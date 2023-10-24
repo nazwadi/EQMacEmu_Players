@@ -1,0 +1,17 @@
+{% extends 'accounts/header.html' %}
+
+{% block content %}
+
+    {% load crispy_forms_tags %}
+    <div class="container py-5">
+        <h1>Update Account: "{{ AccountName }}"</h1>
+        <form method="POST">
+
+            {% csrf_token %}
+            {{ form.AccountPassword|as_crispy_field }}
+            {{ form.AccountEmail|as_crispy_field }}
+            <button class="btn btn-primary" type="submit">Save</button>
+        </form>
+    </div>
+
+{% endblock %}

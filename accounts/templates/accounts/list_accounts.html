@@ -1,0 +1,17 @@
+{% extends 'accounts/header.html' %}
+{% load render_table from django_tables2 %}
+
+<!--Block content goes below-->
+
+{% block content %}
+
+    <div class="container py-5">
+        <h1>Login Server Accounts</h1>
+        <p class="text-muted">These are the accounts you'll use to log in to game.</p>
+        <div class="row mb-3 float-right">
+            <a href="/accounts/create" class="btn btn-primary" role="button">Create Account</a>
+        </div>
+        {% render_table table %}
+    </div>
+
+{% endblock %}

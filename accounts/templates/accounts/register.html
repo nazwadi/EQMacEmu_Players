@@ -1,0 +1,41 @@
+{% extends 'accounts/header.html' %}
+
+<!--Block content goes below-->
+
+{% block content %}
+{% load crispy_forms_tags %}
+
+    <div class="container py-5">
+      <h1>Register</h1>
+      <h4>Create a login management account.</h4>
+      <p>
+          In order to manage the game accounts you'll use to log in to the game, please register a master account.
+      </p>
+      <form method="POST">
+          {% csrf_token %}
+          <div class="row">
+            <div class="col-lg-6 col-md-12">
+              {{form.username|as_crispy_field}}
+            </div>
+          </div>
+          <div class="row">
+              <div class="col-lg-6 col-md-12">
+                  {{form.password1|as_crispy_field}}
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-lg-6 col-md-12">
+                  {{form.password2|as_crispy_field}}
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-lg-6 col-md-12">
+                  {{form.email|as_crispy_field}}
+              </div>
+          </div>
+          <button class="btn btn-primary" type="submit">Register</button>
+      </form>
+    	<p class="text-center">If you already have an account, <a href="/accounts/login">login</a> instead.</p>
+  </div>
+
+{% endblock %}
