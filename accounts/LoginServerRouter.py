@@ -26,7 +26,7 @@ class LoginServerRouter:
         """
         if ((model._meta.app_label in self.route_app_labels)
                 and (model in self.login_server_models)):
-            return "takp_ls"
+            return "login_server_database"
         return None
 
     def db_for_write(self, model, **hints):
@@ -35,7 +35,7 @@ class LoginServerRouter:
         """
         if ((model._meta.app_label in self.route_app_labels)
                 and (model in self.login_server_models)):
-            return "takp_ls"
+            return "login_server_database"
         return None
 
     def allow_relation(self, obj1, obj2, **hints):
@@ -58,5 +58,5 @@ class LoginServerRouter:
         login server database.
         """
         if (app_label in self.route_app_labels) and (model_name in self.login_server_models):
-            return db == "takp_ls"
+            return db == "login_server_database"
         return None

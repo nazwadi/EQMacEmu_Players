@@ -17,6 +17,6 @@ def sha1_password(password: str) -> str:
     """
     message = sha1()
     message.update(bytes(password,
-                     encoding="utf8"))
+                   encoding="utf8"))
     password = message.hexdigest()
     return password

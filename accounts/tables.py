@@ -5,15 +5,11 @@ from .models import LoginServerAccounts
 
 
 class LoginServerAccountTable(ExportMixin, tables.Table):
+    AccountName = tables.LinkColumn("characters:list", args=[Accessor("AccountName")])
     update = tables.LinkColumn('accounts:update_account',
                                text="Update",
                                args=[Accessor('pk')],
                                attrs={'a': {'class': 'btn fa-regular fa-pen-to-square btn-outline-warning'}},
-                               orderable=False)
-    delete = tables.LinkColumn('accounts:delete_account',
-                               text="Delete",
-                               args=[Accessor('pk')],
-                               attrs={'a': {'class': 'btn btn-outline-danger'}},
                                orderable=False)
 
     class Meta:

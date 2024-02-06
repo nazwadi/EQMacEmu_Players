@@ -1,6 +1,7 @@
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.decorators import login_required
 
 from .models import LoginServerAccounts
 from .tables import LoginServerAccountTable
@@ -42,6 +43,7 @@ def login_request(request):
     return render(request=request, template_name="accounts/login.html", context={"login_form": form})
 
 
+@login_required
 def logout_request(request):
     logout(request)
     messages.info(request, "You have successfully logged out.")
@@ -84,6 +86,7 @@ def contact(request):
     return render(request, "accounts/contact.html", {'form': form})
 
 
+@login_required
 def accounts(request):
     table = LoginServerAccountTable(LoginServerAccounts.objects.filter(ForumName=request.user.username))
 
@@ -99,6 +102,7 @@ def accounts(request):
                   {"table": table})
 
 
+@login_required
 def create_account(request):
     if request.method == 'POST':
         form = NewLSAccountForm(request.POST)
@@ -125,6 +129,7 @@ def create_account(request):
                   )
 
 
+@login_required
 def update_account(request, pk):
     """Defines view for https://url.tld/accounts/update/<int:pk>"""
     queryset = LoginServerAccounts.objects.filter(LoginServerID=pk)
@@ -149,6 +154,7 @@ def update_account(request, pk):
                       )
 
 
+@login_required
 def delete_account(request, pk):
     """Defines view for https://url.tld/accounts/delete/<int:pk>"""
     account = LoginServerAccounts.objects.filter(LoginServerID=pk)

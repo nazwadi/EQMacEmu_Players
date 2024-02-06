@@ -1,8 +1,5 @@
 from django.contrib import admin
 
-# Register your models here.
-from django.contrib import admin
-
 from .models import LoginServerAccounts
 from .models import ServerAdminRegistration
 from .models import ServerListType
@@ -29,11 +26,11 @@ class ServerListTypeAdmin(admin.ModelAdmin):
 
 
 class WorldServerRegistrationAdmin(admin.ModelAdmin):
-    list_display = ["ServerLongName", "ServerTagDescription", "ServerListTypeID", "ServerTrusted", "ServerAdminID", "ServerLastLoginDate"]
+    list_display = ["ServerLongName", "ServerTagDescription", "ServerListTypeID", "ServerTrusted", "ServerAdminID",
+                    "ServerLastLoginDate"]
 
 
 admin.site.register(LoginServerAccounts, LoginServerAccountsAdmin)
 admin.site.register(ServerAdminRegistration, ServerAdminRegistrationAdmin)
 admin.site.register(ServerListType, ServerListTypeAdmin)
 admin.site.register(WorldServerRegistration, WorldServerRegistrationAdmin)
-

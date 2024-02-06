@@ -1,0 +1,261 @@
+{% extends 'accounts/header.html' %}
+{% load humanize %}
+{% load data_utilities %}
+{% block content %}
+    <div class="container py-5">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/accounts/list">Game Accounts</a></li>
+                <li class="breadcrumb-item"><a href="/characters/list/{{ account_name }}">Characters</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ character.name }}</li>
+            </ol>
+        </nav>
+        <div class="row mt-4">
+            <div class="col border rounded">
+                <h5>Character</h5>
+                <div class="col align-self-start">
+                    <span style="font-weight: bold">Name:</span> {{ character.name }}
+                </div>
+                <div class="col align-self-start">
+                    <span style="font-weight: bold">Last Name:</span> {{ character.last_name }}
+                </div>
+                <div class="col align-self-start">
+                    <span style="font-weight: bold">Title:</span> {{ character.title }}
+                </div>
+                <div class="col align-self-start">
+                    <span style="font-weight: bold">Suffix:</span> {{ character.suffix }}
+                </div>
+                <div class="col align-self-end">
+                    <span style="font-weight: bold">Guild:</span>
+                </div>
+                <div class="col align-self-end">
+                    <span style="font-weight: bold">Guild Rank:</span>
+                </div>
+                <div class="col align-self-end">
+                    <span style="font-weight: bold">Anonymous:</span> {{ character.anon|yes_no }}
+                </div>
+            </div>
+            <div class="col border rounded">
+                <h5>Basic Info</h5>
+                <div class="col align-self-center">
+                    <span style="font-weight: bold">Level:</span> {{ character.level }}
+                </div>
+                <div class="col align-self-center">
+                    <span style="font-weight: bold">Race:</span> {{ character.race|player_race }}
+                </div>
+                <div class="col align-self-center">
+                    <span style="font-weight: bold">Class:</span> {{ character.class_name|player_class }}
+                </div>
+                <div class="col align-self-center">
+                    <span style="font-weight: bold">Deity:</span> {{ character.deity|player_deity }}
+                </div>
+                <div class="col align-self-center">
+                    <span style="font-weight: bold">Experience:</span> {{ character.exp|intcomma }}
+                </div>
+                <div class="col align-self-center">
+                    <span style="font-weight: bold">Practice Points:</span> {{ character.points }}
+                </div>
+                <div class="col align-self-start">
+                    <span style="font-weight: bold">Flagged PVP:</span> {{ character.pvp_status|yes_no }}
+                </div>
+            </div>
+            <div class="col border rounded">
+                <h5>Stats</h5>
+                <div class="col align-self-end">
+                    <span style="font-weight: bold">STR:</span> {{ character.str }}
+                </div>
+                <div class="col align-self-end">
+                    <span style="font-weight: bold">STA:</span> {{ character.sta }}
+                </div>
+                <div class="col align-self-end">
+                    <span style="font-weight: bold">DEX:</span> {{ character.dex }}
+                </div>
+                <div class="col align-self-end">
+                    <span style="font-weight: bold">AGI:</span> {{ character.agi }}
+                </div>
+                <div class="col align-self-end">
+                    <span style="font-weight: bold">INT:</span> {{ character.int_stat }}
+                </div>
+                <div class="col align-self-end">
+                    <span style="font-weight: bold">WIS:</span> {{ character.wis }}
+                </div>
+                <div class="col align-self-end">
+                    <span style="font-weight: bold">CHA:</span> {{ character.cha }}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col border rounded">
+                <h5>Account Info</h5>
+                <div class="col align-self-start">
+                    <span style="font-weight: bold">Account ID:</span> {{ character.account_id }}
+                </div>
+                <div class="col align-self-start">
+                    <span style="font-weight: bold">Character ID:</span> {{ character.id }}
+                </div>
+                <div class="col align-self-start">
+                    <span style="font-weight: bold">Birthdate:</span> {{ birthday }}
+                </div>
+                <div class="col align-self-start">
+                    <span style="font-weight: bold">First Logon:</span> {{ character.firstlogon }}
+                </div>
+                <div class="col align-self-start">
+                    <span style="font-weight: bold">Last Online:</span> {{ last_login|naturaltime }}
+                </div>
+                <div class="col align-self-start">
+                    <span style="font-weight: bold">Time Played:</span> {{ time_played }}
+                </div>
+                <div class="col align-self-start">
+                    <span style="font-weight: bold">GM:</span> {{ character.gm|yes_no }}
+                </div>
+                <div class="col align-self-start">
+                    <span style="font-weight: bold">Status:</span> {{ status }}
+                </div>
+            </div>
+            <div class="col border rounded">
+                <h5>Location Info</h5>
+                <div class="col align-self-center">
+                    <span style="font-weight: bold">Zone:</span> {{ character.zone_id|zone_filter:"long" }}
+                </div>
+                <div class="col align-self-center">
+                    <span style="font-weight: bold">X:</span> {{ character.x }}
+                </div>
+                <div class="col align-self-center">
+                    <span style="font-weight: bold">Y:</span> {{ character.y }}
+                </div>
+                <div class="col align-self-center">
+                    <span style="font-weight: bold">Z:</span> {{ character.z }}
+                </div>
+                <div class="col align-self-center">
+                    <span style="font-weight: bold">Heading:</span> {{ character.heading }}
+                </div>
+                <div class="col align-self-center pt-3">
+                    <span style="font-weight: bold">BoatID:</span> {{ character.boatid }}
+                </div>
+                <div class="col align-self-center">
+                    <span style="font-weight: bold">Boat Name:</span> {{ character.boatname }}
+                </div>
+            </div>
+            <div class="col border rounded">
+                <h5>Appearance</h5>
+                <div class="col align-self-end">
+                    <span style="font-weight: bold">Gender:</span> {{ character.gender|gender }}
+                </div>
+                <div class="col align-self-end">
+                    <span style="font-weight: bold">Hair Style:</span> {{ character.hair_style }}
+                </div>
+                <div class="col align-self-end">
+                    <span style="font-weight: bold">Hair Color:</span> {{ character.hair_color }}
+                </div>
+                <div class="col align-self-end">
+                    <span style="font-weight: bold">Show Helm:</span> {{ character.showhelm|yes_no }}
+                </div>
+                <div class="col align-self-end">
+                    <span style="font-weight: bold">Face:</span> {{ character.face }}
+                </div>
+                <div class="col align-self-end">
+                    <span style="font-weight: bold">Left Eye:</span> {{ character.eye_color_1 }}
+                </div>
+                <div class="col align-self-end">
+                    <span style="font-weight: bold">Right Eye:</span> {{ character.eye_color_2 }}
+                </div>
+                <div class="col align-self-end">
+                    <span style="font-weight: bold">Beard:</span> {{ character.beard }}
+                </div>
+                <div class="col align-self-end">
+                    <span style="font-weight: bold">Beard Color:</span> {{ character.beard_color }}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col border rounded">
+                <h5>Vitals</h5>
+                <div class="col align-self-start">
+                    <span style="font-weight: bold">HP:</span> {{ character.cur_hp|intcomma }}
+                </div>
+                <div class="col align-self-start">
+                    <span style="font-weight: bold">Mana:</span> {{ character.mana|intcomma }}
+                </div>
+                <div class="col align-self-start">
+                    <span style="font-weight: bold">Fatigue:</span> {{ character.fatigue|intcomma }}
+                </div>
+                <div class="col align-self-start">
+                    <span style="font-weight: bold">Air:</span> {{ character.air_remaining|intcomma }}
+                </div>
+                <div class="col align-self-start">
+                    <span style="font-weight: bold">Hunger:</span> {{ character.hunger_level|intcomma }}
+                </div>
+                <div class="col align-self-start">
+                    <span style="font-weight: bold">Thirst:</span> {{ character.thirst_level|intcomma }}
+                </div>
+                <div class="col align-self-start">
+                    <span style="font-weight: bold">Intoxication:</span> {{ character.intoxication|intcomma }}
+                </div>
+            </div>
+            <div class="col border rounded">
+                <h5>Currency</h5>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th>Body</th>
+                        <th>Cursor</th>
+                        <th>Bank</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th scope="row">Platinum</th>
+                        <td>{{ currency.platinum|intcomma }}</td>
+                        <td>{{ currency.platinum_cursor|intcomma }}</td>
+                        <td>{{ currency.platinum_bank|intcomma }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Gold</th>
+                        <td>{{ currency.gold|intcomma }}</td>
+                        <td>{{ currency.gold_cursor|intcomma }}</td>
+                        <td>{{ currency.gold_bank|intcomma }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Silver</th>
+                        <td>{{ currency.silver|intcomma }}</td>
+                        <td>{{ currency.silver_cursor|intcomma }}</td>
+                        <td>{{ currency.silver_bank|intcomma }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Copper</th>
+                        <td>{{ currency.copper|intcomma }}</td>
+                        <td>{{ currency.copper_cursor|intcomma }}</td>
+                        <td>{{ currency.copper_bank|intcomma }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="col align-self-start">
+                    <span style="font-weight: bold">Autosplit Enabled:</span> {{ character.autosplit_enabled|yes_no }}
+                </div>
+
+            </div>
+            <div class="col border rounded">
+                <h5>Alternate Advancement</h5>
+                <div class="col align-self-end">
+                    <span style="font-weight: bold">AA Experience:</span> {{ character.aa_exp|intcomma }}
+                </div>
+                <div class="col align-self-end">
+                    <span style="font-weight: bold">AA Points:</span> {{ character.aa_points|intcomma }}
+                </div>
+                <div class="col align-self-end">
+                    <span style="font-weight: bold">AA Points Spent:</span> {{ character.aa_points_spent|intcomma }}
+                </div>
+                <div class="col align-self-end">
+                    <span style="font-weight: bold">AA Effects:</span> {{ character.e_aa_effects|intcomma }}
+                </div>
+                <div class="col align-self-end">
+                    <span style="font-weight: bold">Percent to AA:</span> {{ character.e_percent_to_aa }}%
+                </div>
+                <div class="col align-self-end">
+                    <span style="font-weight: bold">Expended AA Spent:</span> {{ character.e_expended_aa_spent }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

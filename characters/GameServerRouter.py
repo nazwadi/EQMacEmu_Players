@@ -4,7 +4,9 @@ This is the database router class for operations relating to tables found in the
 For the purposes of this app, that should simply be the "accounts" model which ties the lsaccount_id
 and forum_id to individual characters tied to a login server account and its overall forum id, respectively.
 """
-from accounts.models import Account
+from characters.models import Characters
+from characters.models import CharacterCurrency
+from characters.models import GuildMembers
 
 
 class GameServerRouter:
@@ -13,8 +15,8 @@ class GameServerRouter:
     accounts application.
     """
 
-    route_app_labels = {"accounts"}
-    game_server_models = [Account]
+    route_app_labels = {"characters"}
+    game_server_models = [Characters, CharacterCurrency, GuildMembers]
 
     def db_for_read(self, model, **hints):
         """
@@ -40,9 +42,10 @@ class GameServerRouter:
         involved.
         """
         if ((obj1._meta.app_label in self.route_app_labels
-             or obj2._meta.app_label in self.route_app_labels)
-                and
-                (obj1 in self.game_server_models and obj2 in self.game_server_models)
+            or obj2._meta.app_label in self.route_app_labels)
+            and
+                (obj1 in self.game_server_models
+                 and obj2 in self.game_server_models)
         ):
             return True
         return None

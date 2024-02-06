@@ -1,5 +1,5 @@
 """
-WSGI config for EQArchives project.
+WSGI config for EQMacEmu_Players project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'EQArchives.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'EQMacEmu_Players.settings')
 
 application = get_wsgi_application()

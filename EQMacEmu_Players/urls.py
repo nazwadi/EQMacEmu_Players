@@ -1,5 +1,5 @@
 """
-URL configuration for EQArchives project.
+URL configuration for EQMacEmu Accounts project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.2/topics/http/urls/
@@ -17,11 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
-admin.site.site_header = "EQ Archives Administration"
+admin.site.site_header = "EQMacEmu Accounts Administration"
 
 urlpatterns = [
     path("__debug__/", include("debug_toolbar.urls")),
     path("polls/", include("polls.urls")),
     path("accounts/", include("accounts.urls")),
-    path('admin/', admin.site.urls)
+    path("characters/", include("characters.urls")),
+    path("admin/", admin.site.urls)
 ]
