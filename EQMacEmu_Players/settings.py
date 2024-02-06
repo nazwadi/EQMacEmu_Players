@@ -43,7 +43,8 @@ SECRET_KEY = os.environ.get("DJANGO_APP_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+#ALLOWED_HOSTS = ['loginserver.eqarchives.com', 'eqarchives.com']
+CSRF_TRUSTED_ORIGINS = ['https://loginserver.eqarchives.com']
 
 # Application definition
 
@@ -168,9 +169,12 @@ SESSION_COOKIE_AGE = 3600  # 60 minutes
 SESSION_SAVE_EVERY_REQUEST = True
 SESSION_COOKIE_SECURE = True
 
-SECURE_HSTS_SECONDS = 2, 592, 000
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
+#SECURE_HSTS_SECONDS = 2, 592, 000
+#SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+#SECURE_HSTS_PRELOAD = False
+
+CSRF_COOKIE_SECURE = True
+#SECURE_SSL_REDIRECT = True
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -187,6 +191,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
