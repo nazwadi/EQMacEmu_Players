@@ -1,261 +1,530 @@
-{% extends 'accounts/header.html' %}
+{% extends 'characters/header.html' %}
 {% load humanize %}
 {% load data_utilities %}
+{% load static %}
 {% block content %}
     <div class="container py-5">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/accounts/list">Game Accounts</a></li>
-                <li class="breadcrumb-item"><a href="/characters/list/{{ account_name }}">Characters</a></li>
+                <li class="breadcrumb-item"><a href="/characters/list/{{ account.name }}">Characters</a></li>
                 <li class="breadcrumb-item active" aria-current="page">{{ character.name }}</li>
             </ol>
         </nav>
-        <div class="row mt-4">
-            <div class="col border rounded">
-                <h5>Character</h5>
-                <div class="col align-self-start">
-                    <span style="font-weight: bold">Name:</span> {{ character.name }}
+        <ul class="nav nav-tabs" id="charViewTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="data-tab" data-bs-toggle="tab" data-bs-target="#data-tab-pane"
+                        type="button" role="tab" aria-controls="data-tab-pane" aria-selected="true">Character
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="skills-tab" data-bs-toggle="tab" data-bs-target="#skill-tab-pane"
+                        type="button" role="tab" aria-controls="skill-tab-pane" aria-selected="false">Skills
+                </button>
+            </li>
+            {# 0 - Unknown, 1 - Warrior, 7 - Monk, 9 - Rogue  #}
+            {% if character.class_name not in non_casters %}
+                <li class="nav-item" role="presentation">
+                    {# Disable feature until complete #}
+                    {% if 1 %}
+                        <a class="nav-link disabled" href="#" aria-disabled="true">Spells</a>
+                    {% else %}
+                        <button class="nav-link" id="spell-tab" data-bs-toggle="tab" data-bs-target="#spell-tab-pane"
+                                type="button" role="tab" aria-controls="spell-tab-pane" aria-selected="false">Spells
+                        </button>
+                    {% endif %}
+                </li>
+            {% endif %}
+            <li class="nav-item" role="presentation">
+                {% if guild is None %}
+                    <a class="nav-link disabled" href="#" aria-disabled="true">Guild</a>
+                {% else %}
+                    <button class="nav-link" id="guild-tab" data-bs-toggle="tab" data-bs-target="#guild-tab-pane"
+                            type="button" role="tab" aria-controls="spell-tab-pane" aria-selected="false">Guild
+                    </button>
+                {% endif %}
+            </li>
+            {% if account.expansion >= 3 %}
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="aa-tab" data-bs-toggle="tab" data-bs-target="#aa-tab-pane"
+                            type="button" role="tab" aria-controls="aa-tab-pane" aria-selected="false">Alternate
+                        Advancement
+                    </button>
+                </li>
+            {% endif %}
+        </ul>
+        <div class="tab-content" id="charViewTabContent">
+            <div class="tab-pane fade show active" id="data-tab-pane" role="tabpanel" aria-labelledby="data-tab"
+                 tabindex="0">
+                <div class="row mt-4">
+                    <div class='WindowSuperFancy' style="width:100%;">
+                        <div class="row">
+                            <div class="WindowNestedTan col">
+                                <div class='WindowNestedTanTitleBar eq-header'>
+                                    <h1>{{ character.name }}&nbsp;{{ character.last_name }}</h1>
+                                </div>
+                                <div class="col">
+                                    {% with "./images/eq-faces/"|add:face_image as face_image_static %}
+                                        <img style="background-color:#999;" class="img-fluid img-thumbnail"
+                                             alt="Character Portrait" src="{% static face_image_static %}">
+                                    {% endwith %}
+                                </div>
+                            </div>
+                            <div class='WindowNestedTan col'>
+                                <div class='WindowNestedTanTitleBar eq-header'>
+                                    <h2>Details</h2>
+                                </div>
+                                <div class="col">
+                                    <span style="font-weight: bold">Level:</span> {{ character.level }}
+                                </div>
+                                <div class="col">
+                                    <span style="font-weight: bold">Race:</span> {{ character.race|player_race }}
+                                </div>
+                                <div class="col">
+                                    <span style="font-weight: bold">Class:</span> {{ character.class_name|player_class }}
+                                </div>
+                                <div class="col">
+                                    <span style="font-weight: bold">Deity:</span> {{ character.deity|player_deity }}
+                                </div>
+                                <div class="col">
+                                    <span style="font-weight: bold">Experience:</span> {{ character.exp|intcomma }}
+                                </div>
+                                <div class="col">
+                                    <span style="font-weight: bold">Flagged PVP:</span> {{ character.pvp_status|yes_no }}
+                                </div>
+                                <div class="col">
+                                    <span style="font-weight: bold">Anonymous:</span> {{ character.anon|yes_no }}
+                                </div>
+                                <div class="col">
+                                    <span style="font-weight: bold">Title:</span> {{ character.title }}
+                                </div>
+                                <div class="col">
+                                    <span style="font-weight: bold">Suffix:</span> {{ character.suffix }}
+                                </div>
+                                <div class="col">
+                                    <span style="font-weight: bold">Guild:</span> {{ guild.name }}
+                                </div>
+                                <div class="col">
+                                    <span style="font-weight: bold">Guild Rank: </span> {{ guild.rank|guild_rank }}
+                                </div>
+                            </div>
+                            <div class='WindowNestedTan col'>
+                                <div class='WindowNestedTanTitleBar eq-header'>
+                                    <h2>Account Info</h2>
+                                </div>
+                                <div class="col">
+                                    <span style="font-weight: bold">Birthdate:</span> {{ birthday }}
+                                </div>
+                                <div class="col">
+                                    <span style="font-weight: bold">First Logon:</span> {{ character.firstlogon }}
+                                </div>
+                                <div class="col">
+                                    <span style="font-weight: bold">Last Online:</span> {{ last_login|naturaltime }}
+                                </div>
+                                <div class="col">
+                                    <span style="font-weight: bold">Time Played:</span> {{ time_played }}
+                                </div>
+                                <div class="col">
+                                    <span style="font-weight: bold">GM:</span> {{ character.gm|yes_no }}
+                                </div>
+                                <div class="col">
+                                    <span style="font-weight: bold">Status:</span> {{ account.status }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class='WindowNestedTan col'>
+                                <div class='WindowNestedTanTitleBar eq-header'>
+                                    <h2>Stats</h2>
+                                </div>
+                                <div class="col">
+                                    <span style="font-weight: bold">STR:</span> {{ character.str }}
+                                </div>
+                                <div class="col">
+                                    <span style="font-weight: bold">STA:</span> {{ character.sta }}
+                                </div>
+                                <div class="col">
+                                    <span style="font-weight: bold">DEX:</span> {{ character.dex }}
+                                </div>
+                                <div class="col">
+                                    <span style="font-weight: bold">AGI:</span> {{ character.agi }}
+                                </div>
+                                <div class="col">
+                                    <span style="font-weight: bold">INT:</span> {{ character.int_stat }}
+                                </div>
+                                <div class="col">
+                                    <span style="font-weight: bold">WIS:</span> {{ character.wis }}
+                                </div>
+                                <div class="col">
+                                    <span style="font-weight: bold">CHA:</span> {{ character.cha }}
+                                </div>
+                            </div>
+                            <div class="WindowNestedTan col">
+                                <div class='WindowNestedTanTitleBar eq-header'>
+                                    <h2>Vitals</h2>
+                                </div>
+                                <div class="col">
+                                    <span style="font-weight: bold">HP:</span> {{ character.cur_hp|intcomma }}
+                                </div>
+                                <div class="col">
+                                    <span style="font-weight: bold">Mana:</span> {{ character.mana|intcomma }}
+                                </div>
+                                <div class="col">
+                                    <span style="font-weight: bold">Fatigue:</span> {{ character.fatigue|intcomma }}
+                                </div>
+                                <div class="col">
+                                    <span style="font-weight: bold">Air:</span> {{ character.air_remaining|intcomma }}
+                                </div>
+                                <div class="col">
+                                    <span style="font-weight: bold">Hunger:</span> {{ character.hunger_level|intcomma }}
+                                </div>
+                                <div class="col">
+                                    <span style="font-weight: bold">Thirst:</span> {{ character.thirst_level|intcomma }}
+                                </div>
+                                <div class="col">
+                                    <span style="font-weight: bold">Intoxication:</span> {{ character.intoxication|intcomma }}
+                                </div>
+                            </div>
+                            <div class="WindowNestedTan col">
+                                <div class='WindowNestedTanTitleBar eq-header'>
+                                    <h2>Location</h2>
+                                </div>
+                                <div class="col align-self-center">
+                                    <span style="font-weight: bold">Zone:</span> {{ character.zone_id|zone_filter:"long" }}
+                                </div>
+                                <div class="col align-self-center">
+                                    <span style="font-weight: bold">X:</span> {{ character.x }}
+                                </div>
+                                <div class="col align-self-center">
+                                    <span style="font-weight: bold">Y:</span> {{ character.y }}
+                                </div>
+                                <div class="col align-self-center">
+                                    <span style="font-weight: bold">Z:</span> {{ character.z }}
+                                </div>
+                                <div class="col align-self-center">
+                                    <span style="font-weight: bold">Heading:</span> {{ character.heading }}
+                                </div>
+                                <div class="col align-self-center pt-3">
+                                    <span style="font-weight: bold">BoatID:</span> {{ character.boatid }}
+                                </div>
+                                <div class="col align-self-center">
+                                    <span style="font-weight: bold">Boat Name:</span> {{ character.boatname }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="WindowNestedTan col">
+                                <div class='WindowNestedTanTitleBar eq-header'>
+                                    <h2>Currency</h2>
+                                </div>
+                                <table class="eq-table eq-highlight-rows">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col"></th>
+                                        <th>Body</th>
+                                        <th>Cursor</th>
+                                        <th>Bank</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <th scope="row">Platinum</th>
+                                        <td>{{ character_currency.platinum|intcomma }}</td>
+                                        <td>{{ character_currency.platinum_cursor|intcomma }}</td>
+                                        <td>{{ character_currency.platinum_bank|intcomma }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Gold</th>
+                                        <td>{{ character_currency.gold|intcomma }}</td>
+                                        <td>{{ character_currency.gold_cursor|intcomma }}</td>
+                                        <td>{{ character_currency.gold_bank|intcomma }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Silver</th>
+                                        <td>{{ character_currency.silver|intcomma }}</td>
+                                        <td>{{ character_currency.silver_cursor|intcomma }}</td>
+                                        <td>{{ character_currency.silver_bank|intcomma }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Copper</th>
+                                        <td>{{ currency.copper|intcomma }}</td>
+                                        <td>{{ currency.copper_cursor|intcomma }}</td>
+                                        <td>{{ currency.copper_bank|intcomma }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <div class="col align-self-start">
+                                    <span style="font-weight: bold">Auto-split Enabled:</span> {{ character.autosplit_enabled|yes_no }}
+                                </div>
+                            </div>
+                            <div class="WindowNestedTan col">
+                                <div class='WindowNestedTanTitleBar eq-header'>
+                                    <h2>Keyring</h2>
+                                </div>
+                                {% if character_keyring.all %}
+                                    <table class="eq-table eq-highlight-rows">
+                                        <thead>
+                                        <tr>
+                                            <th>Key (Item Id)</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for key in character_keyring %}
+                                            <tr>
+                                                <td>{{ key.item_id.Name }} ({{ key.item_id.id }})</td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    {% else %}
+                                    <div style="text-align: center;">You have no keys.</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col align-self-start">
-                    <span style="font-weight: bold">Last Name:</span> {{ character.last_name }}
+                {% if account.expansion >= 3 %}
+                    <div class="row mt-4">
+                        <div class="col">
+                            <div class="card">
+                                <div class="card-header">Appearance</div>
+                                <div class="card-body">
+                                    <div class="col align-self-end">
+                                        <span style="font-weight: bold">Gender:</span> {{ character.gender|gender }}
+                                    </div>
+                                    <div class="col align-self-end">
+                                        <span style="font-weight: bold">Hair Style:</span> {{ character.hair_style }}
+                                    </div>
+                                    <div class="col align-self-end">
+                                        <span style="font-weight: bold">Hair Color:</span> {{ character.hair_color }}
+                                    </div>
+                                    <div class="col align-self-end">
+                                        <span style="font-weight: bold">Show Helm:</span> {{ character.showhelm|yes_no }}
+                                    </div>
+                                    <div class="col align-self-end">
+                                        <span style="font-weight: bold">Face:</span> {{ character.face }}
+                                    </div>
+                                    <div class="col align-self-end">
+                                        <span style="font-weight: bold">Left Eye:</span> {{ character.eye_color_1 }}
+                                    </div>
+                                    <div class="col align-self-end">
+                                        <span style="font-weight: bold">Right Eye:</span> {{ character.eye_color_2 }}
+                                    </div>
+                                    <div class="col align-self-end">
+                                        <span style="font-weight: bold">Beard:</span> {{ character.beard }}
+                                    </div>
+                                    <div class="col align-self-end">
+                                        <span style="font-weight: bold">Beard Color:</span> {{ character.beard_color }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+            {% if guild is not None %}
+                <div class="tab-pane fade" id="guild-tab-pane" role="tabpanel" aria-labelledby="guild-tab"
+                     tabindex="1">
+                    <div class="row mt-4">
+                        <div class='WindowSuperFancy' style="width:100%;">
+                            <div class="row">
+                                <div class="WindowNestedTan col">
+                                    <div class='WindowNestedTanTitleBar eq-header'>
+                                        <h1>{{ guild.name }}</h1>
+                                    </div>
+                                    MOTD: {{ guild.motd }}
+                                    <table class="eq-table eq-highlight-rows" style="display: table">
+                                        <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Level</th>
+                                            <th>Class</th>
+                                            <th>Race</th>
+                                            <th>Rank</th>
+                                            <th>Zone</th>
+                                            <th>Alt</th>
+                                            <th>Last Online</th>
+                                            <th>Public Note</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for member in guild_members %}
+                                            <tr>
+                                                <td>{{ member.char_id.name }}</td>
+                                                <td>{{ member.char_id.level }}</td>
+                                                <td>{{ member.char_id.class_name|player_class }}</td>
+                                                <td>{{ member.char_id.race|player_race }}</td>
+                                                <td>{{ member.rank|guild_rank }}</td>
+                                                <td>{{ member.char_id.zone_id|zone_filter:"long" }}</td>
+                                                {% if member.alt %}
+                                                    <td>
+                                                        <label for="alt" class="eq-checkbox-label"></label>
+                                                        <input id="alt" class="eq-checkbox" type="checkbox"/>
+                                                    </td>
+                                                {% else %}
+                                                    <td>
+                                                        <label for="alt" class="eq-checkbox-label"></label>
+                                                        <input id="alt" class="eq-checkbox" type="checkbox"/>
+                                                    </td>
+                                                {% endif %}
+                                                <td>{{ member.char_id.last_login|datetime_from_timestamp|naturaltime }}</td>
+                                                <td>{{ member.public_note }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col align-self-start">
-                    <span style="font-weight: bold">Title:</span> {{ character.title }}
-                </div>
-                <div class="col align-self-start">
-                    <span style="font-weight: bold">Suffix:</span> {{ character.suffix }}
-                </div>
-                <div class="col align-self-end">
-                    <span style="font-weight: bold">Guild:</span>
-                </div>
-                <div class="col align-self-end">
-                    <span style="font-weight: bold">Guild Rank:</span>
-                </div>
-                <div class="col align-self-end">
-                    <span style="font-weight: bold">Anonymous:</span> {{ character.anon|yes_no }}
+            {% endif %}
+            <div class="tab-pane fade" id="skill-tab-pane" role="tabpanel" aria-labelledby="skill-tab"
+                 tabindex="2">
+                <div class="row mt-4">
+                    <div class='WindowSuperFancy' style="width:100%;">
+                        <div class="row">
+                            <div class="WindowNestedTan col">
+                                <div class='WindowNestedTanTitleBar eq-header'>
+                                    <h2>Skills</h2>
+                                </div>
+                                <div class="col" style="text-align: center">
+                                    <span style="font-weight: bold">Practice Points:</span> {{ character.points }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="WindowNestedTan col">
+                                <div class='WindowNestedTanTitleBar eq-header'>
+                                    <h3>Abilities</h3>
+                                </div>
+                                {% if character_skills %}
+                                    <table class="eq-table eq-highlight-rows">
+                                        <thead>
+                                        <tr>
+                                            <th>Skill</th>
+                                            <th>Value</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for skill in character_skills %}
+                                            <tr>
+                                                <td>{{ skill.skill_id|player_skill }}</td>
+                                                <td>{{ skill.value }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                {% else %}
+                                    <div style="text-align:center;">You have no skills - go visit a trainer!</div>
+                                {% endif %}
+                            </div>
+                            {% if character.class_name not in non_casters %}
+                                <div class="WindowNestedTan col">
+                                    <div class='WindowNestedTanTitleBar eq-header'>
+                                        <h3>Magic/Music</h3>
+                                    </div>
+                                    {% if character_magic_songs %}
+                                        <table class="eq-table eq-highlight-rows">
+                                            <thead>
+                                            <tr>
+                                                <th>Skill</th>
+                                                <th>Value</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for magic_song in character_magic_songs %}
+                                                <tr>
+                                                    <td>{{ magic_song.skill_id|player_skill }}</td>
+                                                    <td>{{ magic_song.value }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    {% else %}
+                                        <div style="text-align:center;">You have no magic or musical skills - go visit a
+                                            trainer!
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                            <div class="WindowNestedTan col">
+                                <div class='WindowNestedTanTitleBar eq-header'>
+                                    <h3>Languages</h3>
+                                </div>
+                                {% if character_languages.all %}
+                                    <table class="eq-table eq-highlight-rows">
+                                        <thead>
+                                        <tr>
+                                            <th>Language</th>
+                                            <th>Value</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for language in character_languages %}
+                                            <tr>
+                                                <td>{{ language.lang_id|player_language }}</td>
+                                                <td>{{ language.value }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                {% else %}
+                                    <div style="text-align:center;">You know no languages - go visit a trainer!</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col border rounded">
-                <h5>Basic Info</h5>
-                <div class="col align-self-center">
-                    <span style="font-weight: bold">Level:</span> {{ character.level }}
-                </div>
-                <div class="col align-self-center">
-                    <span style="font-weight: bold">Race:</span> {{ character.race|player_race }}
-                </div>
-                <div class="col align-self-center">
-                    <span style="font-weight: bold">Class:</span> {{ character.class_name|player_class }}
-                </div>
-                <div class="col align-self-center">
-                    <span style="font-weight: bold">Deity:</span> {{ character.deity|player_deity }}
-                </div>
-                <div class="col align-self-center">
-                    <span style="font-weight: bold">Experience:</span> {{ character.exp|intcomma }}
-                </div>
-                <div class="col align-self-center">
-                    <span style="font-weight: bold">Practice Points:</span> {{ character.points }}
-                </div>
-                <div class="col align-self-start">
-                    <span style="font-weight: bold">Flagged PVP:</span> {{ character.pvp_status|yes_no }}
-                </div>
+            <div class="tab-pane fade" id="spell-tab-pane" role="tabpanel" aria-labelledby="spell-tab"
+                 tabindex="3">
+                {% if character.class_name != 0 or 1 or 7 or 9 %}
+                    <div class="row mt-4">
+                        <div class="col">
+                            {% include "characters/spells_wizard.html" %}
+                            {% for scribed_spell in character_spells %}
+                                <p>
+                                    <img src="/images/{{ scribed_spell.spell_id.custom_icon }}.gif"
+                                         alt="{{ scribed_spell.spell_id.custom_icon }}.gif">
+                                    {{ scribed_spell.spell_id.name }}
+                                </p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
             </div>
-            <div class="col border rounded">
-                <h5>Stats</h5>
-                <div class="col align-self-end">
-                    <span style="font-weight: bold">STR:</span> {{ character.str }}
+            {% if account.expansion >= 3 %}
+                <div class="tab-pane fade" id="aa-tab-pane" role="tabpanel" aria-labelledby="aa-tab"
+                     tabindex="4">
+                    <div class="row mt-4">
+                        <div class='WindowSuperFancy' style="width:100%;">
+                            <div class="row">
+                                <div class="WindowNestedTan col">
+                                    <div class="col align-self-end">
+                                        <span style="font-weight: bold">AA Experience:</span> {{ character.aa_exp|intcomma }}
+                                    </div>
+                                    <div class="col align-self-end">
+                                        <span style="font-weight: bold">AA Points:</span> {{ character.aa_points|intcomma }}
+                                    </div>
+                                    <div class="col align-self-end">
+                                        <span style="font-weight: bold">AA Points Spent:</span> {{ character.aa_points_spent|intcomma }}
+                                    </div>
+                                    <div class="col align-self-end">
+                                        <span style="font-weight: bold">AA Effects:</span> {{ character.e_aa_effects|intcomma }}
+                                    </div>
+                                    <div class="col align-self-end">
+                                        <span style="font-weight: bold">Percent to AA:</span> {{ character.e_percent_to_aa }}%
+                                    </div>
+                                    <div class="col align-self-end">
+                                        <span style="font-weight: bold">Expended AA Spent:</span> {{ character.e_expended_aa_spent }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col align-self-end">
-                    <span style="font-weight: bold">STA:</span> {{ character.sta }}
-                </div>
-                <div class="col align-self-end">
-                    <span style="font-weight: bold">DEX:</span> {{ character.dex }}
-                </div>
-                <div class="col align-self-end">
-                    <span style="font-weight: bold">AGI:</span> {{ character.agi }}
-                </div>
-                <div class="col align-self-end">
-                    <span style="font-weight: bold">INT:</span> {{ character.int_stat }}
-                </div>
-                <div class="col align-self-end">
-                    <span style="font-weight: bold">WIS:</span> {{ character.wis }}
-                </div>
-                <div class="col align-self-end">
-                    <span style="font-weight: bold">CHA:</span> {{ character.cha }}
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col border rounded">
-                <h5>Account Info</h5>
-                <div class="col align-self-start">
-                    <span style="font-weight: bold">Account ID:</span> {{ character.account_id }}
-                </div>
-                <div class="col align-self-start">
-                    <span style="font-weight: bold">Character ID:</span> {{ character.id }}
-                </div>
-                <div class="col align-self-start">
-                    <span style="font-weight: bold">Birthdate:</span> {{ birthday }}
-                </div>
-                <div class="col align-self-start">
-                    <span style="font-weight: bold">First Logon:</span> {{ character.firstlogon }}
-                </div>
-                <div class="col align-self-start">
-                    <span style="font-weight: bold">Last Online:</span> {{ last_login|naturaltime }}
-                </div>
-                <div class="col align-self-start">
-                    <span style="font-weight: bold">Time Played:</span> {{ time_played }}
-                </div>
-                <div class="col align-self-start">
-                    <span style="font-weight: bold">GM:</span> {{ character.gm|yes_no }}
-                </div>
-                <div class="col align-self-start">
-                    <span style="font-weight: bold">Status:</span> {{ status }}
-                </div>
-            </div>
-            <div class="col border rounded">
-                <h5>Location Info</h5>
-                <div class="col align-self-center">
-                    <span style="font-weight: bold">Zone:</span> {{ character.zone_id|zone_filter:"long" }}
-                </div>
-                <div class="col align-self-center">
-                    <span style="font-weight: bold">X:</span> {{ character.x }}
-                </div>
-                <div class="col align-self-center">
-                    <span style="font-weight: bold">Y:</span> {{ character.y }}
-                </div>
-                <div class="col align-self-center">
-                    <span style="font-weight: bold">Z:</span> {{ character.z }}
-                </div>
-                <div class="col align-self-center">
-                    <span style="font-weight: bold">Heading:</span> {{ character.heading }}
-                </div>
-                <div class="col align-self-center pt-3">
-                    <span style="font-weight: bold">BoatID:</span> {{ character.boatid }}
-                </div>
-                <div class="col align-self-center">
-                    <span style="font-weight: bold">Boat Name:</span> {{ character.boatname }}
-                </div>
-            </div>
-            <div class="col border rounded">
-                <h5>Appearance</h5>
-                <div class="col align-self-end">
-                    <span style="font-weight: bold">Gender:</span> {{ character.gender|gender }}
-                </div>
-                <div class="col align-self-end">
-                    <span style="font-weight: bold">Hair Style:</span> {{ character.hair_style }}
-                </div>
-                <div class="col align-self-end">
-                    <span style="font-weight: bold">Hair Color:</span> {{ character.hair_color }}
-                </div>
-                <div class="col align-self-end">
-                    <span style="font-weight: bold">Show Helm:</span> {{ character.showhelm|yes_no }}
-                </div>
-                <div class="col align-self-end">
-                    <span style="font-weight: bold">Face:</span> {{ character.face }}
-                </div>
-                <div class="col align-self-end">
-                    <span style="font-weight: bold">Left Eye:</span> {{ character.eye_color_1 }}
-                </div>
-                <div class="col align-self-end">
-                    <span style="font-weight: bold">Right Eye:</span> {{ character.eye_color_2 }}
-                </div>
-                <div class="col align-self-end">
-                    <span style="font-weight: bold">Beard:</span> {{ character.beard }}
-                </div>
-                <div class="col align-self-end">
-                    <span style="font-weight: bold">Beard Color:</span> {{ character.beard_color }}
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col border rounded">
-                <h5>Vitals</h5>
-                <div class="col align-self-start">
-                    <span style="font-weight: bold">HP:</span> {{ character.cur_hp|intcomma }}
-                </div>
-                <div class="col align-self-start">
-                    <span style="font-weight: bold">Mana:</span> {{ character.mana|intcomma }}
-                </div>
-                <div class="col align-self-start">
-                    <span style="font-weight: bold">Fatigue:</span> {{ character.fatigue|intcomma }}
-                </div>
-                <div class="col align-self-start">
-                    <span style="font-weight: bold">Air:</span> {{ character.air_remaining|intcomma }}
-                </div>
-                <div class="col align-self-start">
-                    <span style="font-weight: bold">Hunger:</span> {{ character.hunger_level|intcomma }}
-                </div>
-                <div class="col align-self-start">
-                    <span style="font-weight: bold">Thirst:</span> {{ character.thirst_level|intcomma }}
-                </div>
-                <div class="col align-self-start">
-                    <span style="font-weight: bold">Intoxication:</span> {{ character.intoxication|intcomma }}
-                </div>
-            </div>
-            <div class="col border rounded">
-                <h5>Currency</h5>
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th scope="col"></th>
-                        <th>Body</th>
-                        <th>Cursor</th>
-                        <th>Bank</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <th scope="row">Platinum</th>
-                        <td>{{ currency.platinum|intcomma }}</td>
-                        <td>{{ currency.platinum_cursor|intcomma }}</td>
-                        <td>{{ currency.platinum_bank|intcomma }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Gold</th>
-                        <td>{{ currency.gold|intcomma }}</td>
-                        <td>{{ currency.gold_cursor|intcomma }}</td>
-                        <td>{{ currency.gold_bank|intcomma }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Silver</th>
-                        <td>{{ currency.silver|intcomma }}</td>
-                        <td>{{ currency.silver_cursor|intcomma }}</td>
-                        <td>{{ currency.silver_bank|intcomma }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Copper</th>
-                        <td>{{ currency.copper|intcomma }}</td>
-                        <td>{{ currency.copper_cursor|intcomma }}</td>
-                        <td>{{ currency.copper_bank|intcomma }}</td>
-                    </tr>
-                    </tbody>
-                </table>
-                <div class="col align-self-start">
-                    <span style="font-weight: bold">Autosplit Enabled:</span> {{ character.autosplit_enabled|yes_no }}
-                </div>
-
-            </div>
-            <div class="col border rounded">
-                <h5>Alternate Advancement</h5>
-                <div class="col align-self-end">
-                    <span style="font-weight: bold">AA Experience:</span> {{ character.aa_exp|intcomma }}
-                </div>
-                <div class="col align-self-end">
-                    <span style="font-weight: bold">AA Points:</span> {{ character.aa_points|intcomma }}
-                </div>
-                <div class="col align-self-end">
-                    <span style="font-weight: bold">AA Points Spent:</span> {{ character.aa_points_spent|intcomma }}
-                </div>
-                <div class="col align-self-end">
-                    <span style="font-weight: bold">AA Effects:</span> {{ character.e_aa_effects|intcomma }}
-                </div>
-                <div class="col align-self-end">
-                    <span style="font-weight: bold">Percent to AA:</span> {{ character.e_percent_to_aa }}%
-                </div>
-                <div class="col align-self-end">
-                    <span style="font-weight: bold">Expended AA Spent:</span> {{ character.e_expended_aa_spent }}
-                </div>
-            </div>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

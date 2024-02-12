@@ -25,7 +25,7 @@ class Accounts(models.Model):
     hideme = models.SmallIntegerField(null=False, default=0)
 
     class Meta:
-        db_table = 'accounts'
+        db_table = 'account'
 
 
 class Characters(models.Model):
@@ -107,6 +107,23 @@ class Characters(models.Model):
 
     class Meta:
         db_table = "character_data"
+        verbose_name_plural = 'Characters'
+
+
+class CharacterSkills(models.Model):
+    """
+    This model maps to the character_skills table in the database.
+    """
+
+    def __str__(self):
+        return self.skill_id
+
+    id = models.IntegerField(primary_key=True, null=False, default=None)
+    skill_id = models.SmallIntegerField(null=False, default=0)
+    value = SmallIntegerField(null=False, default=0)
+
+    class Meta:
+        db_table = "character_skills"
 
 
 class CharacterCurrency(models.Model):
@@ -135,6 +152,104 @@ class CharacterCurrency(models.Model):
         db_table = 'character_currency'
 
 
+class Items(models.Model):
+    """
+    This model maps to the items table in the database.
+    """
+    def __str__(self):
+        return self.id
+
+    id = models.IntegerField(primary_key=True, null=False, default=0)
+    Name = models.CharField(max_length=64, null=False, default=0)
+
+    class Meta:
+        db_table = 'items'
+
+
+class CharacterKeyring(models.Model):
+    """
+    This model maps to the character_keyring table in the database
+    """
+    def __str__(self):
+        return self.item_id
+
+    id = models.ForeignKey(Characters, primary_key=True, on_delete=models.RESTRICT, db_column='id')
+    item_id = models.ForeignKey(Items, on_delete=models.RESTRICT, db_column='item_id')
+#    item_id = models.IntegerField(null=False, default=0, db_column='item_id')
+
+    class Meta:
+        db_table = 'character_keyring'
+
+
+class CharacterLanguages(models.Model):
+    """
+    This model maps to the character_languages table in the database
+    """
+
+    def __str__(self):
+        return self.id
+
+    id = models.IntegerField(primary_key=True, null=False, default=None)
+    lang_id = models.SmallIntegerField(null=False, default=0)
+    value = SmallIntegerField(null=False, default=0)
+
+    class Meta:
+        db_table = "character_languages"
+
+
+class SpellsNew(models.Model):
+    """
+    This model maps to the spells_new table in the database.
+    """
+    id = models.IntegerField(primary_key=True, null=False, default=0)
+    name = models.CharField(max_length=64, null=True, default=None)
+    custom_icon = models.IntegerField(null=True, default=0)
+
+    class Meta:
+        managed = True
+        db_table = 'spells_new'
+
+
+class CharacterSpells(models.Model):
+    """
+    This model maps to the character_spells table in the database.
+    """
+
+    def __str__(self):
+        return self.spell_id
+
+    id = models.IntegerField(primary_key=True, null=False, default=0)
+    slot_id = models.SmallIntegerField(null=False, default=0)
+    spell_id = models.ForeignKey(SpellsNew, on_delete=models.RESTRICT, db_column='spell_id')
+
+    class Meta:
+        managed = True
+        db_table = 'character_spells'
+
+
+class Guilds(models.Model):
+    """
+    This model maps to the guilds table in the database
+    """
+
+    def __str__(self):
+        return str(self.id)
+
+    id = models.IntegerField(primary_key=True, null=False, default=None)
+    name = models.CharField(max_length=32, null=False, unique=True)
+    leader = models.IntegerField(null=False, unique=True, default=0)
+    minstatus = SmallIntegerField(null=False, default=0)
+    motd = models.TextField(null=False, default=None)
+    tribute = models.IntegerField(null=False, default=0)
+    motd_setter = models.CharField(max_length=64, null=False)
+    channel = models.CharField(max_length=128, null=False)
+    url = models.CharField(max_length=512, null=False)
+
+    class Meta:
+        managed = True
+        db_table = 'guilds'
+
+
 class GuildMembers(models.Model):
     """
     This model maps to the guild_members table in the database.
@@ -143,8 +258,8 @@ class GuildMembers(models.Model):
     def __str__(self):
         return self.char_id
 
-    char_id = models.IntegerField(primary_key=True, null=False, default=0)
-    guild_id = models.IntegerField(null=False, default=0)
+    char_id = models.ForeignKey(Characters, primary_key=True, on_delete=models.RESTRICT, db_column='char_id')
+    guild_id = models.ForeignKey(Guilds, on_delete=models.RESTRICT, db_column='guild_id')
     rank = models.SmallIntegerField(null=False, default=0)
     tribute_enable = models.SmallIntegerField(null=False, default=0)
     total_tribute = models.IntegerField(null=False, default=0)
@@ -154,4 +269,5 @@ class GuildMembers(models.Model):
     alt = SmallIntegerField(null=False, default=0)
 
     class Meta:
+        managed = True
         db_table = 'guild_members'

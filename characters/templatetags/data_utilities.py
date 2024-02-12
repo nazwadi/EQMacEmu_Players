@@ -101,6 +101,127 @@ def player_deity(value):
     return deities[value] if value in deities else "Unknown"
 
 
+@register.filter(name='player_skill')
+def player_skill(value):
+    """
+    Converts a player skill id to a human-readable skill name
+    :param value: player skill id
+    :return: a human-readable player skill name
+    """
+    player_skills = {
+        0: "1H Blunt",
+        1: "1H Slashing",
+        2: "2H Blunt",
+        3: "2H Slashing",
+        4: "Abjuration",
+        5: "Alteration",
+        6: "Apply Poison",
+        7: "Archery",
+        8: "Backstab",
+        9: "Bind Wound",
+        10: "Bash",
+        11: "Block",
+        12: "Brass Instruments",
+        13: "Channeling",
+        14: "Conjuration",
+        15: "Defense",
+        16: "Disarm",
+        17: "Disarm Traps",
+        18: "Divination",
+        19: "Dodge",
+        20: "Double Attack",
+        21: "Dragon Punch / Tail Rake",
+        22: "Dual Wield",
+        23: "Eagle Strike",
+        24: "Evocation",
+        25: "Feign Death",
+        26: "Flying Kick",
+        27: "Forage",
+        28: "Hand to Hand",
+        29: "Hide",
+        30: "Kick",
+        31: "Meditate",
+        32: "Mend",
+        33: "Offense",
+        34: "Parry",
+        35: "Pick Lock",
+        36: "1H Piercing",
+        37: "Riposte",
+        38: "Round Kick",
+        39: "Safe Fall",
+        40: "Sense Heading",
+        41: "Singing",
+        42: "Sneak",
+        43: "Specialize Abjure",
+        44: "Specialize Alteration",
+        45: "Specialize Conjuration",
+        46: "Specialize Divination",
+        47: "Specialize Evocation",
+        48: "Pick Pockets",
+        49: "Stringed Instruments",
+        50: "Swimming",
+        51: "Throwing",
+        52: "Tiger Claw",
+        53: "Tracking",
+        54: "Wind Instruments",
+        55: "Fishing",
+        56: "Make Poison",
+        57: "Tinkering",
+        58: "Research",
+        59: "Alchemy",
+        60: "Baking",
+        61: "Tailoring",
+        62: "Sense Traps",
+        63: "Blacksmithing",
+        64: "Fletching",
+        65: "Brewing",
+        66: "Alcohol Tolerance",
+        67: "Begging",
+        68: "Jewelrymaking",
+        69: "Pottery",
+        70: "Percussion Instruments",
+        71: "Intimidation",
+        72: "Berserking",
+        73: "Taunt",
+        74: "Count",
+    }
+    return player_skills[value] if value in player_skills else "Unknown "+str(value)
+
+
+@register.filter(name='player_language')
+def player_language(value):
+    player_languages = {
+        0: "Common Tongue",
+        1: "Barbarian",
+        2: "Erudian",
+        3: "Elvish",
+        4: "Dark Elvish",
+        5: "Dwarvish",
+        6: "Troll",
+        7: "Ogre",
+        8: "Gnomish",
+        9: "Halfling",
+        10: "Thieves Cant",
+        11: "Old Erudian",
+        12: "Elder Elvish",
+        13: "Froglok",
+        14: "Goblin",
+        15: "Gnoll",
+        16: "Combine Tongue",
+        17: "Elder Teir`dal",
+        18: "Lizardman",
+        19: "Orcish",
+        20: "Faerie",
+        21: "Dragon",
+        22: "Elder Dragon",
+        23: "Dark Speech",
+        24: "Vah Shir",
+        25: "Unknown1",
+        26: "Unknown2",
+    }
+    return player_languages[value] if value in player_languages else "Unknown"+str(value)
+
+
 @register.filter(name='zone_filter')
 def zone_filter(value, arg):
     """
@@ -225,3 +346,23 @@ def zone_filter(value, arg):
         return zones[value][0] if value in zones else "Unknown"
 
     return zones[value][1] if value in zones else "Unknown"
+
+
+@register.filter(name="datetime_delta")
+def datetime_delta(value):
+    return datetime.timedelta(seconds=value)
+
+
+@register.filter(name="datetime_from_timestamp")
+def datetime_delta(value):
+    return datetime.datetime.fromtimestamp(value)
+
+
+@register.filter(name='guild_rank')
+def guild_rank_filter(value):
+    guild_ranks = {
+        0: "Member",
+        1: "Officer",
+        2: "Leader",
+    }
+    return guild_ranks[value] if value in guild_ranks else "Unknown"

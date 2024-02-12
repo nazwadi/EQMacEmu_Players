@@ -1,0 +1,824 @@
+/*************************************************************************** 
+ * 
+ *   This program is free software; you can redistribute it and/or modify 
+ *   it under the terms of the GNU General Public License as published by 
+ *   the Free Software Foundation; either version 2 of the License, or 
+ *   (at your option) any later version. 
+ * 
+ *   Portions of this program are derived from publicly licensed software 
+ *   projects including, but not limited to phpBB, Magelo Clone, 
+ *   EQEmulator, EQEditor, and Allakhazam Clone. 
+ * 
+ *                                  Author: 
+ *                           Maudigan(Airwalking) 
+ * 
+ *                      
+ ***************************************************************************/ 
+
+
+
+
+
+
+/* ----------------------------------------------
+              checkboxes on flags/corpses
+-------------------------------------------------*/
+.CB_CheckBox_0 {
+  background-image:url(../images/window-assets/check_0.png);
+  display: inline-block;
+}
+.CB_CheckBox_1 {  
+  background-image:url(../images/window-assets/check_1.png);
+}
+.CB_CheckBox_0,
+.CB_CheckBox_1 {  
+   height: 16px;
+   min-width: 16px;
+   margin: 1px;
+   padding: 1px;
+   display: inline-block;
+   background-repeat: no-repeat;
+}
+.CB_CheckBox_0 SPAN,
+.CB_CheckBox_1 SPAN,
+.CB_CheckBox_0 A,
+.CB_CheckBox_1 A {  
+   padding-left: 20px;
+}
+
+
+/* ----------------------------------------------
+        tab box on various super fancy
+------------------------------------------------- */
+NAV.CB_Tab_Box UL {
+   display: flex;
+   margin-top: 15px;
+   margin-bottom: 20px;
+   margin-left: 0px;
+   margin-right: 0px;
+   padding: 0px;
+}
+
+NAV.CB_Tab_Box UL LI {
+   cursor: pointer;
+   list-style-type: none;
+   flex-grow: 1;
+   text-align: center;
+   border-top: 1px solid #858996;
+   border-bottom: 2px solid #575139;
+   border-left: 1px solid #40434e;
+   border-right: 1px solid #858996;
+   border-top-right-radius: 15px;
+   border-top-left-radius: 15px;    
+   color: #808080;
+   background-color: rgba(255,255,255,0.0);
+}
+
+NAV.CB_Tab_Box UL LI:hover {  
+   color: #ffffff;
+   background-color: rgba(255,255,255,0.2);
+}
+
+NAV.CB_Tab_Box UL LI.CB_Tab_Open {
+   cursor: default;
+   border-top: 2px solid #949187;
+   border-bottom: none;
+   border-left: 2px solid #8a7d4a;
+   border-right: 2px solid #949187;
+   background-color: rgba(255,255,255,0.0);
+   color: #ffffff;
+}
+
+NAV.CB_Tab_Box UL LI.CB_Tab_Open:hover {
+   cursor: default;
+   background-color: rgba(255,255,255,0.0);
+}
+
+
+
+/* ----------------------------------------------
+            tab box on various pages
+------------------------------------------------- */
+NAV.CB_Tab_Box UL {
+   display: flex;
+   margin-top: 15px;
+   margin-bottom: 20px;
+   margin-left: 0px;
+   margin-right: 0px;
+   padding: 0px;
+}
+
+NAV.CB_Tab_Box UL LI {
+   cursor: pointer;
+   list-style-type: none;
+   flex-grow: 1;
+   text-align: center;
+   border-top: 1px solid #858996;
+   border-bottom: 2px solid #575139;
+   border-left: 1px solid #40434e;
+   border-right: 1px solid #858996;
+   border-top-right-radius: 15px;
+   border-top-left-radius: 15px;    
+   color: #808080;
+   background-color: rgba(255,255,255,0.0);
+}
+
+NAV.CB_Tab_Box UL LI:hover {  
+   color: #ffffff;
+   background-color: rgba(255,255,255,0.2);
+}
+
+NAV.CB_Tab_Box UL LI.CB_Tab_Open {
+   cursor: default;
+   border-top: 2px solid #949187;
+   border-bottom: none;
+   border-left: 2px solid #8a7d4a;
+   border-right: 2px solid #949187;
+   background-color: rgba(255,255,255,0.0);
+   color: #ffffff;
+}
+
+NAV.CB_Tab_Box UL LI.CB_Tab_Open:hover {
+   cursor: default;
+   background-color: rgba(255,255,255,0.0);
+}
+
+
+
+/* ----------------------------------------------
+     tab box on various super fancy windows
+------------------------------------------------- */
+.WindowSuperFancy NAV.CB_Tab_Box UL {
+   display: flex;
+   margin-top: 15px;
+   margin-bottom: 20px;
+   margin-left: -18px;
+   margin-right: -18px;
+   padding-bottom: 7px;
+   padding-top: 0px;
+   padding-right: 8px;
+   padding-left: 8px;
+   height: 28px; 
+   background-image: url(.../images/window-assets/window-assets/cb_tab_l.png),
+                     url(.../images/window-assets/window-assets/cb_tab_r.png);
+   background-repeat: no-repeat,
+                      no-repeat;
+   background-position-x: left,
+                          right;
+   background-position-y: bottom, 
+                          bottom; 
+   background-clip: padding-box, 
+                    padding-box;
+}
+
+.WindowSuperFancy NAV.CB_Tab_Box UL LI {
+   cursor: pointer;
+   list-style-type: none;
+   flex-grow: 1;
+   text-align: center;
+   border-width: 0px;   
+   color: #808080;
+   padding: 0px 20px;
+   height: 28px;
+   white-space: nowrap;
+   line-height: 36px;
+   background-image: url(../images/window-assets/cb_tab_down_l.png),
+                     url(../images/window-assets/cb_tab_down_r.png),
+                     url(../images/window-assets/cb_tab_down_t.png),
+                     url(../images/window-assets/cb_tab_down_b.png);
+   background-repeat: no-repeat,
+                      no-repeat,
+                      repeat-x,
+                      repeat-x;
+   background-position-x: left, 
+                          right, 
+                          left, 
+                          left;
+   background-position-y: top, 
+                          top, 
+                          top, 
+                          bottom; 
+   background-clip: padding-box, 
+                    padding-box, 
+                    content-box, 
+                    content-box;
+   background-color: transparent;
+}
+
+.WindowSuperFancy NAV.CB_Tab_Box UL LI:hover,
+.WindowSuperFancy NAV.CB_Tab_Box UL LI.CB_Tab_Open {
+   cursor: default;
+   border-width: 0px;
+   color: #ffffff;
+   padding: 0px 16px;
+   line-height: 25px;
+   background-image: url(../images/window-assets/cb_tab_up_l.png),
+                     url(../images/window-assets/cb_tab_up_r.png),
+                     url(../images/window-assets/cb_tab_up_t.png);
+   background-repeat: no-repeat,
+                      no-repeat,
+                      repeat-x;
+   background-position-x: left, 
+                          right, 
+                          left;
+   background-position-y: top, 
+                          top, 
+                          top; 
+   background-clip: padding-box, 
+                    padding-box, 
+                    content-box;
+   background-color: transparent;
+}
+
+.WindowSuperFancy NAV.CB_Tab_Box UL LI.CB_Tab_Open:hover {
+   cursor: default;
+}
+
+DIV.ProgressBar {
+   background-image: url(../images/window-assets/progress_bar_bottom.png);
+   height: 6px;
+   width: 100px;
+   border: 0px;
+   text-align: center;
+   padding: 0px;
+   margin: 10px auto;
+   display: block;
+   font-size: 6px;
+   line-height: 10px;
+   text-decoration: none;
+   font-weight: normal;
+   color: #ffffff;
+   opacity: 1.0;
+   position: relative;  
+}
+
+DIV.ProgressBar DIV {
+   height: 6px;
+   width: 100%;
+   border: 0px;
+   text-align: center;
+   padding: 0px;
+   display: block;
+   font-size: 6px;
+   line-height: 6px;
+   margin: 0px;
+   text-decoration: none;
+   font-weight: normal;
+   color: #ffffff;
+   opacity: 1.0;
+   position: relative;  
+   background-color: #ff0000;
+   z-index: 1;
+}
+
+DIV.ProgressBar DIV:before {
+   content: " ";
+   background-image: url(../images/window-assets/progress_bar_top.png);
+   height: 10px;
+   width: 108px;
+   border: 0px;
+   text-align: center;
+   padding: 0px;
+   margin: 0px;
+   display: block;
+   font-size: 6px;
+   line-height: 10px;
+   text-decoration: none;
+   font-weight: normal;
+   color: #ffffff;
+   opacity: 1.0;
+   position: absolute;  
+   top: -2px;
+   left: -4px; 
+   z-index: -1;
+}
+
+A.ProgressBar DIV:before {
+    content: " ";
+    position: absolute;
+    z-index: -1;
+    padding: 19px;
+    left: -12px;
+    right: -12px;
+    top: -5px;
+    bottom: -11px;
+    pointer-events: none;
+   outline-offset: -20px;
+   outline: 2px #40434e solid;
+   background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, repeat;
+   background-position-x: left, right, left, right, left;
+   background-position-y: top, top, bottom, bottom, top;
+   background-clip: padding-box, padding-box, padding-box, padding-box, content-box;
+    background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
+    background-position-x: left, right, left, right;
+    background-position-y: top, top, bottom, bottom;
+    background-clip: padding-box, padding-box, padding-box, padding-box;
+   background-image: url(../images/window-assets/cb_simple_window_corner_tl.png), url(../images/window-assets/cb_simple_window_corner_tr.png), url(../images/window-assets/cb_simple_window_corner_bl.png), url(../images/window-assets/cb_simple_window_corner_br.png), url(../images/window-assets/dark.gif);
+}
+
+
+/* ----------------------------------------------
+              anchor stylesheets
+------------------------------------------------- */
+
+A { 
+   text-decoration: none; 
+   font-weight: none;
+   color: #7b714a; 
+}
+A:link { 
+   text-decoration: none; 
+   font-weight: none;
+   color: #7b714a; 
+}
+A:active { 
+   text-decoration: none; 
+   font-weight: none;
+   color: #7b714a; 
+}
+A:visited { 
+   text-decoration: none; 
+   font-weight: none;
+   color: #6b614a; 
+}
+A:hover { 
+   text-decoration: none; 
+   font-weight: none;
+   color: #7b714a; 
+}
+
+/* ----------------------------------------------
+       button styles on most pages
+------------------------------------------------- */
+.CB_ButtonDisabled,
+.CB_ButtonDisabled:link,
+.CB_ButtonDisabled:visited,
+.CB_ButtonDisabled:active,
+.CB_ButtonDisabled:hover,
+.CB_Button,
+.CB_Button:link,
+.CB_Button:visited,
+.CB_Button:active,
+.CB_Button:hover {
+   height: 23px;
+   width: 48px;
+   border: 0px;
+   text-align: center;
+   padding: 0px;
+   margin: 10px auto;
+   display: block;
+   font-size: 9px;
+   line-height: 21px;
+   text-decoration: none; 
+   font-weight: none;
+   color: #ffffff;
+   opacity: 1.0;
+   cursor: pointer;
+   position: relative;
+}
+
+.CB_Button:hover {
+   background-image: url(../images/window-assets/button_small_hover.png);
+}
+.CB_Button,
+.CB_Button:link,
+.CB_Button:visited {
+   background-image: url(../images/window-assets/button_small_up.png);
+}
+.CB_Button:active,
+.CB_ButtonDisabled,
+.CB_ButtonDisabled:link,
+.CB_ButtonDisabled:visited,
+.CB_ButtonDisabled:active,
+.CB_ButtonDisabled:hover {
+   background-image: url(../images/window-assets/button_small_down.png);
+}
+.CB_ButtonDisabled,
+.CB_ButtonDisabled:link,
+.CB_ButtonDisabled:visited,
+.CB_ButtonDisabled:active,
+.CB_ButtonDisabled:hover {
+   cursor: default;
+}
+
+
+
+.CB_ButtonWrapDisabled,
+.CB_ButtonWrapDisabled:link,
+.CB_ButtonWrapDisabled:visited,
+.CB_ButtonWrapDisabled:active,
+.CB_ButtonWrapDisabled:hover,
+.CB_ButtonWrap,
+.CB_ButtonWrap:link,
+.CB_ButtonWrap:visited,
+.CB_ButtonWrap:active,
+.CB_ButtonWrap:hover {
+   height: 40px;
+   width: 40px;
+   border: 0px ;
+   text-align: center;
+   padding: 0px;
+   margin: 1px;
+   display: inline-block;
+   font-size: 9px;
+   line-height: 40px;
+   text-decoration: none; 
+   font-weight: none;
+   color: #ffffff;
+   opacity: 1.0;
+   cursor: pointer;
+   position: relative;
+}
+
+.CB_ButtonWrap:hover {
+   background-image: url(../images/window-assets/button_big_hover.png);
+}
+.CB_ButtonWrap,
+.CB_ButtonWrap:link,
+.CB_ButtonWrap:visited {
+   background-image: url(../images/window-assets/button_big_up.png);
+}
+.CB_ButtonWrap:active,
+.CB_ButtonWrapDisabled,
+.CB_ButtonWrapDisabled:link,
+.CB_ButtonWrapDisabled:visited,
+.CB_ButtonWrapDisabled:active,
+.CB_ButtonWrapDisabled:hover {
+   background-image: url(../images/window-assets/button_big_down.png);
+}
+.CB_ButtonWrapDisabled,
+.CB_ButtonWrapDisabled:link,
+.CB_ButtonWrapDisabled:visited,
+.CB_ButtonWrapDisabled:active,
+.CB_ButtonWrapDisabled:hover {
+   cursor: default;
+}
+
+
+/* ----------------------------------------------
+          general window stylesheets
+------------------------------------------------- */
+
+.WindowTitleBar {
+   position: absolute;
+   overflow: hidden;
+   top: -11px;
+   left: 6px;
+   right: 6px;
+   height: 21px;
+   font-family: arial;
+   font-size: 9pt;
+   line-height: 21px;
+   text-align: center;   
+   color: #FFFFFF;
+   padding: 0px 13px;
+   background-image: url(../images/window-assets/rightt.gif), url(../images/window-assets/leftt.gif), url(../images/window-assets/midt.gif);
+   background-repeat: no-repeat, no-repeat, repeat-x;
+   background-clip: padding-box, padding-box, content-box;
+   background-position-x: right, left, left;
+   display: block;
+   margin: 0px 0px;    
+}
+.WindowSuperFancy { 
+   position: relative;
+   margin: 50px auto;
+   background-image: url(../images/window-assets/cb_super_fancy_r.png),
+                     url(../images/window-assets/cb_super_fancy_l.png),
+                     url(../images/window-assets/cb_super_fancy_bg.png);
+   background-repeat: repeat-y,
+                      repeat-y,
+                      repeat;
+   background-position-x: right, 
+                          left, 
+                          left;
+   background-position-y: top, 
+                          top, 
+                          top;                         
+   padding-top: 10px;
+   padding-left: 20px;
+   padding-right: 20px;
+   padding-bottom: 10px;
+   z-index: 0;
+   font-family: arial;
+   font-size: 9pt;
+   color: #FFFFFF;
+   box-shadow: 5px 20px 20px rgba(0, 0, 0, 0.6);  
+   opacity: 0.95;
+   transition: opacity 200ms;
+}
+.WindowSuperFancy:hover { 
+   opacity: 1;
+}
+.WindowSuperFancy:before {
+   content: " ";
+   position: absolute;
+   z-index: -1;
+   left: -4px;
+   right: 0px;
+   top: -20px;
+   bottom: -19px;
+   background-image: url(../images/window-assets/cb_super_fancy_tl.png),
+                     url(../images/window-assets/cb_super_fancy_tr.png),
+                     url(../images/window-assets/cb_super_fancy_bl.png),
+                     url(../images/window-assets/cb_super_fancy_br.png),
+                     url(../images/window-assets/cb_super_fancy_t.png),
+                     url(../images/window-assets/cb_super_fancy_b.png);
+   background-repeat: no-repeat,
+                      no-repeat,
+                      no-repeat,
+                      no-repeat,
+                      repeat-x,
+                      repeat-x;
+   background-position-x: left, 
+                          right, 
+                          left, 
+                          right, 
+                          left, 
+                          left;
+   background-position-y: top, 
+                          top, 
+                          bottom, 
+                          bottom, 
+                          top, 
+                          bottom; 
+   background-clip: padding-box, 
+                    padding-box, 
+                    padding-box, 
+                    padding-box, 
+                    content-box, 
+                    content-box;
+   padding-top: 0px;
+   padding-left: 20px;
+   padding-right: 20px;
+   padding-bottom: 0px;
+   pointer-events: none;
+}
+
+.WindowSuperFancy .WindowTitleBar {
+   position: absolute;
+   overflow: hidden;
+   top: -10px;
+   height: 30px;
+   font-family: arial;
+   font-size: 9px;
+   line-height: 16px;
+   text-align: center;
+   color: #FFFFFF;
+   padding: 0px 19px;
+   background-image: url(../images/window-assets/cb_super_fancy_title.png);
+   background-repeat: no-repeat;
+   background-clip: padding-box;
+   background-position-x: left;
+   background-position-y: top;
+   display: block;
+   background-size: 100%;
+   margin: 0 auto;
+   width: 134px;  
+}
+
+.WindowSimple UL LI,
+.WindowSimpleFancy UL LI,
+.WindowComplex UL LI,
+.WindowComplexFancy UL LI,
+.WindowComplexGM UL LI, 
+.WindowSuperFancy UL LI { 
+   list-style-type: none;
+}
+
+.WindowSimple,
+.WindowSimpleFancy,
+.WindowComplex,
+.WindowComplexFancy,
+.WindowComplexGM { 
+   position: relative;
+   margin: 25px auto;
+   background-image: url(../images/window-assets/light.gif);
+   padding-top: 19px;
+   padding-left: 13px;
+   padding-right: 13px;
+   padding-bottom: 17px;
+   z-index: 0;
+   border-width: 2px;
+   border-style: solid;
+   border-color: rgb(180, 173, 134) rgb(142, 134, 107) rgb(61, 58, 48) rgb(177, 170, 142);
+   font-family: arial;
+   font-size: 9pt;
+   color: #FFFFFF;
+   box-shadow: 5px 10px 20px rgba(0, 0, 0, 0.6);
+   opacity: 0.95;
+   transition: opacity 200ms;
+}
+
+.WindowSimple:hover,
+.WindowSimpleFancy:hover,
+.WindowComplex:hover,
+.WindowComplexFancy:hover,
+.WindowComplexGM :hover { 
+   opacity: 1;
+}
+
+.WindowComplex:before,
+.WindowComplexGM:before,
+.WindowComplexFancy:before,
+.WindowSimpleFancy:before,
+.WindowSimple:before {
+    content: " ";
+    position: absolute;
+    z-index: -1;
+    padding: 19px;
+    left: -12px;
+    right: -12px;
+    top: -5px;
+    bottom: -11px;
+    pointer-events: none;
+}
+
+.WindowComplex:before,
+.WindowComplexGM:before,
+.WindowComplexFancy:before {
+   outline-offset: -20px;
+   outline: 2px #40434e solid;
+   background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, repeat;
+   background-position-x: left, right, left, right, left;
+   background-position-y: top, top, bottom, bottom, top;
+   background-clip: padding-box, padding-box, padding-box, padding-box, content-box;
+}
+
+.WindowSimpleFancy:before,
+.WindowSimple:before {
+    background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
+    background-position-x: left, right, left, right;
+    background-position-y: top, top, bottom, bottom;
+    background-clip: padding-box, padding-box, padding-box, padding-box;
+}
+
+.WindowComplex:before,
+.WindowComplexGM:before {
+   background-image: url(../images/window-assets/cb_simple_window_corner_tl.png), url(../images/window-assets/cb_simple_window_corner_tr.png), url(../images/window-assets/cb_simple_window_corner_bl.png), url(../images/window-assets/cb_simple_window_corner_br.png), url(../images/window-assets/dark.gif);
+}
+
+.WindowComplexFancy:before {
+   background-image: url(../images/window-assets/cb_window_corner_tl.png), url(../images/window-assets/cb_window_corner_tr.png), url(../images/window-assets/cb_window_corner_bl.png), url(../images/window-assets/cb_window_corner_br.png), url(../images/window-assets/dark.gif);
+}
+
+.WindowSimple:before {
+    background-image: url(../images/window-assets/cb_simple_window_corner_tl.png), url(../images/window-assets/cb_simple_window_corner_tr.png), url(../images/window-assets/cb_simple_window_corner_bl.png), url(../images/window-assets/cb_simple_window_corner_br.png);
+}
+
+.WindowSimpleFancy:before {
+    background-image: url(../images/window-assets/cb_window_corner_tl.png), url(../images/window-assets/cb_window_corner_tr.png), url(../images/window-assets/cb_window_corner_bl.png), url(../images/window-assets/cb_window_corner_br.png);
+}
+
+
+.WindowNestedTanTitleBar {
+   font-family: arial;
+   font-size: 9pt;
+   text-align: center;   
+   color: #FFFFFF;
+   padding: 0;
+   display: block;
+   margin: 5px 0px;
+}
+
+.WindowNestedTan {
+   padding-top: 5px;
+   padding-left: 8px;
+   padding-right: 8px;
+   padding-bottom: 5px;
+   margin-top: 10px;
+   margin-left: 8px;
+   margin-right: 8px;
+   margin-bottom: 10px;
+   font-family: arial;
+   font-size: 11pt;
+   color: #FFFFFF;
+   text-align: left;
+   vertical-align: top;
+   border: 1px #7b714a dotted;
+   position: relative;
+}
+
+.WindowNestedBlue {
+   background-image: url(../images/window-assets/dark.gif);
+   border: 1px #6b7194 solid;
+   padding-top: 6px;
+   padding-left: 0px;
+   padding-right: 0px;
+   padding-bottom: 6px;
+   font-family: arial;
+   font-size: 11pt;
+   color: #FFFFFF;
+   margin-top: 0px;
+   margin-left: 0px;
+   margin-right: 0px;
+   margin-bottom: 0px;
+}
+.eq-header,
+[class*=eq-window] legend {
+  text-shadow:0 0 3px #000,0 0 0 #000,1px 2px 5px #000,4px 4px 5px #000;
+  font-family:menuetto,serif;
+  color:#fcc721;
+  -webkit-background-clip:text;
+  -moz-background-clip:text
+}
+[class*=eq-window] legend {
+  padding-left:10px
+}
+h1.eq-header {
+  font-size:350%
+}
+h2.eq-header {
+  font-size:300%
+}
+h3.eq-header {
+  font-size:275%
+}
+h4.eq-header {
+  font-size:250%
+}
+h5.eq-header {
+  font-size:225%
+}
+h6.eq-header {
+  font-size:200%
+}
+table.eq-table {
+  color:#fff;
+  width:100%;
+  vertical-align:top;
+  margin:0 0 5px;
+  padding:0;
+  border-collapse:collapse
+}
+table.eq-table tr:nth-child(2n) {
+  background-color:hsla(0,0%,100%,.03)
+}
+.eq-table a:active:not(.btn),
+.eq-table a:link:not(.btn),
+.eq-table a:not(.btn),
+.eq-table a:visited:not(.btn) {
+  color:#8aa3ff;
+  -webkit-transition:all .05s ease;
+  transition:all .05s ease
+}
+.eq-table a:hover {
+  color:#073efd
+}
+.eq-table THEAD TR TH {
+  font-weight:700;
+  color:#8aa3ff;
+  padding:20px 15px 15px;
+  white-space:normal;
+  border-right:.1px solid hsla(0,0%,100%,.11);
+  border-left:.1px solid hsla(0,0%,100%,.11);
+  border-bottom:1px solid hsla(0,0%,100%,.11);
+  border-top:1px solid hsla(0,0%,100%,.11)
+}
+.eq-table TBODY TR TD,
+.eq-table THEAD TR TH {
+  vertical-align:top;
+  margin:0;
+  border-collapse:collapse;
+  text-align:left
+}
+.eq-table TBODY TR TD {
+  color:#fff;
+  padding:2px 15px
+}
+.eq-table TFOOT TR TD {
+  color:#fff;
+  vertical-align:top;
+  margin:0;
+  padding:5px 15px;
+  border-collapse:collapse;
+  text-align:center
+}
+.eq-highlight-rows TBODY TR:hover {
+  background:-webkit-gradient(linear,left top,left bottom,from(#7b714a),color-stop(50%,rgba(123,113,74,0)),to(#7b714a));
+  background:linear-gradient(180deg,#7b714a,rgba(123,113,74,0) 50%,#7b714a)
+}
+input[type=checkbox].eq-checkbox {
+  display:none
+}
+input[type=checkbox].eq-checkbox+label {
+  vertical-align:middle;
+  margin:0 0 5px 5px;
+  display:inline-block;
+  padding:0;
+  background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9kFFxY2GQkX4WYAAANXSURBVDjLTZLdT5sFFIefvoW2tC9d6aB8b6U2BBASdIOJH0FFnTGImXEmw+CFJkYvTHbh3PQP8MLEaOKNXmyRmIgJYeLnkM4R2SAMHRTKR18KFegnXUsptJSW9p0XviSe5ElOTs75Jb9zjgo4AZQCZYDFbDbX9PT0tHV0WOtaWuosyWQuK0n7MYfDIY2MjNzLZrMR4IiYGrADNcDJK1c+vDD4bd+blSSa87v3K2Ib3uJ8PGiympJVH116oeXCW+fPbGz4BEny7wIqIK8GThUVFdmHhq6+32oKn7416ixwLvkzY3c93tGJ5cUp53rAH955EA/Fi7XJnaLLF19p3s8cipPTK8Ejgc7+/s/fK8tIDbNuP7+Muea++/Wvn10rgZlgJLHm39pZn3P7Vyad3k2dVmPSq1TH3n7nrNXvjzLrWg+pOzs73v349cYXZ5d8fPX9+Njtvz0TubwcAaJAHEgCmf109mBy1usrMYol7bYq87Nt9db+4Um3+tq1D77c24qZbt11h4dG7v2hDIaOlgQkgH0gD6idbt921xMPN4miXhuKJAShs6HixGFOZvTOwrTSHAPCQFAR8gObgA/YSh9kozfvLEuawkKefqyxXhDShyoZVXZhJbgOpIBdRSgB7CjEFOLA3m9TksdsMlJXW24UVBVlROP7KVmW84AM5BQyQBY4UCyklTwTCER3CzVaDHq9RsBgpMlea9RpC4sALaABBOXOsuL9Af+FABQ0NdWbozspQpHEgZBe8+UazzSrX36urQEQgWNACVAM6AEDYFTqRsDQ13e+MRTZZc7t2xY++/onD+ksn3xx+ZRGU3gcsADVQK3yobX/w2K320+81lFp3wxv45iYd6mltYC9tdHafvqRh3Ql5VXijRu3twC1YkUETEA5UGk2m09ev/5pjzQvidPzq4mBH8d/UO+l0rZYPKUrF0Vbz1Mtpd29F20ulysbCARkRaAEKO3t7X188JtL3aszi6Zljz93dcAxGIvveVTAOaCuu6v93BuvPvOkpdREa5ONhKEy6XAsBkRRVfB86/HqhcU13ep6kEA4lhkY/nN4xeufAsIqoEPxWm2tKX/0pa72s/W2KotBr0MQBGRZZi+VJp3O4Fz6x31zfOb3eCLpBe4D0X8BslN8o5mvJ5AAAAAASUVORK5CYII=) no-repeat;
+  height:16px;
+  width:16px
+}
+input[type=checkbox].eq-checkbox:checked+label {
+  background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9kFFxY2BoQf7JMAAAO8SURBVDjLNcNdTBsFAAfw//XaK0eB8l0FWiiMMBgjCwzYYBM0bC5NhkHUBxNidJpozF4Qw8Mihvho9mDikw/E7cGFzCUqBGnW2WwgjDYwvksLhdaW0l57ba+0x/V67fmiv+RHADAAKAdQAaCytLRUPzg4ePnKlVpja6uxMpXKik5nirVYLM75+flVURQZAP9nCQAdAKoB1IyPjw2Pftncu25ZVwfDHERRgppSoqxEg35TJ7yJvPj4+A/mmZmV5wD8AI5JAB00TTdOT/90t0Vz3PH0zzWlbdMjWlf2fZYlx8HLDU/I44/KjC+iUZ3G6LG7t1vTUrZg2eY6AZAlAfRPTd3/ojjlaLJtezD7fNv5x7ONZZeH8THRZDwUOY05DoN++5YnIIPIp3K5wk8+vVEXOIlhfdsbIPv6rn4+NtT4tm3zCFO/LtlWt73ubE5WGI36UpPJZDAa60uiUVZmYwnhlcMXoCgVfUmv097oPl/3y+zKHszm+56nP4/Jd96/zgB4AmBmcnLSI0lSTv5PPG6Vhga7twDMUZRy7uH3nwmbs9/JHw9fW1Jcb9IZ+HQGL+yuXQAYGRmpn5iYqCXJMAEsA7BCq02TD74daWkwVBSLoiRZX+55czJw7XJTo4LgM4SURcbtZcIAyNHRd2qBHQBBAAQACnAH4Q5EFe/e6qwDoFjYODrJU+fBUFVepCB05QjHeD4nyzIAxWu0QAFRABkASiCRwN4RC16QUagpUAMgwmEuLUMBSq2mlNAUobm+qoBSkZSYyRKPp61nnRfPqWiagpIkkeIFMBEOwUgcr3a9SQAKvb6qkOV4BBlOUKQ9x1Jz1wWyr/tCDQD5xwfz+we+sLzp9GN114M1hxcHfgaBCJcxv1j3ASAGBt7QR2JJbO0fx0laTX3Y236+vKH9ovbRo3lvmOXO9tz+dHlZcUkiKZBcgocvwKYePvlrJ86lkjqdLv+rj/qbT5i44neL3Ua6DgPnLrUYu9pa69QkXaReXFwLRaKJxKJt55+N3aPQon3Xs7zq8KZ4QdBoNKp79+60xZkI7ToKJH4zr8yQp6mz+jjH01XaovqBrubizjffq3Q4HKcsyyaFtChkJCkDINfT0/P6N19/0JYMhQuC4Xj28eziTIxLuggAQwAaTG91Dg2bensKNDQM1RU4kfL5hQUnq1ZnlR0N2jJ/gKEiLAcukRLnrHbzoTe4AsBPALgKoAaAvrZa136zv/1mXU1lhVKlhJyTIUkSkrwAUcxg7+DY/bd9x8qdptwAQgBC/wJbs+vZ8IkDfQAAAABJRU5ErkJggg==) no-repeat;
+  display:inline-block;
+  padding:0;
+  height:16px;
+  width:16px
+}
+.eq-checkbox-label:hover {
+  -webkit-box-shadow:0 0 1px 3px #fff;
+  box-shadow:0 0 1px 3px #fff;
+  border-radius:7px
+}
+
