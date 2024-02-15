@@ -12,6 +12,8 @@ from characters.models import CharacterSpells
 from characters.models import CharacterSkills
 from characters.models import Guilds
 from characters.models import GuildMembers
+from characters.models import Items
+from characters.models import SpellsNew
 
 
 class GameServerRouter:
@@ -28,7 +30,9 @@ class GameServerRouter:
                           CharacterSkills,
                           CharacterSpells,
                           Guilds,
-                          GuildMembers]
+                          GuildMembers,
+                          SpellsNew,
+                          Items,]
 
     def db_for_read(self, model, **hints):
         """

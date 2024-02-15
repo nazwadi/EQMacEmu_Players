@@ -47,6 +47,11 @@ def player_class(value):
     return classes[value] if value in classes else "Unknown"
 
 
+@register.simple_tag
+def define(value=None):
+    return value
+
+
 @register.filter(name='player_race')
 def player_race(value):
     races = {

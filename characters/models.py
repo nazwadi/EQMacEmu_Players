@@ -2,32 +2,6 @@ from django.db import models
 from django.db.models import SmallIntegerField
 
 
-class Accounts(models.Model):
-    """
-    This model maps to the 'accounts' table in the database.
-    """
-
-    def __str__(self):
-        return self.name
-
-    id = models.AutoField(primary_key=True, null=False)
-    name = models.CharField(max_length=30, unique=True, null=False)
-    character_name = models.CharField(max_length=64, null=False, db_column='charname')
-    shared_plat = models.IntegerField(null=False, default=0, db_column='sharedplat')
-    password = models.CharField(max_length=50, null=False)
-    status = models.IntegerField(null=False, default=0)
-    lsaccount_id = models.IntegerField(null=True, unique=True)
-    forum_id = models.IntegerField(null=False, default=0)
-    gm_speed = models.SmallIntegerField(null=False, default=0)
-    revoked = models.SmallIntegerField(null=False, default=0)
-    karma = models.IntegerField(null=False, default=0)
-    mini_login_ip = models.CharField(max_length=32, null=False, db_column='minilogin_ip')
-    hideme = models.SmallIntegerField(null=False, default=0)
-
-    class Meta:
-        db_table = 'account'
-
-
 class Characters(models.Model):
     """
     This model maps to the character_data table in the database.
@@ -171,7 +145,7 @@ class CharacterKeyring(models.Model):
     This model maps to the character_keyring table in the database
     """
     def __str__(self):
-        return self.item_id
+        return self.item_id.id
 
     id = models.ForeignKey(Characters, primary_key=True, on_delete=models.RESTRICT, db_column='id')
     item_id = models.ForeignKey(Items, on_delete=models.RESTRICT, db_column='item_id')
@@ -203,7 +177,27 @@ class SpellsNew(models.Model):
     """
     id = models.IntegerField(primary_key=True, null=False, default=0)
     name = models.CharField(max_length=64, null=True, default=None)
+    icon = models.IntegerField(null=False, default=0)
+    memicon = models.IntegerField(null=False, default=0)
+    skill = models.IntegerField(null=False, default=98)
+    mana = models.IntegerField(null=False, default=0)
     custom_icon = models.IntegerField(null=True, default=0)
+    classes1 = models.IntegerField(null=True, default=255)
+    classes2 = models.IntegerField(null=True, default=255)
+    classes3 = models.IntegerField(null=True, default=255)
+    classes4 = models.IntegerField(null=True, default=255)
+    classes5 = models.IntegerField(null=True, default=255)
+    classes6 = models.IntegerField(null=True, default=255)
+    classes7 = models.IntegerField(null=True, default=255)
+    classes8 = models.IntegerField(null=True, default=255)
+    classes9 = models.IntegerField(null=True, default=255)
+    classes10 = models.IntegerField(null=True, default=255)
+    classes11 = models.IntegerField(null=True, default=255)
+    classes12 = models.IntegerField(null=True, default=255)
+    classes13 = models.IntegerField(null=True, default=255)
+    classes14 = models.IntegerField(null=True, default=255)
+    classes15 = models.IntegerField(null=True, default=255)
+    not_player_spell = models.IntegerField(null=True, default=0)
 
     class Meta:
         managed = True

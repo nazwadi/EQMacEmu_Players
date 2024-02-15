@@ -26,7 +26,7 @@
             {% if character.class_name not in non_casters %}
                 <li class="nav-item" role="presentation">
                     {# Disable feature until complete #}
-                    {% if 1 %}
+                    {% if 0 %}
                         <a class="nav-link disabled" href="#" aria-disabled="true">Spells</a>
                     {% else %}
                         <button class="nav-link" id="spell-tab" data-bs-toggle="tab" data-bs-target="#spell-tab-pane"
@@ -481,16 +481,7 @@
                  tabindex="3">
                 {% if character.class_name != 0 or 1 or 7 or 9 %}
                     <div class="row mt-4">
-                        <div class="col">
-                            {% include "characters/spells_wizard.html" %}
-                            {% for scribed_spell in character_spells %}
-                                <p>
-                                    <img src="/images/{{ scribed_spell.spell_id.custom_icon }}.gif"
-                                         alt="{{ scribed_spell.spell_id.custom_icon }}.gif">
-                                    {{ scribed_spell.spell_id.name }}
-                                </p>
-                            {% endfor %}
-                        </div>
+                            {% include "characters/spells.html" %}
                     </div>
                 {% endif %}
             </div>

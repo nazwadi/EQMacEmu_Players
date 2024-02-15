@@ -1,0 +1,112 @@
+{% load static %}
+{% load data_utilities %}
+{% block content %}
+    <div class="WindowSuperFancy">
+        <div class="row">
+            <div class="spell-table" style="height: 78vh; overflow: hidden scroll;">
+                <span style="font-weight: bold; margin-left: 20px;">Legend:</span>&nbsp;
+                Spell names in <span style="color: #00FF00;">green</span> are scribed in the character's spell book.
+                <table id="spell-table" class="eq-table bordered eq-highlight-rows">
+                    <thead class="eq-table-floating-header">
+                    <tr>
+                        <th scope="col" style="width: auto; min-width: 270px;">Spell Name</th>
+                        <th scope="col" style="width: auto;">Class</th>
+                        <th scope="col" style="width: 400px;">Effect(s)</th>
+                        <th scope="col">Mana</th>
+                        <th scope="col">Skill</th>
+                        <th scope="col">Expansion</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% define 1 as current_level %}
+                    <tr>
+                        <th scope="col" colspan="7" style="text-align:center; background-color: #000; color: #FFF;">
+                            Level {{ current_level }}
+                        </th>
+                    </tr>
+                    {% for spell in spell_list %}
+                        {% if spell.level > current_level %}
+                            {% define spell.level as current_level %}
+                            <tr>
+                                <th scope="col" colspan="7"
+                                    style="text-align:center; background-color: #000; color: #FFF;">
+                                    Level {{ current_level }}
+                                </th>
+                            </tr>
+                        {% endif %}
+                        <tr>
+                            <td>
+                                <span class="d-inline-block">
+                                    <img src="/static/images/icons/{{ spell.custom_icon }}.gif"
+                                         alt="{{ spell.custom_icon }}.gif">
+                                </span>
+                                {% if spell.id in character_spells %}
+                                    <span class="ml-3"
+                                          style="color: #00FF00; position: relative; top: -10px;">
+                                        {{ spell.name }}&nbsp;
+                                    </span>
+                                    <span class="ml-3" style="color:#FFF; position: relative; top: -10px;">
+                                        [<a href="https://lucy.alkabor.com/spell_{{ spell.id }}.html"
+                                            target="_blank">Lucy</a>]
+                                    </span>
+                                {% else %}
+                                    <span class="ml-3" style="color: #FFF; position: relative; top: -10px;">
+                                        {{ spell.name }}&nbsp;
+                                        <span style="color:#FFF">
+                                              [<a href="https://lucy.alkabor.com/spell_{{ spell.id }}.html"
+                                                  target="_blank">Lucy</a>]
+                                        </span>
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if spell.classes1 != 255 %}
+                                    <span>WAR&nbsp;({{ spell.classes1 }})</span>{% endif %}
+                                {% if spell.classes2 != 255 %}
+                                    <span>CLR&nbsp;({{ spell.classes2 }})</span>{% endif %}
+                                {% if spell.classes3 != 255 %}
+                                    <span>PAL&nbsp;({{ spell.classes3 }})</span>{% endif %}
+                                {% if spell.classes4 != 255 %}
+                                    <span>RNG&nbsp;({{ spell.classes4 }})</span>{% endif %}
+                                {% if spell.classes5 != 255 %}
+                                    <span>SHD&nbsp;({{ spell.classes5 }})</span>{% endif %}
+                                {% if spell.classes6 != 255 %}
+                                    <span>DRU&nbsp;({{ spell.classes6 }})</span>{% endif %}
+                                {% if spell.classes7 != 255 %}
+                                    <span>MNK&nbsp;({{ spell.classes7 }})</span>{% endif %}
+                                {% if spell.classes8 != 255 %}
+                                    <span>BRD&nbsp;({{ spell.classes8 }})</span>{% endif %}
+                                {% if spell.classes9 != 255 %}
+                                    <span>ROG&nbsp;({{ spell.classes9 }})</span>{% endif %}
+                                {% if spell.classes10 != 255 %}
+                                    <span>SHM&nbsp;({{ spell.classes10 }})</span>{% endif %}
+                                {% if spell.classes11 != 255 %}
+                                    <span>NEC&nbsp;({{ spell.classes11 }})</span>{% endif %}
+                                {% if spell.classes12 != 255 %}
+                                    <span>WIZ&nbsp;({{ spell.classes12 }})</span>{% endif %}
+                                {% if spell.classes13 != 255 %}
+                                    <span>MAG&nbsp;({{ spell.classes13 }})</span>{% endif %}
+                                {% if spell.classes14 != 255 %}
+                                    <span>ENC&nbsp;({{ spell.classes14 }})</span>{% endif %}
+                                {% if spell.classes15 != 255 %}
+                                    <span>BST&nbsp;({{ spell.classes15 }})</span>{% endif %}
+                            </td>
+                            <td>-</td>
+                            <td>{{ spell.mana }}</td>
+                            <td>{{ spell.skill|player_skill }}</td>
+                            <td>-</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {#    {% for scribed_spell in character_spells %}#}
+    {#        <p>#}
+    {#            <img src="/static/images/icons/{{ scribed_spell.spell_id.custom_icon }}.gif"#}
+    {#                 alt="{{ scribed_spell.spell_id.custom_icon }}.gif">#}
+    {#            {{ scribed_spell.spell_id.name }}#}
+    {#        </p>#}
+    {#    {% endfor %}#}
+{% endblock %}
