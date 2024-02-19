@@ -1,11 +1,12 @@
 import datetime
+import json
 
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import F
 from django.http import Http404
 from django.shortcuts import redirect
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.templatetags.static import static
 
 from .models import Characters
 from .models import CharacterCurrency
@@ -15,7 +16,6 @@ from .models import CharacterSpells
 from .models import CharacterSkills
 from .models import Guilds
 from .models import GuildMembers
-from .models import SpellsNew
 from accounts.models import Account
 
 from characters.utils import valid_game_account_owner
@@ -80,100 +80,9 @@ def view_character(request, character_name):
                 character_spells.append(spell.spell_id.id)
             except ObjectDoesNotExist:
                 continue
-
-        spell_list = None
-        max_level = 60
-        match character.class_name:
-            case 1:  # Warrior - might remove, but disciplines are also spells
-                spell_list = (SpellsNew.objects.filter(not_player_spell=0,
-                                                       classes1__gte=1,
-                                                       classes1__lte=max_level)
-                              .annotate(level=F('classes1'))
-                              .order_by('classes1', 'name'))
-            case 2:  # Cleric
-                spell_list = (SpellsNew.objects.filter(not_player_spell=0,
-                                                       classes2__gte=1,
-                                                       classes2__lte=max_level)
-                              .annotate(level=F('classes2'))
-                              .order_by('classes2', 'name'))
-            case 3:  # Paladin
-                spell_list = (SpellsNew.objects.filter(not_player_spell=0,
-                                                       classes3__gte=1,
-                                                       classes3__lte=max_level)
-                              .annotate(level=F('classes3'))
-                              .order_by('classes3', 'name'))
-            case 4:  # Ranger
-                spell_list = (SpellsNew.objects.filter(not_player_spell=0,
-                                                       classes4__gte=1,
-                                                       classes4__lte=max_level)
-                              .annotate(level=F('classes4'))
-                              .order_by('classes4', 'name'))
-            case 5:  # Shadowknight
-                spell_list = (SpellsNew.objects.filter(not_player_spell=0,
-                                                       classes5__gte=1,
-                                                       classes5__lte=max_level)
-                              .annotate(level=F('classes5'))
-                              .order_by('classes5', 'name'))
-            case 6:  # Druid
-                spell_list = (SpellsNew.objects.filter(not_player_spell=0,
-                                                       classes6__gte=1,
-                                                       classes6__lte=max_level)
-                              .annotate(level=F('classes6'))
-                              .order_by('classes6', 'name'))
-            case 7:  # Monk
-                spell_list = (SpellsNew.objects.filter(not_player_spell=0,
-                                                       classes7__gte=1,
-                                                       classes7__lte=max_level)
-                              .annotate(level=F('classes7'))
-                              .order_by('classes7', 'name'))
-            case 8:  # Bard
-                spell_list = (SpellsNew.objects.filter(not_player_spell=0,
-                                                       classes8__gte=1,
-                                                       classes8__lte=max_level)
-                              .annotate(level=F('classes8'))
-                              .order_by('classes8', 'name'))
-            case 9:  # Rogue
-                spell_list = (SpellsNew.objects.filter(not_player_spell=0,
-                                                       classes9__gte=1,
-                                                       classes9__lte=max_level)
-                              .annotate(level=F('classes9'))
-                              .order_by('classes9', 'name'))
-            case 10: # Shaman
-                spell_list = (SpellsNew.objects.filter(not_player_spell=0,
-                                                       classes10__gte=1,
-                                                       classes10__lte=max_level)
-                              .annotate(level=F('classes10'))
-                              .order_by('classes10', 'name'))
-            case 11: # Necromancer
-                spell_list = (SpellsNew.objects.filter(not_player_spell=0,
-                                                       classes11__gte=1,
-                                                       classes11__lte=max_level)
-                              .annotate(level=F('classes11'))
-                              .order_by('classes11', 'name'))
-            case 12:  # Wizard
-                spell_list = (SpellsNew.objects.filter(not_player_spell=0,
-                                                       classes12__gte=1,
-                                                       classes12__lte=max_level)
-                              .annotate(level=F('classes12'))
-                              .order_by('classes12', 'name'))
-            case 13:  # Magician
-                spell_list = (SpellsNew.objects.filter(not_player_spell=0,
-                                                       classes13__gte=1,
-                                                       classes13__lte=max_level)
-                              .annotate(level=F('classes13'))
-                              .order_by('classes13', 'name'))
-            case 14:  # Enchanter
-                spell_list = (SpellsNew.objects.filter(not_player_spell=0,
-                                                       classes14__gte=1,
-                                                       classes14__lte=max_level)
-                              .annotate(level=F('classes14'))
-                              .order_by('classes14', 'name'))
-            case 15:  # Beastlord
-                spell_list = (SpellsNew.objects.filter(not_player_spell=0,
-                                                       classes15__gte=1,
-                                                       classes15__lte=max_level)
-                              .annotate(level=F('classes15'))
-                              .order_by('classes15', 'name'))
+        filename = f'static/spell_data/{character.class_name}.json'
+        with open(filename, 'r') as json_file:
+            spell_list = json.load(json_file)
         # 0 - Unknown, 1 - Warrior, 7 - Monk, 9 - Rogue
         non_casters = [0, 1, 7, 9]
         guild_members = GuildMembers.objects.filter(char_id=character.id).first()

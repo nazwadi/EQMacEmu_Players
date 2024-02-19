@@ -6,12 +6,12 @@ register = template.Library()
 
 @register.filter(name='yes_no')
 def yes_no(value):
-    return "yes" if value is 1 else "no"
+    return "yes" if value == 1 else "no"
 
 
 @register.filter(name='gender')
 def gender_filter(value):
-    return "Male" if value is 0 else "Female"
+    return "Male" if value == 0 else "Female"
 
 
 @register.filter(name='from_timestamp')
@@ -45,6 +45,45 @@ def player_class(value):
         15: "Beastlord",
     }
     return classes[value] if value in classes else "Unknown"
+
+
+@register.filter(name='spell_target_type')
+def spell_target_type(value):
+    target_type = {
+        0: "Rag'Zhezum Special",
+        1: "Line of Sight",
+        3: "Group V1",
+        4: "PBAE",
+        5: "Single",
+        6: "Self",
+        8: "Targeted Area of Effect",
+        9: "Animal",
+        10: "Undead",
+        11: "Summoned",
+        13: "Lifetap",
+        14: "Pet",
+        15: "Corpse",
+        16: "Plant",
+        17: "Uber Giants",
+        18: "Uber Dragons",
+        20: "Targeted Area of Effect Life Tap",
+        24: "Area of Effect Undead",
+        25: "Area of Effect Summoned",
+        32: "Area of Effect Caster",
+        33: "NPC Hate List",
+        34: "Dungeon Object",
+        35: "Muramite",
+        36: "Area - PC Only",
+        37: "Area - NPC Only",
+        38: "Summoned Pet",
+        39: "Group No Pets",
+        40: "Area of EffectPC V2",
+        41: "Group v2",
+        42: "Self (Directional)",
+        43: "Group With Pets",
+        44: "Beam",
+    }
+    return target_type[value] if value in target_type else "Unknown"
 
 
 @register.simple_tag
@@ -371,3 +410,16 @@ def guild_rank_filter(value):
         2: "Leader",
     }
     return guild_ranks[value] if value in guild_ranks else "Unknown"
+
+@register.filter(name="expansion_icon")
+def expansion_icon(value):
+    expansion_icons = {
+        0: "Original.gif",
+        1: "Kunarkicon.gif",
+        2: "Veliousicon.gif",
+        3: "Luclinicon.gif",
+        4: "Powericon.gif",
+        5: "Ykeshaicon.gif",
+        6: "Ldonicon.gif"
+    }
+    return expansion_icons[value] if value in expansion_icons else None
