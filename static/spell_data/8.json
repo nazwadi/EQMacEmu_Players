@@ -1,0 +1,3307 @@
+{
+    "1": [
+        {
+            "name": "Chant of Battle",
+            "spell_id": 700,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=700",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_700.html",
+            "level": 1,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 1,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Percussion Instruments",
+            "target_type": "Group v2",
+            "scrolls": [
+                [
+                    9992,
+                    "Song: Chant of Battle*"
+                ],
+                [
+                    15700,
+                    "Song: Chant of Battle"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 143
+        }
+    ],
+    "2": [
+        {
+            "name": "Chords of Dissonance",
+            "spell_id": 703,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=703",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_703.html",
+            "level": 2,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 2,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Stringed Instruments",
+            "target_type": "Point Blank Area of Effect",
+            "scrolls": [
+                [
+                    15703,
+                    "Song: Chords of Dissonance"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 143
+        }
+    ],
+    "3": [
+        {
+            "name": "Jaxan`s Jig o` Vigor",
+            "spell_id": 722,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=722",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_722.html",
+            "level": 3,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 3,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Percussion Instruments",
+            "target_type": "Group v2",
+            "scrolls": [
+                [
+                    15722,
+                    "Song: Jaxan`s Jig o` Vigor"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 9
+        }
+    ],
+    "4": [
+        {
+            "name": "Lyssa`s Locating Lyric",
+            "spell_id": 720,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=720",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_720.html",
+            "level": 4,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 4,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Singing",
+            "target_type": "Self",
+            "scrolls": [
+                [
+                    15720,
+                    "Song: Lyssa`s Locating Lyric"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 97
+        }
+    ],
+    "5": [
+        {
+            "name": "Selo`s Accelerando",
+            "spell_id": 717,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=717",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_717.html",
+            "level": 5,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 5,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Percussion Instruments",
+            "target_type": "Group v2",
+            "scrolls": [
+                [
+                    15717,
+                    "Song: Selo`s Accelerando"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 4
+        }
+    ],
+    "6": [
+        {
+            "name": "Hymn of Restoration",
+            "spell_id": 7,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=7",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_7.html",
+            "level": 6,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 6,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Stringed Instruments",
+            "target_type": "Group v2",
+            "scrolls": [
+                [
+                    15007,
+                    "Song: Hymn of Restoration"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 99
+        }
+    ],
+    "7": [
+        {
+            "name": "Jonthan's Whistling Warsong",
+            "spell_id": 734,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=734",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_734.html",
+            "level": 7,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 7,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Singing",
+            "target_type": "Self",
+            "scrolls": [
+                [
+                    15734,
+                    "Song: Jonthan's Whistling Warsong"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 16
+        }
+    ],
+    "8": [
+        {
+            "name": "Kelin`s Lugubrious Lament",
+            "spell_id": 728,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=728",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_728.html",
+            "level": 8,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 8,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Stringed Instruments",
+            "target_type": "Single",
+            "scrolls": [
+                [
+                    15728,
+                    "Song: Kelin`s Lugubrious Lament"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 40
+        }
+    ],
+    "9": [
+        {
+            "name": "Elemental Rhythms",
+            "spell_id": 710,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=710",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_710.html",
+            "level": 9,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 9,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Percussion Instruments",
+            "target_type": "Group v2",
+            "scrolls": [
+                [
+                    15710,
+                    "Song: Elemental Rhythms"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 148
+        },
+        {
+            "name": "Magical Monologue",
+            "spell_id": 2601,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=2601",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_2601.html",
+            "level": 9,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 9,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Singing",
+            "target_type": "Self",
+            "scrolls": [
+                [
+                    7701,
+                    "Song: Magical Monologue"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 104
+        }
+    ],
+    "10": [
+        {
+            "name": "Anthem de Arms",
+            "spell_id": 701,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=701",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_701.html",
+            "level": 10,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 10,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Singing",
+            "target_type": "Group v2",
+            "scrolls": [
+                [
+                    15701,
+                    "Song: Anthem de Arms"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 16
+        }
+    ],
+    "11": [
+        {
+            "name": "Cinda`s Charismatic Carillon",
+            "spell_id": 708,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=708",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_708.html",
+            "level": 11,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 11,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Wind Instruments",
+            "target_type": "Single",
+            "scrolls": [
+                [
+                    15708,
+                    "Song: Cinda`s Charismatic Carillon"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 30
+        }
+    ],
+    "12": [
+        {
+            "name": "Brusco`s Boastful Bellow",
+            "spell_id": 704,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=704",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_704.html",
+            "level": 12,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 12,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Singing",
+            "target_type": "Single",
+            "scrolls": [
+                [
+                    15704,
+                    "Song: Brusco`s Boastful Bellow"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 153
+        }
+    ],
+    "13": [
+        {
+            "name": "Purifying Rhythms",
+            "spell_id": 711,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=711",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_711.html",
+            "level": 13,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 13,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Percussion Instruments",
+            "target_type": "Group v2",
+            "scrolls": [
+                [
+                    15711,
+                    "Song: Purifying Rhythms"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 149
+        }
+    ],
+    "14": [
+        {
+            "name": "Lyssa`s Cataloging Libretto",
+            "spell_id": 737,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=737",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_737.html",
+            "level": 14,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 14,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Singing",
+            "target_type": "Single",
+            "scrolls": [
+                [
+                    15737,
+                    "Song: Lyssa`s Cataloging Libretto"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 84
+        }
+    ],
+    "15": [
+        {
+            "name": "Kelin`s Lucid Lullaby",
+            "spell_id": 724,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=724",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_724.html",
+            "level": 15,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 15,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Stringed Instruments",
+            "target_type": "Single",
+            "scrolls": [
+                [
+                    15724,
+                    "Song: Kelin`s Lucid Lullaby"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 35
+        },
+        {
+            "name": "Song of Sustenance",
+            "spell_id": 2602,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=2602",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_2602.html",
+            "level": 15,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 15,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Stringed Instruments",
+            "target_type": "Group v2",
+            "scrolls": [
+                [
+                    7702,
+                    "Song: Song of Sustenance"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 9
+        }
+    ],
+    "16": [
+        {
+            "name": "Tarew`s Aquatic Ayre",
+            "spell_id": 729,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=729",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_729.html",
+            "level": 16,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 16,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Wind Instruments",
+            "target_type": "Group v2",
+            "scrolls": [
+                [
+                    15729,
+                    "Song: Tarew`s Aquatic Ayre"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 20
+        }
+    ],
+    "17": [
+        {
+            "name": "Guardian Rhythms",
+            "spell_id": 709,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=709",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_709.html",
+            "level": 17,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 17,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Percussion Instruments",
+            "target_type": "Group v2",
+            "scrolls": [
+                [
+                    15709,
+                    "Song: Guardian Rhythms"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 69
+        }
+    ],
+    "18": [
+        {
+            "name": "Denon`s Disruptive Discord",
+            "spell_id": 730,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=730",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_730.html",
+            "level": 18,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 18,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Brass Instruments",
+            "target_type": "Point Blank Area of Effect",
+            "scrolls": [
+                [
+                    15730,
+                    "Song: Denon`s Disruptive Discord"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 161
+        }
+    ],
+    "19": [
+        {
+            "name": "Shauri`s Sonorous Clouding",
+            "spell_id": 719,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=719",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_719.html",
+            "level": 19,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 19,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Wind Instruments",
+            "target_type": "Group v2",
+            "scrolls": [
+                [
+                    15719,
+                    "Song: Shauri`s Sonorous Clouding"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 18
+        }
+    ],
+    "20": [
+        {
+            "name": "Cassindra`s Chant of Clarity",
+            "spell_id": 1287,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=1287",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_1287.html",
+            "level": 20,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 20,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Singing",
+            "target_type": "Group v2",
+            "scrolls": [
+                [
+                    19504,
+                    "Song: Cassindra's Chant of Clarity"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 24
+        },
+        {
+            "name": "Largo`s Melodic Binding",
+            "spell_id": 705,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=705",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_705.html",
+            "level": 20,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 20,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Singing",
+            "target_type": "Point Blank Area of Effect",
+            "scrolls": [
+                [
+                    15705,
+                    "Song: Largo`s Melodic Binding"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 17
+        }
+    ],
+    "21": [
+        {
+            "name": "Melanie`s Mellifluous Motion",
+            "spell_id": 739,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=739",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_739.html",
+            "level": 21,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 21,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Wind Instruments",
+            "target_type": "Group v2",
+            "scrolls": [
+                [
+                    15739,
+                    "Song: Melanie`s Mellifluous Motion"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 48
+        }
+    ],
+    "22": [
+        {
+            "name": "Alenia`s Disenchanting Melody",
+            "spell_id": 727,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=727",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_727.html",
+            "level": 22,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 22,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Stringed Instruments",
+            "target_type": "Group v2",
+            "scrolls": [
+                [
+                    15727,
+                    "Song:Alenia`s Disenchanting Melody"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 32
+        }
+    ],
+    "23": [
+        {
+            "name": "Selo`s Consonant Chain",
+            "spell_id": 738,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=738",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_738.html",
+            "level": 23,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 23,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Singing",
+            "target_type": "Single",
+            "scrolls": [
+                [
+                    15738,
+                    "Song: Selo`s Consonant Chain"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 5
+        }
+    ],
+    "24": [
+        {
+            "name": "Lyssa`s Veracious Concord",
+            "spell_id": 735,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=735",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_735.html",
+            "level": 24,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 24,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Wind Instruments",
+            "target_type": "Group v2",
+            "scrolls": [
+                [
+                    15735,
+                    "Song: Lyssa`s Veracious Concord"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 93
+        }
+    ],
+    "25": [
+        {
+            "name": "Psalm of Warmth",
+            "spell_id": 712,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=712",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_712.html",
+            "level": 25,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 25,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Singing",
+            "target_type": "Group v2",
+            "scrolls": [
+                [
+                    15712,
+                    "Song: Psalm of Warmth"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 157
+        }
+    ],
+    "26": [
+        {
+            "name": "Angstlich`s Appalling Screech",
+            "spell_id": 706,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=706",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_706.html",
+            "level": 26,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 26,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Brass Instruments",
+            "target_type": "Point Blank Area of Effect",
+            "scrolls": [
+                [
+                    15706,
+                    "Song: Angstlichs Appalling Screech"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 154
+        }
+    ],
+    "27": [
+        {
+            "name": "Solon's Song of the Sirens",
+            "spell_id": 725,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=725",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_725.html",
+            "level": 27,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 27,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Wind Instruments",
+            "target_type": "Single",
+            "scrolls": [
+                [
+                    15725,
+                    "Song: Solon`s Song of the Sirens"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 27
+        }
+    ],
+    "28": [
+        {
+            "name": "Crission`s Pixie Strike",
+            "spell_id": 741,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=741",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_741.html",
+            "level": 28,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 28,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Wind Instruments",
+            "target_type": "Single",
+            "scrolls": [
+                [
+                    15741,
+                    "Song: Crission`s Pixie Strike"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 35
+        }
+    ],
+    "29": [
+        {
+            "name": "Psalm of Vitality",
+            "spell_id": 715,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=715",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_715.html",
+            "level": 29,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 29,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Singing",
+            "target_type": "Group v2",
+            "scrolls": [
+                [
+                    15715,
+                    "Song: Psalm of Vitality"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 65
+        }
+    ],
+    "30": [
+        {
+            "name": "Amplification",
+            "spell_id": 2603,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=2603",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_2603.html",
+            "level": 30,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 30,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Singing",
+            "target_type": "Self",
+            "scrolls": [
+                [
+                    7703,
+                    "Song: Amplification"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 95
+        },
+        {
+            "name": "Fufil`s Curtailing Chant",
+            "spell_id": 707,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=707",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_707.html",
+            "level": 30,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 30,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Percussion Instruments",
+            "target_type": "Single",
+            "scrolls": [
+                [
+                    15707,
+                    "Song: Fufil`s Curtailing Chant"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 161
+        }
+    ],
+    "31": [
+        {
+            "name": "Agilmente`s Aria of Eagles",
+            "spell_id": 718,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=718",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_718.html",
+            "level": 31,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 31,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Wind Instruments",
+            "target_type": "Group v2",
+            "scrolls": [
+                [
+                    15718,
+                    "Song: Agilmente`s Aria of Eagles"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 80
+        }
+    ],
+    "32": [
+        {
+            "name": "Cassindra`s Chorus of Clarity",
+            "spell_id": 723,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=723",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_723.html",
+            "level": 32,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 32,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Singing",
+            "target_type": "Group v2",
+            "scrolls": [
+                [
+                    15723,
+                    "Song:Cassindra`s Chorus of Clarity"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 24
+        }
+    ],
+    "33": [
+        {
+            "name": "Psalm of Cooling",
+            "spell_id": 713,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=713",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_713.html",
+            "level": 33,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 33,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Singing",
+            "target_type": "Group v2",
+            "scrolls": [
+                [
+                    15713,
+                    "Song: Psalm of Cooling"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 156
+        }
+    ],
+    "34": [
+        {
+            "name": "Cantata of Soothing",
+            "spell_id": 1448,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=1448",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_1448.html",
+            "level": 34,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 34,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Stringed Instruments",
+            "target_type": "Group v2",
+            "scrolls": [
+                [
+                    30448,
+                    "Song: Cantata of Soothing"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 99
+        },
+        {
+            "name": "Lyssa`s Solidarity of Vision",
+            "spell_id": 721,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=721",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_721.html",
+            "level": 34,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 34,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Wind Instruments",
+            "target_type": "Single",
+            "scrolls": [
+                [
+                    15721,
+                    "Song: Lyssa`s Solidarity of Vision"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 93
+        }
+    ],
+    "35": [
+        {
+            "name": "Denon`s Dissension",
+            "spell_id": 736,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=736",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_736.html",
+            "level": 35,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 35,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Brass Instruments",
+            "target_type": "Point Blank Area of Effect",
+            "scrolls": [
+                [
+                    15736,
+                    "Song: Denon`s Dissension"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 24
+        }
+    ],
+    "36": [
+        {
+            "name": "Vilia`s Verses of Celerity",
+            "spell_id": 740,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=740",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_740.html",
+            "level": 36,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 36,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Singing",
+            "target_type": "Group v2",
+            "scrolls": [
+                [
+                    15740,
+                    "Song: Vilia`s Verses of Celerity"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 16
+        }
+    ],
+    "37": [
+        {
+            "name": "Psalm of Purity",
+            "spell_id": 716,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=716",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_716.html",
+            "level": 37,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 37,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Singing",
+            "target_type": "Group v2",
+            "scrolls": [
+                [
+                    15716,
+                    "Song: Psalm of Purity"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 61
+        }
+    ],
+    "38": [
+        {
+            "name": "Tuyen`s Chant of Flame",
+            "spell_id": 743,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=743",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_743.html",
+            "level": 38,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 38,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Percussion Instruments",
+            "target_type": "Single",
+            "scrolls": [
+                [
+                    15743,
+                    "Song: Tuyen`s Chant of Flame"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 51
+        }
+    ],
+    "39": [
+        {
+            "name": "Katta's Song of Sword Dancing",
+            "spell_id": 2604,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=2604",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_2604.html",
+            "level": 39,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 39,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Percussion Instruments",
+            "target_type": "Group v2",
+            "scrolls": [
+                [
+                    7704,
+                    "Song: Katta's Sword Dancing"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 104
+        },
+        {
+            "name": "Solon's Bewitching Bravura",
+            "spell_id": 750,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=750",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_750.html",
+            "level": 39,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 39,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 60,
+            "skill": "Wind Instruments",
+            "target_type": "Single",
+            "scrolls": [
+                [
+                    15750,
+                    "Song: Solon`s Bravura"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 27
+        }
+    ],
+    "40": [
+        {
+            "name": "Sionachie`s Dreams",
+            "spell_id": 868,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=868",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_868.html",
+            "level": 40,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 40,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Wind Instruments",
+            "target_type": "Single",
+            "scrolls": [
+                [
+                    24547,
+                    "Song: Sionachie`s Dreams"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 35
+        },
+        {
+            "name": "Syvelian`s Anti-Magic Aria",
+            "spell_id": 726,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=726",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_726.html",
+            "level": 40,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 40,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Singing",
+            "target_type": "Single",
+            "scrolls": [
+                [
+                    15726,
+                    "Song: Syvelian`s Anti-Magic Aria"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 32
+        }
+    ],
+    "41": [
+        {
+            "name": "Psalm of Mystic Shielding",
+            "spell_id": 714,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=714",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_714.html",
+            "level": 41,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 41,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Singing",
+            "target_type": "Group v2",
+            "scrolls": [
+                [
+                    15714,
+                    "Song: Psalm of Mystic Shielding"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 82
+        }
+    ],
+    "42": [
+        {
+            "name": "McVaxius` Berserker Crescendo",
+            "spell_id": 702,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=702",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_702.html",
+            "level": 42,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 42,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Brass Instruments",
+            "target_type": "Group v2",
+            "scrolls": [
+                [
+                    15702,
+                    "Song: McVaxius Berserker Crescendo"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 16
+        },
+        {
+            "name": "Tuyen`s Chant of Disease",
+            "spell_id": 3567,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=3567",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_3567.html",
+            "level": 42,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 42,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Percussion Instruments",
+            "target_type": "Single",
+            "scrolls": [
+                [
+                    26953,
+                    "Song: Tuyen`s Chant of Disease"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 41
+        }
+    ],
+    "43": [
+        {
+            "name": "Denon`s Desperate Dirge",
+            "spell_id": 742,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=742",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_742.html",
+            "level": 43,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 43,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 800,
+            "skill": "Singing",
+            "target_type": "Targeted Area of Effect",
+            "scrolls": [
+                [
+                    15742,
+                    "Song: Denon`s Desperate Dirge"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 161
+        }
+    ],
+    "44": [
+        {
+            "name": "Cassindra`s Elegy",
+            "spell_id": 745,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=745",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_745.html",
+            "level": 44,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 44,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Singing",
+            "target_type": "Group v2",
+            "scrolls": [
+                [
+                    15745,
+                    "Song: Cassindra`s Elegy"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 11
+        }
+    ],
+    "45": [
+        {
+            "name": "Aria of Asceticism",
+            "spell_id": 3682,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=3682",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_3682.html",
+            "level": 45,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 45,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Wind Instruments",
+            "target_type": "Single",
+            "scrolls": [],
+            "expansion": 0,
+            "custom_icon": 149
+        },
+        {
+            "name": "Jonthan's Provocation",
+            "spell_id": 749,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=749",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_749.html",
+            "level": 45,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 45,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Singing",
+            "target_type": "Self",
+            "scrolls": [
+                [
+                    15749,
+                    "Song: Jonthan`s Provocation"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 16
+        }
+    ],
+    "46": [
+        {
+            "name": "Tuyen`s Chant of Frost",
+            "spell_id": 744,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=744",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_744.html",
+            "level": 46,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 46,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Percussion Instruments",
+            "target_type": "Single",
+            "scrolls": [
+                [
+                    15744,
+                    "Song: Tuyen`s Chant of Frost"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 56
+        }
+    ],
+    "47": [
+        {
+            "name": "Niv`s Melody of Preservation",
+            "spell_id": 748,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=748",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_748.html",
+            "level": 47,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 47,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Stringed Instruments",
+            "target_type": "Group v2",
+            "scrolls": [
+                [
+                    15748,
+                    "Song: Niv`s Melody of Preservation"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 78
+        }
+    ],
+    "48": [
+        {
+            "name": "Selo`s Chords of Cessation",
+            "spell_id": 746,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=746",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_746.html",
+            "level": 48,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 48,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Stringed Instruments",
+            "target_type": "Point Blank Area of Effect",
+            "scrolls": [
+                [
+                    15746,
+                    "Song: Selo`s Chords of Cessation"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 143
+        }
+    ],
+    "49": [
+        {
+            "name": "Selo`s Accelerating Chorus",
+            "spell_id": 2605,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=2605",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_2605.html",
+            "level": 49,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 49,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Percussion Instruments",
+            "target_type": "Group v2",
+            "scrolls": [
+                [
+                    7705,
+                    "Song: Selo's Accelerating Chorus"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 4
+        },
+        {
+            "name": "Shield of Songs",
+            "spell_id": 1450,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=1450",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_1450.html",
+            "level": 49,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 49,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Stringed Instruments",
+            "target_type": "Group v2",
+            "scrolls": [
+                [
+                    30450,
+                    "Song: Shield of Song"
+                ]
+            ],
+            "expansion": 0,
+            "custom_icon": 78
+        }
+    ],
+    "50": [
+        {
+            "name": "Melody of Ervaj",
+            "spell_id": 1449,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=1449",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_1449.html",
+            "level": 50,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 50,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Brass Instruments",
+            "target_type": "Group v2",
+            "scrolls": [
+                [
+                    30449,
+                    "Song: Melody of Ervaj"
+                ]
+            ],
+            "expansion": 1,
+            "custom_icon": 43
+        },
+        {
+            "name": "Tuyen`s Chant of Poison",
+            "spell_id": 3566,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=3566",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_3566.html",
+            "level": 50,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 50,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Percussion Instruments",
+            "target_type": "Single",
+            "scrolls": [
+                [
+                    26954,
+                    "Song: Tuyen`s Chant of Poison"
+                ]
+            ],
+            "expansion": 1,
+            "custom_icon": 42
+        },
+        {
+            "name": "Verses of Victory",
+            "spell_id": 747,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=747",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_747.html",
+            "level": 50,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 50,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Singing",
+            "target_type": "Group v2",
+            "scrolls": [
+                [
+                    15747,
+                    "Song: Verses of Victory"
+                ]
+            ],
+            "expansion": 1,
+            "custom_icon": 16
+        }
+    ],
+    "51": [
+        {
+            "name": "Largo`s Absonant Binding",
+            "spell_id": 1751,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=1751",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_1751.html",
+            "level": 51,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 51,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Singing",
+            "target_type": "Single",
+            "scrolls": [
+                [
+                    19451,
+                    "Song: Largo's Assonant Binding"
+                ]
+            ],
+            "expansion": 1,
+            "custom_icon": 5
+        },
+        {
+            "name": "Selo`s Song of Travel",
+            "spell_id": 1750,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=1750",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_1750.html",
+            "level": 51,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 51,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Percussion Instruments",
+            "target_type": "Group v2",
+            "scrolls": [
+                [
+                    19450,
+                    "Song: Selo's Song of Travel"
+                ]
+            ],
+            "expansion": 1,
+            "custom_icon": 161
+        }
+    ],
+    "52": [
+        {
+            "name": "Aria of Innocence",
+            "spell_id": 3681,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=3681",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_3681.html",
+            "level": 52,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 52,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Wind Instruments",
+            "target_type": "Single",
+            "scrolls": [],
+            "expansion": 1,
+            "custom_icon": 139
+        },
+        {
+            "name": "Battlecry of the Vah Shir",
+            "spell_id": 2606,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=2606",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_2606.html",
+            "level": 52,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 52,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Brass Instruments",
+            "target_type": "Group v2",
+            "scrolls": [
+                [
+                    7706,
+                    "Song: Battlecry of the Vah Shir"
+                ]
+            ],
+            "expansion": 1,
+            "custom_icon": 72
+        },
+        {
+            "name": "Nillipus` March of the Wee",
+            "spell_id": 1752,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=1752",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_1752.html",
+            "level": 52,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 52,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Percussion Instruments",
+            "target_type": "Group v2",
+            "scrolls": [
+                [
+                    19452,
+                    "Song: Nillipuss' March of the Wee"
+                ]
+            ],
+            "expansion": 1,
+            "custom_icon": 108
+        }
+    ],
+    "53": [
+        {
+            "name": "Song of Dawn",
+            "spell_id": 1754,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=1754",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_1754.html",
+            "level": 53,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 53,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Wind Instruments",
+            "target_type": "Single",
+            "scrolls": [
+                [
+                    19454,
+                    "Song: Song of Dawn"
+                ]
+            ],
+            "expansion": 1,
+            "custom_icon": 139
+        },
+        {
+            "name": "Song of Twilight",
+            "spell_id": 1753,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=1753",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_1753.html",
+            "level": 53,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 53,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Wind Instruments",
+            "target_type": "Single",
+            "scrolls": [
+                [
+                    19453,
+                    "Song: Song of Twilight"
+                ]
+            ],
+            "expansion": 1,
+            "custom_icon": 35
+        }
+    ],
+    "54": [
+        {
+            "name": "Elemental Chorus",
+            "spell_id": 2607,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=2607",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_2607.html",
+            "level": 54,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 54,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Percussion Instruments",
+            "target_type": "Area of EffectPC V2",
+            "scrolls": [
+                [
+                    7707,
+                    "Song: Elemental Chorus"
+                ]
+            ],
+            "expansion": 1,
+            "custom_icon": 148
+        },
+        {
+            "name": "Selo`s Assonant Strane",
+            "spell_id": 1758,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=1758",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_1758.html",
+            "level": 54,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 54,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Stringed Instruments",
+            "target_type": "Point Blank Area of Effect",
+            "scrolls": [
+                [
+                    19458,
+                    "Song: Selo's Assonant Strain"
+                ]
+            ],
+            "expansion": 1,
+            "custom_icon": 5
+        },
+        {
+            "name": "Vilia`s Chorus of Celerity",
+            "spell_id": 1757,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=1757",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_1757.html",
+            "level": 54,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 54,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Singing",
+            "target_type": "Group v2",
+            "scrolls": [
+                [
+                    19457,
+                    "Song: Vilia's Chorus of Celerity"
+                ]
+            ],
+            "expansion": 1,
+            "custom_icon": 16
+        }
+    ],
+    "55": [
+        {
+            "name": "Brusco`s Bombastic Bellow",
+            "spell_id": 1747,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=1747",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_1747.html",
+            "level": 55,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 55,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Singing",
+            "target_type": "Single",
+            "scrolls": [
+                [
+                    19468,
+                    "Song: Brusco`s Bombastic Bellow"
+                ]
+            ],
+            "expansion": 1,
+            "custom_icon": 153
+        },
+        {
+            "name": "Cantata of Replenishment",
+            "spell_id": 1759,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=1759",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_1759.html",
+            "level": 55,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 55,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Stringed Instruments",
+            "target_type": "Group v2",
+            "scrolls": [
+                [
+                    19459,
+                    "Song: Cantata of Replenishment"
+                ]
+            ],
+            "expansion": 1,
+            "custom_icon": 99
+        },
+        {
+            "name": "Occlusion of Sound",
+            "spell_id": 1451,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=1451",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_1451.html",
+            "level": 55,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 55,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Percussion Instruments",
+            "target_type": "Single",
+            "scrolls": [
+                [
+                    30451,
+                    "Song: Occlusion of Sound"
+                ]
+            ],
+            "expansion": 1,
+            "custom_icon": 148
+        }
+    ],
+    "56": [
+        {
+            "name": "Purifying Chorus",
+            "spell_id": 2608,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=2608",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_2608.html",
+            "level": 56,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 56,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Percussion Instruments",
+            "target_type": "Area of EffectPC V2",
+            "scrolls": [
+                [
+                    7708,
+                    "Song: Purifying Chorus"
+                ]
+            ],
+            "expansion": 1,
+            "custom_icon": 149
+        },
+        {
+            "name": "Song of Highsun",
+            "spell_id": 1755,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=1755",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_1755.html",
+            "level": 56,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 56,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Wind Instruments",
+            "target_type": "Single",
+            "scrolls": [
+                [
+                    19455,
+                    "Song: Song of Highsun"
+                ]
+            ],
+            "expansion": 1,
+            "custom_icon": 48
+        },
+        {
+            "name": "Song of Midnight",
+            "spell_id": 1756,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=1756",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_1756.html",
+            "level": 56,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 56,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Brass Instruments",
+            "target_type": "Point Blank Area of Effect",
+            "scrolls": [
+                [
+                    19456,
+                    "Song: Song of Midnight"
+                ]
+            ],
+            "expansion": 1,
+            "custom_icon": 154
+        }
+    ],
+    "57": [
+        {
+            "name": "Cassindra's Insipid Ditty",
+            "spell_id": 1761,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=1761",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_1761.html",
+            "level": 57,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 57,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Stringed Instruments",
+            "target_type": "Single",
+            "scrolls": [
+                [
+                    19461,
+                    "Song: Cassindra's Insipid Ditty"
+                ]
+            ],
+            "expansion": 1,
+            "custom_icon": 24
+        },
+        {
+            "name": "McVaxius` Rousing Rondo",
+            "spell_id": 1760,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=1760",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_1760.html",
+            "level": 57,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 57,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Brass Instruments",
+            "target_type": "Group v2",
+            "scrolls": [
+                [
+                    19460,
+                    "Song: McVaxius Rousing Rondo"
+                ]
+            ],
+            "expansion": 1,
+            "custom_icon": 49
+        }
+    ],
+    "58": [
+        {
+            "name": "Chorus of Replenishment",
+            "spell_id": 2609,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=2609",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_2609.html",
+            "level": 58,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 58,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Stringed Instruments",
+            "target_type": "Area of EffectPC V2",
+            "scrolls": [
+                [
+                    7709,
+                    "Song: Chorus of Replenishment"
+                ]
+            ],
+            "expansion": 1,
+            "custom_icon": 99
+        },
+        {
+            "name": "Dreams of Ayonae",
+            "spell_id": 1100,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=1100",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_1100.html",
+            "level": 58,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 58,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Wind Instruments",
+            "target_type": "Single",
+            "scrolls": [
+                [
+                    24548,
+                    "Song: Dreams of Ayonae"
+                ]
+            ],
+            "expansion": 1,
+            "custom_icon": 35
+        },
+        {
+            "name": "Jonthan's Inspiration",
+            "spell_id": 1762,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=1762",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_1762.html",
+            "level": 58,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 58,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Singing",
+            "target_type": "Self",
+            "scrolls": [
+                [
+                    19462,
+                    "Song: Jonthan's Inspiration"
+                ]
+            ],
+            "expansion": 1,
+            "custom_icon": 16
+        },
+        {
+            "name": "Niv`s Harmonic",
+            "spell_id": 1763,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=1763",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_1763.html",
+            "level": 58,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 58,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Singing",
+            "target_type": "Group v2",
+            "scrolls": [
+                [
+                    19463,
+                    "Song: Niv's Harmonic"
+                ]
+            ],
+            "expansion": 1,
+            "custom_icon": 98
+        }
+    ],
+    "59": [
+        {
+            "name": "Denon`s Bereavement",
+            "spell_id": 1764,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=1764",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_1764.html",
+            "level": 59,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 59,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Stringed Instruments",
+            "target_type": "Point Blank Area of Effect",
+            "scrolls": [
+                [
+                    19464,
+                    "Song: Denon's Bereavement"
+                ]
+            ],
+            "expansion": 1,
+            "custom_icon": 42
+        },
+        {
+            "name": "Solon's Charismatic Concord",
+            "spell_id": 1765,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=1765",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_1765.html",
+            "level": 59,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 59,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Singing",
+            "target_type": "Group v2",
+            "scrolls": [
+                [
+                    19465,
+                    "Song: Solon's Charismatic Concord"
+                ]
+            ],
+            "expansion": 1,
+            "custom_icon": 15
+        }
+    ],
+    "60": [
+        {
+            "name": "Anc: Rytan's Dirge of Death",
+            "spell_id": 773,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=773",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_773.html",
+            "level": 60,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 60,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 100,
+            "skill": "Wind Instruments",
+            "target_type": "Group V1",
+            "scrolls": [],
+            "expansion": 1,
+            "custom_icon": 1
+        },
+        {
+            "name": "Ancient: Lcea's Lament",
+            "spell_id": 1196,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=1196",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_1196.html",
+            "level": 60,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 60,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Stringed Instruments",
+            "target_type": "Area of EffectPC V2",
+            "scrolls": [
+                [
+                    26622,
+                    "Ancient: Lcea's Lament"
+                ]
+            ],
+            "expansion": 1,
+            "custom_icon": 99
+        },
+        {
+            "name": "Ancient: Lullaby of Shadow",
+            "spell_id": 1197,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=1197",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_1197.html",
+            "level": 60,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 60,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Singing",
+            "target_type": "Single",
+            "scrolls": [
+                [
+                    26623,
+                    "Ancient: Lullaby of Shadow"
+                ]
+            ],
+            "expansion": 1,
+            "custom_icon": 35
+        },
+        {
+            "name": "Angstlich's Assonance",
+            "spell_id": 1748,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=1748",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_1748.html",
+            "level": 60,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 60,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Brass Instruments",
+            "target_type": "Single",
+            "scrolls": [
+                [
+                    19466,
+                    "Song: Angstlich`s Assonance"
+                ]
+            ],
+            "expansion": 1,
+            "custom_icon": 153
+        },
+        {
+            "name": "Composition of Ervaj",
+            "spell_id": 1452,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=1452",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_1452.html",
+            "level": 60,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 60,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Brass Instruments",
+            "target_type": "Group v2",
+            "scrolls": [
+                [
+                    30452,
+                    "Song: Composition of Ervaj"
+                ]
+            ],
+            "expansion": 1,
+            "custom_icon": 43
+        },
+        {
+            "name": "Ervaj's Lost Composition",
+            "spell_id": 2936,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=2936",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_2936.html",
+            "level": 60,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 60,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Brass Instruments",
+            "target_type": "Single",
+            "scrolls": [
+                [
+                    30479,
+                    "Song: Ervaj's Lost Composition"
+                ]
+            ],
+            "expansion": 1,
+            "custom_icon": 24
+        },
+        {
+            "name": "Kazumi's Note of Preservation",
+            "spell_id": 1749,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=1749",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_1749.html",
+            "level": 60,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 60,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Wind Instruments",
+            "target_type": "Group v2",
+            "scrolls": [
+                [
+                    19467,
+                    "Song: Kazumi`s Preservation"
+                ]
+            ],
+            "expansion": 1,
+            "custom_icon": 46
+        },
+        {
+            "name": "Warsong of the Vah Shir",
+            "spell_id": 2610,
+            "lucy": "https://lucy.allakhazam.com/spell.html?id=2610",
+            "alkabor_lucy": "https://lucy.alkabor.com/spell_2610.html",
+            "level": 60,
+            "effects": "",
+            "classes1": 255,
+            "classes2": 255,
+            "classes3": 255,
+            "classes4": 255,
+            "classes5": 255,
+            "classes6": 255,
+            "classes7": 255,
+            "classes8": 60,
+            "classes9": 255,
+            "classes10": 255,
+            "classes11": 255,
+            "classes12": 255,
+            "classes13": 255,
+            "classes14": 255,
+            "classes15": 255,
+            "mana": 0,
+            "skill": "Brass Instruments",
+            "target_type": "Group v2",
+            "scrolls": [
+                [
+                    7710,
+                    "Song: Warsong of the Vah Shir"
+                ]
+            ],
+            "expansion": 1,
+            "custom_icon": 72
+        }
+    ]
+}
