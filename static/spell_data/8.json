@@ -357,7 +357,7 @@
                     "Song: Magical Monologue"
                 ]
             ],
-            "expansion": 0,
+            "expansion": 3,
             "custom_icon": 104
         }
     ],
@@ -607,7 +607,7 @@
                     "Song: Song of Sustenance"
                 ]
             ],
-            "expansion": 0,
+            "expansion": 3,
             "custom_icon": 9
         }
     ],
@@ -787,7 +787,7 @@
                     "Song: Cassindra's Chant of Clarity"
                 ]
             ],
-            "expansion": 0,
+            "expansion": 2,
             "custom_icon": 24
         },
         {
@@ -821,7 +821,7 @@
                     "Song: Largo`s Melodic Binding"
                 ]
             ],
-            "expansion": 0,
+            "expansion": 5,
             "custom_icon": 17
         }
     ],
@@ -1181,7 +1181,7 @@
                     "Song: Amplification"
                 ]
             ],
-            "expansion": 0,
+            "expansion": 3,
             "custom_icon": 95
         },
         {
@@ -1359,7 +1359,7 @@
                     "Song: Cantata of Soothing"
                 ]
             ],
-            "expansion": 0,
+            "expansion": 2,
             "custom_icon": 99
         },
         {
@@ -1573,7 +1573,7 @@
                     "Song: Katta's Sword Dancing"
                 ]
             ],
-            "expansion": 0,
+            "expansion": 3,
             "custom_icon": 104
         },
         {
@@ -1607,7 +1607,7 @@
                     "Song: Solon`s Bravura"
                 ]
             ],
-            "expansion": 0,
+            "expansion": 1,
             "custom_icon": 27
         }
     ],
@@ -1643,7 +1643,7 @@
                     "Song: Sionachie`s Dreams"
                 ]
             ],
-            "expansion": 0,
+            "expansion": 3,
             "custom_icon": 35
         },
         {
@@ -1783,7 +1783,7 @@
                     "Song: Tuyen`s Chant of Disease"
                 ]
             ],
-            "expansion": 0,
+            "expansion": 4,
             "custom_icon": 41
         }
     ],
@@ -1886,7 +1886,7 @@
             "skill": "Wind Instruments",
             "target_type": "Single",
             "scrolls": [],
-            "expansion": 0,
+            "expansion": 5,
             "custom_icon": 149
         },
         {
@@ -1920,7 +1920,7 @@
                     "Song: Jonthan`s Provocation"
                 ]
             ],
-            "expansion": 0,
+            "expansion": 1,
             "custom_icon": 16
         }
     ],
@@ -2064,7 +2064,7 @@
                     "Song: Selo's Accelerating Chorus"
                 ]
             ],
-            "expansion": 0,
+            "expansion": 3,
             "custom_icon": 4
         },
         {
@@ -2098,7 +2098,7 @@
                     "Song: Shield of Song"
                 ]
             ],
-            "expansion": 0,
+            "expansion": 1,
             "custom_icon": 78
         }
     ],
@@ -2134,7 +2134,7 @@
                     "Song: Melody of Ervaj"
                 ]
             ],
-            "expansion": 1,
+            "expansion": 2,
             "custom_icon": 43
         },
         {
@@ -2168,7 +2168,7 @@
                     "Song: Tuyen`s Chant of Poison"
                 ]
             ],
-            "expansion": 1,
+            "expansion": 4,
             "custom_icon": 42
         },
         {
@@ -2202,7 +2202,7 @@
                     "Song: Verses of Victory"
                 ]
             ],
-            "expansion": 1,
+            "expansion": 0,
             "custom_icon": 16
         }
     ],
@@ -2303,7 +2303,7 @@
             "skill": "Wind Instruments",
             "target_type": "Single",
             "scrolls": [],
-            "expansion": 1,
+            "expansion": 5,
             "custom_icon": 139
         },
         {
@@ -2337,7 +2337,7 @@
                     "Song: Battlecry of the Vah Shir"
                 ]
             ],
-            "expansion": 1,
+            "expansion": 3,
             "custom_icon": 72
         },
         {
@@ -2477,7 +2477,7 @@
                     "Song: Elemental Chorus"
                 ]
             ],
-            "expansion": 1,
+            "expansion": 3,
             "custom_icon": 148
         },
         {
@@ -2649,7 +2649,7 @@
                     "Song: Occlusion of Sound"
                 ]
             ],
-            "expansion": 1,
+            "expansion": 2,
             "custom_icon": 148
         }
     ],
@@ -2685,7 +2685,7 @@
                     "Song: Purifying Chorus"
                 ]
             ],
-            "expansion": 1,
+            "expansion": 3,
             "custom_icon": 149
         },
         {
@@ -2859,7 +2859,7 @@
                     "Song: Chorus of Replenishment"
                 ]
             ],
-            "expansion": 1,
+            "expansion": 3,
             "custom_icon": 99
         },
         {
@@ -2893,7 +2893,7 @@
                     "Song: Dreams of Ayonae"
                 ]
             ],
-            "expansion": 1,
+            "expansion": 3,
             "custom_icon": 35
         },
         {
@@ -3037,35 +3037,6 @@
     ],
     "60": [
         {
-            "name": "Anc: Rytan's Dirge of Death",
-            "spell_id": 773,
-            "lucy": "https://lucy.allakhazam.com/spell.html?id=773",
-            "alkabor_lucy": "https://lucy.alkabor.com/spell_773.html",
-            "level": 60,
-            "effects": "",
-            "classes1": 255,
-            "classes2": 255,
-            "classes3": 255,
-            "classes4": 255,
-            "classes5": 255,
-            "classes6": 255,
-            "classes7": 255,
-            "classes8": 60,
-            "classes9": 255,
-            "classes10": 255,
-            "classes11": 255,
-            "classes12": 255,
-            "classes13": 255,
-            "classes14": 255,
-            "classes15": 255,
-            "mana": 100,
-            "skill": "Wind Instruments",
-            "target_type": "Group V1",
-            "scrolls": [],
-            "expansion": 1,
-            "custom_icon": 1
-        },
-        {
             "name": "Ancient: Lcea's Lament",
             "spell_id": 1196,
             "lucy": "https://lucy.allakhazam.com/spell.html?id=1196",
@@ -3096,7 +3067,7 @@
                     "Ancient: Lcea's Lament"
                 ]
             ],
-            "expansion": 1,
+            "expansion": 2,
             "custom_icon": 99
         },
         {
@@ -3130,7 +3101,7 @@
                     "Ancient: Lullaby of Shadow"
                 ]
             ],
-            "expansion": 1,
+            "expansion": 3,
             "custom_icon": 35
         },
         {
@@ -3198,7 +3169,7 @@
                     "Song: Composition of Ervaj"
                 ]
             ],
-            "expansion": 1,
+            "expansion": 2,
             "custom_icon": 43
         },
         {
@@ -3232,7 +3203,7 @@
                     "Song: Ervaj's Lost Composition"
                 ]
             ],
-            "expansion": 1,
+            "expansion": 3,
             "custom_icon": 24
         },
         {
@@ -3300,7 +3271,7 @@
                     "Song: Warsong of the Vah Shir"
                 ]
             ],
-            "expansion": 1,
+            "expansion": 3,
             "custom_icon": 72
         }
     ]
