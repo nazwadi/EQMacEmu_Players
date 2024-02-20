@@ -15,11 +15,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from django.urls import include, path
 
 admin.site.site_header = "EQMacEmu Accounts Administration"
 
 urlpatterns = [
+    path(r"", include("accounts.urls")),
     path("__debug__/", include("debug_toolbar.urls")),
     path("polls/", include("polls.urls")),
     path("accounts/", include("accounts.urls")),
