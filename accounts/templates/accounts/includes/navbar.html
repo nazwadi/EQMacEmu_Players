@@ -1,3 +1,4 @@
+{% load static %}
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="/accounts/">EQMacEmu Players</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
@@ -12,7 +13,7 @@
                 </li>
             {% endif %}
             <li class="nav-item">
-                <a class="nav-link" href="https://eqarchives.com">EQA Wiki</a>
+                <a class="nav-link" href="https://eqarchives.com" target="_blank">EQA Wiki</a>
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="navbarDropdownMenuResources" data-toggle="dropdown"
@@ -26,6 +27,20 @@
                     <a class="dropdown-item" href="https://everquest.allakhazam.com" target="_blank">Allakhazam</a>
                     <a class="dropdown-item" href="https://www.steveprutz.com/eq/" target="_blank">EverQuest Map Preserve</a>
                     <a class="dropdown-item" href="https://wiki.project1999.com" target="_blank">P99 Wiki</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdownMenuResources" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                    Maps 
+                </a>
+                <div class="dropdown-menu dropdown-menu-right dropdown-info" aria-labelledby="navbarDropdownMenuResources">
+                    <a class="dropdown-item" href="{% static "images/Classic_Zone_Connection.jpg" %}" target="_blank">
+                        Classic
+                    </a>
+                    <a class="dropdown-item" href="{% static "images/Kunark_Zone_Connection.png" %}" target="_blank">
+                        Kunark
+                    </a>
                 </div>
             </li>
             {% if user.is_authenticated %}
