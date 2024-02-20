@@ -411,6 +411,7 @@ def guild_rank_filter(value):
     }
     return guild_ranks[value] if value in guild_ranks else "Unknown"
 
+
 @register.filter(name="expansion_icon")
 def expansion_icon(value):
     expansion_icons = {
