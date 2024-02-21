@@ -7,12 +7,9 @@ from django.http import Http404
 from django.shortcuts import redirect
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from django.templatetags.static import static
 
 from .models import Characters
 from .models import CharacterCurrency
-from .models import CharacterFactionValues
-from .models import CharacterKeyring
 from .models import CharacterLanguages
 from .models import CharacterSpells
 from .models import CharacterSkills
@@ -73,7 +70,14 @@ def view_character(request, character_name):
                 character_magic_songs.append(skill)
             else:
                 character_skills.append(skill)
-        character_keyring = CharacterKeyring.objects.filter(id=character.id)
+        cursor = connections['game_database'].cursor()
+        cursor.execute(
+            """SELECT ck.item_id, i.Name 
+               FROM character_keyring as ck LEFT OUTER JOIN items as i ON ck.item_id = i.id 
+               WHERE ck.id  = '%s' 
+               ORDER BY i.Name;""", [character.id])
+        character_keyring = cursor.fetchall()
+        print(character_keyring)
         character_languages = CharacterLanguages.objects.filter(id=character.id)
         cursor = connections['game_database'].cursor()
         cursor.execute(

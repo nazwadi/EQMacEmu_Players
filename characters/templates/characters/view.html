@@ -266,7 +266,7 @@
                                 <div class='WindowNestedTanTitleBar eq-header'>
                                     <h2>Keyring</h2>
                                 </div>
-                                {% if character_keyring.all %}
+                                {% if character_keyring %}
                                     <table class="eq-table eq-highlight-rows">
                                         <thead>
                                         <tr>
@@ -274,9 +274,9 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        {% for key in character_keyring %}
+                                        {% for item_id, key in character_keyring %}
                                             <tr>
-                                                <td>{{ key.item_id.Name }} ({{ key.item_id.id }})</td>
+                                                <td>{{ key }} ({{ item_id }})</td>
                                             </tr>
                                         {% endfor %}
                                         </tbody>
