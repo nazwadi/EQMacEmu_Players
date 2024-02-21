@@ -77,7 +77,6 @@ def view_character(request, character_name):
                WHERE ck.id  = '%s' 
                ORDER BY i.Name;""", [character.id])
         character_keyring = cursor.fetchall()
-        print(character_keyring)
         character_languages = CharacterLanguages.objects.filter(id=character.id)
         cursor = connections['game_database'].cursor()
         cursor.execute(
