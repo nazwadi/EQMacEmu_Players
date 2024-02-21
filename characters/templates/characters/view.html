@@ -36,6 +36,11 @@
                 </li>
             {% endif %}
             <li class="nav-item" role="presentation">
+                <button class="nav-link" id="faction-tab" data-bs-toggle="tab" data-bs-target="#faction-tab-pane"
+                        type="button" role="tab" aria-controls="faction-tab-pane" aria-selected="false">Faction
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
                 {% if guild is None %}
                     <a class="nav-link disabled" href="#" aria-disabled="true">Guild</a>
                 {% else %}
@@ -322,9 +327,14 @@
                     </div>
                 {% endif %}
             </div>
+            <div class="tab-pane fade" id="faction-tab-pane" role="tabpanel" aria-labelledby="faction-tab" tabindex="1">
+                <div class="row mt-4">
+                    {% include "characters/factions.html" %}
+                </div>
+            </div>
             {% if guild is not None %}
                 <div class="tab-pane fade" id="guild-tab-pane" role="tabpanel" aria-labelledby="guild-tab"
-                     tabindex="1">
+                     tabindex="2">
                     <div class="row mt-4">
                         <div class='WindowSuperFancy' style="width:100%;">
                             <div class="row">
@@ -380,7 +390,7 @@
                 </div>
             {% endif %}
             <div class="tab-pane fade" id="skill-tab-pane" role="tabpanel" aria-labelledby="skill-tab"
-                 tabindex="2">
+                 tabindex="3">
                 <div class="row mt-4">
                     <div class='WindowSuperFancy' style="width:100%;">
                         <div class="row">
@@ -478,7 +488,7 @@
                 </div>
             </div>
             <div class="tab-pane fade" id="spell-tab-pane" role="tabpanel" aria-labelledby="spell-tab"
-                 tabindex="3">
+                 tabindex="4">
                 {% if character.class_name != 0 or 1 or 7 or 9 %}
                     <div class="row mt-4">
                             {% include "characters/spells.html" %}
@@ -487,7 +497,7 @@
             </div>
             {% if account.expansion >= 3 %}
                 <div class="tab-pane fade" id="aa-tab-pane" role="tabpanel" aria-labelledby="aa-tab"
-                     tabindex="4">
+                     tabindex="5">
                     <div class="row mt-4">
                         <div class='WindowSuperFancy' style="width:100%;">
                             <div class="row">

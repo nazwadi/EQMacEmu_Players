@@ -6,6 +6,7 @@ and forum_id to individual characters tied to a login server account and its ove
 """
 from characters.models import Characters
 from characters.models import CharacterCurrency
+from characters.models import CharacterFactionValues
 from characters.models import CharacterKeyring
 from characters.models import CharacterLanguages
 from characters.models import CharacterSpells
@@ -25,6 +26,7 @@ class GameServerRouter:
     route_app_labels = {"characters"}
     game_server_models = [Characters,
                           CharacterCurrency,
+                          CharacterFactionValues,
                           CharacterKeyring,
                           CharacterLanguages,
                           CharacterSkills,

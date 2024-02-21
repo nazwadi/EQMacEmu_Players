@@ -84,6 +84,23 @@ class Characters(models.Model):
         verbose_name_plural = 'Characters'
 
 
+class CharacterFactionValues(models.Model):
+    """
+    This model maps to the character_faction_values table in the database.
+    """
+
+    def __str__(self):
+        return str(self.faction_id)
+
+    id = models.IntegerField(primary_key=True, null=False, default=None)
+    faction_id = models.IntegerField(null=False, unique=True, default=None)
+    current_value = SmallIntegerField(null=False, default=0)
+    temp = SmallIntegerField(null=False, default=0)
+
+    class Meta:
+        db_table = "character_faction_values"
+
+
 class CharacterSkills(models.Model):
     """
     This model maps to the character_skills table in the database.

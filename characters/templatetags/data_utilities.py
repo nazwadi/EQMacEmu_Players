@@ -424,3 +424,33 @@ def expansion_icon(value):
         6: "Ldonicon.gif"
     }
     return expansion_icons[value] if value in expansion_icons else None
+
+
+@register.filter(name="faction_level")
+def faction_level(value):
+    try:
+        value = int(value)
+    except ValueError:
+        return None
+    if value >= 2000:
+        return "Max Ally"
+    elif value >= 1100:
+        return "Ally"
+    elif 750 <= value <= 1099:
+        return "Warmly"
+    elif 500 <= value <= 749:
+        return "Kindly"
+    elif 100 <= value <= 499:
+        return "Amiably"
+    elif 0 <= value <= 99:
+        return "Indifferently"
+    elif -100 <= value <= -1:
+        return "Apprehensively"
+    elif -500 <= value <= -101:
+        return "Dubiously"
+    elif -750 <= value <= -501:
+        return "Threateningly"
+    elif -1999 <= value <= -500:
+        return "Scowls"
+    else:
+        return "Max Scowls"

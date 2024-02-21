@@ -2,6 +2,7 @@ import datetime
 import json
 
 from django.core.exceptions import ObjectDoesNotExist
+from django.db import connections
 from django.http import Http404
 from django.shortcuts import redirect
 from django.shortcuts import render
@@ -10,6 +11,7 @@ from django.templatetags.static import static
 
 from .models import Characters
 from .models import CharacterCurrency
+from .models import CharacterFactionValues
 from .models import CharacterKeyring
 from .models import CharacterLanguages
 from .models import CharacterSpells
@@ -73,6 +75,14 @@ def view_character(request, character_name):
                 character_skills.append(skill)
         character_keyring = CharacterKeyring.objects.filter(id=character.id)
         character_languages = CharacterLanguages.objects.filter(id=character.id)
+        cursor = connections['game_database'].cursor()
+        cursor.execute(
+            """SELECT fl.name, cfv.current_value 
+               FROM character_faction_values as cfv LEFT OUTER JOIN faction_list as fl ON cfv.faction_id = fl.id 
+               WHERE cfv.id = '%s'
+               ORDER BY fl.name;
+            """, [character.id])
+        character_faction_list = cursor.fetchall()
         scribed_spells = CharacterSpells.objects.filter(id=character.id)
         character_spells = list()
         for spell in scribed_spells:
@@ -102,6 +112,7 @@ def view_character(request, character_name):
                           "account": account,
                           "birthday": birthday,
                           "character": character,
+                          "character_faction_values": character_faction_list,
                           "character_keyring": character_keyring,
                           "character_languages": character_languages,
                           "character_spells": character_spells,
