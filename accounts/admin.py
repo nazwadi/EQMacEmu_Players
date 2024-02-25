@@ -1,8 +1,4 @@
 from django.contrib import admin
-from django.conf.locale.en import formats as en_formats
-
-en_formats.DATE_FORMAT = "d M Y"
-
 from .models import LoginServerAccounts
 from .models import ServerAdminRegistration
 from .models import ServerListType
