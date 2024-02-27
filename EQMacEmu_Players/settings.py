@@ -41,9 +41,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("DJANGO_APP_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ['DEBUG'] == 'TRUE'
 
-#ALLOWED_HOSTS = ['loginserver.eqarchives.com', 'eqarchives.com']
+ALLOWED_HOSTS = ['loginserver.eqarchives.com', 'eqarchives.com']
+#ALLOWED_HOSTS = ['*']
 CSRF_TRUSTED_ORIGINS = ['https://loginserver.eqarchives.com']
 
 # Application definition
@@ -52,6 +53,7 @@ INSTALLED_APPS = [
     'polls.apps.PollsConfig',
     'accounts.apps.AccountsConfig',
     'characters.apps.CharactersConfig',
+    'character_transfer.apps.CharacterTransferConfig',
     'debug_toolbar',
     'django.contrib.admin',
     'django.contrib.auth',

@@ -32,13 +32,16 @@ def list_characters(request, game_account_name):
 
         forum_name = request.user.username
         if not valid_game_account_owner(forum_name, game_account_name):
-            raise Http404("This account does not exist")
+            raise Http404("Either this account does not exist or does not belong to you.  If you have registered this account"
+                          " with the loginserver, you must log in to the game server at least once before attempting"
+                          " to view this page.")
 
         game_account = Account.objects.filter(name=game_account_name)
         try:
             game_account_id = game_account.values('id')[0]
         except IndexError:
-            raise Http404("This account does not exist")
+            raise Http404("This game account does not exist. If you have registered this account with the loginserver, "
+                          "you must log in to the game server at least once.")
 
         if game_account_id is not None:
             characters = Characters.objects.filter(account_id=game_account_id['id'])

@@ -1,10 +1,20 @@
 {% extends "accounts/header.html" %}
 {% block content %}
-<div class="container py-5">
-<h1>Whoops!</h1>
-    <h4>Quoth the server, 404 (page not found).</h4>
-<p>Either the page you are looking for does not exist, or your lock-picking skill is too low!
-    Seriously though, try our <a href="https://loginserver.eqarchives.com/accounts/">Accounts</a> page
-    or <a href="https://eqarchives.com">Wiki</a> instead.</p>
-</div>
+    <div class="container py-5">
+        <h1>Whoops!</h1>
+        <h5>Quoth the server, 404 (page not found).</h5>
+        {% if exception %}
+            <div style="margin-top: 10px;">
+            {{ exception }}
+            </div>
+            <div style="margin-top: 10px;">
+            <p>Try our <a href="https://loginserver.eqarchives.com/accounts/">Accounts</a> page
+            or <a href="https://eqarchives.com">Wiki</a> instead.</p>
+            </div>
+        {% else %}
+            <p>Either the page you are looking for does not exist, or your lock-picking skill is too low!
+                Seriously though, try our <a href="https://loginserver.eqarchives.com/accounts/">Accounts</a> page
+                or <a href="https://eqarchives.com">Wiki</a> instead.</p>
+        {% endif %}
+    </div>
 {% endblock %}
