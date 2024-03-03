@@ -1,0 +1,73 @@
+{% load static %}
+{% load data_utilities %}
+{% load humanize %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="container-fluid content-pop">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="eq-window-complex-fancy">
+                                <div class="row">
+                                    <div class="WindowNestedTan col" style="overflow: hidden scroll">
+                                        <div class='WindowNestedTanTitleBar eq-header'>
+                                            <h1>{{ guild.name }}</h1>
+                                        </div>
+                                        <div class="eq-window-nested-tan eq-header">
+                                            <h5>MOTD:</h5>
+                                            {{ guild.motd }}
+                                        </div>
+                                        <table class="eq-table eq-highlight-rows" style="display: table">
+                                            <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Level</th>
+                                                <th>Class</th>
+                                                <th>Race</th>
+                                                <th>Rank</th>
+                                                <th>Zone</th>
+                                                <th>Alt</th>
+                                                <th>Last Online</th>
+                                                <th>Public Note</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for member in guild_members %}
+                                                <tr>
+                                                    <td>{{ member.char_id.name }}</td>
+                                                    <td>{{ member.char_id.level }}</td>
+                                                    <td>{{ member.char_id.class_name|player_class }}</td>
+                                                    <td>{{ member.char_id.race|player_race }}</td>
+                                                    <td>{{ member.rank|guild_rank }}</td>
+                                                    <td>{{ member.char_id.zone_id|zone_filter:"long" }}</td>
+                                                    {% if member.alt %}
+                                                        <td>
+                                                            <label for="alt" class="eq-checkbox-label"></label>
+                                                            <input id="alt" class="eq-checkbox"
+                                                                   type="checkbox"/>
+                                                        </td>
+                                                    {% else %}
+                                                        <td>
+                                                            <label for="alt" class="eq-checkbox-label"></label>
+                                                            <input id="alt" class="eq-checkbox"
+                                                                   type="checkbox"/>
+                                                        </td>
+                                                    {% endif %}
+                                                    <td>{{ member.char_id.last_login|datetime_from_timestamp|naturaltime }}</td>
+                                                    <td>{{ member.public_note }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

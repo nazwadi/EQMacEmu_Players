@@ -1,11 +1,16 @@
 {% load static %}
 {% load data_utilities %}
 {% block content %}
-    <span style="font-weight: bold; margin-left: 20px;">Legend:</span>&nbsp;
-    Spell names in&nbsp;<span style="color: #00FF00;">green</span>&nbsp;are scribed in the character's spell book.
-    <div class="WindowSuperFancy">
+    <div class="eq-window-complex-fancy">
         <div class="row">
-            <div class="spell-table" style="">
+            <div class="spell-table">
+                <div class='WindowNestedTanTitleBar eq-header'>
+                    <h2>Character Spells</h2>
+                </div>
+                <div style="font-style: italic; text-align: center;">
+                    <span style="font-weight: bold; margin-left: 20px;">Note:</span>&nbsp;
+                    Spell names in&nbsp;<span style="color: #00FF00;">green</span>&nbsp;are scribed in the character's spell book.
+                </div>
                 <table id="spell-table" class="eq-table bordered eq-highlight-rows">
                     <thead class="eq-table-floating-header">
                     <tr>
@@ -101,11 +106,13 @@
                                 <td>
                                     {% for scroll in spell.scrolls %}
                                         <div>
-                                            <a href="https://www.takproject.net/allaclone/item.php?id={{ scroll.0 }}" target="_blank">{{ scroll.1 }}&nbsp;({{ scroll.0 }})</a>
+                                            <a href="https://www.takproject.net/allaclone/item.php?id={{ scroll.0 }}"
+                                               target="_blank">{{ scroll.1 }}&nbsp;({{ scroll.0 }})</a>
                                         </div>
                                     {% endfor %}
                                 </td>
-                                <td><img src="/static/images/{{ spell.expansion|expansion_icon }}" alt="{{ spell.expansion }}" /></td>
+                                <td><img src="/static/images/{{ spell.expansion|expansion_icon }}"
+                                         alt="{{ spell.expansion }}"/></td>
                             </tr>
                         {% endfor %}
                     {% endfor %}
@@ -114,11 +121,4 @@
             </div>
         </div>
     </div>
-    {#    {% for scribed_spell in character_spells %}#}
-    {#        <p>#}
-    {#            <img src="/static/images/icons/{{ scribed_spell.spell_id.custom_icon }}.gif"#}
-    {#                 alt="{{ scribed_spell.spell_id.custom_icon }}.gif">#}
-    {#            {{ scribed_spell.spell_id.name }}#}
-    {#        </p>#}
-    {#    {% endfor %}#}
 {% endblock %}

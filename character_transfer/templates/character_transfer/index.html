@@ -1,40 +1,125 @@
-{% extends 'accounts/header.html' %}
-
-<!--Block content goes below-->
-
+{% extends 'characters/header.html' %}
+{% load static %}
+{% load data_utilities %}
 {% block content %}
-
-    <div class="container py-5">
-    <h2>Character Transfer Tool</h2>
-        <p>
-            This app will allow you to transfer your characters between EQA accounts that you own. 
-            Select the character you wish to transfer and the account to which you'd like to transfer below.
-            Game accounts will not populate the list until you have logged into the EQA server at least once.
-        </p>
-        <form class="form-inline" action="/character_transfer/" method="POST">
-        {% csrf_token %}
-            <div class="form-group">
-                <label for="character" class="mr-sm-2">Transfer:</label>
-                <select class="custom-select mr-sm-2" aria-label="character" id="character"
-                        name="character">
-                    <option selected>Select a character</option>
-                    {% for char_id, char_name, account_id, account_name in characters %}
-                        <option value="{{ char_id }}">{{ char_name }} (Account: {{ account_name }})
-                        </option>
-                    {% endfor %}
-                </select>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="container-fluid content-pop">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="eq-window-complex-fancy">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="eq-header" style="text-align: center;">
+                                            <h1>Character Transfer Tool</h1>
+                                        </div>
+                                        <p>
+                                            This app will allow you to transfer your characters between EQA accounts that you own.
+                                            Select the character you wish to transfer and the account to which you'd like to
+                                            transfer
+                                            below.
+                                            Game accounts will not populate the list until you have logged into the EQA server at
+                                            least
+                                            once.
+                                        </p>
+                                        <form class="" action="/character_transfer/" method="POST">
+                                            {% csrf_token %}
+                                            <div class="form-group">
+                                                <label for="character" class="mr-sm-2">Transfer:</label>
+                                                <select class="eq-input form-control" aria-label="character"
+                                                        id="character"
+                                                        name="character">
+                                                    <option selected>Select a character</option>
+                                                    {% for account in characters.items %}
+                                                        {% for character in account.1.characters.items %}
+                                                            <option value="{{ character.1.char_id }}">{{ character.1.char_name }}
+                                                                (Account: {{ character.1.account_name }})
+                                                            </option>
+                                                        {% endfor %}
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="account" class="mr-sm-2">To Account:</label>
+                                                <select class="eq-input form-control" id="account" name="account">
+                                                    <option selected>Select a game account</option>
+                                                    {% for account in accounts %}
+                                                        <option value="{{ account.id }}">{{ account.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                            <div class="form-group" style="text-align:center;">
+                                                <button type="submit" class="eq-button-wrap">Submit</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 mt-3">
+                            <div class="eq-window-complex-fancy" style="width: 100%;">
+                                <div class="row">
+                                    <div class="WindowNestedTan col">
+                                        <div class='WindowNestedTanTitleBar eq-header'>
+                                            <h1>Characters</h1>
+                                        </div>
+                                        <table id="character-table" class="eq-table bordered eq-highlight-rows">
+                                            <thead class="eq-table-floating-header">
+                                            <tr>
+                                                <th scope="col" style="width: auto;">Name</th>
+                                                <th scope="col" style="width: auto;">Race</th>
+                                                <th scope="col" style="width: auto;">Class</th>
+                                                <th scope="col" style="width: auto;">Level</th>
+                                                <th scope="col" style="width: auto;">Zone</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for account in characters.items %}
+                                                <tr>
+                                                    <th scope="col" colspan="8"
+                                                        style="text-align:center;">
+                                                        <div class="eq-window-nested-tan"
+                                                             style="padding:5px; background-color:#000;">
+                                                            <div class='WindowNestedTanTitleBar'>
+                                                                <h5>
+                                                                    <span style="color:#fcc92c">{{ account.0 }}</span>
+                                                                    has <span
+                                                                        style="color:#fcc92c">{{ account.1.characters|length }}</span>
+                                                                    characters
+                                                                </h5>
+                                                                Created: {{ account.1.time_creation|from_timestamp }}
+                                                            </div>
+                                                        </div>
+                                                    </th>
+                                                </tr>
+                                                {% for character in account.1.characters.items %}
+                                                    <tr>
+                                                        <td>
+                                                            <a href="/characters/view/{{ character.1.char_name }}">{{ character.1.char_name }}</a>
+                                                        </td>
+                                                        <td>{{ character.1.char_race|player_race }}</td>
+                                                        <td>{{ character.1.char_class|player_class }}</td>
+                                                        <td>{{ character.1.char_level }}</td>
+                                                        <td>{{ character.1.zone_id|zone_filter:"long" }}<br/>
+                                                            (x = {{ character.1.x }}, y = {{ character.1.y }}, z
+                                                            = {{ character.1.z }})
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="account" class="mr-sm-2">To Account:</label>
-                <select class="custom-select mr-sm-2" id="account" name="account">
-                    <option selected>Select a game account</option>
-                    {% for account in accounts %}
-                        <option value="{{ account.id }}">{{ account.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
+        </div>
     </div>
 
 {% endblock %}

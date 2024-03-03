@@ -62,7 +62,7 @@
             <div class="tab-pane fade show active" id="data-tab-pane" role="tabpanel" aria-labelledby="data-tab"
                  tabindex="0">
                 <div class="row mt-4">
-                    <div class='WindowSuperFancy' style="width:100%;">
+                    <div class='eq-window-complex-fancy' style="width:100%;">
                         <div class="row">
                             <div class="WindowNestedTan col">
                                 <div class='WindowNestedTanTitleBar eq-header'>
@@ -281,7 +281,7 @@
                                         {% endfor %}
                                         </tbody>
                                     </table>
-                                    {% else %}
+                                {% else %}
                                     <div style="text-align: center;">You have no keys.</div>
                                 {% endif %}
                             </div>
@@ -335,64 +335,13 @@
             {% if guild is not None %}
                 <div class="tab-pane fade" id="guild-tab-pane" role="tabpanel" aria-labelledby="guild-tab"
                      tabindex="2">
-                    <div class="row mt-4">
-                        <div class='WindowSuperFancy' style="width:100%;">
-                            <div class="row">
-                                <div class="WindowNestedTan col" style="overflow: hidden scroll">
-                                    <div class='WindowNestedTanTitleBar eq-header'>
-                                        <h1>{{ guild.name }}</h1>
-                                    </div>
-                                    MOTD: {{ guild.motd }}
-                                    <table class="eq-table eq-highlight-rows" style="display: table">
-                                        <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Level</th>
-                                            <th>Class</th>
-                                            <th>Race</th>
-                                            <th>Rank</th>
-                                            <th>Zone</th>
-                                            <th>Alt</th>
-                                            <th>Last Online</th>
-                                            <th>Public Note</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        {% for member in guild_members %}
-                                            <tr>
-                                                <td>{{ member.char_id.name }}</td>
-                                                <td>{{ member.char_id.level }}</td>
-                                                <td>{{ member.char_id.class_name|player_class }}</td>
-                                                <td>{{ member.char_id.race|player_race }}</td>
-                                                <td>{{ member.rank|guild_rank }}</td>
-                                                <td>{{ member.char_id.zone_id|zone_filter:"long" }}</td>
-                                                {% if member.alt %}
-                                                    <td>
-                                                        <label for="alt" class="eq-checkbox-label"></label>
-                                                        <input id="alt" class="eq-checkbox" type="checkbox"/>
-                                                    </td>
-                                                {% else %}
-                                                    <td>
-                                                        <label for="alt" class="eq-checkbox-label"></label>
-                                                        <input id="alt" class="eq-checkbox" type="checkbox"/>
-                                                    </td>
-                                                {% endif %}
-                                                <td>{{ member.char_id.last_login|datetime_from_timestamp|naturaltime }}</td>
-                                                <td>{{ member.public_note }}</td>
-                                            </tr>
-                                        {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    {% include 'characters/guild.html' %}
                 </div>
             {% endif %}
             <div class="tab-pane fade" id="skill-tab-pane" role="tabpanel" aria-labelledby="skill-tab"
                  tabindex="3">
                 <div class="row mt-4">
-                    <div class='WindowSuperFancy' style="width:100%;">
+                    <div class='eq-window-complex-fancy' style="width:100%;">
                         <div class="row">
                             <div class="WindowNestedTan col">
                                 <div class='WindowNestedTanTitleBar eq-header'>
@@ -491,7 +440,7 @@
                  tabindex="4">
                 {% if character.class_name != 0 or 1 or 7 or 9 %}
                     <div class="row mt-4">
-                            {% include "characters/spells.html" %}
+                        {% include "characters/spells.html" %}
                     </div>
                 {% endif %}
             </div>
