@@ -765,7 +765,7 @@ A.eq-progress-bar DIV:before {
     padding: 5px 8px;
     margin: 10px 8px;
     font-family: arial;
-    font-size: 7pt;
+    font-size: 11pt;
     color: #FFFFFF;
     text-align: left;
     vertical-align: top;
@@ -815,7 +815,7 @@ table.eq-table tr:nth-child(even) {
     font-weight: bold;
     color: #8aa3ff;
     vertical-align: top;
-    margin: 0px;
+    margin: 0;
     padding: 20px 15px 15px;
     border-collapse: collapse;
     text-align: left;
@@ -830,7 +830,7 @@ table.eq-table tr:nth-child(even) {
 .eq-table TBODY TR TD {
     color: #ffffff;
     vertical-align: top;
-    margin: 0px;
+    margin: 0;
     padding: 2px 15px;
     border-collapse: collapse;
     text-align: left;
@@ -839,7 +839,7 @@ table.eq-table tr:nth-child(even) {
 .eq-table TFOOT TR TD {
     color: #ffffff;
     vertical-align: top;
-    margin: 0px;
+    margin: 0;
     padding: 5px 15px;
     border-collapse: collapse;
     text-align: center;

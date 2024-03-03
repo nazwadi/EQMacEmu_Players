@@ -1,0 +1,116 @@
+{% load static %}
+{% load data_utilities %}
+{% load humanize %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="container-fluid content-pop">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class='eq-window-fancy' style="width:100%;">
+                                <div class="row">
+                                    <div class="WindowNestedTan col">
+                                        <div class='WindowNestedTanTitleBar eq-header'>
+                                            <h2>Character Skills</h2>
+                                        </div>
+                                        <div class="col" style="text-align: center">
+                                            <span style="font-weight: bold">Practice Points:</span> {{ character.points }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="WindowNestedTan col">
+                                        <div class='WindowNestedTanTitleBar eq-header'>
+                                            <h3>Abilities</h3>
+                                        </div>
+                                        {% if character_skills %}
+                                            <table class="eq-table eq-highlight-rows">
+                                                <thead>
+                                                <tr>
+                                                    <th>Skill</th>
+                                                    <th>Value</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% for skill in character_skills %}
+                                                    <tr>
+                                                        <td>{{ skill.skill_id|player_skill }}</td>
+                                                        <td>{{ skill.value }}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        {% else %}
+                                            <div style="text-align:center;">You have no skills - go visit a
+                                                trainer!
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    {% if character.class_name not in non_casters %}
+                                        <div class="WindowNestedTan col">
+                                            <div class='WindowNestedTanTitleBar eq-header'>
+                                                <h3>Magic/Music</h3>
+                                            </div>
+                                            {% if character_magic_songs %}
+                                                <table class="eq-table eq-highlight-rows">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>Skill</th>
+                                                        <th>Value</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {% for magic_song in character_magic_songs %}
+                                                        <tr>
+                                                            <td>{{ magic_song.skill_id|player_skill }}</td>
+                                                            <td>{{ magic_song.value }}</td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            {% else %}
+                                                <div style="text-align:center;">You have no magic or musical
+                                                    skills - go visit a
+                                                    trainer!
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+                                    <div class="WindowNestedTan col">
+                                        <div class='WindowNestedTanTitleBar eq-header'>
+                                            <h3>Languages</h3>
+                                        </div>
+                                        {% if character_languages.all %}
+                                            <table class="eq-table eq-highlight-rows">
+                                                <thead>
+                                                <tr>
+                                                    <th>Language</th>
+                                                    <th>Value</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% for language in character_languages %}
+                                                    <tr>
+                                                        <td>{{ language.lang_id|player_language }}</td>
+                                                        <td>{{ language.value }}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        {% else %}
+                                            <div style="text-align:center;">You know no languages - go visit
+                                                a trainer!
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
