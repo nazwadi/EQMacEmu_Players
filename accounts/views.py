@@ -1,9 +1,11 @@
-from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
+from django.db import connections
+from django.shortcuts import render, redirect
 
 from .models import LoginServerAccounts
+from .models import WorldServerRegistration
 from .tables import LoginServerAccountTable
 
 from .forms import ContactForm, NewUserForm, NewLSAccountForm, UpdateLSAccountForm
@@ -22,6 +24,18 @@ def index_request(request):
         if request.user.is_authenticated:
             return render(request=request, template_name="accounts/index.html")
     return redirect("accounts:login")
+
+
+def server_list(request):
+    if request.method == "GET":
+        servers = WorldServerRegistration.objects.all()
+        cursor = connections['game_database'].cursor()
+        cursor.execute("SELECT count(*) FROM account WHERE `active` = '1' AND `mule` = '0';")
+        population = cursor.fetchone()[0]
+        return render(request=request,
+                      template_name="accounts/server_list.html",
+                      context={"servers": servers,
+                               "population": population})
 
 
 def login_request(request):

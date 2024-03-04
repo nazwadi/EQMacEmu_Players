@@ -1,0 +1,43 @@
+{% extends 'characters/header.html' %}
+
+<!--Block content goes below-->
+
+{% block content %}
+
+    <div class="container py-5">
+        <div class="eq-window-complex-fancy">
+            <div class="eq-window-nested-tan eq-header" style="text-align: center;">
+                <h1>EQMacEmu Server List</h1>
+            </div>
+            <table class="eq-table">
+                <thead>
+                <tr>
+                    <th>Status</th>
+                    <th>Server Information</th>
+                    <th>Legends Servers</th>
+                    <th>Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for server in servers %}
+                    {% if server.ServerListTypeID == 1 %}
+                        <tr>
+                            <td style="width: 50px;">
+                                <span style="color:green">{{ population }}</span>
+                            </td>
+                            <td style="width:150px;">[<a href="https://eqarchives.com/" target="_blank">View</a>]</td>
+                            <td style="width: auto;"><span style="color:orange">{{ server.ServerLongName }}</span></td>
+                            <td style="width: auto;">{{ server.ServerTagDescription }}</td>
+                        </tr>
+                    {% endif %}
+                {% empty %}
+                    <tr>
+                        <td colspan="4">No registered servers were found.</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}
