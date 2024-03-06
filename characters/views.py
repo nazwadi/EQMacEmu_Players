@@ -109,7 +109,7 @@ def view_character(request, character_name):
         else:
             guild = None
         cursor = connections['game_database'].cursor()
-        cursor.execute("""SELECT ci.itemid, i.name, ci.slotid, ci.charges
+        cursor.execute("""SELECT ci.itemid, i.name, i.icon, ci.slotid, ci.charges
                           FROM character_inventory ci LEFT OUTER JOIN items i ON ci.itemid = i.id
                           WHERE ci.id = %s""",[character.id])
         character_inventory = cursor.fetchall()

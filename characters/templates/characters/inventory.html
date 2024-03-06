@@ -31,7 +31,7 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            {% for item_id, item_name, slot_id, charges in character_inventory %}
+                                            {% for item_id, item_name, icon, slot_id, charges in character_inventory %}
                                                 {% if forloop.counter == 1 %}
                                                     <tr>
                                                         <td colspan="4"
@@ -57,7 +57,7 @@
                                                 {% endif %}
                                                 <tr>
                                                     <td style="width: 10px;">{{ item_id }}</td>
-                                                    <td>
+                                                    <td><img src="{% static '/images/items' %}/item_{{ icon }}.png" alt="item_{{ icon }}.png">
                                                         <a href="https://www.takproject.net/allaclone/item.php?id={{ item_id }}"
                                                            target="_blank">{{ item_name }}</a>
                                                     </td>
