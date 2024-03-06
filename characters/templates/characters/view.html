@@ -32,6 +32,11 @@
                 {% endif %}
             </li>
             <li class="nav-item" role="presentation">
+                <button class="nav-link" id="inventory-tab" data-bs-toggle="tab" data-bs-target="#inventory-tab-pane"
+                        type="button" role="tab" aria-controls="inventory-tab-pane" aria-selected="false">Inventory
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
                 <button class="nav-link" id="skills-tab" data-bs-toggle="tab" data-bs-target="#skill-tab-pane"
                         type="button" role="tab" aria-controls="skill-tab-pane" aria-selected="false">Skills
                 </button>
@@ -334,19 +339,23 @@
                     {% include 'characters/guild.html' %}
                 </div>
             {% endif %}
-            <div class="tab-pane fade" id="skill-tab-pane" role="tabpanel" aria-labelledby="skill-tab"
+            <div class="tab-pane fade" id="inventory-tab-pane" role="tabpanel" aria-labelledby="inventory-tab"
                  tabindex="3">
+                {% include 'characters/inventory.html' %}
+            </div>
+            <div class="tab-pane fade" id="skill-tab-pane" role="tabpanel" aria-labelledby="skill-tab"
+                 tabindex="4">
                 {% include "characters/skills.html" %}
             </div>
             <div class="tab-pane fade" id="spell-tab-pane" role="tabpanel" aria-labelledby="spell-tab"
-                 tabindex="4">
+                 tabindex="5">
                 {% if character.class_name != 0 or 1 or 7 or 9 %}
                     {% include "characters/spells.html" %}
                 {% endif %}
             </div>
             {% if account.expansion >= 3 %}
                 <div class="tab-pane fade" id="aa-tab-pane" role="tabpanel" aria-labelledby="aa-tab"
-                     tabindex="5">
+                     tabindex="6">
                     <div class="row mt-4">
                         <div class='WindowSuperFancy' style="width:100%;">
                             <div class="row">

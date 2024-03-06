@@ -1,0 +1,79 @@
+{% load static %}
+{% load data_utilities %}
+{% load humanize %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="container-fluid content-pop">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="eq-window-fancy">
+                                <div class="row">
+                                    <div class="eq-window-nested-tan col" style="overflow: hidden scroll">
+                                        <div class='WindowNestedTanTitleBar eq-header'>
+                                            <h2>Character Inventory</h2>
+                                        </div>
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <label for="inventory-filter"></label>
+                                                <input class="form-control" type="text" id="inventory-filter"
+                                                       placeholder="Search..."/>
+                                            </div>
+                                        </div>
+                                        <table id="inventory-table" class="eq-table eq-highlight-rows"
+                                               style="display: table">
+                                            <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Item Name</th>
+                                                <th>Slot / Slot ID</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for item_id, item_name, slot_id, charges in character_inventory %}
+                                                {% if forloop.counter == 1 %}
+                                                    <tr>
+                                                        <td colspan="4"
+                                                            style="background-color: #000; text-align: center;">
+                                                            Worn Gear
+                                                        </td>
+                                                    </tr>
+                                                {% elif slot_id == 22 %}
+                                                    <tr>
+                                                        <td colspan="4"
+                                                            style="background-color: #000; text-align: center;">
+                                                            Inventory
+                                                        </td>
+                                                    </tr>
+                                                {% elif slot_id == 2000 %}
+                                                    <tr>
+                                                        <td colspan="4"
+                                                            style="background-color: #000; text-align: center;">
+                                                            Bank Gear
+                                                        </td>
+                                                    </tr>
+
+                                                {% endif %}
+                                                <tr>
+                                                    <td style="width: 10px;">{{ item_id }}</td>
+                                                    <td>
+                                                        <a href="https://www.takproject.net/allaclone/item.php?id={{ item_id }}"
+                                                           target="_blank">{{ item_name }}</a>
+                                                    </td>
+                                                    <td>{{ slot_id|inventory_slot }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

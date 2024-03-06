@@ -8,7 +8,7 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 
-from .models import Characters
+from .models import Characters, CharacterInventory
 from .models import CharacterCurrency
 from .models import CharacterLanguages
 from .models import CharacterSpells
@@ -108,6 +108,11 @@ def view_character(request, character_name):
             guild_members = GuildMembers.objects.filter(guild_id=guild.id)
         else:
             guild = None
+        cursor = connections['game_database'].cursor()
+        cursor.execute("""SELECT ci.itemid, i.name, ci.slotid, ci.charges
+                          FROM character_inventory ci LEFT OUTER JOIN items i ON ci.itemid = i.id
+                          WHERE ci.id = %s""",[character.id])
+        character_inventory = cursor.fetchall()
         last_login = datetime.datetime.fromtimestamp(character.last_login)
         birthday = datetime.datetime.fromtimestamp(character.birthday)
         time_played = datetime.timedelta(seconds=character.time_played)
@@ -118,13 +123,14 @@ def view_character(request, character_name):
                           "account": account,
                           "birthday": birthday,
                           "character": character,
+                          "character_currency": character_currency,
                           "character_faction_values": character_faction_list,
+                          "character_inventory": character_inventory,
                           "character_keyring": character_keyring,
                           "character_languages": character_languages,
-                          "character_spells": character_spells,
-                          "character_skills": character_skills,
                           "character_magic_songs": character_magic_songs,
-                          "character_currency": character_currency,
+                          "character_skills": character_skills,
+                          "character_spells": character_spells,
                           "face_image": face_image,
                           "guild": guild,
                           "guild_members": guild_members,

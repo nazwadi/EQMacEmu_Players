@@ -101,6 +101,26 @@ class CharacterFactionValues(models.Model):
         db_table = "character_faction_values"
 
 
+class CharacterInventory(models.Model):
+    """
+    This model maps to the character_inventory table in the database.
+    """
+
+    def __str__(self):
+        return str(self.item_id)
+
+    id = models.IntegerField(primary_key=True, null=False, default=None)
+    slot_id = models.IntegerField(null=False, unique=True, default=None, db_column='slotid')
+    item_id = models.IntegerField(null=True, default=0, db_column='itemid')
+    charges = models.SmallIntegerField(null=False, default=0)
+    custom_data = models.TextField(null=True, default="")
+    serial_number = models.IntegerField(null=False, default=0, db_column='serialnumber')
+    initial_serial = models.SmallIntegerField(null=False, default=0, db_column='initialserial')
+
+    class Meta:
+        db_table = "character_inventory"
+
+
 class CharacterSkills(models.Model):
     """
     This model maps to the character_skills table in the database.

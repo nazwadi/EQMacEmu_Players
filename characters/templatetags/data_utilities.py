@@ -24,6 +24,43 @@ def time_played(value):
     return datetime.timedelta(seconds=value)
 
 
+@register.filter(name='inventory_slot')
+def inventory_slot(value):
+    slot = {
+        0: "slotCursor",
+        1: "Left Ear",
+        2: "Head",
+        3: "Face",
+        4: "Right Ear",
+        5: "Neck",
+        6: "Shoulders",
+        7: "Arms",
+        8: "Back",
+        9: "Left Wrist",
+        10: "Right Wrist",
+        11: "Range",
+        12: "Hands",
+        13: "Primary",
+        14: "Secondary",
+        15: "Left Finger",
+        16: "Right Finger",
+        17: "Chest",
+        18: "Legs",
+        19: "Feet",
+        20: "Waist",
+        21: "Ammo",
+        22: "General 1",
+        23: "General 2",
+        24: "General 3",
+        25: "General 4",
+        26: "General 5",
+        27: "General 6",
+        28: "General 7",
+        29: "General 8",
+    }
+    return slot[value] if value in slot else value
+
+
 @register.filter(name='player_class')
 def player_class(value):
     classes = {
@@ -229,7 +266,7 @@ def player_skill(value):
         73: "Taunt",
         74: "Count",
     }
-    return player_skills[value] if value in player_skills else "Unknown "+str(value)
+    return player_skills[value] if value in player_skills else "Unknown " + str(value)
 
 
 @register.filter(name='player_language')
@@ -263,7 +300,7 @@ def player_language(value):
         25: "Unknown1",
         26: "Unknown2",
     }
-    return player_languages[value] if value in player_languages else "Unknown"+str(value)
+    return player_languages[value] if value in player_languages else "Unknown" + str(value)
 
 
 @register.filter(name='zone_filter')
