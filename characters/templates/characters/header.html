@@ -53,6 +53,14 @@
             });
         });
     });
+    $(document).ready(function () {
+        $("#faction-filter").on("keyup", function () {
+            let value = $(this).val().toLowerCase();
+            $("#faction-table tbody>tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
 </script>
 
 </body>
