@@ -94,9 +94,9 @@ def view_character(request, character_name):
             """, [character.id])
         character_faction_list = cursor.fetchall()
         final_faction = list()
-        race_mod_name = 'r'.join(str(character.race))
-        class_mod_name = 'c'.join(str(character.class_name))
-        deity_mod_name = 'd'.join(str(character.deity))
+        race_mod_name = ''.join(['r', str(character.race)])
+        class_mod_name = ''.join(['c',str(character.class_name)])
+        deity_mod_name = ''.join(['d',str(character.deity)])
         for faction in character_faction_list:
             faction_modifiers = FactionListMod.objects.filter(faction_id=faction[0])
             fm = FactionMod()
