@@ -29,7 +29,8 @@
                                                 <th scope="col" style="width: auto; min-width: 300px;">Faction Name</th>
                                                 <th scope="col" style="width: auto; min-width: 100px;">
                                                     <div data-toggle="tooltip" data-placement="right"
-                                                         title="Modifiers = Base + Race + Class + Deity">Faction Modifiers
+                                                         title="Modifiers = Base + Race + Class + Deity">Faction
+                                                        Modifiers
                                                     </div>
                                                 </th>
                                                 <th scope="col" style="width: auto; min-width: 100px;">
@@ -46,7 +47,9 @@
                                             <tbody>
                                             {% for id, name, modifiers, min_cap, max_cap, value in character_faction_values %}
                                                 <tr>
-                                                    <td>{{ name }}</td>
+                                                    <td>
+                                                        <a href="https://www.takproject.net/allaclone/faction.php?id={{ id }}"
+                                                           target="_blank">{{ name }}</a></td>
                                                     <td>{{ modifiers }}</td>
                                                     <td>{{ value }}</td>
                                                     {% with con_value=value|add:modifiers %}
@@ -58,7 +61,33 @@
                                                             <td>{{ value|add:modifiers }}</td>
                                                         {% endif %}
                                                     {% endwith %}
-                                                    <td>{{ value|add:modifiers|faction_level }}</td>
+                                                    {% with con_level=value|add:modifiers|faction_level %}
+                                                        {% if con_level == "Max Scowls" %}
+                                                            <td style="color:#990000">{{ con_level }}</td>
+                                                        {% elif con_level == "Scowls" %}
+                                                            <td style="color:#FF0000">{{ con_level }}</td>
+                                                        {% elif con_level == "Threateningly" %}
+                                                            <td style="color:#FFA500">{{ con_level }}</td>
+                                                        {% elif con_level == "Dubiously" %}
+                                                            <td style="color:#FFFF00">{{ con_level }}</td>
+                                                        {% elif con_level == "Apprehensively" %}
+                                                            <td>{{ con_level }}</td>
+                                                        {% elif con_level == "Indifferently" %}
+                                                            <td style="color:#02CCFE">{{ con_level }}</td>
+                                                        {% elif con_level == "Amiably" %}
+                                                            <td style="color:#0000FF">{{ con_level }}</td>
+                                                        {% elif con_level == "Kindly" %}
+                                                            <td style="color:#043927">{{ con_level }}</td>
+                                                        {% elif con_level == "Warmly" %}
+                                                            <td style="color:#00FF00">{{ con_level }}</td>
+                                                        {% elif con_level == "Ally" %}
+                                                            <td style="color:#00FF00">{{ con_level }}</td>
+                                                        {% elif con_level == "Max_Ally" %}
+                                                            <td style="color:#00FF00">{{ con_level }}</td>
+                                                        {% else %}
+                                                            <td>{{ con_level }}</td>
+                                                        {% endif %}
+                                                    {% endwith %}
                                                 </tr>
                                             {% endfor %}
                                             </tbody>
