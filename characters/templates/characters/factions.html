@@ -13,23 +13,45 @@
                                         <div class='WindowNestedTanTitleBar eq-header'>
                                             <h2>Character Faction</h2>
                                         </div>
-                                        <table id="faction-table" class="eq-table bordered eq-highlight-rows"
+                                        <div class="WindowNestedTanTitleBar">
+                                        </div>
+                                        <table id="faction-table" class="eq-table eq-highlight-rows"
                                                style="width: 100%;">
                                             <thead class="eq-table-floating-header">
                                             <tr>
-                                                <th scope="col" style="width: auto; min-width: 300px;">Name</th>
-                                                <th scope="col" style="width: auto; min-width: 300px;">Base Level
+                                                <th scope="col" style="width: auto; min-width: 300px;">Faction Name</th>
+                                                <th scope="col" style="width: auto; min-width: 100px;">
+                                                    <div data-toggle="tooltip" data-placement="right"
+                                                         title="Modifiers = Base + Race + Class + Deity">Faction Modifiers
+                                                    </div>
                                                 </th>
-                                                <th scope="col" style="width: auto; min-width: 300px;">Base Value
+                                                <th scope="col" style="width: auto; min-width: 100px;">
+                                                    Raw Value
+                                                </th>
+                                                <th scope="col" style="width: auto; min-width: 100px;">
+                                                    Consider Value
+                                                </th>
+                                                <th scope="col" style="width: auto; min-width: 100px;">
+                                                    Con Level
                                                 </th>
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            {% for faction_name, faction_value in character_faction_values %}
+                                            {% for id, name, modifiers, min_cap, max_cap, value in character_faction_values %}
                                                 <tr>
-                                                    <td>{{ faction_name }}</td>
-                                                    <td>{{ faction_value|faction_level }}</td>
-                                                    <td>{{ faction_value }}</td>
+                                                    <td>{{ name }}</td>
+                                                    <td>{{ modifiers }}</td>
+                                                    <td>{{ value }}</td>
+                                                    {% with con_value=value|add:modifiers %}
+                                                        {% if con_value < min_cap %}
+                                                            <td>{{ min_cap }}</td>
+                                                        {% elif con_value > max_cap %}
+                                                            <td>{{ max_cap }}</td>
+                                                        {% else %}
+                                                            <td>{{ value|add:modifiers }}</td>
+                                                        {% endif %}
+                                                    {% endwith %}
+                                                    <td>{{ value|add:modifiers|faction_level }}</td>
                                                 </tr>
                                             {% endfor %}
                                             </tbody>

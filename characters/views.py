@@ -13,6 +13,7 @@ from .models import CharacterCurrency
 from .models import CharacterLanguages
 from .models import CharacterSpells
 from .models import CharacterSkills
+from .models import FactionListMod
 from .models import Guilds
 from .models import GuildMembers
 from accounts.models import Account
@@ -83,12 +84,32 @@ def view_character(request, character_name):
         character_languages = CharacterLanguages.objects.filter(id=character.id)
         cursor = connections['game_database'].cursor()
         cursor.execute(
-            """SELECT fl.name, cfv.current_value 
-               FROM character_faction_values as cfv LEFT OUTER JOIN faction_list as fl ON cfv.faction_id = fl.id 
+            """SELECT fl.id, fl.name, fl.base, fl.min_cap, fl.max_cap, cfv.current_value
+               FROM character_faction_values as cfv LEFT OUTER JOIN faction_list as fl ON fl.id  = cfv.faction_id
                WHERE cfv.id = '%s'
                ORDER BY fl.name;
             """, [character.id])
         character_faction_list = cursor.fetchall()
+        final_faction = list()
+        race_mod_name = 'r'.join(str(character.race))
+        class_mod_name = 'c'.join(str(character.class_name))
+        deity_mod_name = 'd'.join(str(character.deity))
+        for faction in character_faction_list:
+            faction_modifiers = FactionListMod.objects.filter(id=faction[0])
+            race_mod = 0
+            class_mod = 0
+            deity_mod = 0
+            for modifier in faction_modifiers:
+                if race_mod_name in modifier.mod_name:
+                    race_mod = modifier.mod
+                if class_mod_name in modifier.mod_name:
+                    class_mod = modifier.mod
+                if deity_mod_name in modifier.mod_name:
+                    deity_mod = modifier.mod
+            modifiers = faction[2] + race_mod + class_mod + deity_mod
+            row = faction[0], faction[1], modifiers, faction[3], faction[4], faction[5]
+            if len(row) == 6:
+                final_faction.append(row)
         scribed_spells = CharacterSpells.objects.filter(id=character.id)
         character_spells = list()
         for spell in scribed_spells:
@@ -124,7 +145,7 @@ def view_character(request, character_name):
                           "birthday": birthday,
                           "character": character,
                           "character_currency": character_currency,
-                          "character_faction_values": character_faction_list,
+                          "character_faction_values": final_faction,
                           "character_inventory": character_inventory,
                           "character_keyring": character_keyring,
                           "character_languages": character_languages,

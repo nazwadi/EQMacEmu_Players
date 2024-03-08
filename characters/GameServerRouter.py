@@ -12,6 +12,7 @@ from characters.models import CharacterKeyring
 from characters.models import CharacterLanguages
 from characters.models import CharacterSpells
 from characters.models import CharacterSkills
+from characters.models import FactionListMod
 from characters.models import Guilds
 from characters.models import GuildMembers
 from characters.models import Items
@@ -33,6 +34,7 @@ class GameServerRouter:
                           CharacterLanguages,
                           CharacterSkills,
                           CharacterSpells,
+                          FactionListMod,
                           Guilds,
                           GuildMembers,
                           SpellsNew,
