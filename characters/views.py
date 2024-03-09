@@ -9,7 +9,7 @@ from common.models.characters import CharacterCurrency
 from common.models.characters import CharacterLanguages
 from accounts.models import Account
 
-from characters.utils import valid_game_account_owner
+from common.utils import valid_game_account_owner
 from characters.utils import get_character_keyring
 from characters.utils import get_character_inventory
 from characters.utils import get_faction_information
@@ -29,20 +29,14 @@ def list_characters(request, game_account_name):
     if request.method == "GET":
 
         forum_name = request.user.username
-        if not valid_game_account_owner(forum_name, game_account_name):
+        game_account = Account.objects.filter(name=game_account_name).first()
+        if not valid_game_account_owner(forum_name, game_account.id):
             raise Http404("Either this account does not exist or does not belong to you.  If you have registered this "
                           "account with the login server, you must log in to the game server at least once before "
                           "attempting to view this page.")
 
-        game_account = Account.objects.filter(name=game_account_name)
-        try:
-            game_account_id = game_account.values('id')[0]
-        except IndexError:
-            raise Http404("This game account does not exist. If you have registered this account with the login "
-                          "server, you must log in to the game server at least once.")
-
-        if game_account_id is not None:
-            characters = Characters.objects.filter(account_id=game_account_id['id'])
+        if game_account.id is not None:
+            characters = Characters.objects.filter(account_id=game_account.id)
             return render(request=request, template_name="characters/list.html",
                           context={"characters": characters, }
                           )
@@ -60,7 +54,7 @@ def view_character(request, character_name):
         account = Account.objects.filter(id=character.account_id).first()
 
         forum_name = request.user.username
-        if not valid_game_account_owner(forum_name, account.name):
+        if not valid_game_account_owner(forum_name, account.id):
             raise Http404("This account does not exist")
 
         character_currency = CharacterCurrency.objects.filter(id=character.id).first()

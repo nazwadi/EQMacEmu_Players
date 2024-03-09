@@ -1,8 +1,5 @@
 import json
 
-from accounts.models import Account
-from accounts.models import LoginServerAccounts
-
 from collections import namedtuple
 
 from django.core.exceptions import ObjectDoesNotExist
@@ -15,30 +12,6 @@ from common.models.characters import CharacterSpells
 from common.models.faction import FactionListMod
 from common.models.guilds import Guilds
 from common.models.guilds import GuildMembers
-
-
-def valid_game_account_owner(web_account: str, game_account_name: str) -> bool:
-    """
-    Returns True if the web account (ForumName) owns the game account
-
-    :param web_account:
-    :param game_account_name:
-    :return: bool
-    """
-    game_account = Account.objects.filter(name=game_account_name)
-    ls_account = LoginServerAccounts.objects.filter(ForumName=web_account)
-
-    try:
-        game_account_name = game_account.values('name')[0]
-    except IndexError:
-        return False
-
-    # Ensure the requested game account belongs to the current user
-    ls_account_names = []
-    for account_name in ls_account.values('AccountName'):
-        ls_account_names.append(account_name['AccountName'])
-
-    return game_account_name['name'] in ls_account_names
 
 
 def get_character_inventory(character_id: int) -> tuple:
