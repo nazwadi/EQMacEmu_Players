@@ -28,13 +28,13 @@
                                             <tr>
                                                 <th scope="col" style="width: auto; min-width: 300px;">Faction Name</th>
                                                 <th scope="col" style="width: auto; min-width: 100px;">
+                                                    Raw Value
+                                                </th>
+                                                <th scope="col" style="width: auto; min-width: 100px;">
                                                     <div data-toggle="tooltip" data-placement="right"
                                                          title="Modifiers = Base + Race + Class + Deity">Faction
                                                         Modifiers
                                                     </div>
-                                                </th>
-                                                <th scope="col" style="width: auto; min-width: 100px;">
-                                                    Raw Value
                                                 </th>
                                                 <th scope="col" style="width: auto; min-width: 100px;">
                                                     Consider Value
@@ -50,8 +50,8 @@
                                                     <td>
                                                         <a href="https://www.takproject.net/allaclone/faction.php?id={{ id }}"
                                                            target="_blank">{{ name }}</a></td>
-                                                    <td>{{ modifiers }}</td>
                                                     <td>{{ value }}</td>
+                                                    <td>{{ modifiers }}</td>
                                                     {% with con_value=value|add:modifiers %}
                                                         {% if con_value < min_cap %}
                                                             <td>{{ min_cap }}</td>

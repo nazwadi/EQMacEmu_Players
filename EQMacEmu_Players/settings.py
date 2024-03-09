@@ -43,7 +43,7 @@ SECRET_KEY = os.environ.get("DJANGO_APP_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ['DEBUG'] == 'TRUE'
 
-ALLOWED_HOSTS = ['loginserver.eqarchives.com', 'eqarchives.com']
+ALLOWED_HOSTS = ['loginserver.eqarchives.com', 'eqarchives.com', 'localhost']
 #ALLOWED_HOSTS = ['*']
 CSRF_TRUSTED_ORIGINS = ['https://loginserver.eqarchives.com']
 

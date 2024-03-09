@@ -1,4 +1,3 @@
-from collections import namedtuple
 import datetime
 import json
 
@@ -14,12 +13,11 @@ from common.models.characters import CharacterCurrency
 from common.models.characters import CharacterLanguages
 from common.models.characters import CharacterSpells
 from common.models.characters import CharacterSkills
-from common.models.faction import FactionListMod
 from common.models.guilds import Guilds
 from common.models.guilds import GuildMembers
 from accounts.models import Account
 
-from common.faction import FactionMods
+from common.faction import get_faction_view
 from characters.utils import valid_game_account_owner
 
 
@@ -61,6 +59,7 @@ def view_character(request, character_name):
         character = Characters.objects.filter(name=character_name).first()
         if character is None:
             raise Http404("This character does not exist")
+
         account = Account.objects.filter(id=character.account_id).first()
 
         forum_name = request.user.username
@@ -84,38 +83,11 @@ def view_character(request, character_name):
                ORDER BY i.Name;""", [character.id])
         character_keyring = cursor.fetchall()
         character_languages = CharacterLanguages.objects.filter(id=character.id)
-        cursor = connections['game_database'].cursor()
 
-        # Faction Data
-        cursor.execute(
-            """SELECT fl.id, fl.name, fl.base, fl.min_cap, fl.max_cap, cfv.current_value
-               FROM character_faction_values as cfv LEFT OUTER JOIN faction_list as fl ON fl.id  = cfv.faction_id
-               WHERE cfv.id = '%s'
-               ORDER BY fl.name;
-            """, [character.id])
-        character_faction_list = cursor.fetchall()
-        final_faction = list()
-        race_mod_name = ''.join(['r', str(character.race)])
-        class_mod_name = ''.join(['c', str(character.class_name)])
-        deity_mod_name = ''.join(['d', str(character.deity)])
-        FactionTableRow = namedtuple("FactionTableRow", "id name base min_cap max_cap current_value")
-        for faction in character_faction_list:
-            faction_table_row = FactionTableRow(faction[0], faction[1], faction[2],
-                                                faction[3], faction[4], faction[5])
-            faction_modifiers = FactionListMod.objects.filter(faction_id=faction_table_row.id)
-            fm = FactionMods()
-            fm.base_mod = faction_table_row.base
-            for modifier in faction_modifiers:
-                if race_mod_name in modifier.mod_name:
-                    fm.race_mod = modifier.mod
-                if class_mod_name in modifier.mod_name:
-                    fm.class_mod = modifier.mod
-                if deity_mod_name in modifier.mod_name:
-                    fm.deity_mod = modifier.mod
-            modifiers = fm.base_mod + fm.race_mod + fm.class_mod + fm.deity_mod
-            row = faction[0], faction[1], modifiers, faction[3], faction[4], faction[5]
-            if len(row) == 6:
-                final_faction.append(row)
+        character_faction_values = get_faction_view(character_id=character.id,
+                                                    race_id=character.race,
+                                                    class_id=character.class_name,
+                                                    deity_id=character.deity)
 
         # Spell Data
         scribed_spells = CharacterSpells.objects.filter(id=character.id)
@@ -153,7 +125,7 @@ def view_character(request, character_name):
                           "birthday": birthday,
                           "character": character,
                           "character_currency": character_currency,
-                          "character_faction_values": final_faction,
+                          "character_faction_values": character_faction_values,
                           "character_inventory": character_inventory,
                           "character_keyring": character_keyring,
                           "character_languages": character_languages,
