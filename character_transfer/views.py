@@ -30,7 +30,8 @@ def index(request):
                 if game_account_id is not None:
                     cursor = connections['game_database'].cursor()
                     cursor.execute(
-                        """SELECT cd.id, cd.name, cd.class, cd.race, cd.level, cd.zone_id, cd.x, cd.y, cd.z, a.id, a.Name, a.time_creation
+                        """SELECT cd.id, cd.name, cd.class, cd.race, cd.level, cd.zone_id,
+                                  cd.x, cd.y, cd.z, a.id, a.Name, a.time_creation
                            FROM character_data as cd LEFT OUTER JOIN account as a ON cd.account_id = a.id 
                            WHERE cd.account_id  = '%s' 
                            ORDER BY cd.name;""", [game_account_id])
