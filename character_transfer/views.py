@@ -1,8 +1,10 @@
 from collections import namedtuple
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db import connections
 from django.shortcuts import render, redirect
+
 from accounts.models import Account
 from accounts.models import LoginServerAccounts
 
