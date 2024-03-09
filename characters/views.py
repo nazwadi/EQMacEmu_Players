@@ -1,8 +1,4 @@
 import datetime
-import json
-
-from django.core.exceptions import ObjectDoesNotExist
-from django.db import connections
 from django.http import Http404
 from django.shortcuts import redirect
 from django.shortcuts import render
@@ -11,14 +7,15 @@ from django.contrib.auth.decorators import login_required
 from common.models.characters import Characters
 from common.models.characters import CharacterCurrency
 from common.models.characters import CharacterLanguages
-from common.models.characters import CharacterSpells
-from common.models.characters import CharacterSkills
-from common.models.guilds import Guilds
-from common.models.guilds import GuildMembers
 from accounts.models import Account
 
-from common.faction import get_faction_view
 from characters.utils import valid_game_account_owner
+from characters.utils import get_character_keyring
+from characters.utils import get_character_inventory
+from characters.utils import get_faction_information
+from characters.utils import get_guild_information
+from characters.utils import get_skill_information
+from characters.utils import get_spell_information
 
 
 def index_request(request):
@@ -67,58 +64,33 @@ def view_character(request, character_name):
             raise Http404("This account does not exist")
 
         character_currency = CharacterCurrency.objects.filter(id=character.id).first()
-        character_skills_unfiltered = CharacterSkills.objects.filter(id=character.id)
-        character_magic_songs = []
-        character_skills = []
-        for skill in character_skills_unfiltered:
-            if skill.skill_id in [4, 5, 12, 13, 14, 18, 24, 31, 41, 43, 44, 45, 46, 47, 49, 54, 70]:
-                character_magic_songs.append(skill)
-            else:
-                character_skills.append(skill)
-        cursor = connections['game_database'].cursor()
-        cursor.execute(
-            """SELECT ck.item_id, i.Name 
-               FROM character_keyring as ck LEFT OUTER JOIN items as i ON ck.item_id = i.id 
-               WHERE ck.id  = '%s' 
-               ORDER BY i.Name;""", [character.id])
-        character_keyring = cursor.fetchall()
+
+        character_magic_songs, character_skills = get_skill_information(character_id=character.id)
+
+        character_keyring = get_character_keyring(character_id=character.id)
+
         character_languages = CharacterLanguages.objects.filter(id=character.id)
 
-        character_faction_values = get_faction_view(character_id=character.id,
-                                                    race_id=character.race,
-                                                    class_id=character.class_name,
-                                                    deity_id=character.deity)
+        character_faction_values = get_faction_information(character_id=character.id,
+                                                           race_id=character.race,
+                                                           class_id=character.class_name,
+                                                           deity_id=character.deity)
 
-        # Spell Data
-        scribed_spells = CharacterSpells.objects.filter(id=character.id)
-        character_spells = list()
-        for spell in scribed_spells:
-            try:
-                character_spells.append(spell.spell_id.id)
-            except ObjectDoesNotExist:
-                continue
-        filename = f'static/spell_data/{character.class_name}.json'
-        with open(filename, 'r') as json_file:
-            spell_list = json.load(json_file)
+        character_spells, spell_list = get_spell_information(character_id=character.id,
+                                                             class_id=character.class_name)
+
         # 0 - Unknown, 1 - Warrior, 7 - Monk, 9 - Rogue
         non_casters = [0, 1, 7, 9]
-        guild_members = GuildMembers.objects.filter(char_id=character.id).first()
-        if guild_members is not None:
-            guild_id = guild_members.guild_id
-            guild = Guilds.objects.filter(id=int(guild_id.id)).first()
-            guild_members = GuildMembers.objects.filter(guild_id=guild.id)
-        else:
-            guild = None
-        cursor = connections['game_database'].cursor()
-        cursor.execute("""SELECT ci.itemid, i.name, i.icon, ci.slotid, ci.charges
-                          FROM character_inventory ci LEFT OUTER JOIN items i ON ci.itemid = i.id
-                          WHERE ci.id = %s""", [character.id])
-        character_inventory = cursor.fetchall()
+
+        guild, guild_members = get_guild_information(character_id=character.id)
+
+        character_inventory = get_character_inventory(character_id=character.id)
+
         last_login = datetime.datetime.fromtimestamp(character.last_login)
         birthday = datetime.datetime.fromtimestamp(character.birthday)
         time_played = datetime.timedelta(seconds=character.time_played)
-        face_image = "race_" + str(character.race) + "_gender_" + str(character.gender) + "_face_" + str(
-            character.face) + ".png"
+        face_image = ''.join(["race_", str(character.race), "_gender_",
+                              str(character.gender), "_face_", str(character.face), ".png"])
         return render(request=request, template_name="characters/view.html",
                       context={
                           "account": account,
