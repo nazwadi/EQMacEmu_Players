@@ -1,6 +1,6 @@
 from accounts.models import Account
 from accounts.models import LoginServerAccounts
-from characters.models import Characters
+from common.models.characters import Characters
 
 
 def valid_character_ownership(web_account: str, character_id: str) -> bool:
@@ -15,7 +15,6 @@ def valid_character_ownership(web_account: str, character_id: str) -> bool:
     ls_accounts = LoginServerAccounts.objects.filter(ForumName=web_account)
     target_character = Characters.objects.filter(id=character_id).first()
     ls_account_names = list()
-    game_account_names = list()
     for account_name in ls_accounts.values('AccountName'):
         ls_account_names.append(account_name['AccountName'])
         game_account = Account.objects.filter(name=account_name['AccountName'])

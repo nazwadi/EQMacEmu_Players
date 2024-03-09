@@ -1,3 +1,4 @@
+from collections import namedtuple
 import datetime
 import json
 
@@ -8,18 +9,18 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 
-from .models import Characters, CharacterInventory
-from .models import CharacterCurrency
-from .models import CharacterLanguages
-from .models import CharacterSpells
-from .models import CharacterSkills
-from .models import FactionListMod
-from .models import Guilds
-from .models import GuildMembers
+from common.models.characters import Characters
+from common.models.characters import CharacterCurrency
+from common.models.characters import CharacterLanguages
+from common.models.characters import CharacterSpells
+from common.models.characters import CharacterSkills
+from common.models.faction import FactionListMod
+from common.models.guilds import Guilds
+from common.models.guilds import GuildMembers
 from accounts.models import Account
 
+from common.faction import FactionMods
 from characters.utils import valid_game_account_owner
-from characters.utils import FactionMod
 
 
 def index_request(request):
@@ -34,16 +35,16 @@ def list_characters(request, game_account_name):
 
         forum_name = request.user.username
         if not valid_game_account_owner(forum_name, game_account_name):
-            raise Http404("Either this account does not exist or does not belong to you.  If you have registered this account"
-                          " with the loginserver, you must log in to the game server at least once before attempting"
-                          " to view this page.")
+            raise Http404("Either this account does not exist or does not belong to you.  If you have registered this "
+                          "account with the login server, you must log in to the game server at least once before "
+                          "attempting to view this page.")
 
         game_account = Account.objects.filter(name=game_account_name)
         try:
             game_account_id = game_account.values('id')[0]
         except IndexError:
-            raise Http404("This game account does not exist. If you have registered this account with the loginserver, "
-                          "you must log in to the game server at least once.")
+            raise Http404("This game account does not exist. If you have registered this account with the login "
+                          "server, you must log in to the game server at least once.")
 
         if game_account_id is not None:
             characters = Characters.objects.filter(account_id=game_account_id['id'])
@@ -95,12 +96,15 @@ def view_character(request, character_name):
         character_faction_list = cursor.fetchall()
         final_faction = list()
         race_mod_name = ''.join(['r', str(character.race)])
-        class_mod_name = ''.join(['c',str(character.class_name)])
-        deity_mod_name = ''.join(['d',str(character.deity)])
+        class_mod_name = ''.join(['c', str(character.class_name)])
+        deity_mod_name = ''.join(['d', str(character.deity)])
+        FactionTableRow = namedtuple("FactionTableRow", "id name base min_cap max_cap current_value")
         for faction in character_faction_list:
-            faction_modifiers = FactionListMod.objects.filter(faction_id=faction[0])
-            fm = FactionMod()
-            fm.base_mod = faction[2]
+            faction_table_row = FactionTableRow(faction[0], faction[1], faction[2],
+                                                faction[3], faction[4], faction[5])
+            faction_modifiers = FactionListMod.objects.filter(faction_id=faction_table_row.id)
+            fm = FactionMods()
+            fm.base_mod = faction_table_row.base
             for modifier in faction_modifiers:
                 if race_mod_name in modifier.mod_name:
                     fm.race_mod = modifier.mod
@@ -136,7 +140,7 @@ def view_character(request, character_name):
         cursor = connections['game_database'].cursor()
         cursor.execute("""SELECT ci.itemid, i.name, i.icon, ci.slotid, ci.charges
                           FROM character_inventory ci LEFT OUTER JOIN items i ON ci.itemid = i.id
-                          WHERE ci.id = %s""",[character.id])
+                          WHERE ci.id = %s""", [character.id])
         character_inventory = cursor.fetchall()
         last_login = datetime.datetime.fromtimestamp(character.last_login)
         birthday = datetime.datetime.fromtimestamp(character.birthday)

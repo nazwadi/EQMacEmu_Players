@@ -52,6 +52,7 @@ CSRF_TRUSTED_ORIGINS = ['https://loginserver.eqarchives.com']
 INSTALLED_APPS = [
     'polls.apps.PollsConfig',
     'accounts.apps.AccountsConfig',
+    'common.apps.CommonConfig',
     'characters.apps.CharactersConfig',
     'character_transfer.apps.CharacterTransferConfig',
     'debug_toolbar',

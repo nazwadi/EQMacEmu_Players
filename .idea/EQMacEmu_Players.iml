@@ -28,6 +28,7 @@
         <option value="$MODULE_DIR$/characters/templates" />
         <option value="$MODULE_DIR$/EQMacEmu_Players/templates" />
         <option value="$MODULE_DIR$/templates" />
+        <option value="$MODULE_DIR$/character_transfer/templates" />
       </list>
     </option>
   </component>

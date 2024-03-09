@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Characters
+from common.models.characters import Characters
 
 
 class CharactersAdmin(admin.ModelAdmin):

@@ -2,7 +2,7 @@
 This is the database router class for operations relating to tables found in the GameServer database.
 """
 from accounts.models import Account
-from characters.models import Characters
+from common.models.characters import Characters
 
 
 class GameServerRouter:
