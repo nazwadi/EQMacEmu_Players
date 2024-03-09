@@ -1,9 +1,28 @@
 from django.db import models
 
 
+class FactionList(models.Model):
+    """
+    This model maps to the faction list table in the database
+    """
+
+    def __str__(self):
+        return str(self.id)
+
+    id = models.IntegerField(primary_key=True, null=False)
+    name = models.CharField(max_length=50, null=False)
+    base = models.SmallIntegerField(null=False, default=0)
+    see_illusion = models.SmallIntegerField(null=False, default=1)
+    min_cap = models.SmallIntegerField(null=False, default=0)
+    max_cap = models.SmallIntegerField(null=False, default=0)
+
+    class Meta:
+        db_table = 'faction_list'
+
+
 class FactionListMod(models.Model):
     """
-    This model maps to the faction_list_model table in the database
+    This model maps to the faction_list_mod table in the database
     """
 
     def __str__(self):
@@ -16,5 +35,3 @@ class FactionListMod(models.Model):
 
     class Meta:
         db_table = 'faction_list_mod'
-
-
