@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect
 from accounts.models import Account
 from accounts.models import LoginServerAccounts
 
-from character_transfer.utils import valid_game_account_owner
+from common.utils import valid_game_account_owner
 from character_transfer.utils import valid_character_ownership
 
 

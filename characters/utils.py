@@ -38,10 +38,7 @@ def valid_game_account_owner(web_account: str, game_account_name: str) -> bool:
     for account_name in ls_account.values('AccountName'):
         ls_account_names.append(account_name['AccountName'])
 
-    if game_account_name['name'] not in ls_account_names:
-        return False
-
-    return True
+    return game_account_name['name'] in ls_account_names
 
 
 def get_character_inventory(character_id: int) -> tuple:
