@@ -27,28 +27,29 @@
                                                 <th>ID</th>
                                                 <th>Item Name</th>
                                                 <th>Charges / Max Charges</th>
+                                                <th>Stack Size / Max</th>
                                                 <th>Slot / Slot ID</th>
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            {% for item_id, item_name, icon, slot_id, charges, max_charges, stackable in character_inventory %}
+                                            {% for item_id, item_name, icon, slot_id, charges, max_charges, stackable, stack_size in character_inventory %}
                                                 {% if forloop.counter == 1 %}
                                                     <tr>
-                                                        <td colspan="4"
+                                                        <td colspan="5"
                                                             style="background-color: #000; text-align: center;">
                                                             Worn Gear
                                                         </td>
                                                     </tr>
                                                 {% elif slot_id == 22 %}
                                                     <tr>
-                                                        <td colspan="4"
+                                                        <td colspan="5"
                                                             style="background-color: #000; text-align: center;">
                                                             Inventory
                                                         </td>
                                                     </tr>
                                                 {% elif slot_id == 2000 %}
                                                     <tr>
-                                                        <td colspan="4"
+                                                        <td colspan="5"
                                                             style="background-color: #000; text-align: center;">
                                                             Bank Gear
                                                         </td>
@@ -57,16 +58,25 @@
                                                 {% endif %}
                                                 <tr>
                                                     <td style="width: 10px;">{{ item_id }}</td>
-                                                    <td><img src="{% static '/images/items' %}/item_{{ icon }}.png" alt="item_{{ icon }}.png">
+                                                    <td><img src="{% static '/images/items' %}/item_{{ icon }}.png"
+                                                             alt="item_{{ icon }}.png">
                                                         <a href="https://www.takproject.net/allaclone/item.php?id={{ item_id }}"
                                                            target="_blank">{{ item_name }}</a>
                                                     </td>
-                                                    <td>
-                                                        {% if stackable == 3 and max_charges > 0 %}
+                                                    {% if stackable == 3 and max_charges > 0 %}
+                                                        <td>
                                                             <span style="text-align: center;">{{ charges }} / {{ max_charges }}</span>
-                                                        {% else %}
-                                                        {% endif %}
-                                                    </td>
+                                                        </td>
+                                                        <td></td>
+                                                    {% elif stackable == 1 and max_charges > 0 %}
+                                                        <td></td>
+                                                        <td>
+                                                            <span style="text-align: center;">{{ charges }} / {{ stack_size }}</span>
+                                                        </td>
+                                                    {% else %}
+                                                        <td></td>
+                                                        <td></td>
+                                                    {% endif %}
                                                     <td>{{ slot_id|inventory_slot }}</td>
                                                 </tr>
                                             {% endfor %}
