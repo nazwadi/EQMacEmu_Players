@@ -10,7 +10,7 @@
                         <div class="col-12">
                             <div class="eq-window-fancy">
                                 <div class="row">
-                                    <div class="eq-window-nested-tan col" style="overflow: hidden scroll">
+                                    <div class="eq-window-nested-tan col">
                                         <div class='WindowNestedTanTitleBar eq-header'>
                                             <h2>Character Inventory</h2>
                                         </div>
@@ -21,17 +21,17 @@
                                                        placeholder="Search..."/>
                                             </div>
                                         </div>
-                                        <table id="inventory-table" class="eq-table eq-highlight-rows"
-                                               style="display: table">
-                                            <thead>
+                                        <table id="inventory-table" class="eq-table bordered eq-highlight-rows">
+                                            <thead class="eq-table-floating-header">
                                             <tr>
                                                 <th>ID</th>
                                                 <th>Item Name</th>
+                                                <th>Charges / Max Charges</th>
                                                 <th>Slot / Slot ID</th>
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            {% for item_id, item_name, icon, slot_id, charges in character_inventory %}
+                                            {% for item_id, item_name, icon, slot_id, charges, max_charges, stackable in character_inventory %}
                                                 {% if forloop.counter == 1 %}
                                                     <tr>
                                                         <td colspan="4"
@@ -60,6 +60,12 @@
                                                     <td><img src="{% static '/images/items' %}/item_{{ icon }}.png" alt="item_{{ icon }}.png">
                                                         <a href="https://www.takproject.net/allaclone/item.php?id={{ item_id }}"
                                                            target="_blank">{{ item_name }}</a>
+                                                    </td>
+                                                    <td>
+                                                        {% if stackable == 3 and max_charges > 0 %}
+                                                            <span style="text-align: center;">{{ charges }} / {{ max_charges }}</span>
+                                                        {% else %}
+                                                        {% endif %}
                                                     </td>
                                                     <td>{{ slot_id|inventory_slot }}</td>
                                                 </tr>

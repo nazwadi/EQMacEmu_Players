@@ -16,7 +16,7 @@ from common.models.guilds import GuildMembers
 
 def get_character_inventory(character_id: int) -> tuple:
     cursor = connections['game_database'].cursor()
-    cursor.execute("""SELECT ci.itemid, i.name, i.icon, ci.slotid, ci.charges
+    cursor.execute("""SELECT ci.itemid, i.name, i.icon, ci.slotid, ci.charges, i.maxcharges, i.stackable
                       FROM character_inventory ci LEFT OUTER JOIN items i ON ci.itemid = i.id
                       WHERE ci.id = %s""", [character_id])
     character_inventory = cursor.fetchall()
