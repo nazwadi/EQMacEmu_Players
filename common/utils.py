@@ -21,4 +21,4 @@ def valid_game_account_owner(web_account: str, game_account_id: str) -> bool:
     for account_name in ls_account.values('AccountName'):
         ls_account_names.append(account_name['AccountName'].lower())
 
-    return game_account.name in ls_account_names
+    return game_account.name.lower() in ls_account_names
