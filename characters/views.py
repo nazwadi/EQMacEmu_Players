@@ -2,6 +2,7 @@ import datetime
 from django.http import Http404
 from django.shortcuts import redirect
 from django.shortcuts import render
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
 from common.models.characters import Characters
@@ -29,7 +30,11 @@ def list_characters(request, game_account_name):
     if request.method == "GET":
 
         forum_name = request.user.username
-        game_account = Account.objects.filter(name=game_account_name).first()
+        game_account = Account.objects.filter(name__iexact=game_account_name).first()
+        if game_account is None:
+            messages.error(request, "The world server has not seen this account. If this account is new, "
+                                    "please log in to character select first.")
+            return redirect("accounts:list_accounts")
         if not valid_game_account_owner(forum_name, game_account.id):
             raise Http404("Either this account does not exist or does not belong to you.  If you have registered this "
                           "account with the login server, you must log in to the game server at least once before "

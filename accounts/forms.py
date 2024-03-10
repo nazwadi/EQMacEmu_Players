@@ -15,6 +15,7 @@ class NewUserForm(UserCreationForm):
 
     def save(self, commit=True):
         user = super(NewUserForm, self).save(commit=False)
+        user.username = self.cleaned_data["username"].title()
         user.email = self.cleaned_data['email']
         if commit:
             user.save()
@@ -22,6 +23,8 @@ class NewUserForm(UserCreationForm):
 
 
 class NewLSAccountForm(ModelForm):
+    AccountPassword = forms.CharField(widget=forms.PasswordInput())
+
     class Meta:
         model = LoginServerAccounts
         fields = ('AccountName', 'AccountPassword', 'AccountEmail')
