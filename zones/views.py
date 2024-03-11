@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.contrib import messages
 
 
 def index(request):
@@ -10,6 +11,7 @@ def index(request):
 
 
 def view_zone(request, short_name):
+    messages.info(request, "Zone pages not implemented yet.  Come back soon!")
     return redirect("zones:index")
     # return render(request=request,
     #               template_name="zones/view_zone.html",
