@@ -1,0 +1,66 @@
+{% extends 'characters/header.html' %}
+{% load static %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="py-5">
+            <div class="d-flex align-items-start">
+                <div class="nav flex-column nav-pills me-3" id="zonesTab" role="tablist" aria-orientation="vertical">
+                    <button class="nav-link active" id="antonica-tab" data-bs-toggle="pill"
+                            data-bs-target="#antonica-tab-pane" type="button" role="tab"
+                            aria-controls="antonica-tab-pane" aria-selected="true">Zones
+                    </button>
+                    <button class="nav-link" id="zem-tab" data-bs-toggle="pill" data-bs-target="#zem-tab-pane"
+                            type="button" role="tab" aria-controls="zem-tab-pane" aria-selected="true">ZEM
+                    </button>
+                    <button class="nav-link" id="maps-tab" data-bs-toggle="pill" data-bs-target="#maps-tab-pane"
+                            type="button" role="tab" aria-controls="maps-tab-pane" aria-selected="true">Maps
+                    </button>
+                </div>
+                <div class="col tab-content" id="zonesTabContent">
+                    <div class="row px-4">
+                        <div class="col">
+                <pre>I've been everywhere, [Odus], [Faydwer], [Kunark]. . . .
+You name it, and I can tell ya a little something 'bout it. . .
+If you buy me a sip of brandy, of course!
+- Captain Rohand
+                    </pre>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade show active" id="antonica-tab-pane" role="tabpanel"
+                         aria-labelledby="antonica-tab"
+                         tabindex="0">
+                        <div class="container-fluid px-4">
+                            <ul class="list-group list-group-horizontal">
+                                <li class="list-group-item"><a href="https://www.steveprutz.com/eq/" target="_blank">Classic
+                                    Cartography: The Everquest Map Preserve</a></li>
+                                <li class="list-group-item"><a href="#">Maps of the World of Norrath / Zone Connection
+                                    Maps </a></li>
+                                <li class="list-group-item"><a href="#">Recommended Levels and ZEM List</a></li>
+                                <li class="list-group-item"><a href="#">Zone Spawn Timers</a></li>
+                            </ul>
+                        </div>
+                        {% include "zones/antonica.html" %}
+                        {% include "zones/odus_faydwer.html" %}
+                        {% include "zones/kunark.html" %}
+                        {% if 1 %}
+                            {% include "zones/velious.html" %}
+                        {% endif %}
+                        {% include "zones/planes.html" %}
+                    </div>
+                    <div class="tab-pane fade" id="zem-tab-pane" role="tabpanel" aria-labelledby="zem-tab"
+                         tabindex="1">
+                        <div class="container">
+                            <p>Coming soon!</p>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="maps-tab-pane" role="tabpanel" aria-labelledby="maps-tab"
+                         tabindex="2">
+                        <div class="container">
+                            <p>Coming soon!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

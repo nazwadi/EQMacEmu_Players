@@ -27,4 +27,5 @@ urlpatterns = [
     path("characters/", include("characters.urls")),
     path("character_transfer/", include("character_transfer.urls")),
     path("polls/", include("polls.urls")),
+    path("zones/", include("zones.urls")),
 ]

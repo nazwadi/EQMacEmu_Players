@@ -1,0 +1,24 @@
+{% load static %}
+{% load data_utilities %}
+{% block content %}
+<div class="container-fluid px-4">
+    <div class="row-4" style="text-align: center; font-weight: bold; background-color: #cedff2; border: #000 solid 1px;">Planes</div>
+    <div class="row align-items-start">
+        <div class="col-8 px-4">
+            <p style="font-weight: bold;">Original Release</p>
+            <ul>
+                <li><a href="/zones/view/fearplane" title="Plane of Fear">Plane of Fear</a></li>
+                <li><a href="/zones/view/hateplane" title="Plane of Hate">Plane of Hate</a></li>
+                <li><a href="/zones/view/airplane" title="Plane of Sky">Plane of Sky</a></li>
+            </ul>
+        </div>
+        <div class="col">
+            <p style="font-weight: bold;">Scars of Velious</p>
+            <ul>
+                <li>Plane of Growth</li>
+                <li>Plane of Mischief</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

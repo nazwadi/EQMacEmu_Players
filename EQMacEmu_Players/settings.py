@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap4',
     'bootstrap5',
+    'zones.apps.ZonesConfig',
 ]
 
 MESSAGE_TAGS = {

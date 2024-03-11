@@ -474,11 +474,11 @@ def player_language(value):
 @register.filter(name='zone_filter')
 def zone_filter(value, arg):
     """
-    Converts a zone_id to a zone long name or short name
+    Converts a zone_id to a zones long name or short name
 
     :param value: The zone_id piped to the filter
-    :param arg: "long" if the zone's long name is desired, defaults to the zone short name
-    :return: a zone long name or short name
+    :param arg: "long" if the zones's long name is desired, defaults to the zones short name
+    :return: a zones long name or short name
     """
     zones = {
         1: ("South Qeynos", "qeynos"),
