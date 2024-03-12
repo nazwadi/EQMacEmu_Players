@@ -14,6 +14,7 @@ from common.models.guilds import Guilds
 from common.models.guilds import GuildMembers
 from common.models.items import Items
 from common.models.spells import SpellsNew
+from common.models.zones import Zone
 
 
 class GameServerRouter:
@@ -34,7 +35,8 @@ class GameServerRouter:
                           Guilds,
                           GuildMembers,
                           SpellsNew,
-                          Items,]
+                          Items,
+                          Zone,]
 
     def db_for_read(self, model, **hints):
         """

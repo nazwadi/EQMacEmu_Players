@@ -1,0 +1,70 @@
+{% load static %}
+{% load data_utilities %}
+{% block content %}
+    <div class="container-fluid px-4">
+        <div class="row-4"
+             style="text-align: center; font-weight: bold; background-color: #cedff2; border: #000 solid 1px;">Planes of
+            Power
+        </div>
+        <div class="row align-items-start">
+            <div class="col px-4">
+                <p style="font-weight: bold;">Tier 1</p>
+                <ul>
+                    <li>Plane of Nightmare
+                        <ul>
+                            <li>Lair of Terris Thule</li>
+                        </ul>
+                    </li>
+                    <li>Plane of Disease</li>
+                    <li>Plane of Innovation</li>
+                    <li>Plane of Justice</li>
+                </ul>
+                <p style="font-weight: bold;">Tier 2</p>
+                <ul>
+                    <li>Plane of Storms</li>
+                    <li>Plane of Valor</li>
+                    <li>Plane of Torment</li>
+                    <li>Ruins of Lxanvom (Crypt of Decay)</li>
+                </ul>
+                <p style="font-weight: bold;">Tier 3</p>
+                <ul>
+                    <li>Halls of Honor
+                        <ul>
+                            <li>Temple of Marr</li>
+                        </ul>
+                    </li>
+                    <li>Torden, the Bastion of Thunder</li>
+                    <li>Drunder, Fortress of Zek (Plane of Tactics)</li>
+                </ul>
+            </div>
+            <div class="col py-5">
+                <img alt="planes_of_power_map.jpg" src="{% static "/images/planes_of_power_map.jpg" %}" width="337"
+                     height="307"/>
+            </div>
+            <div class="col">
+                <p style="font-weight: bold;">Cities</p>
+                <ul>
+                    <li>Plane of Knowledge</li>
+                    <li>Plane of Tranquility</li>
+                </ul>
+                <p style="font-weight: bold;">Tier 4</p>
+                <ul>
+                    <li>Solusek Ro's Tower</li>
+                    <li>Doomfire, the Burning Lands</li>
+                    <li>Eryslai, the Kingdom of Wind</li>
+                    <li>Reef of Coirnav</li>
+                    <li>Vegarlson, the Earthen Badlands
+                        <ul>
+                            <li>Ragrax, Stronghold of the Twelve</li>
+                        </ul>
+                    </li>
+                </ul>
+                <p style="font-weight: bold;">Tier 5</p>
+                <ul>
+                    <li>Plane of Time A</li>
+                    <li>Plane of Time B</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}

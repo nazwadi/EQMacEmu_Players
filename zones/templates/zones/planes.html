@@ -15,8 +15,13 @@
         <div class="col">
             <p style="font-weight: bold;">Scars of Velious</p>
             <ul>
+                {% if 1 %}
                 <li>Plane of Growth</li>
                 <li>Plane of Mischief</li>
+                {% else %}
+                    <li><a href="/zones/view/growthplane">Plane of Growth</a></li>
+                    <li><a href="/zones/view/mischiefplane">Plane of Mischief</a></li>
+                {% endif %}
             </ul>
         </div>
     </div>
