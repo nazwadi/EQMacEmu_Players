@@ -33,7 +33,7 @@ def view_zone(request, short_name):
     cursor = connections['game_database'].cursor()
     zone_data = Zone.objects.filter(short_name=short_name).first()
 
-    cursor.execute("""SELECT DISTINCT d.id, d.name, d.race, d.class, d.level, a.min_expansion 
+    cursor.execute("""SELECT DISTINCT d.id, d.name, d.race, d.class, d.level, a.min_expansion, a.max_expansion 
                       FROM spawn2 a
                         JOIN spawngroup b ON b.id = a.spawngroupID
                         JOIN spawnentry c ON c.spawngroupID = b.id
@@ -44,7 +44,7 @@ def view_zone(request, short_name):
 
     cursor.execute("""SELECT gs.id, gs.max_x, gs.max_y, gs.max_z, gs.min_x, gs.min_y, gs.heading, 
                              gs.max_allowed, gs.comment AS comment, gs.respawn_timer, gs.item AS giid, i.name AS name, 
-                             gs.min_expansion, gs.max_expansion
+                             i.icon as icon, gs.min_expansion, gs.max_expansion
                        FROM ground_spawns gs 
                          JOIN items i ON gs.item = i.id
                        WHERE gs.zoneid=%s AND gs.item=i.id OR gs.zoneid=0 AND gs.item=i.id""", [zone_data.zone_id_number])
@@ -62,13 +62,13 @@ def view_zone(request, short_name):
         spawn_entry_results = SpawnEntry.objects.filter(spawngroupID=sp[0])
         spawn_points.append((point, spawn_entry_results))
 
-    cursor.execute("""SELECT f.id, i.name, f.skill_level, f.chance 
+    cursor.execute("""SELECT i.id, i.name, i.icon, f.skill_level, f.chance 
                       FROM fishing f 
                         JOIN items i on i.id=f.itemid
                       WHERE f.zoneid=%s""", [zone_data.zone_id_number])
     fish = cursor.fetchall()
 
-    cursor.execute("""SELECT f.id, i.name, f.level, f.chance 
+    cursor.execute("""SELECT i.id, i.name, i.icon, f.level, f.chance 
                       FROM forage f 
                         JOIN items i on i.id=f.itemid
                       WHERE f.zoneid=%s""", [zone_data.zone_id_number])

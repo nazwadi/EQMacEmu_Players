@@ -1,40 +1,47 @@
 {% load static %}
 {% load data_utilities %}
-<div class="row">
-    <div class="col">
-        <span style="font-weight: bold;">NPCs</span> -
-        <span style="font-style: italic">Found {{ npc_results|length }} NPC's that spawn in {{ zone_data.short_name|zone_short_to_long }}:</span>
-        <table id="npc-table" class="display table table-striped" style="width: 100%;">
-            <thead>
-            <tr>
-                <th>NPC Name</th>
-                <th>Race</th>
-                <th>Class</th>
-                <th>Level</th>
-                <th>Expansion</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for id, name, race, class, level, min_expansion in npc_results %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <span style="font-weight: bold;">NPCs</span> -
+            <span style="font-style: italic">Found {{ npc_results|length }} NPC's that spawn in {{ zone_data.short_name|zone_short_to_long }}:</span>
+            <table id="npc-table" class="display table table-striped" style="width: 100%;">
+                <thead>
                 <tr>
-                    <td>{{ name|clean_npc_name }}</td>
-                    <td>{{ race|npc_race }}</td>
-                    <td>{{ class|npc_class }}</td>
-                    <td>{{ level }}</td>
-                    <td><img src="{% static "/images/" %}{{ min_expansion|expansion_icon }}"
-                             alt="{{ min_expansion }}"></td>
+                    <th>NPC Name</th>
+                    <th>Race</th>
+                    <th>Class</th>
+                    <th>Level</th>
+                    <th>Min Expansion</th>
+                    <th>Max Expansion</th>
                 </tr>
-            {% endfor %}
-            </tbody>
-            <tfoot>
-            <tr>
-                <th>NPC Name</th>
-                <th>Race</th>
-                <th>Class</th>
-                <th>Level</th>
-                <th>Expansion</th>
-            </tr>
-            </tfoot>
-        </table>
+                </thead>
+                <tbody>
+                {% for id, name, race, class, level, min_expansion, max_expansion in npc_results %}
+                    <tr>
+                        <td>{{ name|clean_npc_name }}</td>
+                        <td>{{ race|npc_race }}</td>
+                        <td>{{ class|npc_class }}</td>
+                        <td>{{ level }}</td>
+                        <td><img src="{% static "/images/" %}{{ min_expansion|expansion_icon }}"
+                                 alt="{{ min_expansion }}"></td>
+                        <td><img src="{% static "/images/" %}{{ max_expansion|expansion_icon }}"
+                                 alt="{{ min_expansion }}"></td>
+                    </tr>
+                    </tr>
+                {% endfor %}
+                </tbody>
+                <tfoot>
+                <tr>
+                    <th>NPC Name</th>
+                    <th>Race</th>
+                    <th>Class</th>
+                    <th>Level</th>
+                    <th>Min Expansion</th>
+                    <th>Max Expansion</th>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
     </div>
 </div>

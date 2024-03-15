@@ -1,36 +1,48 @@
 {% load data_utilities %}
 {% load static %}
 {% block content %}
-    <div class="container-fluid px-4">
-    <h1>Zone Experience Modifier</h1>
-    <p>
-        If all things were equal, you would receive an equal amount of XP for killing equivalent mobs in different zones. This is not the case. Some zones give a higher amount of experience than others. Some zones actually give a significantly lower amount of experience. ZEMs were put in place to encourage players to adventure in less frequented zones, as well as reward those adventuring in significantly more difficult areas. For example, dungeons typically have higher multipliers than outdoor zones.ref
-    </p>
-    <p>
-        In the old days of live EQ the server sent the actual ZEM values, which were recorded by studious players. These values were used as a basis for the EQEmu numbers, and so are in place on most stock EQEmu servers. These numbers were never known to have changed over the history of classic EQ live.
-    </p>
-    <p>
-        <span style="font-weight: bold;">ZEM</span> is the acronym used for Zone Experience Modifier. This corresponds to the per zone boost to experience you receive over the flat, normal amount. Note that on this scale a value of 75 represents normal. Below 75 indicates a experience penalty, and above 75 a bonus.
-    </p>
-        <div class="table-responsive">
-            <table id="zem-table" class="display table table-striped" style="width: 100%;">
-                <thead>
-                <tr>
-                    <th scope="col">Zone Name</th>
-                    <th scope="col">ZEM</th>
-                    <th scope="col">Expansion</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for zone in zone_data %}
+    <div class="container-fluid">
+        <div class="container-fluid px-4">
+            <h1>Zone Experience Modifier</h1>
+            <p>
+                If all things were equal, you would receive an equal amount of XP for killing equivalent mobs in
+                different zones. This is not the case. Some zones give a higher amount of experience than others. Some
+                zones actually give a significantly lower amount of experience. ZEMs were put in place to encourage
+                players to adventure in less frequented zones, as well as reward those adventuring in significantly more
+                difficult areas. For example, dungeons typically have higher multipliers than outdoor zones.ref
+            </p>
+            <p>
+                In the old days of live EQ the server sent the actual ZEM values, which were recorded by studious
+                players. These values were used as a basis for the EQEmu numbers, and so are in place on most stock
+                EQEmu servers. These numbers were never known to have changed over the history of classic EQ live.
+            </p>
+            <p>
+                <span style="font-weight: bold;">ZEM</span> is the acronym used for Zone Experience Modifier. This
+                corresponds to the per zone boost to experience you receive over the flat, normal amount. Note that on
+                this scale a value of 75 represents normal. Below 75 indicates a experience penalty, and above 75 a
+                bonus.
+            </p>
+            <div class="table-responsive">
+                <table id="zem-table" class="display table table-striped" style="width: 100%;">
+                    <thead>
                     <tr>
-                        <td>{{ zone.long_name }} (<span style="color: #535f50">{{ zone.short_name }}</span>)</td>
-                        <td>{{ zone.zone_exp_multiplier }}</td>
-                        <td><img src="{%  static "/images/" %}{{ zone.expansion|add:"-1"|expansion_icon }}" alt="{{ zone.expansion|expansion_icon }}"/></td>
+                        <th scope="col">Zone Name</th>
+                        <th scope="col">ZEM</th>
+                        <th scope="col">Expansion</th>
                     </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    {% for zone in zone_data %}
+                        <tr>
+                            <td>{{ zone.long_name }} (<span style="color: #535f50">{{ zone.short_name }}</span>)</td>
+                            <td>{{ zone.zone_exp_multiplier }}</td>
+                            <td><img src="{% static "/images/" %}{{ zone.expansion|add:"-1"|expansion_icon }}"
+                                     alt="{{ zone.expansion|expansion_icon }}"/></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 {% endblock %}

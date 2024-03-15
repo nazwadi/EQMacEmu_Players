@@ -1,39 +1,39 @@
 {% load data_utilities %}
-<div class="row">
-    <div class="col">
-        <span style="font-weight: bold;">Foraging</span> -
-        <span style="font-style: italic">Found {{ forage|length }} forage able items in {{ zone_data.short_name|zone_short_to_long }}:</span>
-        <table id="foraging-table" class="display table table-striped" style="width: 100%;">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Skill Level</th>
-                <th>Chance</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for id, name, skill_level, chance in forage %}
+{% load static %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <span style="font-weight: bold;">Foraging</span> -
+            <span style="font-style: italic">Found {{ forage|length }} forage able items in {{ zone_data.short_name|zone_short_to_long }}:</span>
+            <table id="foraging-table" class="display table table-striped" style="width: 100%;">
+                <thead>
                 <tr>
-                    <td>{{ id }}</td>
-                    <td>{{ name|clean_npc_name }}</td>
-                    <td>{{ skill_level }}</td>
-                    <td>{{ chance }}%</td>
+                    <th>Name</th>
+                    <th>Skill Level</th>
+                    <th>Chance</th>
                 </tr>
-            {% empty %}
+                </thead>
+                <tbody>
+                {% for item_id, item_name, item_icon, skill_level, chance in forage %}
+                    <tr>
+                        <td><img src="{% static '/images/items' %}/item_{{ item_icon }}.png"
+                                 alt="item_{{ item_icon }}.png">
+                            <a href="https://www.takproject.net/allaclone/item.php?id={{ item_id }}"
+                               target="_blank">{{ item_name }}</a>
+                        </td>
+                        <td>{{ skill_level }}</td>
+                        <td>{{ chance }}%</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+                <tfoot>
                 <tr>
-                    <td colspan="4">There are no forage able items found in this zone!</td>
+                    <th>Name</th>
+                    <th>Skill Level</th>
+                    <th>Chance</th>
                 </tr>
-            {% endfor %}
-            </tbody>
-            <tfoot>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Skill Level</th>
-                <th>Chance</th>
-            </tr>
-            </tfoot>
-        </table>
+                </tfoot>
+            </table>
+        </div>
     </div>
 </div>

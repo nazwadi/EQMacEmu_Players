@@ -68,51 +68,38 @@
                                 Z: {{ zone_data.safe_z }}</li>
                             <li>ZEM: {{ zone_data.zone_exp_multiplier }}</li>
                             <li>Casters Can Bind: {{ zone_data.can_bind|can_bind_filter }}</li>
-                            <li>Type: {{ zone_data.type|zone_type_filter }}</li>
                             <li>Levitate: {{ zone_data.can_levitate|yes_no }}</li>
                         </ul>
                     </div>
                     <div class="tab-pane fade" id="npc-tab-pane" role="tabpanel"
                          aria-labelledby="npc-tab"
                          tabindex="1">
-                        <div class="container-fluid">
-                            {% include "zones/npc.html" %}
-                        </div>
+                        {% include "zones/npc.html" %}
                     </div>
                     <div class="tab-pane fade" id="spawns-tab-pane" role="tabpanel"
                          aria-labelledby="spawns-tab"
                          tabindex="2">
-                        <div class="container-fluid">
-                            {% include "zones/spawns.html" %}
-                        </div>
+                        {% include "zones/spawns.html" %}
                     </div>
                     <div class="tab-pane fade" id="fishing-tab-pane" role="tabpanel"
                          aria-labelledby="fishing-tab"
                          tabindex="3">
-                        <div class="container-fluid">
-                            {% include "zones/fishing.html" %}
-                        </div>
+                        {% include "zones/fishing.html" %}
                     </div>
                     <div class="tab-pane fade" id="foraging-tab-pane" role="tabpanel"
                          aria-labelledby="foraging-tab"
                          tabindex="4">
-                        <div class="container-fluid">
-                            {% include "zones/foraging.html" %}
-                        </div>
+                        {% include "zones/foraging.html" %}
                     </div>
                     <div class="tab-pane fade" id="ground-spawns-tab-pane" role="tabpanel"
                          aria-labelledby="ground-spawns-tab"
                          tabindex="5">
-                        <div class="container-fluid">
-                            {% include "zones/ground-spawns.html" %}
-                        </div>
+                        {% include "zones/ground-spawns.html" %}
                     </div>
                     <div class="tab-pane fade" id="merchants-tab-pane" role="tabpanel"
                          aria-labelledby="merchants-tab"
                          tabindex="6">
-                        <div class="container-fluid">
-                            {% include "zones/merchants.html" %}
-                        </div>
+                        {% include "zones/merchants.html" %}
                     </div>
                 </div>
             </div>

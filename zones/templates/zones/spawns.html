@@ -1,10 +1,10 @@
 {% load data_utilities %}
 {% load static %}
-<div class="row">
-    <div class="col">
-        <span style="font-weight: bold;">Spawn Points</span> -
-        <span style="font-style: italic">Found {{ spawn_points|length }} spawn points in {{ zone_data.short_name|zone_short_to_long }}:</span>
-        {% if spawn_points %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <span style="font-weight: bold;">Spawn Points</span> -
+            <span style="font-style: italic">Found {{ spawn_points|length }} spawn points in {{ zone_data.short_name|zone_short_to_long }}:</span>
             <table id="spawn-table" class="display table table-striped" style="width: 100%;">
                 <thead>
                 <tr>
@@ -18,10 +18,12 @@
                 <tbody>
                 {% for point, spawn_entry_results in spawn_points %}
                     <tr>
-                        <td>({{ point.y|stringformat:".1f" }}, {{ point.x|stringformat:".1f" }}, {{ point.z|stringformat:".1f" }})</td>
+                        <td>
+                            ({{ point.y|stringformat:".1f" }}, {{ point.x|stringformat:".1f" }}, {{ point.z|stringformat:".1f" }})
+                        </td>
                         <td>
                             {% for spawn_entry in spawn_entry_results %}
-                                {{ spawn_entry.npcID.name|clean_npc_name }} ({{ spawn_entry.chance }}%)<br />
+                                {{ spawn_entry.npcID.name|clean_npc_name }} ({{ spawn_entry.chance }}%)<br/>
                             {% endfor %}
                         </td>
                         <td>{{ point.respawntime|datetime_delta }} ({{ point.variance|datetime_delta }})</td>
@@ -42,6 +44,6 @@
                 </tr>
                 </tfoot>
             </table>
-        {% endif %}
+        </div>
     </div>
 </div>
