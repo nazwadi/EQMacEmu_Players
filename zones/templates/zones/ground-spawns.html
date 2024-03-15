@@ -1,0 +1,40 @@
+{% load static %}
+{% load data_utilities %}
+<div class="row">
+    <div class="col">
+        <span style="font-weight: bold;">Ground Spawns</span> -
+        <span style="font-style: italic">Found {{ ground_spawns|length }} ground spawns in {{ zone_data.short_name|zone_short_to_long }}:</span>
+        {% if ground_spawns %}
+            <table id="ground-spawns-table" class="display table table-striped"
+                   style="width: 100%;">
+                <thead>
+                <tr>
+                    <th>id</th>
+                    <th>Name</th>
+                    <th>Coordinates (Y, X, Z)</th>
+                    <th>Comment</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for id, max_x, max_y, max_z, min_x, min_y, heading, max_allowed, comment, respawn_timer, item, item_name, min_expansion, max_expansion in ground_spawns %}
+                    <tr>
+                        <td>{{ item }}</td>
+                        <td>{{ item_name }}</td>
+                        <td>({{ max_y }}, {{ max_x }}, {{ max_z }})</td>
+                        <td>{{ comment }}</td>
+                    </tr>
+                {% empty %}
+                {% endfor %}
+                </tbody>
+                <tfoot>
+                <tr>
+                    <th>id</th>
+                    <th>Name</th>
+                    <th>Coordinates (Y, X, Z)</th>
+                    <th>Comment</th>
+                </tr>
+                </tfoot>
+            </table>
+        {% endif %}
+    </div>
+</div>

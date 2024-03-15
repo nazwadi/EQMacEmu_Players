@@ -1,0 +1,41 @@
+{% load static %}
+{% load data_utilities %}
+<div class="row">
+    <div class="col">
+        <span style="font-weight: bold;">Merchants</span> -
+        <span style="font-style: italic">Found {{ merchants|length }} merchants in {{ zone_data.short_name|zone_short_to_long }} (these are included in the NPCs list):</span>
+        {% if merchants %}
+        <table id="merchants-table" class="display table table-striped" style="width: 100%;">
+            <thead>
+            <tr>
+                <th>Merchant ID</th>
+                <th>Name</th>
+                <th>Race</th>
+                <th>Class</th>
+                <th>Gender</th>
+                <th>Coordinates (Y, X, Z)</th>
+                <th>Expansion</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for mid, name, race, class, gender, y, x, z, min_expansion in merchants %}
+                <tr>
+                    <td>{{ mid }}</td>
+                    <td>{{ name|clean_npc_name }}</td>
+                    <td>{{ race|npc_race }}</td>
+                    <td>{{ class|npc_class }}</td>
+                    <td>{{ gender|gender }}</td>
+                    <td>({{ y }}, {{ x }}, {{ z }})</td>
+                    <td><img src="{% static "/images/" %}{{ min_expansion|expansion_icon }}"
+                             alt="{{ min_expansion }}"></td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="2">There are no merchants in this zone!</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+    </div>
+</div>

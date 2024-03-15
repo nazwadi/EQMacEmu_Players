@@ -1,0 +1,39 @@
+{% load data_utilities %}
+<div class="row">
+    <div class="col">
+        <span style="font-weight: bold;">Fishing</span> -
+        <span style="font-style: italic">Found {{ fish|length }} fish-able items in {{ zone_data.short_name|zone_short_to_long }}:</span>
+        <table id="fishing-table" class="display table table-striped" style="width: 100%;">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Skill Level</th>
+                <th>Chance</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for id, name, skill_level, chance in fish %}
+                <tr>
+                    <td>{{ id }}</td>
+                    <td>{{ name|clean_npc_name }}</td>
+                    <td>{{ skill_level }}</td>
+                    <td>{{ chance }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="4">There are no fish found in this zone!</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+            <tfoot>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Skill Level</th>
+                <th>Chance</th>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>

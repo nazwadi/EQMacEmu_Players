@@ -13,6 +13,7 @@ from common.models.faction import FactionListMod
 from common.models.guilds import Guilds
 from common.models.guilds import GuildMembers
 from common.models.items import Items
+from common.models.spawns import SpawnEntry
 from common.models.spells import SpellsNew
 from common.models.zones import Zone
 
@@ -34,6 +35,7 @@ class GameServerRouter:
                           FactionListMod,
                           Guilds,
                           GuildMembers,
+                          SpawnEntry,
                           SpellsNew,
                           Items,
                           Zone,]

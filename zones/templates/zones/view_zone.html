@@ -1,18 +1,121 @@
-{% extends 'characters/header.html' %}
+{% extends 'zones/header.html' %}
 {% load static %}
+{% load data_utilities %}
+{% load humanize %}
 {% block content %}
-    <table class="table">
-    <thead>
-    <tr>
-        <th>NPC Name</th>
-        <th>Race</th>
-        <th>Class</th>
-        <th>Level</th>
-        <th>Location</th>
-    </tr>
-    </thead>
-    <tbody>
-
-    </tbody>
-    </table>
+    <div class="container-fluid">
+        <div class="py-5">
+            <div class="d-flex align-items-start">
+                <div class="d-flex align-items-start">
+                    <div class="nav flex-column nav-pills me-3" id="zonesTab" role="tablist"
+                         aria-orientation="vertical">
+                        <button class="nav-link active" id="general-tab" data-bs-toggle="pill"
+                                data-bs-target="#general-tab-pane" type="button" role="tab"
+                                aria-controls="general-tab-pane" aria-selected="true">General
+                        </button>
+                        <button class="nav-link " id="npc-tab" data-bs-toggle="pill"
+                                data-bs-target="#npc-tab-pane" type="button" role="tab"
+                                aria-controls="npc-tab-pane" aria-selected="false">NPC's
+                        </button>
+                        <button class="nav-link" id="spawns-tab" data-bs-toggle="pill" data-bs-target="#spawns-tab-pane"
+                                type="button" role="tab" aria-controls="spawns-tab-pane" aria-selected="true">Spawns
+                        </button>
+                        <button class="nav-link" id="fishing-tab" data-bs-toggle="pill"
+                                data-bs-target="#fishing-tab-pane"
+                                type="button" role="tab" aria-controls="fishing-tab-pane" aria-selected="true">Fishing
+                        </button>
+                        <button class="nav-link" id="foraging-tab" data-bs-toggle="pill"
+                                data-bs-target="#foraging-tab-pane"
+                                type="button" role="tab" aria-controls="foraging-tab-pane" aria-selected="true">Foraging
+                        </button>
+                        <button class="nav-link" id="ground-spawns-tab" data-bs-toggle="pill"
+                                data-bs-target="#ground-spawns-tab-pane"
+                                type="button" role="tab" aria-controls="ground-spawns-tab-pane" aria-selected="true">
+                            Ground Spawns
+                        </button>
+                        <button class="nav-link" id="merchants-tab" data-bs-toggle="pill"
+                                data-bs-target="#merchants-tab-pane"
+                                type="button" role="tab" aria-controls="merchants-tab-pane" aria-selected="true">
+                            Merchants
+                        </button>
+                    </div>
+                </div>
+                <div class="col tab-content" id="zonesTabContent">
+                    <div class="row">
+                        <div class="col">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="/zones/">Zones</a>
+                                    </li>
+                                    <li class="breadcrumb-item active"
+                                        aria-current="page">{{ zone_data.short_name|zone_short_to_long }}
+                                    </li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade show active" id="general-tab-pane" role="tabpanel"
+                         aria-labelledby="general-tab"
+                         tabindex="0">
+                        <h4>{{ zone_data.long_name }}</h4>
+                        <ul>
+                            <li>Expansion: <img
+                                    src="{% static "/images/" %}{{ zone_data.expansion|add:"-1"|expansion_icon }}"
+                                    alt="{{ zone_data.expansion|add:"-1"|expansion_icon }}"/>
+                            </li>
+                            <li>Adjacent Zones:</li>
+                            <li>Succor: Y: {{ zone_data.safe_x }}, X: {{ zone_data.safe_y }}
+                                Z: {{ zone_data.safe_z }}</li>
+                            <li>ZEM: {{ zone_data.zone_exp_multiplier }}</li>
+                            <li>Casters Can Bind: {{ zone_data.can_bind|can_bind_filter }}</li>
+                            <li>Type: {{ zone_data.type|zone_type_filter }}</li>
+                            <li>Levitate: {{ zone_data.can_levitate|yes_no }}</li>
+                        </ul>
+                    </div>
+                    <div class="tab-pane fade" id="npc-tab-pane" role="tabpanel"
+                         aria-labelledby="npc-tab"
+                         tabindex="1">
+                        <div class="container-fluid">
+                            {% include "zones/npc.html" %}
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="spawns-tab-pane" role="tabpanel"
+                         aria-labelledby="spawns-tab"
+                         tabindex="2">
+                        <div class="container-fluid">
+                            {% include "zones/spawns.html" %}
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="fishing-tab-pane" role="tabpanel"
+                         aria-labelledby="fishing-tab"
+                         tabindex="3">
+                        <div class="container-fluid">
+                            {% include "zones/fishing.html" %}
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="foraging-tab-pane" role="tabpanel"
+                         aria-labelledby="foraging-tab"
+                         tabindex="4">
+                        <div class="container-fluid">
+                            {% include "zones/foraging.html" %}
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="ground-spawns-tab-pane" role="tabpanel"
+                         aria-labelledby="ground-spawns-tab"
+                         tabindex="5">
+                        <div class="container-fluid">
+                            {% include "zones/ground-spawns.html" %}
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="merchants-tab-pane" role="tabpanel"
+                         aria-labelledby="merchants-tab"
+                         tabindex="6">
+                        <div class="container-fluid">
+                            {% include "zones/merchants.html" %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
