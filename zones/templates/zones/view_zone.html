@@ -57,19 +57,7 @@
                     <div class="tab-pane fade show active" id="general-tab-pane" role="tabpanel"
                          aria-labelledby="general-tab"
                          tabindex="0">
-                        <h4>{{ zone_data.long_name }}</h4>
-                        <ul>
-                            <li>Expansion: <img
-                                    src="{% static "/images/" %}{{ zone_data.expansion|add:"-1"|expansion_icon }}"
-                                    alt="{{ zone_data.expansion|add:"-1"|expansion_icon }}"/>
-                            </li>
-                            <li>Adjacent Zones:</li>
-                            <li>Succor: Y: {{ zone_data.safe_x }}, X: {{ zone_data.safe_y }}
-                                Z: {{ zone_data.safe_z }}</li>
-                            <li>ZEM: {{ zone_data.zone_exp_multiplier }}</li>
-                            <li>Casters Can Bind: {{ zone_data.can_bind|can_bind_filter }}</li>
-                            <li>Levitate: {{ zone_data.can_levitate|yes_no }}</li>
-                        </ul>
+                        {% include "zones/general.html" %}
                     </div>
                     <div class="tab-pane fade" id="npc-tab-pane" role="tabpanel"
                          aria-labelledby="npc-tab"

@@ -2,13 +2,16 @@
 {% load data_utilities %}
 {% block content %}
     <div class="container-fluid px-4">
-        <div class="row-4" style="text-align: center; font-weight: bold; background-color: #cedff2; border: solid #000 1px;">Antonica</div>
+        <div class="row-4"
+             style="text-align: center; font-weight: bold; background-color: #cedff2; border: solid #000 1px;">Antonica
+        </div>
         <div class="row align-items-start">
             <div class="col px-4">
                 <p style="font-weight: bold;">Outdoors</p>
                 <ul>
                     <li><a href="/zones/view/arena" title="The Arena">The Arena</a></li>
-                    <li><a href="/zones/view/beholder" title="Beholder's Maze">Beholder's Maze<br/>(Gorge of King Xorbb)</a></li>
+                    <li><a href="/zones/view/beholder" title="Beholder's Maze">Beholder's Maze<br/>(Gorge of King Xorbb)</a>
+                    </li>
                     <li><a href="/zones/view/ecommons" title="East Commonlands">East Commonlands</a></li>
                     <li><a href="/zones/view/eastkarana" title="Eastern Plains of Karana">Eastern Karana</a></li>
                     <li><a href="/zones/view/everfrost" title="Everfrost Peaks">Everfrost Peaks</a></li>
@@ -33,35 +36,54 @@
                 </ul>
             </div>
             <div class="col align-self-center">
-                <img alt="Map rav antonica.jpg" src="{% static "/images/Map_rav_antonica.jpg" %}" width="339" height="401"/>
+                <img alt="Map rav antonica.jpg" src="{% static "/images/Map_rav_antonica.jpg" %}" width="339"
+                     height="401"/>
             </div>
             <div class="col">
                 <p style="font-weight: bold;">Cities</p>
                 <ul>
                     <li><a href="/zones/view/grobb" title="Grobb">Grobb</a></li>
                     <li><a href="/zones/view/halas" title="Halas">Halas</a></li>
-                    <li><a href="/zones/view/neriak" title="Neriak">Neriak</a></li>
-                    <li><a href="/zones/view/freeport" title="Freeport">Freeport</a></li>
-                    <li><a href="/zones/view/qeynos" title="Qeynos">Qeynos</a></li>
+                    <li>Neriak
+                        <ul>
+                            <li><a href="/zones/view/neriaka" title="Neriak - Foreign Quarter">Foreign Quarter</a></li>
+                            <li><a href="/zones/view/neriakb" title="Neriak - Commons">Commons</a></li>
+                            <li><a href="/zones/view/neriakc" title="Neriak - 3rd Gate">3rd Gate</a></li>
+                        </ul>
+                    </li>
+                    <li>Freeport
+                        <ul>
+                            <li><a href="/zones/view/freporte" title="Freeport East">East</a></li>
+                            <li><a href="/zones/view/freportn" title="Freeport North">North</a></li>
+                            <li><a href="/zones/view/freportw" title="Freeport West">West</a></li>
+                        </ul>
+                    </li>
+                    <li>Qeynos
+                        <ul>
+                            <li><a href="/zones/view/qeynos" title="South Qeynos">South</a></li>
+                            <li><a href="/zones/view/qeynos2" title="North Qeynos">North</a></li>
+                        </ul>
+                    </li>
                     <li><a href="/zones/view/oggok" title="Oggok">Oggok</a></li>
                     <li><a href="/zones/view/rivervale" title="Rivervale">Rivervale</a></li>
-                    <li><a href="/zones/view/surefall" title="Surefall Glade">Surefall Glade</a></li>
+                    <li><a href="/zones/view/qrg" title="Surefall Glade">Surefall Glade</a></li>
                 </ul>
                 <p style="font-weight: bold;">Dungeons</p>
                 <ul>
                     <li><a href="/zones/view/Befallen" title="Befallen">Befallen</a></li>
                     <li><a href="/zones/view/Blackburrow" title="Blackburrow">Blackburrow</a></li>
-                    <li><a href="/zones/view/Cazic_Thule" title="Cazic Thule">Cazic Thule</a></li>
-                    <li><a href="/zones/view/Runnyeye_Citadel" title="Runnyeye Citadel">Runnyeye Citadel</a></li>
-                    <li><a href="/zones/view/High_Keep" title="High Keep">High Keep</a></li>
+                    <li><a href="/zones/view/cazicthule" title="Cazic Thule">Cazic Thule</a></li>
+                    <li><a href="/zones/view/runnyeye" title="Runnyeye Citadel">Runnyeye Citadel</a></li>
+                    <li><a href="/zones/view/highkeep" title="High Keep">High Keep</a></li>
                     <li><a href="/zones/view/gukbottom" title="Lower Guk">Lower Guk</a></li>
-                    <li><a href="/Nagafen%27s_Lair" title="Nagafen's Lair">Nagafen's Lair (Sol B)</a></li>
+                    <li><a href="/zones/view/soldungb" title="Nagafen's Lair">Nagafen's Lair (Sol B)</a></li>
                     <li><a href="/zones/view/najena" title="Najena">Najena</a></li>
                     <li><a href="/zones/view/permafrost" title="Permafrost">Permafrost</a></li>
-                    <li><a href="/Qeynos_Aqueducts" title="Qeynos Aqueducts">Qeynos Aqueducts</a></li>
+                    <li><a href="/zones/view/qcat" title="Qeynos Aqueducts">Qeynos Aqueducts</a></li>
                     <li><a href="/zones/view/soldunga" title="Solusek's Eye">Solusek's Eye (Sol A)</a></li>
-                    <li><a href="/zones/view/splitpaw" title="Splitpaw Lair">Splitpaw Lair</a></li>
-                    <li><a href="/zones/view/soltemple" title="The Temple of Solusek Ro">The Temple of Solusek Ro</a></li>
+                    <li><a href="/zones/view/paw" title="Splitpaw Lair">Splitpaw Lair</a></li>
+                    <li><a href="/zones/view/soltemple" title="The Temple of Solusek Ro">The Temple of Solusek Ro</a>
+                    </li>
                     <li><a href="/zones/view/guktop" title="Upper Guk">Upper Guk</a></li>
                 </ul>
             </div>
