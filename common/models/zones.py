@@ -68,3 +68,29 @@ class Zone(models.Model):
 
     class Meta:
         db_table = "zone"
+
+
+class ZonePoints(models.Model):
+    """
+    This model maps to the zone_points table in the database
+    """
+
+    def __str__(self):
+        return str(self.id)
+
+    id = models.AutoField(primary_key=True, null=False, default=None)
+    zone = models.CharField(max_length=32, null=True)
+    number = models.SmallIntegerField(null=False, default=None)
+    y = models.FloatField(null=False, default=0)
+    x = models.FloatField(null=False, default=0)
+    z = models.FloatField(null=False, default=0)
+    heading = models.FloatField(null=False, default=0)
+    target_y = models.FloatField(null=False, default=0)
+    target_x = models.FloatField(null=False, default=0)
+    target_z = models.FloatField(null=False, default=0)
+    target_heading = models.FloatField(null=False, default=0)
+    target_zone_id = models.IntegerField(null=False, default=0)
+    client_version_mask = models.IntegerField(null=False, default=4294967295)
+
+    class Meta:
+        db_table = "zone_points"

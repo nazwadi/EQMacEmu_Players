@@ -16,6 +16,7 @@ from common.models.items import Items
 from common.models.spawns import SpawnEntry
 from common.models.spells import SpellsNew
 from common.models.zones import Zone
+from common.models.zones import ZonePoints
 
 
 class GameServerRouter:
@@ -38,7 +39,8 @@ class GameServerRouter:
                           SpawnEntry,
                           SpellsNew,
                           Items,
-                          Zone,]
+                          Zone,
+                          ZonePoints]
 
     def db_for_read(self, model, **hints):
         """

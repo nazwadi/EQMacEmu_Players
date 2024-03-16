@@ -6,3 +6,5 @@ pre {
     line-height: 1.1em;
     font-family: monospace,Courier;
 }
+p { max-width: 100em; font-size: 16px; }
+ul {font-size: 14px;}
