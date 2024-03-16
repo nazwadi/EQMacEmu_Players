@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.db import connections
 from collections import namedtuple
 
@@ -32,6 +32,8 @@ def view_zone(request, short_name):
     """
     cursor = connections['game_database'].cursor()
     zone_data = Zone.objects.filter(short_name=short_name).first()
+    if not zone_data:
+        return redirect("zones:index")
 
     cursor.execute("""SELECT DISTINCT d.id, d.name, d.race, d.class, d.level, a.min_expansion, a.max_expansion 
                       FROM spawn2 a

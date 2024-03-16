@@ -9,6 +9,6 @@ class ZonePage(models.Model):
         return self.id
 
     id = models.AutoField(primary_key=True)
-    short_name = models.CharField(max_length=32, null=True, blanke=True, default=None)
+    short_name = models.CharField(max_length=32, null=True, blank=True, default=None)
     description = models.TextField(blank=True)
     map_legend = models.TextField(blank=True)
