@@ -951,7 +951,7 @@ def zone_short_to_long(value):
         "najena": "Najena",
         "qcat": "The Qeynos Aqueduct System",
         "innothule": "Innothule Swamp",
-        "feerott": "The Feerott",
+        "feerrott": "The Feerott",
         "cazicthule": "Accursed Temple of CazicThule",
         "oggok": "Oggok",
         "rathemtn": "The Rathe Mountains",

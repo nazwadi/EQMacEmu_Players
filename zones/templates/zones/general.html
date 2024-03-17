@@ -4,48 +4,58 @@
     <div class="row">
         <div class="col">
             <h4>{{ zone_data.long_name }}</h4>
-            <p>{{ zone_page_text.description|safe }}</p>
-                <ul class="list-group list-group-horizontal">
-                    <li class="list-group-item" style="background-color:#cedff2; width: 170px;border-top: 1px solid">Expansion:</li>
-                    <li class="list-group-item" style="width:90%;border:0;border-top:1px solid;">
-                        <img src="{% static "/images/" %}{{ zone_data.expansion|add:"-1"|expansion_icon }}"
-                             alt="{{ zone_data.expansion|add:"-1"|expansion_icon }}"/>
-                        {% if zone_data.short_name == 'warrens' or zone_data.short_name == 'stonebrunt' %}
-                            (Custom - normally Velious)
-                        {% endif %}
-                    </li>
-                </ul>
-                <ul class="list-group list-group-horizontal">
-                    <li class="list-group-item" style="background-color:#cedff2; width: 170px;">Adjacent Zones:</li>
-                    <li class="list-group-item" style="width:90%;border:0">
-                        {% for zone in zone_points %}
-                            <a href="/zones/view/{{ zone.1 }}">{{ zone.2 }}</a>,&nbsp;
-                        {% endfor %}
-                    </li>
-                </ul>
-                <ul class="list-group list-group-horizontal">
-                    <li class="list-group-item" style="background-color:#cedff2; width:170px;">Name in /who:</li>
-                    <li class="list-group-item" style="width:90%;border:0">{{ zone_data.short_name }}</li>
-                </ul>
-                <ul class="list-group list-group-horizontal">
-                    <li class="list-group-item" style="background-color:#cedff2; width: 170px;">Succor/Evacuate:</li>
-                    <li class="list-group-item" style="width:90%;border:0">Y: {{ zone_data.safe_x }}, X: {{ zone_data.safe_y }} Z: {{ zone_data.safe_z }}</li>
-                </ul>
-                <ul class="list-group list-group-horizontal">
-                    <li class="list-group-item" style="background-color:#cedff2; width: 170px;">ZEM:</li>
-                    <li class="list-group-item" style="width:90%;border:0">{{ zone_data.zone_exp_multiplier }}</li>
-                </ul>
-                <ul class="list-group list-group-horizontal">
-                    <li class="list-group-item" style="background-color:#cedff2; width: 170px;">Casters Can Bind:</li>
-                    <li class="list-group-item" style="width:90%;border:0">{{ zone_data.can_bind|can_bind_filter }}</li>
-                </ul>
-                <ul class="list-group list-group-horizontal">
-                    <li class="list-group-item" style="background-color:#cedff2; width: 170px;border-bottom: 1px solid;">Levitate:</li>
-                    <li class="list-group-item" style="width:90%;border:0;border-bottom: 1px solid">{{ zone_data.can_levitate|yes_no }}</li>
-                </ul>
+            <ul class="list-group list-group-horizontal">
+                <li class="list-group-item" style="background-color:#cedff2; width: 170px;border-top: 1px solid">
+                    Expansion:
+                </li>
+                <li class="list-group-item" style="width:90%;border:0;border-top:1px solid;">
+                    <img src="{% static "/images/" %}{{ zone_data.expansion|add:"-1"|expansion_icon }}"
+                         alt="{{ zone_data.expansion|add:"-1"|expansion_icon }}"/>
+                    {% if zone_data.short_name == 'warrens' or zone_data.short_name == 'stonebrunt' %}
+                        (Custom - normally Velious)
+                    {% endif %}
+                </li>
+            </ul>
+            <ul class="list-group list-group-horizontal">
+                <li class="list-group-item" style="background-color:#cedff2; width: 170px;">Adjacent Zones:</li>
+                <li class="list-group-item" style="width:90%;border:0">
+                    {% for zone in zone_points %}
+                        <a href="/zones/view/{{ zone.1 }}">{{ zone.2 }}</a>,&nbsp;
+                    {% endfor %}
+                </li>
+            </ul>
+            <ul class="list-group list-group-horizontal">
+                <li class="list-group-item" style="background-color:#cedff2; width:170px;">Name in /who:</li>
+                <li class="list-group-item" style="width:90%;border:0">{{ zone_data.short_name }}</li>
+            </ul>
+            <ul class="list-group list-group-horizontal">
+                <li class="list-group-item" style="background-color:#cedff2; width: 170px;">Succor/Evacuate:</li>
+                <li class="list-group-item" style="width:90%;border:0">Y: {{ zone_data.safe_x }},
+                    X: {{ zone_data.safe_y }} Z: {{ zone_data.safe_z }}</li>
+            </ul>
+            <ul class="list-group list-group-horizontal">
+                <li class="list-group-item" style="background-color:#cedff2; width: 170px;">ZEM:</li>
+                <li class="list-group-item" style="width:90%;border:0">{{ zone_data.zone_exp_multiplier }}</li>
+            </ul>
+            <ul class="list-group list-group-horizontal">
+                <li class="list-group-item" style="background-color:#cedff2; width: 170px;">Casters Can Bind:</li>
+                <li class="list-group-item" style="width:90%;border:0">{{ zone_data.can_bind|can_bind_filter }}</li>
+            </ul>
+            <ul class="list-group list-group-horizontal">
+                <li class="list-group-item" style="background-color:#cedff2; width: 170px;border-bottom: 1px solid;">
+                    Levitate:
+                </li>
+                <li class="list-group-item"
+                    style="width:90%;border:0;border-bottom: 1px solid">{{ zone_data.can_levitate|yes_no }}</li>
+            </ul>
+        </div>
+        <div class="row">
+            <div class="col">
+                <p>{{ zone_page_text.description|safe }}</p>
+            </div>
         </div>
     </div>
-    <div class="row py-5">
+    <div class="row">
         <h5>Map</h5>
         <hr/>
         <div class="col px-5">
@@ -62,32 +72,34 @@
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col">
-            <h5>Dangers</h5>
-            <hr/>
+    <div class="row py-2">
+        <h5>Dangers</h5>
+        <hr/>
+        <div class="col px-5">
             <p>{{ zone_page_text.dangers|safe }}</p>
         </div>
     </div>
     <div class="row">
-        <div class="col">
-            <h5>Benefits</h5>
-            <hr/>
+        <h5>Benefits</h5>
+        <hr/>
+        <div class="col px-5">
             <p>{{ zone_page_text.benefits|safe }}</p>
         </div>
     </div>
     <div class="row">
-        <div class="col">
-            <h5>Travel To and From</h5>
-            <hr/>
+        <h5>Travel To and From</h5>
+        <hr/>
+        <div class="col px-5">
             <p>{{ zone_page_text.travel_to_from|safe }}</p>
         </div>
     </div>
-    <div class="row">
-        <div class="col">
+    {% if zone_page_text.history_lore %}
+        <div class="row">
             <h5>History, Lore, Background</h5>
             <hr/>
-            <p>{{ zone_page_text.history_lore|safe }}</p>
+            <div class="col px-5">
+                <p>{{ zone_page_text.history_lore|safe }}</p>
+            </div>
         </div>
-    </div>
+    {% endif %}
 </div>

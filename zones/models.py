@@ -11,7 +11,7 @@ class ZonePage(models.Model):
     id = models.AutoField(primary_key=True)
     short_name = models.CharField(max_length=32, null=True, blank=True, default=None)
     description = models.TextField(blank=True)
-    map_legend = models.TextField(blank=True)
+    map = models.TextField(blank=True)
     dangers = models.TextField(blank=True)
     benefits = models.TextField(blank=True)
     travel_to_from = models.TextField(blank=True)
