@@ -63,7 +63,7 @@
                  style="border: 1px solid gray; max-width: 1200px; width: 90%; background-color:#f0f0ff; padding: 10px;">
                 <div class="col align-self-left">
                     <span style="font-weight: bold;">{{ zone_data.short_name|zone_short_to_long }}</span>
-                    {{ zone_page_text.map_legend|safe }}
+                    {{ zone_page_text.map|safe }}
                 </div>
                 <div class="col align-self-right">
                     <img src="{% static "/images/zone_maps/Map_" %}{{ zone_data.short_name }}.jpg"
