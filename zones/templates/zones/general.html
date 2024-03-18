@@ -21,6 +21,12 @@
                 <li class="list-group-item" style="width:90%;border:0">
                     {% for zone in zone_points %}
                         <a href="/zones/view/{{ zone.1 }}">{{ zone.2 }}</a>,&nbsp;
+                    {% empty %}
+                        {% if zone_data.short_name == 'oot' %}
+                            {# Zone Points are done in oot via quest scripts, so hard code them here #}
+                            <a href="/zones/view/freporte">East Freeport</a>,
+                            <a href="/zones/view/butcher">Butcherblock Mountains</a>
+                        {% endif %}
                     {% endfor %}
                 </li>
             </ul>
@@ -72,27 +78,33 @@
             </div>
         </div>
     </div>
-    <div class="row py-2">
-        <h5>Dangers</h5>
-        <hr/>
-        <div class="col px-5">
-            <p>{{ zone_page_text.dangers|safe }}</p>
+    {% if zone_page_text.dangers %}
+        <div class="row py-2">
+            <h5>Dangers</h5>
+            <hr/>
+            <div class="col px-5">
+                <p>{{ zone_page_text.dangers|safe }}</p>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <h5>Benefits</h5>
-        <hr/>
-        <div class="col px-5">
-            <p>{{ zone_page_text.benefits|safe }}</p>
+    {% endif %}
+    {% if zone_page_text.benefits %}
+        <div class="row">
+            <h5>Benefits</h5>
+            <hr/>
+            <div class="col px-5">
+                <p>{{ zone_page_text.benefits|safe }}</p>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <h5>Travel To and From</h5>
-        <hr/>
-        <div class="col px-5">
-            <p>{{ zone_page_text.travel_to_from|safe }}</p>
+    {% endif %}
+    {% if zone_page_text.travel_to_from %}
+        <div class="row">
+            <h5>Travel To and From</h5>
+            <hr/>
+            <div class="col px-5">
+                <p>{{ zone_page_text.travel_to_from|safe }}</p>
+            </div>
         </div>
-    </div>
+    {% endif %}
     {% if zone_page_text.history_lore %}
         <div class="row">
             <h5>History, Lore, Background</h5>
