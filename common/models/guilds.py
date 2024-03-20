@@ -22,8 +22,8 @@ class Guilds(models.Model):
     url = models.CharField(max_length=512, null=False)
 
     class Meta:
-        managed = True
         db_table = 'guilds'
+        managed = False
 
 
 class GuildMembers(models.Model):
@@ -45,5 +45,5 @@ class GuildMembers(models.Model):
     alt = SmallIntegerField(null=False, default=0)
 
     class Meta:
-        managed = True
         db_table = 'guild_members'
+        managed = False

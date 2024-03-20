@@ -18,6 +18,7 @@ class FactionList(models.Model):
 
     class Meta:
         db_table = 'faction_list'
+        managed = False
 
 
 class FactionListMod(models.Model):
@@ -35,3 +36,4 @@ class FactionListMod(models.Model):
 
     class Meta:
         db_table = 'faction_list_mod'
+        managed = False

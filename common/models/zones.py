@@ -94,3 +94,4 @@ class ZonePoints(models.Model):
 
     class Meta:
         db_table = "zone_points"
+        managed = False

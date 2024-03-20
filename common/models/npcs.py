@@ -14,3 +14,4 @@ class NPCTypes(models.Model):
 
     class Meta:
         db_table = "npc_types"
+        managed = False

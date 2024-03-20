@@ -31,6 +31,6 @@ class SpellsNew(models.Model):
     target_type = models.IntegerField(null=False, default=2, db_column='targettype')
 
     class Meta:
-        managed = True
         db_table = 'spells_new'
+        managed = False
 

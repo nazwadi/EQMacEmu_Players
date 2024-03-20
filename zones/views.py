@@ -4,7 +4,6 @@ from collections import namedtuple
 
 from zones.models import ZonePage
 from common.models.zones import Zone
-from common.models.zones import ZonePoints
 from common.models.spawns import SpawnEntry
 
 

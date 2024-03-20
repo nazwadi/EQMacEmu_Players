@@ -84,6 +84,7 @@ class Characters(models.Model):
     class Meta:
         db_table = "character_data"
         verbose_name_plural = 'Characters'
+        managed = False
 
 
 class CharacterCurrency(models.Model):
@@ -110,6 +111,7 @@ class CharacterCurrency(models.Model):
 
     class Meta:
         db_table = 'character_currency'
+        managed = False
 
 
 class CharacterFactionValues(models.Model):
@@ -127,6 +129,7 @@ class CharacterFactionValues(models.Model):
 
     class Meta:
         db_table = "character_faction_values"
+        managed = False
 
 
 class CharacterInventory(models.Model):
@@ -147,6 +150,7 @@ class CharacterInventory(models.Model):
 
     class Meta:
         db_table = "character_inventory"
+        managed = False
 
 
 class CharacterKeyring(models.Model):
@@ -161,6 +165,7 @@ class CharacterKeyring(models.Model):
 
     class Meta:
         db_table = 'character_keyring'
+        managed = False
 
 
 class CharacterLanguages(models.Model):
@@ -177,6 +182,7 @@ class CharacterLanguages(models.Model):
 
     class Meta:
         db_table = "character_languages"
+        managed = False
 
 
 class CharacterSkills(models.Model):
@@ -193,6 +199,7 @@ class CharacterSkills(models.Model):
 
     class Meta:
         db_table = "character_skills"
+        managed = False
 
 
 class CharacterSpells(models.Model):
@@ -208,7 +215,7 @@ class CharacterSpells(models.Model):
     spell_id = models.ForeignKey(SpellsNew, on_delete=models.RESTRICT, db_column='spell_id')
 
     class Meta:
-        managed = True
         db_table = 'character_spells'
+        managed = False
 
 

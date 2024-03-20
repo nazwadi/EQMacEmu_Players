@@ -16,5 +16,6 @@ class Items(models.Model):
 
     class Meta:
         db_table = 'items'
+        managed = False
 
 

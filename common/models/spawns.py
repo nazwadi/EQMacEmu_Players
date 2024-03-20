@@ -21,3 +21,4 @@ class SpawnEntry(models.Model):
 
     class Meta:
         db_table = "spawnentry"
+        managed = False
