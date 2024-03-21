@@ -11,7 +11,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md">
+            <div class="col-md-3">
                 <table class="table mobStatsBox">
                     <tr>
                         <th> Mob Information</th>
@@ -135,26 +135,37 @@
                 </table>
             </div>
             <div class="col-md">
-                <h5>Factions</h5>
-                <ul>
-                    {% for name, value, npc_value in factions %}
-                        {% if value != 0 %}
-                            <li>{{ name|clean_name|title }} <span style="color:#770000">({{ value }})</span></li>
-                        {% endif %}
-                    {% empty %}
-                        <li>None</li>
-                    {% endfor %}
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Faction</a>
+                    </li>
                 </ul>
-                <h5>Opposing Factions</h5>
-                <ul>
-                    {% for name, value, npc_value in opposing_factions %}
-                        {% if value != 0 %}
-                            <li>{{ name|clean_name|title }} <span style="color:#007700">({{ value }})</span></li>
-                        {% endif %}
-                    {% empty %}
-                        <li>None</li>
-                    {% endfor %}
-                </ul>
+                <div class="row">
+                    <div class="col py-3 px-5">
+                        <h5>Factions</h5>
+                        <ul>
+                            {% for name, value, npc_value in factions %}
+                                {% if value != 0 %}
+                                    <li>{{ name|clean_name|title }} <span style="color:#770000">({{ value }})</span>
+                                    </li>
+                                {% endif %}
+                            {% empty %}
+                                <li>None</li>
+                            {% endfor %}
+                        </ul>
+                        <h5>Opposing Factions</h5>
+                        <ul>
+                            {% for name, value, npc_value in opposing_factions %}
+                                {% if value != 0 %}
+                                    <li>{{ name|clean_name|title }} <span style="color:#007700">({{ value }})</span>
+                                    </li>
+                                {% endif %}
+                            {% empty %}
+                                <li>None</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
             </div>
             <div class="col-md">
                 <svg class="bd-placeholder-img bd-placeholder-img-lg img-fluid mx-auto" id="test" width="250"
