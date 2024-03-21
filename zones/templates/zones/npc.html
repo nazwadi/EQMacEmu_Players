@@ -19,7 +19,7 @@
                 <tbody>
                 {% for id, name, race, class, level, min_expansion, max_expansion in npc_results %}
                     <tr>
-                        <td>{{ name|clean_npc_name }}</td>
+                        <td><a href="/npcs/view/{{ id }}">{{ name|clean_name }}</a></td>
                         <td>{{ race|npc_race }}</td>
                         <td>{{ class|npc_class }}</td>
                         <td>{{ level }}</td>

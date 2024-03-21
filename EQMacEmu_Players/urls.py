@@ -26,6 +26,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("characters/", include("characters.urls")),
     path("character_transfer/", include("character_transfer.urls")),
+    path("npcs/", include("npcs.urls")),
     path("polls/", include("polls.urls")),
     path("zones/", include("zones.urls")),
 ]

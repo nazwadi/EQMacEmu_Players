@@ -4,11 +4,13 @@ from django import template
 register = template.Library()
 
 
-@register.filter(name='clean_npc_name')
-def clean_npc_name(value):
+@register.filter(name='clean_name')
+def clean_name(value):
     """Remove underscores and prepended # from NPC names"""
-    value = value.replace('_', ' ')
-    return value.replace('#','')
+    if value:
+        value = value.replace('_', ' ')
+        return value.replace('#', '')
+    return value
 
 
 @register.filter(name="can_bind_filter")
@@ -1146,7 +1148,7 @@ def zone_filter(value, arg):
 
 @register.filter(name="datetime_delta")
 def datetime_delta(value):
-    return datetime.timedelta(seconds=value)
+    return datetime.timedelta(seconds=value) if value else value
 
 
 @register.filter(name="datetime_from_timestamp")
@@ -1206,3 +1208,72 @@ def faction_level(value):
         return "Scowls"
     else:
         return "Max Scowls"
+
+
+@register.filter(name="npc_special_ability")
+def npc_special_ability(values):
+    npc_special_abilities = {
+        0: 'None',
+        1: 'Summon',
+        2: 'Enrage',
+        3: 'Rampage',
+        4: 'Area Rampage',
+        5: 'Flurry',
+        6: 'Triple Attack',
+        7: 'Quad Attack',
+        8: 'Dual Wield',
+        9: 'Bane Attack',
+        10: 'Magical Attack',
+        11: 'Ranged Attack',
+        12: 'Unslowable',
+        13: 'Unmezable',
+        14: 'Uncharmable',
+        15: 'Unstunable',
+        16: 'Unsnareable',
+        17: 'Unfearable',
+        18: 'Immune to Dispell',
+        19: 'Immune to Melee',
+        20: 'Immune to Magic',
+        21: 'Immune to Fleeing',
+        22: 'Immune to Non-Bane Damage',
+        23: 'Immune to Non-Magical Damage',
+        24: 'Will Not Aggro',
+        25: 'Immune to Aggro',
+        26: 'Resist Ranged Spells',
+        27: 'See through Feign Death',
+        28: 'Immune to Taunt',
+        29: 'Tunnel Vision',
+        30: 'Does NOT buff/heal friends',
+        31: 'Unpacifiable',
+        32: 'Leashed',
+        33: 'Tethered',
+        34: 'Destructible Object',
+        35: 'No Harm from Players',
+        36: 'Always Flee',
+        37: 'Flee Percentage',
+        38: 'Allow Beneficial',
+        39: 'Disable Melee',
+        40: 'Chase Distance',
+        41: 'Allow Tank',
+        42: 'Ignore Root Aggro',
+        43: 'Casting Resist Diff',
+        44: 'Counter Avoid Damage',
+        45: 'Proximity Aggro',
+        46: 'Immune Ranged Attacks',
+        47: 'Immune Client Damage',
+        48: 'Immune NPC Damage',
+        49: 'Immune Client Aggro',
+        50: 'Immune NPC Aggro'
+    }
+
+    result = list()
+    abilities = values.split('^')
+    for ability in abilities:
+        codes = ability.split(',')
+        try:
+            ability_code = codes[0].strip()
+            result.append(npc_special_abilities[int(ability_code)])
+        except (IndexError, ValueError) as e:
+            print(e, ability)
+            continue
+    return ', '.join(result)

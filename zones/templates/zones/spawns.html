@@ -23,7 +23,7 @@
                         </td>
                         <td>
                             {% for spawn_entry in spawn_entry_results %}
-                                {{ spawn_entry.npcID.name|clean_npc_name }} ({{ spawn_entry.chance }}%)<br/>
+                                <a href="/npcs/view/{{ spawn_entry.npcID.id }}">{{ spawn_entry.npcID.name|clean_name }}</a> ({{ spawn_entry.chance }}%)<br/>
                             {% endfor %}
                         </td>
                         <td>{{ point.respawntime|datetime_delta }} ({{ point.variance|datetime_delta }})</td>

@@ -8,3 +8,16 @@ pre {
 }
 p { max-width: 100em; font-size: 16px; }
 ul {font-size: 14px;}
+/* NPC Page */
+.mobStatsBox {
+    border: 1px solid #becfe2;
+    margin: 0 5px 5px 0;
+    float:left; width: 300px;
+}
+
+.mobStatsBox th {
+    background-color: #cedff2
+}
+.mobStatsBox .msb_sub {
+    background-color: #f3f8fd
+}

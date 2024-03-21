@@ -19,7 +19,7 @@
                 <tbody>
                 {% for mid, name, race, class, gender, y, x, z, min_expansion in merchants %}
                     <tr>
-                        <td>{{ name|clean_npc_name }}</td>
+                        <td><a href="/npcs/view/{{ mid }}">{{ name|clean_name }}</a></td>
                         <td>{{ race|npc_race }}</td>
                         <td>{{ class|npc_class }}</td>
                         <td>{{ gender|gender }}</td>

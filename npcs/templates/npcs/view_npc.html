@@ -1,0 +1,169 @@
+{% extends 'characters/header.html' %}
+{% load data_utilities %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <h1>{{ npc_data.name|clean_name }} {% if npc_data.lastname %}
+                    {{ npc_data.lastname|clean_name }} {% endif %}</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md">
+                <table class="table mobStatsBox">
+                    <tr>
+                        <th> Mob Information</th>
+                    </tr>
+                    <tr>
+                        <th class="msb_sub"> About</th>
+                    </tr>
+                    <tr>
+                        <td><span style="font-weight: bold;">Race:</span>&nbsp;{{ npc_data.race|npc_race }} </td>
+                    </tr>
+                    <tr>
+                        <td><span style="font-weight: bold;">Class:</span>&nbsp;{{ npc_data.class_name|npc_class }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span style="font-weight: bold;">Level:</span>&nbsp;{{ npc_data.level }}
+                            {% if npc_data.max_level %} - {{ npc_data.max_level }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <th class="msb_sub"> Spawn Info</th>
+                    </tr>
+                    <tr>
+                        <td><span style="font-weight: bold;">Zone:&nbsp;</span><a
+                                href="/zones/view/{{ spawn_data.short_name }}">{{ spawn_data.long_name }}</a></td>
+                    </tr>
+                    <tr>
+                        <td><span style="font-weight: bold;">Location:&nbsp;</span></td>
+                    </tr>
+                    <tr>
+                        <td><span
+                                style="font-weight: bold;">Respawn Time:</span>&nbsp;{{ spawn_data.respawntime|datetime_delta }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span style="font-weight: bold;">Expansion:</span>&nbsp;<img
+                                src="/static/images/{{ spawn_data.min_expansion|expansion_icon }}"
+                                alt="{{ spawn_data.min_expansion|expansion_icon }}"/> (Expansion tagging in progress)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="msb_sub"> Stats</th>
+                    </tr>
+                    <tr>
+                        <td><span style="font-weight: bold;">AC:</span>&nbsp;{{ npc_data.ac|intcomma }}</td>
+                    </tr>
+                    <tr>
+                        <td><span style="font-weight: bold;">HP:</span>&nbsp;{{ npc_data.hp|intcomma }}</td>
+                    </tr>
+                    <tr>
+                        <td><span style="font-weight: bold;">Mana:</span>&nbsp;{{ npc_data.mana|intcomma }}</td>
+                    </tr>
+                    <tr>
+                        <td><span style="font-weight: bold;">MR:</span>&nbsp;{{ npc_data.MR }}</td>
+                    </tr>
+                    <tr>
+                        <td><span style="font-weight: bold;">CR:</span>&nbsp;{{ npc_data.CR }}</td>
+                    </tr>
+                    <tr>
+                        <td><span style="font-weight: bold;">FR:</span>&nbsp;{{ npc_data.FR }}</td>
+                    </tr>
+                    <tr>
+                        <td><span style="font-weight: bold;">DR:</span>&nbsp;{{ npc_data.DR }}</td>
+                    </tr>
+                    <tr>
+                        <td><span style="font-weight: bold;">PR:</span>&nbsp;{{ npc_data.PR }}</td>
+                    </tr>
+                    <tr>
+                        <th class="msb_sub"> Combat</th>
+                    </tr>
+                    <tr>
+                        <td><span style="font-weight: bold;">Damage Per Hit:</span>&nbsp;{{ npc_data.min_dmg }}
+                            - {{ npc_data.max_dmg }}</td>
+                    </tr>
+                    <tr>
+                        <td><span
+                                style="font-weight: bold;">Special Abilities:</span>&nbsp;{{ npc_data.special_abilities|npc_special_ability }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="msb_sub"> Spells</th>
+                    </tr>
+                    <tr>
+                        <td><span style="font-weight: bold;">Attack Proc:</span>&nbsp;
+                            <ul>
+                                {% if npc_spell_proc_data.proc %}
+                                    <li class="px-1">
+                                        <img src="
+                                                {% static "/images/icons/" %}{{ npc_spell_proc_data.custom_icon }}.gif"
+                                             alt="{{ npc_spell_proc_data.custom_icon }}.gif"/>
+                                        <a href="https://lucy.alkabor.com/spell_{{ npc_spell_proc_data.proc }}.html">{{ npc_spell_proc_data.spell_name }}</a>
+                                    </li>
+                                {% else %}
+                                    <li>None</li>
+                                {% endif %}
+                            </ul>
+                    </tr>
+                    <tr>
+                        <td><span style="font-weight: bold;">Proc Chance:</span>&nbsp;
+                            {% if npc_spell_proc_data.proc_chance %}
+                                {{ npc_spell_proc_data.proc_chance }}%
+                            {% else %}
+                                N/A
+                            {% endif %}<br/></td>
+                    </tr>
+                    <tr>
+                        <td><span style="font-weight: bold;">Casts:</span><br/>
+                            <ul>
+                                {% for custom_icon, spell_name, spell_id in npc_spells_entries %}
+                                    <li>
+                                        <img src="{% static "/images/icons/" %}{{ custom_icon }}.gif"
+                                             alt="{{ custom_icon }}.gif"/>
+                                        <span class="px-1"><a
+                                                href="https://lucy.alkabor.com/spell_{{ spell_id }}.html">{{ spell_name }}</a></span>
+                                    </li>
+                                {% empty %}
+                                    <li>None</li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md">
+                <h5>Factions</h5>
+                <ul>
+                    {% for name, value, npc_value in factions %}
+                        {% if value != 0 %}
+                            <li>{{ name|clean_name|title }} <span style="color:#770000">({{ value }})</span></li>
+                        {% endif %}
+                    {% empty %}
+                        <li>None</li>
+                    {% endfor %}
+                </ul>
+                <h5>Opposing Factions</h5>
+                <ul>
+                    {% for name, value, npc_value in opposing_factions %}
+                        {% if value != 0 %}
+                            <li>{{ name|clean_name|title }} <span style="color:#007700">({{ value }})</span></li>
+                        {% endif %}
+                    {% empty %}
+                        <li>None</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="col-md">
+                <svg class="bd-placeholder-img bd-placeholder-img-lg img-fluid mx-auto" id="test" width="250"
+                     height="250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 250x250"
+                     preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title>
+                    <rect width="100%" height="100%" fill="#eee"/>
+                    <text x="50%" y="50%" fill="#aaa" dy=".3em">250x250</text>
+                </svg>
+            </div>
+        </div>
+    </div>
+{% endblock %}
