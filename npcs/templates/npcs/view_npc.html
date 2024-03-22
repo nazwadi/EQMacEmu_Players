@@ -143,7 +143,7 @@
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        {% if npc_data.merchant_id %}
+                        {% if npc_data.merchant_id > 0 %}
                             <button class="nav-link" id="merchant-tab" data-bs-toggle="tab"
                                     data-bs-target="#merchant-tab-pane"
                                     type="button" role="tab" aria-controls="merchant-tab-pane" aria-selected="false">
@@ -188,14 +188,36 @@
                     </div>
                     <div class="tab-pane fade" id="merchant-tab-pane" role="tabpanel" aria-labelledby="merchant-tab"
                          tabindex="1">
-                        <div class='eq-window-fancy' style="width:100%;">
-                            <div class="row">
-                                <div class="WindowNestedTan col">
-                                    <div class='WindowNestedTanTitleBar eq-header'>
-                                        <h1>Merchants</h1>
-                                    </div>
-                                </div>
+                        <div class='eq-window-simple' style="width:100%;">
+                            <div class="eq-window-title-bar">
+                                {{ npc_data.name|clean_name }}
                             </div>
+                               <div class="eq-window-nested-blue">
+                                  <table class="eq-table eq-highlight-rows" style="display:table;">
+                                      <thead>
+                                      <tr>
+                                      <th>Item Name</th>
+                                      <th><img src="{% static "/images/icons/Platinum.png" %}" alt="Platinum.png"></th>
+                                      <th><img src="{% static "/images/icons/Gold.png" %}" alt="Gold.png"></th>
+                                      <th><img src="{% static "/images/icons/Silver.png" %}" alt="Silver.png"></th>
+                                      <th><img src="{% static "/images/icons/Copper.png" %}" alt="Copper.png"></th>
+                                      </tr>
+                                      </thead>
+                                      <tbody>
+                                      {% for item in merchant_list %}
+                                          <tr>
+                                              <td><img src="{% static "/images/items/" %}item_{{ item.icon }}.png"
+                                                       alt="{{item.icon}}.png">&nbsp;{{ item.name }}</td>
+                                              <td>{{ item.platinum }}</td>
+                                              <td>{{ item.gold }}</td>
+                                              <td>{{ item.silver }}</td>
+                                              <td>{{ item.copper }}</td>
+                                          </tr>
+                                      {% endfor %}
+                                      </tbody>
+                                      
+                                  </table>
+                               </div> 
                         </div>
                     </div>
                 </div>

@@ -1,7 +1,8 @@
+import math
 from django.shortcuts import render, redirect
 from django.db import connections
 from common.models.npcs import NPCTypes
-from common.models.npcs import NPCSpellsEntries
+from common.models.npcs import MerchantList
 from collections import namedtuple
 
 
@@ -116,6 +117,19 @@ def view_npc(request, npc_id):
         else:
             factions.append((name, value, npc_value))
 
+    merchant_list_result = MerchantList.objects.filter(merchant_id=npc_data.merchant_id)
+    MerchantListTuple = namedtuple('MerchantList', ['id', 'name', 'icon', 'platinum', 'gold', 'silver', 'copper'])
+    merchant_list = list()
+    for item in merchant_list_result:
+        price = item.item.price
+        merchant_list.append(MerchantListTuple(id=item.item.id,
+                                               name=item.item.Name,
+                                               icon=item.item.icon,
+                                               platinum=math.floor(price / 1000),
+                                               gold=math.floor((price % 1000) / 100),
+                                               silver=math.floor((price % 100) / 10),
+                                               copper=price % 10))
+
     return render(request=request,
                   template_name="npcs/view_npc.html",
                   context={"npc_data": npc_data,
@@ -123,4 +137,5 @@ def view_npc(request, npc_id):
                            "npc_spell_proc_data": npc_spell_proc_data,
                            "factions": factions,
                            "opposing_factions": opposing_factions,
-                           "spawn_data": spawn_data, })
+                           "spawn_data": spawn_data,
+                           "merchant_list": merchant_list, })

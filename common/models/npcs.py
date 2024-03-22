@@ -1,4 +1,5 @@
 from django.db import models
+from common.models.items import Items
 
 
 class NPCFaction(models.Model):
@@ -75,6 +76,7 @@ class NPCTypes(models.Model):
     max_dmg = models.IntegerField(null=False, default=0, db_column='maxdmg')
     npc_faction_id = models.IntegerField(null=False, default=0)
     npc_spells_id = models.IntegerField(null=False, default=0)
+    merchant_id = models.IntegerField(null=False, default=0)
     ac = models.SmallIntegerField(null=False, default=0, db_column='AC')
     attack_count = models.SmallIntegerField(null=False, default=-1)
     MR = models.SmallIntegerField(null=False, default=0)
@@ -86,4 +88,29 @@ class NPCTypes(models.Model):
 
     class Meta:
         db_table = "npc_types"
+        managed = False
+
+
+class MerchantList(models.Model):
+    """
+    This model maps to the merchant_lists table in the database.
+    """
+
+    def __str__(self):
+        return str(self.item)
+
+    merchant_id = models.IntegerField(null=False, primary_key=True, default=0, db_column='merchantid')
+    slot = models.IntegerField(null=False, unique=True, default=0, db_column='slot')
+    item = models.OneToOneField(Items, on_delete=models.DO_NOTHING, db_column='item')
+    faction_required = models.SmallIntegerField(null=False, default=-100)
+    level_required = models.SmallIntegerField(null=False, default=0)
+    alt_currency_cost = models.IntegerField(null=False, default=0)
+    classes_required = models.IntegerField(null=False, default=65535)
+    probability = models.IntegerField(null=False, default=100)
+    quantity = models.SmallIntegerField(null=False, default=0)
+    min_expansion = models.FloatField(null=False, default=0)
+    max_expansion = models.FloatField(null=False, default=0)
+
+    class Meta:
+        db_table = "merchantlist"
         managed = False

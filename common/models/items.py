@@ -13,6 +13,8 @@ class Items(models.Model):
     scroll_effect = models.IntegerField(null=False, default=0, db_column='scrolleffect')
     scroll_type = models.IntegerField(null=False, default=0, db_column='scrolltype')
     source = models.CharField(max_length=20, null=False)
+    icon = models.IntegerField(null=False, default=0)
+    price = models.IntegerField(null=False, default=0)
 
     class Meta:
         db_table = 'items'

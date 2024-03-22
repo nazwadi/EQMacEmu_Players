@@ -13,6 +13,7 @@ from common.models.faction import FactionListMod
 from common.models.guilds import Guilds
 from common.models.guilds import GuildMembers
 from common.models.items import Items
+from common.models.npcs import MerchantList
 from common.models.npcs import NPCFaction
 from common.models.npcs import NPCSpellsEntries
 from common.models.npcs import NPCTypes
@@ -42,6 +43,7 @@ class GameServerRouter:
                           NPCFaction,
                           NPCTypes,
                           NPCSpellsEntries,
+                          MerchantList,
                           SpawnEntry,
                           SpellsNew,
                           Items,
