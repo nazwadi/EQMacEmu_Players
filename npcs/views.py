@@ -74,12 +74,16 @@ def view_npc(request, npc_id):
     else:
         npc_spell_proc_data = None
 
-    cursor.execute("""SELECT
+    cursor.execute("""SELECT 
                             z.long_name,
                             z.short_name,
+                            s.x,
+                            s.y,
+                            s.z,
+                            s.respawntime,
+                            s.variance,
                             s.min_expansion,
-                            s.max_expansion,
-                            s.respawntime
+                            s.max_expansion
                         FROM
                             npc_types AS n
                             JOIN spawnentry AS se ON n.id = se.npcID
@@ -89,17 +93,19 @@ def view_npc(request, npc_id):
                             n.id=%s
                             AND race != '127' 
                             AND race != '240' 
-                            AND z.min_status = 0 
-                            LIMIT 1;
-    
+                            AND z.min_status = 0;
     """, [npc_data.id])
-    spawn_data = cursor.fetchone()
+    spawn_data = cursor.fetchall()
+    spawn_point_list = list()
     if spawn_data:
-        SpawnData = namedtuple("SpawnData", "long_name short_name min_expansion max_expansion respawntime")
-        spawn_data = SpawnData(*spawn_data)
-    else:
-        spawn_data = None
+        for spawn in spawn_data:
+            SpawnData = namedtuple("SpawnData", ["long_name", "short_name", "x", "y", "z",
+                                                 "respawntime", "variance", "min_expansion", "max_expansion"])
+            spawn_point_list.append(SpawnData(*spawn))
 
+    print(spawn_point_list)
+    ZoneTuple = namedtuple("Zone", ["long_name", "short_name"])
+    zone = ZoneTuple(spawn_point_list[0].long_name, spawn_point_list[0].short_name)
     cursor.execute("""SELECT
                         fl.NAME,
                         nfe.value,
@@ -156,6 +162,7 @@ def view_npc(request, npc_id):
                            "npc_spell_proc_data": npc_spell_proc_data,
                            "factions": factions,
                            "opposing_factions": opposing_factions,
-                           "spawn_data": spawn_data,
+                           "spawn_point_list": spawn_point_list,
                            "merchant_list": merchant_list,
-                           "merchant_list_temp": merchant_list_temp, })
+                           "merchant_list_temp": merchant_list_temp,
+                           "zone": zone, })

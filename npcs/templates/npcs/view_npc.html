@@ -12,7 +12,8 @@
         </div>
         <div class="row">
             <div class="col-md-3">
-                <table class="table mobStatsBox">
+                <table class="table mobStatsBox"
+                       style="box-shadow: 5px 10px 20px rgba(0, 0, 0, 0.6); box-sizing: border-box;">
                     <tr>
                         <th> Mob Information</th>
                     </tr>
@@ -31,19 +32,8 @@
                             {% if npc_data.max_level %} - {{ npc_data.max_level }}{% endif %}</td>
                     </tr>
                     <tr>
-                        <th class="msb_sub"> Spawn Info</th>
-                    </tr>
-                    <tr>
                         <td><span style="font-weight: bold;">Zone:&nbsp;</span><a
-                                href="/zones/view/{{ spawn_data.short_name }}">{{ spawn_data.long_name }}</a></td>
-                    </tr>
-                    <tr>
-                        <td><span style="font-weight: bold;">Location:&nbsp;</span></td>
-                    </tr>
-                    <tr>
-                        <td><span
-                                style="font-weight: bold;">Respawn Time:</span>&nbsp;{{ spawn_data.respawntime|datetime_delta }}
-                        </td>
+                                href="/zones/view/{{ zone.short_name }}">{{ zone.long_name }}</a></td>
                     </tr>
                     <tr>
                         <td><span style="font-weight: bold;">Expansion:</span>&nbsp;<img
@@ -134,7 +124,7 @@
                     </tr>
                 </table>
             </div>
-            <div class="col-md">
+            <div class="col-lg">
                 <ul class="nav nav-tabs" id="npcDataTab" role="tablist">
                     <li class="nav-item" role="presentation">
                         <button class="nav-link active" id="faction-tab" data-bs-toggle="tab"
@@ -150,6 +140,13 @@
                                 Merchant
                             </button>
                         {% endif %}
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="faction-tab" data-bs-toggle="tab"
+                                data-bs-target="#spawn-tab-pane"
+                                type="button" role="tab" aria-controls="spawn-tab-pane" aria-selected="true">Spawn
+                            Points
+                        </button>
                     </li>
                 </ul>
                 <div class="tab-content" id="charViewTabContent">
@@ -193,8 +190,8 @@
                                 {{ npc_data.name|clean_name }}
                             </div>
                             <div class="eq-window-nested-blue">
-                                <table class="eq-table eq-highlight-rows" style="display:table;">
-                                    <thead>
+                                <table class="eq-table" style="height: 78vh; overflow: hidden scroll">
+                                    <thead class="eq-table-floating-header">
                                     <tr>
                                         <th>Item Name</th>
                                         <th><img src="{% static "/images/icons/Platinum.png" %}" alt="Platinum.png">
@@ -233,9 +230,39 @@
                             </div>
                         </div>
                     </div>
+                    <div class="tab-pane fade" id="spawn-tab-pane" role="tabpanel"
+                         aria-labelledby="spawn-tab"
+                         tabindex="2">
+                        <div class="row">
+                            <div class="col py-2 px-3">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>Coordinates (y,x,z)</th>
+                                        <th>Respawntime (variance)</th>
+                                        <th>Expansion</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for sp in spawn_point_list %}
+                                        <tr>
+                                            <td style="width: 200px;">
+                                                ({{ sp.y|floatformat:1 }}, {{ sp.x|floatformat:1 }}, {{ sp.z|floatformat:1 }})
+                                            </td>
+                                            <td>{{ sp.respawntime|datetime_delta }} ({{ sp.variance|datetime_delta }})
+                                            </td>
+                                            <td><img src="{% static "/images/" %}{{ sp.min_expansion|expansion_icon }}"
+                                                     alt="{{ sp.min_expansion|expansion_icon }}"></td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col-md">
+            <div class="col-lg">
                 <svg class="bd-placeholder-img bd-placeholder-img-lg img-fluid mx-auto" id="test" width="250"
                      height="250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 250x250"
                      preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title>
