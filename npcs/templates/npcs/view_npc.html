@@ -37,8 +37,8 @@
                     </tr>
                     <tr>
                         <td><span style="font-weight: bold;">Expansion:</span>&nbsp;<img
-                                src="/static/images/{{ spawn_data.min_expansion|expansion_icon }}"
-                                alt="{{ spawn_data.min_expansion|expansion_icon }}"/> (Expansion tagging in progress)
+                                src="/static/images/{{ expansion|expansion_icon }}"
+                                alt="{{ expansion|expansion_icon }}"/> (Expansion tagging in progress)
                         </td>
                     </tr>
                     <tr>
@@ -239,17 +239,17 @@
                                     <thead>
                                     <tr>
                                         <th>Coordinates (y,x,z)</th>
-                                        <th>Respawntime (variance)</th>
+                                        <th>Respawntime<br />(variance)</th>
                                         <th>Expansion</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     {% for sp in spawn_point_list %}
                                         <tr>
-                                            <td style="width: 200px;">
+                                            <td style="width: 250px;">
                                                 ({{ sp.y|floatformat:1 }}, {{ sp.x|floatformat:1 }}, {{ sp.z|floatformat:1 }})
                                             </td>
-                                            <td>{{ sp.respawntime|datetime_delta }} ({{ sp.variance|datetime_delta }})
+                                            <td>{{ sp.respawntime|datetime_delta }}<br />({{ sp.variance|datetime_delta }})
                                             </td>
                                             <td><img src="{% static "/images/" %}{{ sp.min_expansion|expansion_icon }}"
                                                      alt="{{ sp.min_expansion|expansion_icon }}"></td>

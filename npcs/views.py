@@ -103,9 +103,15 @@ def view_npc(request, npc_id):
                                                  "respawntime", "variance", "min_expansion", "max_expansion"])
             spawn_point_list.append(SpawnData(*spawn))
 
-    print(spawn_point_list)
+    try:
+        expansion = spawn_point_list[0].min_expansion
+    except IndexError:
+        expansion = None
     ZoneTuple = namedtuple("Zone", ["long_name", "short_name"])
-    zone = ZoneTuple(spawn_point_list[0].long_name, spawn_point_list[0].short_name)
+    try:
+        zone = ZoneTuple(spawn_point_list[0].long_name, spawn_point_list[0].short_name)
+    except IndexError:
+        zone = ZoneTuple(None, None)
     cursor.execute("""SELECT
                         fl.NAME,
                         nfe.value,
@@ -160,6 +166,7 @@ def view_npc(request, npc_id):
                   context={"npc_data": npc_data,
                            "npc_spells_entries": npc_spells_entries,
                            "npc_spell_proc_data": npc_spell_proc_data,
+                           "expansion": expansion,
                            "factions": factions,
                            "opposing_factions": opposing_factions,
                            "spawn_point_list": spawn_point_list,
