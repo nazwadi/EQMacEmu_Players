@@ -192,32 +192,45 @@
                             <div class="eq-window-title-bar">
                                 {{ npc_data.name|clean_name }}
                             </div>
-                               <div class="eq-window-nested-blue">
-                                  <table class="eq-table eq-highlight-rows" style="display:table;">
-                                      <thead>
-                                      <tr>
-                                      <th>Item Name</th>
-                                      <th><img src="{% static "/images/icons/Platinum.png" %}" alt="Platinum.png"></th>
-                                      <th><img src="{% static "/images/icons/Gold.png" %}" alt="Gold.png"></th>
-                                      <th><img src="{% static "/images/icons/Silver.png" %}" alt="Silver.png"></th>
-                                      <th><img src="{% static "/images/icons/Copper.png" %}" alt="Copper.png"></th>
-                                      </tr>
-                                      </thead>
-                                      <tbody>
-                                      {% for item in merchant_list %}
-                                          <tr>
-                                              <td><img src="{% static "/images/items/" %}item_{{ item.icon }}.png"
-                                                       alt="{{item.icon}}.png">&nbsp;{{ item.name }}</td>
-                                              <td>{{ item.platinum }}</td>
-                                              <td>{{ item.gold }}</td>
-                                              <td>{{ item.silver }}</td>
-                                              <td>{{ item.copper }}</td>
-                                          </tr>
-                                      {% endfor %}
-                                      </tbody>
-                                      
-                                  </table>
-                               </div> 
+                            <div class="eq-window-nested-blue">
+                                <table class="eq-table eq-highlight-rows" style="display:table;">
+                                    <thead>
+                                    <tr>
+                                        <th>Item Name</th>
+                                        <th><img src="{% static "/images/icons/Platinum.png" %}" alt="Platinum.png">
+                                        </th>
+                                        <th><img src="{% static "/images/icons/Gold.png" %}" alt="Gold.png"></th>
+                                        <th><img src="{% static "/images/icons/Silver.png" %}" alt="Silver.png"></th>
+                                        <th><img src="{% static "/images/icons/Copper.png" %}" alt="Copper.png"></th>
+                                        <th>Qty</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for item in merchant_list %}
+                                        <tr>
+                                            <td><img src="{% static "/images/items/" %}item_{{ item.icon }}.png"
+                                                     alt="{{ item.icon }}.png">&nbsp;{{ item.name }}</td>
+                                            <td>{{ item.platinum.0 }}</td>
+                                            <td>{{ item.gold.0 }}</td>
+                                            <td>{{ item.silver.0 }}</td>
+                                            <td>{{ item.copper }}</td>
+                                            <td>-</td>
+                                        </tr>
+                                    {% endfor %}
+                                    {% for item in merchant_list_temp %}
+                                        <tr>
+                                            <td><img src="{% static "/images/items/" %}item_{{ item.icon }}.png"
+                                                     alt="{{ item.icon }}.png">&nbsp;{{ item.name }}</td>
+                                            <td>{{ item.platinum.0 }}</td>
+                                            <td>{{ item.gold.0 }}</td>
+                                            <td>{{ item.silver.0 }}</td>
+                                            <td>{{ item.copper }}</td>
+                                            <td>{{ item.quantity }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>

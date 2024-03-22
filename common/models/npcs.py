@@ -114,3 +114,22 @@ class MerchantList(models.Model):
     class Meta:
         db_table = "merchantlist"
         managed = False
+
+
+class MerchantListTemp(models.Model):
+    """
+    This model maps to the merchantlist_temp table in the database.
+    """
+
+    def __str__(self):
+        return str(self.npc_id)
+
+    npc_id = models.IntegerField(primary_key=True, null=False, default=0, db_column='npcid')
+    slot = models.SmallIntegerField(null=False, unique=True, default=0)
+    item_id = models.OneToOneField(Items, on_delete=models.DO_NOTHING, db_column='itemid')
+    charges = models.IntegerField(null=False, default=1)
+    quantity = models.SmallIntegerField(null=False, default=0)
+
+    class Meta:
+        db_table = "merchantlist_temp"
+        managed = False

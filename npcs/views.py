@@ -3,6 +3,8 @@ from django.shortcuts import render, redirect
 from django.db import connections
 from common.models.npcs import NPCTypes
 from common.models.npcs import MerchantList
+from common.models.npcs import MerchantListTemp
+from common.utils import calculate_item_price
 from collections import namedtuple
 
 
@@ -118,17 +120,34 @@ def view_npc(request, npc_id):
             factions.append((name, value, npc_value))
 
     merchant_list_result = MerchantList.objects.filter(merchant_id=npc_data.merchant_id)
-    MerchantListTuple = namedtuple('MerchantList', ['id', 'name', 'icon', 'platinum', 'gold', 'silver', 'copper'])
+    merchant_list_temp_result = MerchantListTemp.objects.filter(npc_id=npc_data.merchant_id)
+    MerchantListTuple = namedtuple('MerchantList', ['id', 'name', 'icon', 'platinum', 'gold',
+                                                    'silver', 'copper', 'charges', 'quantity'])
     merchant_list = list()
     for item in merchant_list_result:
-        price = item.item.price
+        platinum, gold, silver, copper = calculate_item_price(item.item.price)
         merchant_list.append(MerchantListTuple(id=item.item.id,
                                                name=item.item.Name,
                                                icon=item.item.icon,
-                                               platinum=math.floor(price / 1000),
-                                               gold=math.floor((price % 1000) / 100),
-                                               silver=math.floor((price % 100) / 10),
-                                               copper=price % 10))
+                                               platinum=platinum,
+                                               gold=gold,
+                                               silver=silver,
+                                               copper=copper,
+                                               charges=-1,
+                                               quantity=-1))
+
+    merchant_list_temp = list()
+    for item in merchant_list_temp_result:
+        platinum, gold, silver, copper = calculate_item_price(item.item_id.price)
+        merchant_list_temp.append(MerchantListTuple(id=item.item_id.id,
+                                                    name=item.item_id.Name,
+                                                    icon=item.item_id.icon,
+                                                    platinum=platinum,
+                                                    gold=gold,
+                                                    silver=silver,
+                                                    copper=copper,
+                                                    charges=item.charges,
+                                                    quantity=item.quantity, ))
 
     return render(request=request,
                   template_name="npcs/view_npc.html",
@@ -138,4 +157,5 @@ def view_npc(request, npc_id):
                            "factions": factions,
                            "opposing_factions": opposing_factions,
                            "spawn_data": spawn_data,
-                           "merchant_list": merchant_list, })
+                           "merchant_list": merchant_list,
+                           "merchant_list_temp": merchant_list_temp, })
