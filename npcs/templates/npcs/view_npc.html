@@ -306,12 +306,11 @@
                                                     {% for sp in spawn_data.1 %}
                                                         {% if forloop.counter|divisibleby:2 %}
                                                         <li class="list-group-item list-group-item">
-                                                            ({{ sp.y }},{{ sp.x }},{{ sp.z }})
-                                                        {{ sp }}
+                                                            ({{ sp.y }}, {{ sp.x }}, {{ sp.z }})
                                                         </li>
                                                         {% else %}
                                                             <li class="list-group-item" style="background-color:#f3f8fd;">
-                                                                ({{ sp.y }},{{ sp.x }},{{ sp.z }})
+                                                                ({{ sp.y }}, {{ sp.x }}, {{ sp.z }})
                                                             </li>
                                                         {% endif %}
                                                     {% endfor %}
