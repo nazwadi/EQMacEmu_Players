@@ -13,6 +13,9 @@ from common.models.faction import FactionListMod
 from common.models.guilds import Guilds
 from common.models.guilds import GuildMembers
 from common.models.items import Items
+from common.models.loot import LootTable
+from common.models.loot import LootTableEntries
+from common.models.loot import LootDropEntries
 from common.models.npcs import MerchantList
 from common.models.npcs import MerchantListTemp
 from common.models.npcs import NPCFaction
@@ -42,11 +45,14 @@ class GameServerRouter:
                           FactionListMod,
                           Guilds,
                           GuildMembers,
+                          LootTable,
+                          LootTableEntries,
+                          LootDropEntries,
+                          MerchantList,
+                          MerchantListTemp,
                           NPCFaction,
                           NPCTypes,
                           NPCSpellsEntries,
-                          MerchantList,
-                          MerchantListTemp,
                           SpawnEntry,
                           Spawn2,
                           SpellsNew,

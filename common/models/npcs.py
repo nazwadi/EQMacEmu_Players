@@ -77,6 +77,7 @@ class NPCTypes(models.Model):
     npc_faction_id = models.IntegerField(null=False, default=0)
     npc_spells_id = models.IntegerField(null=False, default=0)
     merchant_id = models.IntegerField(null=False, default=0)
+    loottable_id = models.IntegerField(null=False, default=0)
     ac = models.SmallIntegerField(null=False, default=0, db_column='AC')
     attack_count = models.SmallIntegerField(null=False, default=-1)
     MR = models.SmallIntegerField(null=False, default=0)

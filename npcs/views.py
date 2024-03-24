@@ -1,5 +1,8 @@
 from django.shortcuts import render, redirect
 from django.db import connections
+
+from common.models.loot import LootTable, LootDropEntries
+from common.models.loot import LootTableEntries
 from common.models.npcs import NPCTypes
 from common.models.npcs import MerchantList
 from common.models.npcs import MerchantListTemp
@@ -170,16 +173,27 @@ def view_npc(request, npc_id):
                                                     charges=item.charges,
                                                     quantity=item.quantity, ))
 
+    loottable = LootTable.objects.get(id=npc_data.loottable_id)
+    loottable_entries = LootTableEntries.objects.filter(loottable_id=loottable.id)
+    loot_tables = dict()
+    for lootdrop_table in loottable_entries:
+        ld_entries = LootDropEntries.objects.filter(lootdrop_id=lootdrop_table.lootdrop_id.id)
+        loot_tables[lootdrop_table.lootdrop_id.id] = lootdrop_table, ld_entries
+
     return render(request=request,
                   template_name="npcs/view_npc.html",
-                  context={"npc_data": npc_data,
-                           "npc_spells_entries": npc_spells_entries,
-                           "npc_spell_proc_data": npc_spell_proc_data,
+                  context={
                            "expansion": expansion,
                            "factions": factions,
+                           "loottable": loottable,
+                           "loot_tables": loot_tables,
+                           "merchant_list": merchant_list,
+                           "merchant_list_temp": merchant_list_temp,
+                           "npc_data": npc_data,
+                           "npc_spells_entries": npc_spells_entries,
+                           "npc_spell_proc_data": npc_spell_proc_data,
                            "opposing_factions": opposing_factions,
                            "spawn_point_list": spawn_point_list,
                            "spawn_groups": spawn_groups,
-                           "merchant_list": merchant_list,
-                           "merchant_list_temp": merchant_list_temp,
-                           "zone": zone, })
+                           "zone": zone,
+                  })

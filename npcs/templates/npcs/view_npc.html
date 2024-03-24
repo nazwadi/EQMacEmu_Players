@@ -155,6 +155,12 @@
                             Groups
                         </button>
                     </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="loot-tab" data-bs-toggle="tab"
+                                data-bs-target="#loot-tab-pane"
+                                type="button" role="tab" aria-controls="loot-tab-pane" aria-selected="true">Loot
+                        </button>
+                    </li>
                 </ul>
                 <div class="tab-content" id="charViewTabContent">
                     <div class="tab-pane fade show active" id="faction-tab-pane" role="tabpanel"
@@ -166,11 +172,9 @@
                                 <h5>Factions</h5>
                                 <ul>
                                     {% for name, value, npc_value in factions %}
-                                        {% if value != 0 %}
-                                            <li>{{ name|clean_name|title }} <span
-                                                    style="color:#770000">({{ value }})</span>
-                                            </li>
-                                        {% endif %}
+                                        <li>{{ name|clean_name|title }} <span
+                                                style="color:#770000">({{ value }})</span>
+                                        </li>
                                     {% empty %}
                                         <li>None</li>
                                     {% endfor %}
@@ -292,7 +296,9 @@
                                         <tr>
                                             <th colspan="2"
                                                 style="background-color:#f3f8fd; text-align: center;">Spawn
-                                                Group:&nbsp;#{{ forloop.counter }} has {{ spawn_data.1|length }} spawn points</th>
+                                                Group:&nbsp;#{{ forloop.counter }} has {{ spawn_data.1|length }} spawn
+                                                points
+                                            </th>
                                         </tr>
                                         <tr>
                                             <td>
@@ -305,11 +311,12 @@
                                                 <ul class="list-group">
                                                     {% for sp in spawn_data.1 %}
                                                         {% if forloop.counter|divisibleby:2 %}
-                                                        <li class="list-group-item list-group-item">
-                                                            ({{ sp.y }}, {{ sp.x }}, {{ sp.z }})
-                                                        </li>
+                                                            <li class="list-group-item list-group-item">
+                                                                ({{ sp.y }}, {{ sp.x }}, {{ sp.z }})
+                                                            </li>
                                                         {% else %}
-                                                            <li class="list-group-item" style="background-color:#f3f8fd;">
+                                                            <li class="list-group-item"
+                                                                style="background-color:#f3f8fd;">
                                                                 ({{ sp.y }}, {{ sp.x }}, {{ sp.z }})
                                                             </li>
                                                         {% endif %}
@@ -323,13 +330,59 @@
                             </div>
                         </div>
                     </div>
+                    <div class="tab-pane fade" id="loot-tab-pane" role="tabpanel" aria-labelledby="loot-tab"
+                         tabindex="4">
+                        <div class="row">
+                            <div class="col py-2 px-3">
+                                <span><b>Loot Tables</b> - <i>Found {{ loot_tables|length }} loot drop tables for 
+                                    {{ npc_data.name|clean_name }} in {{ zone.long_name }}.</i></span>
+                                <div>
+                                    <ul class="list-group list-group-horizontal">
+                                        <li class="list-group-item">Min Cash: {{ loottable.min_cash }} copper</li>
+                                        <li class="list-group-item">Max Cash: {{ loottable.max_cash }} copper</li>
+                                        <li class="list-group-item">Average Coin: {{ loottable.avg_coin }} copper</li>
+                                    </ul>
+                                </div>
+                                <ul class="list-group">
+                                    {% for key, loot_data in loot_tables.items %}
+                                        <li class="list-group-item" style="background-color: #f3f8fd;">
+                                            Drop Table #{{ forloop.counter }} has a {{ loot_data.0.probability }}% probability of being used.<br />
+                                            <b>Minimum Drop(s):</b> {{ loot_data.0.min_drop }},
+                                            <b>Drop Limit:</b> {{ loot_data.0.drop_limit }}
+                                            <b>Multiplier:</b> {{ loot_data.0.multiplier }}, 
+                                        </li>
+                                        <table class="table table-striped">
+                                            <thead class="table-floating-header">
+                                            <tr>
+                                                <th>Item</th>
+                                                <th>Chance</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for ld_entry in loot_data.1 %}
+                                                <tr>
+                                                    <td>
+                                                        <img src="/static/images/items/item_{{ ld_entry.item_id.icon  }}.png"
+                                                        alt="item_{{ ld_entry.item_id.icon }}.png">
+                                                        {{ ld_entry.item_id.Name }}
+                                                    </td>
+                                                    <td>{{ ld_entry.chance }}%</td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="col-lg">
                 <svg class="bd-placeholder-img bd-placeholder-img-lg img-fluid mx-auto" id="test" width="250"
                      height="250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 250x250"
                      preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title>
-                    <rect width="100%" height="100%" fill="#eee"/>
+                    <rect width="100%" height="100%" fill="#eee"></rect>
                     <text x="50%" y="50%" fill="#aaa" dy=".3em">250x250</text>
                 </svg>
             </div>
