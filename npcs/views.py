@@ -1,9 +1,10 @@
-import math
 from django.shortcuts import render, redirect
 from django.db import connections
 from common.models.npcs import NPCTypes
 from common.models.npcs import MerchantList
 from common.models.npcs import MerchantListTemp
+from common.models.spawns import SpawnEntry
+from common.models.spawns import Spawn2
 from common.utils import calculate_item_price
 from collections import namedtuple
 
@@ -112,6 +113,14 @@ def view_npc(request, npc_id):
         zone = ZoneTuple(spawn_point_list[0].long_name, spawn_point_list[0].short_name)
     except IndexError:
         zone = ZoneTuple(None, None)
+
+    spawn_entries_spawngroup_result = SpawnEntry.objects.filter(npcID=npc_data.id).order_by("-spawngroupID")
+    spawn_groups = dict()
+    for spawn_entry in spawn_entries_spawngroup_result:
+        spawn_entries_result = SpawnEntry.objects.filter(spawngroupID=spawn_entry.spawngroupID)
+        spawn_points_result = Spawn2.objects.filter(spawngroupID=spawn_entry.spawngroupID)
+        spawn_groups[spawn_entry.spawngroupID] = spawn_entries_result, spawn_points_result
+
     cursor.execute("""SELECT
                         fl.NAME,
                         nfe.value,
@@ -170,6 +179,7 @@ def view_npc(request, npc_id):
                            "factions": factions,
                            "opposing_factions": opposing_factions,
                            "spawn_point_list": spawn_point_list,
+                           "spawn_groups": spawn_groups,
                            "merchant_list": merchant_list,
                            "merchant_list_temp": merchant_list_temp,
                            "zone": zone, })

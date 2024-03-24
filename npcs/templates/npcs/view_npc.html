@@ -142,10 +142,17 @@
                         {% endif %}
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="faction-tab" data-bs-toggle="tab"
-                                data-bs-target="#spawn-tab-pane"
-                                type="button" role="tab" aria-controls="spawn-tab-pane" aria-selected="true">Spawn
+                        <button class="nav-link" id="spawn-point-tab" data-bs-toggle="tab"
+                                data-bs-target="#spawn-point-tab-pane"
+                                type="button" role="tab" aria-controls="spawn-point-tab-pane" aria-selected="true">Spawn
                             Points
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="spawn-group-tab" data-bs-toggle="tab"
+                                data-bs-target="#spawn-group-tab-pane"
+                                type="button" role="tab" aria-controls="spawn-group-tab-pane" aria-selected="true">Spawn
+                            Groups
                         </button>
                     </li>
                 </ul>
@@ -230,16 +237,20 @@
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="spawn-tab-pane" role="tabpanel"
-                         aria-labelledby="spawn-tab"
+                    <div class="tab-pane fade" id="spawn-point-tab-pane" role="tabpanel"
+                         aria-labelledby="spawn-point-tab"
                          tabindex="2">
                         <div class="row">
                             <div class="col py-2 px-3">
+                                <div class="py-2">
+                                <span><b>Spawn Points</b> - <i>Found {{ spawn_point_list|length }} spawn points for 
+                                    {{ npc_data.name|clean_name }} in {{ zone.long_name }}.</i></span>
+                                </div>
                                 <table class="table">
-                                    <thead>
+                                    <thead class="table-floating-header">
                                     <tr>
                                         <th>Coordinates (y,x,z)</th>
-                                        <th>Respawntime<br />(variance)</th>
+                                        <th>Respawntime<br/>(variance)</th>
                                         <th>Expansion</th>
                                     </tr>
                                     </thead>
@@ -249,10 +260,63 @@
                                             <td style="width: 250px;">
                                                 ({{ sp.y|floatformat:1 }}, {{ sp.x|floatformat:1 }}, {{ sp.z|floatformat:1 }})
                                             </td>
-                                            <td>{{ sp.respawntime|datetime_delta }}<br />({{ sp.variance|datetime_delta }})
+                                            <td>{{ sp.respawntime|datetime_delta }}<br/>({{ sp.variance|datetime_delta }})
                                             </td>
                                             <td><img src="{% static "/images/" %}{{ sp.min_expansion|expansion_icon }}"
                                                      alt="{{ sp.min_expansion|expansion_icon }}"></td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="spawn-group-tab-pane" role="tabpanel"
+                         aria-labelledby="spawn-group-tab"
+                         tabindex="3">
+                        <div class="row">
+                            <div class="col py-2 px-3">
+                                <div class="py-2">
+                                <span><b>Spawn Groups</b> - <i>Found {{ spawn_groups|length }} spawn groups for 
+                                    {{ npc_data.name|clean_name }} in {{ zone.long_name }}.</i></span>
+                                </div>
+                                <table class="table">
+                                    <thead class="table-floating-header">
+                                    <tr>
+                                        <th>NPC (Spawn Chance)</th>
+                                        <th>Spawn Points</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for spawngroupID, spawn_data in spawn_groups.items %}
+                                        <tr>
+                                            <th colspan="2"
+                                                style="background-color:#f3f8fd; text-align: center;">Spawn
+                                                Group:&nbsp;#{{ forloop.counter }} has {{ spawn_data.1|length }} spawn points</th>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                {% for spawn_entry in spawn_data.0 %}
+                                                    <a href="/npcs/view/{{ spawn_entry.npcID }}">{{ spawn_entry.npcID.name|clean_name }}</a>
+                                                    ({{ spawn_entry.chance }}%)<br/>
+                                                {% endfor %}
+                                            </td>
+                                            <td>
+                                                <ul class="list-group">
+                                                    {% for sp in spawn_data.1 %}
+                                                        {% if forloop.counter|divisibleby:2 %}
+                                                        <li class="list-group-item list-group-item">
+                                                            ({{ sp.y }},{{ sp.x }},{{ sp.z }})
+                                                        {{ sp }}
+                                                        </li>
+                                                        {% else %}
+                                                            <li class="list-group-item" style="background-color:#f3f8fd;">
+                                                                ({{ sp.y }},{{ sp.x }},{{ sp.z }})
+                                                            </li>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </ul>
+                                            </td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>

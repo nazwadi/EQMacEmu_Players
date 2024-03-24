@@ -19,6 +19,7 @@ from common.models.npcs import NPCFaction
 from common.models.npcs import NPCSpellsEntries
 from common.models.npcs import NPCTypes
 from common.models.spawns import SpawnEntry
+from common.models.spawns import Spawn2
 from common.models.spells import SpellsNew
 from common.models.zones import Zone
 from common.models.zones import ZonePoints
@@ -47,6 +48,7 @@ class GameServerRouter:
                           MerchantList,
                           MerchantListTemp,
                           SpawnEntry,
+                          Spawn2,
                           SpellsNew,
                           Items,
                           Zone,

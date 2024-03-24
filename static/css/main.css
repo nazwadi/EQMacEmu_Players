@@ -21,3 +21,13 @@ ul {font-size: 14px;}
 .mobStatsBox .msb_sub {
     background-color: #f3f8fd
 }
+.table-floating-header {
+    background: #cedff2;
+    position: sticky;
+    top: 0;
+    border-collapse: separate;
+    z-index: 9999;
+    border-bottom: 1px solid #ffffff1c;
+
+    filter: drop-shadow(0px 3px 3px rgba(0, 0, 0, .2));
+}
