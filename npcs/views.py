@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.db import connections
+from django.core.exceptions import ObjectDoesNotExist
 
+from npcs.models import NpcPage
 from common.models.loot import LootTable, LootDropEntries
 from common.models.loot import LootTableEntries
 from common.models.npcs import NPCTypes
@@ -43,6 +45,7 @@ def view_npc(request, npc_id):
     :return: Http response
     """
     npc_data = NPCTypes.objects.filter(id=npc_id).first()
+    npc_page_text = NpcPage.objects.filter(npc_id=npc_id).first()
     if npc_data is None:
         return redirect("accounts:index")
     cursor = connections['game_database'].cursor()
@@ -173,12 +176,21 @@ def view_npc(request, npc_id):
                                                     charges=item.charges,
                                                     quantity=item.quantity, ))
 
-    loottable = LootTable.objects.get(id=npc_data.loottable_id)
-    loottable_entries = LootTableEntries.objects.filter(loottable_id=loottable.id)
-    loot_tables = dict()
-    for lootdrop_table in loottable_entries:
-        ld_entries = LootDropEntries.objects.filter(lootdrop_id=lootdrop_table.lootdrop_id.id)
-        loot_tables[lootdrop_table.lootdrop_id.id] = lootdrop_table, ld_entries
+    try:
+        loottable = LootTable.objects.get(id=npc_data.loottable_id)
+    except ObjectDoesNotExist:
+        loottable = None
+    if loottable:
+        loottable_entries = LootTableEntries.objects.filter(loottable_id=loottable.id)
+        loot_tables = dict()
+        for lootdrop_table in loottable_entries:
+            try:
+                ld_entries = LootDropEntries.objects.filter(lootdrop_id=lootdrop_table.lootdrop_id.id)
+                loot_tables[lootdrop_table.lootdrop_id] = lootdrop_table, ld_entries
+            except ObjectDoesNotExist:
+                continue
+    else:
+        loot_tables = dict()
 
     return render(request=request,
                   template_name="npcs/view_npc.html",
@@ -190,6 +202,7 @@ def view_npc(request, npc_id):
                            "merchant_list": merchant_list,
                            "merchant_list_temp": merchant_list_temp,
                            "npc_data": npc_data,
+                           "npc_page_text": npc_page_text,
                            "npc_spells_entries": npc_spells_entries,
                            "npc_spell_proc_data": npc_spell_proc_data,
                            "opposing_factions": opposing_factions,

@@ -125,6 +125,14 @@
                 </table>
             </div>
             <div class="col-lg">
+                <div style="margin-bottom: 10px;">
+                    <h5>Description</h5>
+                    {% if npc_page_text.description %}
+                        {{ npc_page_text.description }}
+                    {% else %}
+                        <p>Information needed.</p>
+                    {% endif %}
+                </div>
                 <ul class="nav nav-tabs" id="npcDataTab" role="tablist">
                     <li class="nav-item" role="presentation">
                         <button class="nav-link active" id="faction-tab" data-bs-toggle="tab"
@@ -161,6 +169,12 @@
                                 type="button" role="tab" aria-controls="loot-tab-pane" aria-selected="true">Loot
                         </button>
                     </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="quest-tab" data-bs-toggle="tab"
+                                data-bs-target="#quest-tab-pane"
+                                type="button" role="tab" aria-controls="quest-tab-pane" aria-selected="true">Quests
+                        </button>
+                    </li>
                 </ul>
                 <div class="tab-content" id="charViewTabContent">
                     <div class="tab-pane fade show active" id="faction-tab-pane" role="tabpanel"
@@ -168,29 +182,30 @@
                          tabindex="0">
                         <div class="row">
                             <div class="col py-2 px-3">
-
-                                <h5>Factions</h5>
-                                <ul>
-                                    {% for name, value, npc_value in factions %}
-                                        <li>{{ name|clean_name|title }} <span
-                                                style="color:#770000">({{ value }})</span>
-                                        </li>
-                                    {% empty %}
-                                        <li>None</li>
-                                    {% endfor %}
-                                </ul>
-                                <h5>Opposing Factions</h5>
-                                <ul>
-                                    {% for name, value, npc_value in opposing_factions %}
-                                        {% if value != 0 %}
+                                <div class="py-2">
+                                    <h5>Factions</h5>
+                                    <ul>
+                                        {% for name, value, npc_value in factions %}
                                             <li>{{ name|clean_name|title }} <span
-                                                    style="color:#007700">({{ value }})</span>
+                                                    style="color:#770000">({{ value }})</span>
                                             </li>
-                                        {% endif %}
-                                    {% empty %}
-                                        <li>None</li>
-                                    {% endfor %}
-                                </ul>
+                                        {% empty %}
+                                            <li>None</li>
+                                        {% endfor %}
+                                    </ul>
+                                    <h5>Opposing Factions</h5>
+                                    <ul>
+                                        {% for name, value, npc_value in opposing_factions %}
+                                            {% if value != 0 %}
+                                                <li>{{ name|clean_name|title }} <span
+                                                        style="color:#007700">({{ value }})</span>
+                                                </li>
+                                            {% endif %}
+                                        {% empty %}
+                                            <li>None</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -247,7 +262,7 @@
                         <div class="row">
                             <div class="col py-2 px-3">
                                 <div class="py-2">
-                                <span><b>Spawn Points</b> - <i>Found {{ spawn_point_list|length }} spawn points for 
+                                <span><b>Spawn Points</b> - <i>Found {{ spawn_point_list|length }} spawn points for
                                     {{ npc_data.name|clean_name }} in {{ zone.long_name }}.</i></span>
                                 </div>
                                 <table class="table">
@@ -281,7 +296,7 @@
                         <div class="row">
                             <div class="col py-2 px-3">
                                 <div class="py-2">
-                                <span><b>Spawn Groups</b> - <i>Found {{ spawn_groups|length }} spawn groups for 
+                                <span><b>Spawn Groups</b> - <i>Found {{ spawn_groups|length }} spawn groups for
                                     {{ npc_data.name|clean_name }} in {{ zone.long_name }}.</i></span>
                                 </div>
                                 <table class="table">
@@ -334,8 +349,10 @@
                          tabindex="4">
                         <div class="row">
                             <div class="col py-2 px-3">
-                                <span><b>Loot Tables</b> - <i>Found {{ loot_tables|length }} loot drop tables for 
+                                <div class="py-2">
+                                <span><b>Loot Tables</b> - <i>Found {{ loot_tables|length }} loot drop tables for
                                     {{ npc_data.name|clean_name }} in {{ zone.long_name }}.</i></span>
+                                </div>
                                 <div>
                                     <ul class="list-group list-group-horizontal">
                                         <li class="list-group-item">Min Cash: {{ loottable.min_cash }} copper</li>
@@ -346,10 +363,11 @@
                                 <ul class="list-group">
                                     {% for key, loot_data in loot_tables.items %}
                                         <li class="list-group-item" style="background-color: #f3f8fd;">
-                                            Drop Table #{{ forloop.counter }} has a {{ loot_data.0.probability }}% probability of being used.<br />
+                                            Drop Table #{{ forloop.counter }} has a {{ loot_data.0.probability }}%
+                                            probability of being used.<br/>
                                             <b>Minimum Drop(s):</b> {{ loot_data.0.min_drop }},
                                             <b>Drop Limit:</b> {{ loot_data.0.drop_limit }}
-                                            <b>Multiplier:</b> {{ loot_data.0.multiplier }}, 
+                                            <b>Multiplier:</b> {{ loot_data.0.multiplier }},
                                         </li>
                                         <table class="table table-striped">
                                             <thead class="table-floating-header">
@@ -362,8 +380,8 @@
                                             {% for ld_entry in loot_data.1 %}
                                                 <tr>
                                                     <td>
-                                                        <img src="/static/images/items/item_{{ ld_entry.item_id.icon  }}.png"
-                                                        alt="item_{{ ld_entry.item_id.icon }}.png">
+                                                        <img src="/static/images/items/item_{{ ld_entry.item_id.icon }}.png"
+                                                             alt="item_{{ ld_entry.item_id.icon }}.png">
                                                         {{ ld_entry.item_id.Name }}
                                                     </td>
                                                     <td>{{ ld_entry.chance }}%</td>
@@ -376,15 +394,34 @@
                             </div>
                         </div>
                     </div>
+                    <div class="tab-pane fade" id="quest-tab-pane" role="tabpanel" aria-labelledby="quest-tab"
+                         tabindex="5">
+                        <div class="row">
+                            <div class="col py-2 px-3">
+                                <div class="py-2">
+                                    <h5>Related Quests</h5>
+                                    {% if npc_page_text.related_quests %}
+                                        {{ npc_page_text.related_quests|safe }}
+                                    {% else %}
+                                        <p>No quest information available.</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="col-lg">
-                <svg class="bd-placeholder-img bd-placeholder-img-lg img-fluid mx-auto" id="test" width="250"
-                     height="250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 250x250"
-                     preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title>
-                    <rect width="100%" height="100%" fill="#eee"></rect>
-                    <text x="50%" y="50%" fill="#aaa" dy=".3em">250x250</text>
-                </svg>
+                {% if npc_page_text.portrait %}
+                    {{ npc_page_text.portrait }}
+                {% else %}
+                    <svg class="bd-placeholder-img bd-placeholder-img-lg img-fluid mx-auto" id="test" width="250"
+                         height="250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 250x250"
+                         preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title>
+                        <rect width="100%" height="100%" fill="#eee"></rect>
+                        <text x="50%" y="50%" fill="#aaa" dy=".3em">250x250</text>
+                    </svg>
+                {% endif %}
             </div>
         </div>
     </div>

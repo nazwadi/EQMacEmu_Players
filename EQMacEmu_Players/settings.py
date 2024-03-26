@@ -123,7 +123,7 @@ WSGI_APPLICATION = 'EQMacEmu_Players.wsgi.application'
 
 DATABASE_ROUTERS = ['accounts.LoginServerRouter.LoginServerRouter',
                     'accounts.GameServerRouter.GameServerRouter',
-                    'characters.GameServerRouter.GameServerRouter']
+                    'common.GameServerRouter.GameServerRouter']
 
 DATABASES = {
     'default': {
