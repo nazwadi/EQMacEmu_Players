@@ -1277,3 +1277,8 @@ def npc_special_ability(values):
             print(e, ability)
             continue
     return ', '.join(result)
+
+
+@register.filter(name="multiply")
+def multiply(value, arg):
+    return value * arg

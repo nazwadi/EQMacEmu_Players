@@ -135,7 +135,13 @@
                 </div>
                 <ul class="nav nav-tabs" id="npcDataTab" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="faction-tab" data-bs-toggle="tab"
+                        <button class="nav-link active" id="map-tab" data-bs-toggle="tab"
+                                data-bs-target="#map-tab-pane"
+                                type="button" role="tab" aria-controls="map-tab-pane" aria-selected="true">Map
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="faction-tab" data-bs-toggle="tab"
                                 data-bs-target="#faction-tab-pane"
                                 type="button" role="tab" aria-controls="faction-tab-pane" aria-selected="true">Faction
                         </button>
@@ -177,9 +183,30 @@
                     </li>
                 </ul>
                 <div class="tab-content" id="charViewTabContent">
-                    <div class="tab-pane fade show active" id="faction-tab-pane" role="tabpanel"
-                         aria-labelledby="faction-tab"
+                    <div class="tab-pane fade show active" id="map-tab-pane" role="tabpanel"
+                         aria-labelledby="map-tab"
                          tabindex="0">
+                        <div class="row">
+                            <div class="col py-2 px-3">
+                                <div id="controls" class="row">
+                                    <label for="lineWeight" class="px-2">Line Weight</label>
+                                    <input type="range" id="lineWeight" min="1" max="10" step="1" value="2">
+                                    <div class="custom-control custom-switch px-5">
+                                        <input type="checkbox" id="showPoints" class="custom-control-input">
+                                        <label for="showPoints" class="custom-control-label">Toggle Points</label>
+                                    </div>
+                                </div>
+                                <div id="konva-container" class="s12 l9 row"
+                                     style="min-width: 400px; min-height: 600px;"></div>
+                                <article class="absolute right surface no-elevate">Credit to <a href="https://www.pqdi.cc/">Talodar</a> for the
+                                    original map script. Credit for all maps goes to <a
+                                            class="link" href="https://www.eqmaps.info/">Brewall</a>.</article>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="faction-tab-pane" role="tabpanel"
+                         aria-labelledby="faction-tab"
+                         tabindex="1">
                         <div class="row">
                             <div class="col py-2 px-3">
                                 <div class="py-2">
@@ -210,7 +237,7 @@
                         </div>
                     </div>
                     <div class="tab-pane fade" id="merchant-tab-pane" role="tabpanel" aria-labelledby="merchant-tab"
-                         tabindex="1">
+                         tabindex="2">
                         <div class='eq-window-simple' style="width:100%;">
                             <div class="eq-window-title-bar">
                                 {{ npc_data.name|clean_name }}
@@ -258,7 +285,7 @@
                     </div>
                     <div class="tab-pane fade" id="spawn-point-tab-pane" role="tabpanel"
                          aria-labelledby="spawn-point-tab"
-                         tabindex="2">
+                         tabindex="3">
                         <div class="row">
                             <div class="col py-2 px-3">
                                 <div class="py-2">
@@ -292,7 +319,7 @@
                     </div>
                     <div class="tab-pane fade" id="spawn-group-tab-pane" role="tabpanel"
                          aria-labelledby="spawn-group-tab"
-                         tabindex="3">
+                         tabindex="4">
                         <div class="row">
                             <div class="col py-2 px-3">
                                 <div class="py-2">
@@ -346,7 +373,7 @@
                         </div>
                     </div>
                     <div class="tab-pane fade" id="loot-tab-pane" role="tabpanel" aria-labelledby="loot-tab"
-                         tabindex="4">
+                         tabindex="5">
                         <div class="row">
                             <div class="col py-2 px-3">
                                 <div class="py-2">
@@ -395,7 +422,7 @@
                         </div>
                     </div>
                     <div class="tab-pane fade" id="quest-tab-pane" role="tabpanel" aria-labelledby="quest-tab"
-                         tabindex="5">
+                         tabindex="6">
                         <div class="row">
                             <div class="col py-2 px-3">
                                 <div class="py-2">
@@ -425,4 +452,14 @@
             </div>
         </div>
     </div>
+    <script src="https://unpkg.com/konva@9/konva.min.js"></script>
+    <script type="text/javascript">
+        mapBaseName = JSON.parse('"{{ zone.short_name }}"')
+        const creatureSpawnPoints = [
+            {% for sp in spawn_point_list %}
+                {x: {{ sp.x|multiply:-1 }}, y: {{ sp.y|multiply:-1 }}},
+            {% endfor %}
+        ];
+    </script>
+    <script src="/static/konvamap.js"></script>
 {% endblock %}
