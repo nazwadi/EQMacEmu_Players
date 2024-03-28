@@ -147,7 +147,6 @@ def view_npc(request, npc_id):
             factions.append((name, value, npc_value))
 
     merchant_list_result = MerchantList.objects.filter(merchant_id=npc_data.merchant_id)
-    merchant_list_temp_result = MerchantListTemp.objects.filter(npc_id=npc_data.merchant_id)
     MerchantListTuple = namedtuple('MerchantList', ['id', 'name', 'icon', 'platinum', 'gold',
                                                     'silver', 'copper', 'charges', 'quantity'])
     merchant_list = list()
@@ -162,19 +161,6 @@ def view_npc(request, npc_id):
                                                copper=copper,
                                                charges=-1,
                                                quantity=-1))
-
-    merchant_list_temp = list()
-    for item in merchant_list_temp_result:
-        platinum, gold, silver, copper = calculate_item_price(item.item_id.price)
-        merchant_list_temp.append(MerchantListTuple(id=item.item_id.id,
-                                                    name=item.item_id.Name,
-                                                    icon=item.item_id.icon,
-                                                    platinum=platinum,
-                                                    gold=gold,
-                                                    silver=silver,
-                                                    copper=copper,
-                                                    charges=item.charges,
-                                                    quantity=item.quantity, ))
 
     try:
         loottable = LootTable.objects.get(id=npc_data.loottable_id)
@@ -200,7 +186,6 @@ def view_npc(request, npc_id):
                            "loottable": loottable,
                            "loot_tables": loot_tables,
                            "merchant_list": merchant_list,
-                           "merchant_list_temp": merchant_list_temp,
                            "npc_data": npc_data,
                            "npc_page_text": npc_page_text,
                            "npc_spells_entries": npc_spells_entries,

@@ -267,17 +267,6 @@
                                             <td>-</td>
                                         </tr>
                                     {% endfor %}
-                                    {% for item in merchant_list_temp %}
-                                        <tr>
-                                            <td><img src="{% static "/images/items/" %}item_{{ item.icon }}.png"
-                                                     alt="{{ item.icon }}.png">&nbsp;{{ item.name }}</td>
-                                            <td>{{ item.platinum.0 }}</td>
-                                            <td>{{ item.gold.0 }}</td>
-                                            <td>{{ item.silver.0 }}</td>
-                                            <td>{{ item.copper }}</td>
-                                            <td>{{ item.quantity }}</td>
-                                        </tr>
-                                    {% endfor %}
                                     </tbody>
                                 </table>
                             </div>
