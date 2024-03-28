@@ -47,8 +47,8 @@ def view_zone(request, short_name):
                         JOIN spawngroup b ON b.id = a.spawngroupID
                         JOIN spawnentry c ON c.spawngroupID = b.id
                         JOIN npc_types d ON d.id = c.npcID
-                      WHERE a.zone = %s
-                      ORDER BY d.name, d.id""", [zone_data.short_name])
+                      WHERE a.zone = %s and d.race != '127'
+                      ORDER BY d.name, d.id""", [zone_data.short_name])  # Race 127 = 'Invisible Man'
     npc_results = cursor.fetchall()
 
     cursor.execute("""SELECT gs.id, gs.max_x, gs.max_y, gs.max_z, gs.min_x, gs.min_y, gs.heading, 
