@@ -1,4 +1,5 @@
 {% load static %}
+{% load data_utilities %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,7 +18,15 @@
     <link rel="stylesheet" href="{% static 'css/eq-ui.css' %}">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
 
-    <title>EQ Archives</title>
+    {% if character.name %}
+        <title>{{ character.name }} - EQ Archives</title>
+    {% elif game_account_name %}
+        <title>{{ game_account_name }} - EQ Archives</title>
+    {% elif npc_data.name  %}
+        <title>{{ npc_data.name|clean_name }} - EQ Archives</title>
+    {% else %}
+        <title>EQ Archives</title>
+    {% endif %}
 </head>
 <body>
 

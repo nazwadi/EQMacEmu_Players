@@ -12,7 +12,11 @@
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
     <link href="https://cdn.datatables.net/v/bs5/dt-2.0.2/datatables.min.css" rel="stylesheet">
 
-    <title>EQ Archives</title>
+    {% if zone_data.short_name %}
+        <title>{{ zone_data.long_name }} - EQ Archives</title>
+    {% else %}
+        <title>Zones - EQ Archives</title>
+    {% endif %}
 </head>
 <body>
 

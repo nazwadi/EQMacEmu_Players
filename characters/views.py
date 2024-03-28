@@ -43,7 +43,8 @@ def list_characters(request, game_account_name):
         if game_account.id is not None:
             characters = Characters.objects.filter(account_id=game_account.id)
             return render(request=request, template_name="characters/list.html",
-                          context={"characters": characters, }
+                          context={"characters": characters,
+                                   "game_account_name": game_account.name, }
                           )
     return redirect("accounts:login")
 
