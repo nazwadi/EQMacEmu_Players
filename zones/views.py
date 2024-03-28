@@ -68,8 +68,9 @@ def view_zone(request, short_name):
     spawn_points = list()
     for sp in spawn_point_results:
         point = SpawnPoint(sp[1], sp[2], sp[3], sp[4], sp[5], sp[6], sp[7], sp[8])
-        spawn_entry_results = SpawnEntry.objects.filter(spawngroupID=sp[0])
-        spawn_points.append((point, spawn_entry_results))
+        spawn_entry_results = SpawnEntry.objects.filter(spawngroupID=sp[0]).exclude(npcID__race='127')
+        if spawn_entry_results:
+            spawn_points.append((point, spawn_entry_results))
 
     cursor.execute("""SELECT i.id, i.name, i.icon, f.skill_level, f.chance 
                       FROM fishing f 
