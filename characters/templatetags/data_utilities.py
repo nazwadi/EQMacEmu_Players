@@ -929,7 +929,7 @@ def zone_short_to_long(value):
         "kithicor": "Kithicor Forest",
         "commons": "West Commonlands",
         "ecommons": "East Commonlands",
-        "erudint": "The Erudin Palace",
+        "erudnint": "The Erudin Palace",
         "erudnext": "Erudin",
         "nektulos": "The Nektulos Forest",
         "cshome": "Sunset Home",
