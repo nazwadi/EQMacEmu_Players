@@ -2,12 +2,12 @@ from django.shortcuts import render, redirect
 from django.db import connections
 from django.core.exceptions import ObjectDoesNotExist
 
+from common.models.zones import Zone
 from npcs.models import NpcPage
 from common.models.loot import LootTable, LootDropEntries
 from common.models.loot import LootTableEntries
 from common.models.npcs import NPCTypes
 from common.models.npcs import MerchantList
-from common.models.npcs import MerchantListTemp
 from common.models.spawns import SpawnEntry
 from common.models.spawns import Spawn2
 from common.utils import calculate_item_price
@@ -25,15 +25,24 @@ def index_request(request):
                   template_name="npcs/view_npc.html")
 
 
-def list_npcs(request):
+def search(request):
     """
-    Displays a list of npcs that match the npc name
+    Search for an npc by name
 
+    :param name: the name of the npc
     :param request: Http request
     :return: Http response
     """
-    return render(request=request,
-                  template_name="npcs/view_npc.html")
+    if request.method == "GET":
+        return render(request=request,
+                      template_name="npcs/search_npc.html")
+    if request.method == "POST":
+        npc_name = request.POST.get("npc_name")
+        npc_name = npc_name.replace(' ', '_')
+        search_results = NPCTypes.objects.filter(name__icontains=npc_name)
+        return render(request=request,
+                      template_name="npcs/search_npc.html",
+                      context={"search_results": search_results})
 
 
 def view_npc(request, npc_id):

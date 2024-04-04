@@ -72,6 +72,7 @@ class NPCTypes(models.Model):
     class_name = models.SmallIntegerField(null=False, default=0, db_column='class')
     hp = models.IntegerField(null=False, default=0)
     mana = models.IntegerField(null=False, default=0)
+    gender = models.SmallIntegerField(null=False, default=0)
     min_dmg = models.IntegerField(null=False, default=0, db_column='mindmg')
     max_dmg = models.IntegerField(null=False, default=0, db_column='maxdmg')
     npc_faction_id = models.IntegerField(null=False, default=0)
