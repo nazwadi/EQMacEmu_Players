@@ -1,25 +1,25 @@
-{% extends 'characters/header.html' %}
+{% extends 'npcs/header.html' %}
 {% load data_utilities %}
 {% load static %}
 {% load humanize %}
 {% block content %}
-    <div class="container">
-        <div class="row py-5">
+    <div class="container py-4">
+        <div class="row">
             <div class="col">
-                <h1>NPC Search</h1>
-                <form action="/npcs/search" method="post">
+                <h1 class="text-center mb-4">NPC Search</h1>
+                <form class="p-3 mb-4 bg-body-tertiary border" action="/npcs/search" method="post">
                     {% csrf_token %}
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
+                    <div class="row">
+                        <div class="col-12 col-md-4">
                             <div class="form-text text-wrap"><label for="npc_name">NPC Name</label></div>
                             <input type="text" class="form-control" id="npc_name" name="npc_name"
                                    placeholder="a decaying skeleton">
                         </div>
-                        <div class="form-group col-md-1">
+                        <div class="col-12 col-md-1">
                             <div class="form-text text-wrap"><label for="min_level">Min Level</label></div>
                             <input class="form-control" id="min_level" name="min_level" type="number" value="0">
                         </div>
-                        <div class="form-group col-md-1">
+                        <div class="col-12 col-md-1">
                             <div class="form-text text-wrap"><label for="max_level">Max Level</label></div>
                             <input class="form-control" id="max_level" name="max_level" type="number" value="99">
                         </div>
@@ -35,16 +35,18 @@
                             </div>
                         {% endif %}
                     </div>
-                    <div class="form-row">
-                        <button type="submit" class="btn btn-primary mb-2">Search</button>
+                    <div class="col-12 col-md-12">
+                        <div class="d-grid gap-2 py-4">
+                            <button type="submit" class="btn btn-outline-primary">Search</button>
+                        </div>
                     </div>
                 </form>
             </div>
         </div>
         {% if search_results %}
-            <div class="row">
+            <div class="row py-5">
                 <div class="col">
-                    <h1>Search Results</h1>
+                    <h1 class="text-center">Search Results</h1>
                     <table id="search-results-table" class="display table table-striped">
                         <thead>
                         <tr>
