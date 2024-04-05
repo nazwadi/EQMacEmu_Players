@@ -11,21 +11,29 @@
                     {% csrf_token %}
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            <label for="npc_name">NPC Name</label>
+                            <div class="form-text text-wrap"><label for="npc_name">NPC Name</label></div>
                             <input type="text" class="form-control" id="npc_name" name="npc_name"
                                    placeholder="a decaying skeleton">
                         </div>
-                    {% if zones %}
-                        <div class="form-group col-md-4">
-                            <label for="zone">Zone</label>
-                            <select id="zone" class="form-control">
-                                <option selected>any</option>
-                                {% for zone in zones %}
-                                    <option value="{{ zone.short_name }}">{{ zone.long_name }}</option>
-                                {% endfor %}
-                            </select>
+                        <div class="form-group col-md-1">
+                            <div class="form-text text-wrap"><label for="min_level">Min Level</label></div>
+                            <input class="form-control" id="min_level" name="min_level" type="number" value="0">
                         </div>
-                    {% endif %}
+                        <div class="form-group col-md-1">
+                            <div class="form-text text-wrap"><label for="max_level">Max Level</label></div>
+                            <input class="form-control" id="max_level" name="max_level" type="number" value="99">
+                        </div>
+                        {% if zones %}
+                            <div class="form-group col-md-4">
+                                <label for="zone">Zone</label>
+                                <select id="zone" class="form-control">
+                                    <option selected>any</option>
+                                    {% for zone in zones %}
+                                        <option value="{{ zone.short_name }}">{{ zone.long_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        {% endif %}
                     </div>
                     <div class="form-row">
                         <button type="submit" class="btn btn-primary mb-2">Search</button>

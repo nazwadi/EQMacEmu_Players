@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from django.db import connections
 from django.core.exceptions import ObjectDoesNotExist
 
-from common.models.zones import Zone
 from npcs.models import NpcPage
 from common.models.loot import LootTable, LootDropEntries
 from common.models.loot import LootTableEntries
@@ -39,10 +38,15 @@ def search(request):
     if request.method == "POST":
         npc_name = request.POST.get("npc_name")
         npc_name = npc_name.replace(' ', '_')
-        search_results = NPCTypes.objects.filter(name__icontains=npc_name)
+        min_level = request.POST.get("min_level")
+        max_level = request.POST.get("max_level")
+        search_results = (NPCTypes.objects.filter(name__icontains=npc_name)
+                          .filter(level__gte=min_level)
+                          .filter(level__lte=max_level))
         return render(request=request,
                       template_name="npcs/search_npc.html",
-                      context={"search_results": search_results})
+                      context={"search_results": search_results,
+                               "level_range": range(100)})
 
 
 def view_npc(request, npc_id):
