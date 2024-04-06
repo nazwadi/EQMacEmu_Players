@@ -51,6 +51,8 @@
                         <thead>
                         <tr>
                             <th>Name</th>
+                            <th>Expansion</th>
+                            <th>Zone</th>
                             <th>Level(s)</th>
                             <th>Race</th>
                             <th>Class</th>
@@ -62,8 +64,10 @@
                         {% for result in search_results %}
                             <tr>
                                 <td><a href="/npcs/view/{{ result.id }}">{{ result.name|clean_name }}</a></td>
-                                {% if result.max_level %}
-                                    <td>{{ result.level }} - {{ result.max_level }}</td>
+                                <td><img src="{% static "/images/"  %}{{ result.min_expansion|expansion_icon }}" alt="{{ result.min_expansion|expansion_icon }}"></td>
+                                <td>{{ result.long_name }}</td>
+                                {% if result.maxlevel %}
+                                    <td>{{ result.level }} - {{ result.maxlevel }}</td>
                                 {% else %}
                                     <td>{{ result.level }}</td>
                                 {% endif %}

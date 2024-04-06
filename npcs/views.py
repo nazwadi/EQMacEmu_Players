@@ -40,9 +40,37 @@ def search(request):
         npc_name = npc_name.replace(' ', '_')
         min_level = request.POST.get("min_level")
         max_level = request.POST.get("max_level")
-        search_results = (NPCTypes.objects.filter(name__icontains=npc_name)
-                          .filter(level__gte=min_level)
-                          .filter(level__lte=max_level))
+        cursor = connections['game_database'].cursor()
+        cursor.execute("""SELECT DISTINCT
+                            nt.id,
+                            nt.NAME,
+                            s.min_expansion,
+                            z.long_name,
+                            nt.LEVEL,
+                            nt.maxlevel,
+                            nt.race,
+                            nt.class,
+                            nt.gender,
+                            nt.hp,
+                            nt.MR 
+                         FROM
+                            npc_types AS nt
+                            INNER JOIN spawnentry AS se ON nt.id = se.npcID
+                            INNER JOIN spawn2 AS s ON se.spawngroupID = s.spawngroupID
+                            INNER JOIN zone AS z ON s.zone = z.short_name 
+                        WHERE
+                            nt.NAME LIKE %s
+                            AND nt.LEVEL >= %s
+                            AND nt.maxlevel <= %s;
+        """, ['%'+npc_name+'%', min_level, max_level])
+        results = cursor.fetchall()
+        search_results = list()
+        if results:
+            for result in results:
+                NpcTuple = namedtuple("NpcTuple", ["id", "name", "min_expansion", "long_name", "level",
+                                                "maxlevel", "race", "class_name", "gender", "hp", "MR"])
+                search_results.append(NpcTuple(*result))
+
         return render(request=request,
                       template_name="npcs/search_npc.html",
                       context={"search_results": search_results,
