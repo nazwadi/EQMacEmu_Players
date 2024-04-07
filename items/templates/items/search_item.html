@@ -1,0 +1,67 @@
+{% extends 'items/header.html' %}
+{% load data_utilities %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+    <div class="container py-4">
+        <div class="row">
+            <div class="col">
+                <h1 class="text-center mb-4">Item Search</h1>
+                <form class="p-3 mb-4 bg-body-tertiary border" action="/items/search" method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-12 col-md-4">
+                            <div class="form-text text-wrap"><label for="item_name">Item Name</label></div>
+                            <input type="text" class="form-control" id="item_name" name="item_name"
+                                   placeholder="a tattered note">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-12">
+                        <div class="d-grid gap-2 py-4">
+                            <button type="submit" class="btn btn-outline-primary">Search</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {% if search_results %}
+            <div class="row py-5">
+                <div class="col">
+                    <h1 class="text-center">Search Results</h1>
+                    <table id="search-results-table" class="display table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Expansion</th>
+                            <th>Zone</th>
+                            <th>Level(s)</th>
+                            <th>Race</th>
+                            <th>Class</th>
+                            <th>Gender</th>
+                            <th>Hit Points</th>
+                            <th>MR</th>
+                        </tr>
+                        </thead>
+                        {% for result in search_results %}
+                            <tr>
+                                <td><a href="/npcs/view/{{ result.id }}">{{ result.name|clean_name }}</a></td>
+                                <td><img src="{% static "/images/"  %}{{ result.min_expansion|expansion_icon }}" alt="{{ result.min_expansion|expansion_icon }}"></td>
+                                <td>{{ result.long_name }}</td>
+                                {% if result.maxlevel %}
+                                    <td>{{ result.level }} - {{ result.maxlevel }}</td>
+                                {% else %}
+                                    <td>{{ result.level }}</td>
+                                {% endif %}
+                                <td>{{ result.race|npc_race }}</td>
+                                <td>{{ result.class_name|npc_class }}</td>
+                                <td>{{ result.gender|gender }}</td>
+                                <td>{{ result.hp|intcomma }}</td>
+                                <td>{{ result.MR }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -4,25 +4,38 @@ pre {
     color: black;
     background-color: #f9f9f9;
     line-height: 1.1em;
-    font-family: monospace,Courier;
+    font-family: monospace, Courier;
 }
-p { max-width: 100em; font-size: 16px; }
-ul {font-size: 14px;}
+
+p {
+    max-width: 100em;
+    font-size: 16px;
+}
+
+ul {
+    font-size: 14px;
+}
+.navbar ul {
+    font-size: 16px;
+}
+
 /* NPC Page */
 .mobStatsBox {
     border: 1px solid #becfe2;
     margin: 0 5px 5px 0;
-    float:left; width: 300px;
+    float: left;
+    width: 300px;
 }
 
 .mobStatsBox th {
     background-color: #cedff2
 }
+
 .mobStatsBox .msb_sub {
     background-color: #f3f8fd
 }
+
 .table-floating-header {
-    background: #cedff2;
     position: sticky;
     top: 0;
     border-collapse: separate;
@@ -31,7 +44,22 @@ ul {font-size: 14px;}
 
     filter: drop-shadow(0px 3px 3px rgba(0, 0, 0, .2));
 }
+
+.table-floating-header th {
+    background: #cedff2;
+}
+
 #konva-container {
-  background-image: url("/static/assets/maps/map-background.jpg");
-  overflow: hidden;
+    background-image: url("/static/assets/maps/map-background.jpg");
+    overflow: hidden;
+}
+
+.breadcrumb {
+    box-shadow: 1px 1px #d5d4d4;
+    background: #eeeded;
+    border: 1px solid #eeeded;
+    border-radius: 5px;
+    padding: 0 5px 0 10px !important;
+    font-size: 16px;
+    line-height: 2em;
 }
