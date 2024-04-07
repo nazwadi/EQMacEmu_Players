@@ -55,13 +55,13 @@
                     style="width:90%;border:0;border-bottom: 1px solid">{{ zone_data.can_levitate|yes_no }}</li>
             </ul>
         </div>
-        <div class="row">
+        <div class="row py-2">
             <div class="col">
                 <p>{{ zone_page_text.description|safe }}</p>
             </div>
         </div>
     </div>
-    <div class="row">
+    <div class="row py-2">
         <h5>Map</h5>
         <hr/>
         <div class="col px-5">
@@ -81,7 +81,7 @@
         </div>
     {% endif %}
     {% if zone_page_text.benefits %}
-        <div class="row">
+        <div class="row py-2">
             <h5>Benefits</h5>
             <hr/>
             <div class="col px-5">
@@ -90,7 +90,7 @@
         </div>
     {% endif %}
     {% if zone_page_text.travel_to_from %}
-        <div class="row">
+        <div class="row py-2">
             <h5>Travel To and From</h5>
             <hr/>
             <div class="col px-5">
@@ -99,7 +99,7 @@
         </div>
     {% endif %}
     {% if zone_page_text.history_lore %}
-        <div class="row">
+        <div class="row py-2">
             <h5>History, Lore, Background</h5>
             <hr/>
             <div class="col px-5">
