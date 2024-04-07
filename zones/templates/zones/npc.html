@@ -11,18 +11,24 @@
                     <th>NPC Name</th>
                     <th>Race</th>
                     <th>Class</th>
-                    <th>Level</th>
+                    <th>Gender</th>
+                    <th>Level(s)</th>
                     <th>Min Expansion</th>
                     <th>Max Expansion</th>
                 </tr>
                 </thead>
                 <tbody>
-                {% for id, name, race, class, level, min_expansion, max_expansion in npc_results %}
+                {% for id, name, race, class, gender, level, max_level, min_expansion, max_expansion in npc_results %}
                     <tr>
                         <td><a href="/npcs/view/{{ id }}">{{ name|clean_name }}</a></td>
                         <td>{{ race|npc_race }}</td>
                         <td>{{ class|npc_class }}</td>
-                        <td>{{ level }}</td>
+                        <td>{{ gender|gender }}</td>
+                        {% if max_level %}
+                            <td>{{ level }} - {{ max_level }}</td>
+                        {% else %}
+                            <td>{{ level }}</td>
+                        {% endif %}
                         <td><img src="{% static "/images/" %}{{ min_expansion|expansion_icon }}"
                                  alt="{{ min_expansion }}"></td>
                         <td><img src="{% static "/images/" %}{{ max_expansion|expansion_icon }}"
