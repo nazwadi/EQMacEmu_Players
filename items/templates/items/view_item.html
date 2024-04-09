@@ -60,16 +60,16 @@
                                 {% if item.rec_level %}Recommended level of {{ item.rec_level }}.<br />{% endif %}
                                 {# stackable == 3 means Spell Effect; this field is perhaps poorly named  #}
                                 {% if item.stackable == 3 %}
-                                    {% if item.click_effect > 0 %}
+                                    {% if item.click_type > 0 %}
                                         Effect: {{ effect_name }}
                                         ({% if item.click_type == 1 %}Any Slot,{% endif %}{% if item.click_type == 4 %}Must Equip.{% endif %}
                                         Casting Time:&nbsp;{% if item.cast_time == 0 %}Instant{% else %}{{ item.cast_time|ms_to_seconds }} sec{% endif %})<br/>
                                     {% endif %}
-                                    {% if item.worn_effect > 0 %}
+                                    {% if item.worn_type > 0 %}
                                         Effect:&nbsp;{{ effect_name }}&nbsp;{% if item.worn_type == 2 %}(Worn){% endif %}
                                         <br />
                                     {% endif %}
-                                    {% if item.proc_effect > 0 %}
+                                    {% if item.proc_type > 0 %}
                                         Effect: {{ effect_name }}({% if item.click_type == 1 %}Combat.{% endif %})<br/>
                                     {% endif %}
                                 {% endif %}
