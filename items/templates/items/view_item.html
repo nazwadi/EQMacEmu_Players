@@ -1,0 +1,208 @@
+{% extends 'items/header.html' %}
+{% load data_utilities %}
+{% load item_filters %}
+{% load tradeskill_filters %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+    <div class="container py-4">
+        <div class="row">
+            <h3>{{ item.Name }}</h3>
+            <hr/>
+            <div class="col">
+                <div class="row py-2">
+                    <div class="col">
+                        <div class="item_top_background">
+                            <div class="item_title">{{ item.Name }}</div>
+                        </div>
+                        <div class="item_background">
+                            <div class="item_data">
+                                <div class="item_icon" style="float:right;"><img
+                                        src="{% static "/images/items/" %}/item_{{ item.icon }}.png"/></div>
+                                {# Item Row 1 #}
+                                {% if item.magic or item.no_rent == 0 or item.lore|first in '*' or item.nodrop == 0 %}
+                                    {% if item.magic %}MAGIC ITEM {% endif %}
+                                    {% if item.no_rent == 0 %}NO RENT {% endif %}
+                                    {% if item.lore|first in '*' %}LORE ITEM{% endif %}
+                                    {% if item.nodrop == 0 %}NODROP{% endif %}
+                                    <br/>
+                                {% endif %}
+                                {# Slots is a bitfield #}
+                                {% if item.slots %}Slot: {{ item.slots|item_slots }}<br/>{% endif %}
+                                {% if item.item_type and item.delay %}
+                                    {% if item.item_type %}Skill:&nbsp;{{ item.item_type|item_type }}&nbsp;{% endif %}
+                                    {% if item.delay %}Atk Delay:&nbsp;{{ item.delay }}{% endif %}
+                                    <br/>
+                                {% endif %}
+                                {% if item.damage %}DMG:&nbsp;{{ item.damage }}<br />{% endif %}
+                                {% if item.max_charges > 0 %}Charges: {{ item.max_charges }}<br/>{% endif %}
+                                {% if item.ac %}AC: {{ item.ac }}<br/>{% endif %}
+                                {% if item.aagi or item.acha or item.adex or item.aint or item.asta or item.astr or item.awis %}
+                                    {% if item.astr %}STR:&nbsp;{{ item.astr|positive_negative }}{% endif %}
+                                    {% if item.adex %}DEX:&nbsp;{{ item.adex|positive_negative }}{% endif %}
+                                    {% if item.asta %}STA:&nbsp;{{ item.asta|positive_negative }}{% endif %}
+                                    {% if item.acha %}CHA:&nbsp;{{ item.acha|positive_negative }}{% endif %}
+                                    {% if item.awis %}WIS:&nbsp;{{ item.awis|positive_negative }}{% endif %}
+                                    {% if item.aint %}INT:&nbsp;{{ item.aint|positive_negative }}{% endif %}
+                                    {% if item.aagi %}AGI:&nbsp;{{ item.aagi|positive_negative }}{% endif %}
+                                    {% if item.hp %}HP:&nbsp;{{ item.hp|positive_negative }}{% endif %}
+                                    {% if item.mana %}MANA:&nbsp;+{{ item.mana }}{% endif %}
+                                    <br />
+                                {% endif %}
+                                {% if item.fr or item.dr or item.cr or item.mr or item.pr %}
+                                    {% if item.fr %}SV FIRE:&nbsp;+{{ item.fr }}{% endif %}
+                                    {% if item.dr %}SV DISEASE:&nbsp;+{{ item.dr }}{% endif %}
+                                    {% if item.cr %}SV COLD:&nbsp;+{{ item.cr }}{% endif %}
+                                    {% if item.mr %}SV MAGIC:&nbsp;+{{ item.mr }}{% endif %}
+                                    {% if item.pr %}SV POISON:&nbsp;+{{ item.pr }}{% endif %}
+                                    <br />
+                                {% endif %}
+                                {# stackable == 3 means Spell Effect; this field is perhaps poorly named  #}
+                                {% if item.stackable == 3 %}
+                                    {% if item.click_effect > 0 %}
+                                        Effect: {{ effect_name }}
+                                        ({% if item.click_type == 1 %}Any Slot,{% endif %}{% if item.click_type == 4 %}Must Equip.{% endif %}
+                                        Casting Time:&nbsp;{% if item.cast_time == 0 %}Instant{% else %}{{ item.cast_time|ms_to_seconds }} sec{% endif %})<br/>
+                                    {% endif %}
+                                    {% if item.worn_effect > 0 %}
+                                        Effect:&nbsp;{{ effect_name }}&nbsp;{% if item.worn_type == 2 %}(Worn){% endif %}
+                                        <br />
+                                    {% endif %}
+                                    {% if item.proc_effect > 0 %}
+                                        Effect: {{ effect_name }}({% if item.click_type == 1 %}Combat.{% endif %})<br/>
+                                    {% endif %}
+                                {% endif %}
+                                WT:&nbsp;{{ item.weight|item_weight }}&nbsp;Size: {{ item.size|item_size }}<br/>
+                                Class:&nbsp;{{ item.classes|item_classes }}<br/>
+                                Race:&nbsp;{{ item.races|item_races }}<br/>
+                            </div>
+                        </div>
+                        <div class="item_bottom_background"></div>
+                        <div>
+                            <span style="background-color:#FFF8DD; font-size: 10pt"><b>Item Lore</b> <span style="font-size:8pt">(from Identify)</span>: {{ item.lore }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="row py-2">
+                    <div class="col">
+                        {% if drops_from|length > 0 %}
+                            <h5>Drops From</h5>
+                            <hr/>
+                            {% for zone, result_list in drops_from.items %}
+                                <div><a style="text-decoration: none;"
+                                        href="/zones/view/{{ zone }}">{{ result_list.0.z_long_name }}</a>
+                                    <ul>
+                                        {% for result in result_list %}
+                                            <li><a style="text-decoration: none;"
+                                                   href="/npcs/view/{{ result.npc_id }}">{{ result.npc_name|clean_name }}</a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="text-disabled">
+                                <h5>Drops From</h5>
+                                <hr/>
+                                <p>This item is not dropped by mobs.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row py-2">
+                    <div class="col">
+                        {% if sold_by|length > 0 %}
+                            <h5>Sold By</h5>
+                            <hr/>
+                            {% for zone, result_list in sold_by.items %}
+                                <div><a style="text-decoration: none" href="/zones/view/{{ zone }}">{{ zone }}</a></div>
+                                <ul>
+                                    {% for merchant in result_list %}
+                                        <li><a style="text-decoration: none"
+                                               href="/npcs/view/{{ merchant.npc_id }}">{{ merchant.npc_name }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            {% endfor %}
+                        {% else %}
+                            <div class="text-disabled">
+                                <h5>Sold By</h5>
+                                <hr/>
+                                <p>This item is not found in any merchant lists.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="row py-2">
+                    <div class="col">
+                        {% if created_by_these_tradeskill_recipes|length > 0 %}
+                            <h5>Player crafted from:</h5>
+                            <hr/>
+                            {% for tradeskill, recipe_list in created_by_these_tradeskill_recipes.items %}
+                                <div>{{ tradeskill|tradeskill_filter }}
+                                    <ul>
+                                        {% for recipe in recipe_list %}
+                                            <li>
+                                                <b>Recipe</b>:&nbsp;{{ recipe.recipe_name }}&nbsp;<b>Yield</b>:&nbsp;x{{ recipe.success_count }}
+                                                &nbsp;(Trivial: {{ recipe.trivial }})
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="text-disabled">
+                                <h5>Player Crafted from:</h5>
+                                <hr/>
+                                <p>This item is not crafted by players.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row py-2">
+                    <div class="col">
+                        {% if used_in_these_tradeskill_recipes|length > 0 %}
+                            <h5>Used in the following tradeskill recipes:</h5>
+                            <hr/>
+                            {% for tradeskill, recipe_list in used_in_these_tradeskill_recipes.items %}
+                                <div>{{ tradeskill|tradeskill_filter }}
+                                    <ul>
+                                        {% for recipe in recipe_list %}
+                                            <li><b>{{ recipe.recipe_name }}</b> (Trivial: {{ recipe.trivial }})</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="text-disabled">
+                                <h5>Component in the following tradeskill recipes:</h5>
+                                <hr/>
+                                <p>This item is not a component in any tradeskill recipes.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row py-2">
+                    <div class="col">
+                        {% if related_quests|length > 3 %}
+                            <h5>Related Quests</h5>
+                            <hr/>
+                            <p>Information currently unavailable.</p>
+                        {% else %}
+                            <div class="text-disabled">
+                                <h5>Related Quests</h5>
+                                <hr/>
+                                <p>Information currently unavailable.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

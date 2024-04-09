@@ -32,31 +32,15 @@
                         <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Expansion</th>
-                            <th>Zone</th>
-                            <th>Level(s)</th>
-                            <th>Race</th>
-                            <th>Class</th>
-                            <th>Gender</th>
-                            <th>Hit Points</th>
-                            <th>MR</th>
                         </tr>
                         </thead>
                         {% for result in search_results %}
                             <tr>
-                                <td><a href="/npcs/view/{{ result.id }}">{{ result.name|clean_name }}</a></td>
-                                <td><img src="{% static "/images/"  %}{{ result.min_expansion|expansion_icon }}" alt="{{ result.min_expansion|expansion_icon }}"></td>
-                                <td>{{ result.long_name }}</td>
-                                {% if result.maxlevel %}
-                                    <td>{{ result.level }} - {{ result.maxlevel }}</td>
-                                {% else %}
-                                    <td>{{ result.level }}</td>
-                                {% endif %}
-                                <td>{{ result.race|npc_race }}</td>
-                                <td>{{ result.class_name|npc_class }}</td>
-                                <td>{{ result.gender|gender }}</td>
-                                <td>{{ result.hp|intcomma }}</td>
-                                <td>{{ result.MR }}</td>
+                                <td>
+                                    <img src="{% static "/images/items/" %}item_{{ result.icon}}.png"
+                                         alt="item_{{ result.icon }}.png">
+                                    <a href="/items/view/{{ result.id }}">{{ result.Name }}</a>
+                                </td>
                             </tr>
                         {% endfor %}
                     </table>
