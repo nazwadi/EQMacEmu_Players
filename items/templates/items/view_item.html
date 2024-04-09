@@ -57,6 +57,7 @@
                                     {% if item.pr %}SV POISON:&nbsp;+{{ item.pr }}{% endif %}
                                     <br />
                                 {% endif %}
+                                {% if item.rec_level %}Recommended level of {{ item.rec_level }}.<br />{% endif %}
                                 {# stackable == 3 means Spell Effect; this field is perhaps poorly named  #}
                                 {% if item.stackable == 3 %}
                                     {% if item.click_effect > 0 %}
@@ -75,11 +76,12 @@
                                 WT:&nbsp;{{ item.weight|item_weight }}&nbsp;Size: {{ item.size|item_size }}<br/>
                                 Class:&nbsp;{{ item.classes|item_classes }}<br/>
                                 Race:&nbsp;{{ item.races|item_races }}<br/>
+                                {% if item.deity > 0 %}Deity:&nbsp;{{ item.deity|item_deities }}{% endif %}
                             </div>
                         </div>
                         <div class="item_bottom_background"></div>
                         <div>
-                            <span style="background-color:#FFF8DD; font-size: 10pt"><b>Item Lore</b> <span style="font-size:8pt">(from Identify)</span>: {{ item.lore }}</span>
+                            <span style="background-color:#FFF8DD; font-size: 10pt"><img src="{% static "/images/spell_icons/Spellicon_U.png"%}" style="width:18px;" alt="Lore Icon"><b>Item Lore</b> <span style="font-size:8pt">(from Identify)</span>: {{ item.lore }}</span>
                         </div>
                     </div>
                 </div>

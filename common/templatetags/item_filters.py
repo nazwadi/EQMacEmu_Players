@@ -121,9 +121,51 @@ def item_classes(classes_bitmask):
     return " ".join(classes_can_use)
 
 
+@register.filter(name='item_deities')
+def item_deities(deity_bitmask):
+    """Match deities bitmask from an item row to human-readable value"""
+    deities_can_use = list()
+    if deity_bitmask == 0:
+        return 'All'
+    if deity_bitmask & 1:
+        deities_can_use.append("Agnostic")
+    if deity_bitmask & 2:
+        deities_can_use.append("Bertoxxulous")
+    if deity_bitmask & 4:
+        deities_can_use.append("Brell Serilis")
+    if deity_bitmask & 8:
+        deities_can_use.append("Cazic-Thule")
+    if deity_bitmask & 16:
+        deities_can_use.append("Erollisi Marr")
+    if deity_bitmask & 32:
+        deities_can_use.append("Bristlebane")
+    if deity_bitmask & 64:
+        deities_can_use.append("Innoruuk")
+    if deity_bitmask & 128:
+        deities_can_use.append("Karana")
+    if deity_bitmask & 256:
+        deities_can_use.append("Mithaniel Marr")
+    if deity_bitmask & 512:
+        deities_can_use.append("Prexus")
+    if deity_bitmask & 1024:
+        deities_can_use.append("Quellious")
+    if deity_bitmask & 2048:
+        deities_can_use.append("Rallos Zek")
+    if deity_bitmask & 4096:
+        deities_can_use.append("Rodcet Nife")
+    if deity_bitmask & 8192:
+        deities_can_use.append("Solusek Ro")
+    if deity_bitmask & 16384:
+        deities_can_use.append("The Tribunal")
+    if deity_bitmask & 32768:
+        deities_can_use.append("Tunare")
+    if deity_bitmask & 65536:
+        deities_can_use.append("Veeshan")
+    return ' '.join(deities_can_use)
+
 @register.filter(name='item_races')
 def item_races(races_bitmask):
-    """Match classes bitmask from an item row to human-readable value"""
+    """Match races bitmask from an item row to human-readable value"""
     races_can_use = list()
     if races_bitmask == 16383:
         return "ALL"

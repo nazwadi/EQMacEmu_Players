@@ -50,7 +50,9 @@ class Items(models.Model):
     delay = models.IntegerField(null=False, default=0)
     classes = models.IntegerField(null=False, default=0)
     races = models.IntegerField(null=False, default=0)
+    deity = models.IntegerField(null=False, default=0)
     damage = models.IntegerField(null=False, default=0)
+    rec_level = models.IntegerField(null=False, default=0, db_column='reclevel')
 
     class Meta:
         db_table = 'items'
