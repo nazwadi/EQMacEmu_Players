@@ -125,7 +125,7 @@
                                 <ul>
                                     {% for merchant in result_list %}
                                         <li><a style="text-decoration: none"
-                                               href="/npcs/view/{{ merchant.npc_id }}">{{ merchant.npc_name }}</a></li>
+                                               href="/npcs/view/{{ merchant.npc_id }}">{{ merchant.npc_name|clean_name }}</a></li>
                                     {% endfor %}
                                 </ul>
                             {% endfor %}
