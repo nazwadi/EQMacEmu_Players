@@ -17,10 +17,10 @@
 
     {% if item.Name  %}
         <title>{{ item.Name|clean_name }} - EQ Archives</title>
-        <meta property=“og:title” content=“{{ item.Name|clean_name }}” />
-        <meta property="og:type" content="product" />
-        <meta property="og:url" content="https://loginserver.eqarchives.com/items/view/{{ item.id }}" />
-        <meta property="og:image" content="{{ request.get_host }}/static/images/item_{{ item.icon }}.png" />
+        <meta content=“{{ item.Name|clean_name }}” property="og:title">
+        <met content="{{ item.Name|clean_name }}" property="og:description">
+        <meta content="EQ Archives" property="og:site_name">
+        <meta content="{{ request.get_host }}/static/images/item_{{ item.icon }}.png" property="og:image">
     {% else %}
         <title>EQ Archives</title>
     {% endif %}
