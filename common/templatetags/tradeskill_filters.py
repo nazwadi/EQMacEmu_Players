@@ -7,6 +7,8 @@ register = template.Library()
 def tradeskill_filter(tradeskill_id):
     """Match item slots bitmask to slots"""
     match tradeskill_id:
+        case 55:
+            return "Fishing"
         case 56:
             return "Make Poison"
         case 57:

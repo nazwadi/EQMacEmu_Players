@@ -121,7 +121,7 @@
                             <h5>Sold By</h5>
                             <hr/>
                             {% for zone, result_list in sold_by.items %}
-                                <div><a style="text-decoration: none" href="/zones/view/{{ zone }}">{{ zone }}</a></div>
+                                <div><a style="text-decoration: none" href="/zones/view/{{ zone }}">{{ result_list.0.z_long_name }}</a></div>
                                 <ul>
                                     {% for merchant in result_list %}
                                         <li><a style="text-decoration: none"
