@@ -60,7 +60,7 @@
                                                     <td style="width: 10px;">{{ item_id }}</td>
                                                     <td><img src="{% static '/images/items' %}/item_{{ icon }}.png"
                                                              alt="item_{{ icon }}.png">
-                                                        <a href="https://www.takproject.net/allaclone/item.php?id={{ item_id }}"
+                                                        <a href="/items/view/{{ item_id }}"
                                                            target="_blank">{{ item_name }}</a>
                                                     </td>
                                                     {% if stackable == 3 and max_charges > 0 %}
