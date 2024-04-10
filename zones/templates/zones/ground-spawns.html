@@ -21,7 +21,7 @@
                     <tr>
                         <td><img src="{% static '/images/items' %}/item_{{ icon }}.png"
                                  alt="item_{{ icon }}.png">
-                            <a href="https://www.takproject.net/allaclone/item.php?id={{ item }}"
+                            <a href="/items/view/{{ item }}"
                                target="_blank">{{ item_name }}</a>
                         </td>
                         <td>({{ max_y }}, {{ max_x }}, {{ max_z }})</td>

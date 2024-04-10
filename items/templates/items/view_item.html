@@ -148,16 +148,39 @@
                 </div>
                 <div class="row py-2">
                     <div class="col">
+                        {% if forage|length > 0 %}
+                            <h5>Foraged from:</h5>
+                            <hr/>
+                            <ul>
+                                {% for zone, forage_list in forage.items %}
+                                    <li><a style="text-decoration: none;" href="/zones/view/{{ zone }}">{{ forage_list.0.z_long_name }}</a>&nbsp;({{ forage_list.0.chance }}%)</li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <div class="text-disabled">
+                                <h5>Foraged from:</h5>
+                                <hr/>
+                                <p>This item is not foraged anywhere.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row py-2">
+                    <div class="col">
                         {% if ground_spawns|length > 0 %}
                             <h5>Spawns on the ground in:</h5>
                             <hr/>
-                            {% for zone, coordinate_list in ground_spawns.items  %}
+                            {% for zone, coordinate_list in ground_spawns.items %}
                                 <div><a style="text-decoration: none"
-                                        href="/zones/view/{{ zone }}">{{ coordinate_list.0.z_long_name }}</a>&nbsp;(y, x, z)</div>
+                                        href="/zones/view/{{ zone }}">{{ coordinate_list.0.z_long_name }}</a>&nbsp;(y,
+                                    x, z)
+                                </div>
                                 <ul style="list-style: square">
-                                {% for coordinates in coordinate_list  %}
-                                    <li>({{ coordinates.max_y }}, {{ coordinates.max_x }}, {{ coordinates.max_z }})</li>
-                                {% endfor %}
+                                    {% for coordinates in coordinate_list %}
+                                        <li>
+                                            ({{ coordinates.max_y }}, {{ coordinates.max_x }}, {{ coordinates.max_z }})
+                                        </li>
+                                    {% endfor %}
                                 </ul>
                             {% endfor %}
                         {% else %}

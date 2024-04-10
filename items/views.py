@@ -140,6 +140,20 @@ def view_item(request, item_id):
             ground_spawns[result_tuple.z_short_name] = list()
         ground_spawns[result_tuple.z_short_name].append(result_tuple)
 
+    cursor.execute("""SELECT zone.short_name, zone.long_name, forage.id, forage.zoneid, forage.itemid, forage.level, forage.chance
+                      FROM forage, zone
+                      WHERE zone.zoneidnumber = forage.zoneid
+                          AND itemid=%s""", [[item_id]])
+    forage_results = cursor.fetchall()
+    ForageTuple = namedtuple('ForageTuple', ['z_short_name', 'z_long_name', 'id', 'zone_id',
+                                             'item_id', 'level', 'chance'])
+    forage = dict()
+    for result in forage_results:
+        forage_tuple = ForageTuple(*result)
+        if forage_tuple.z_short_name not in forage:
+            forage[forage_tuple.z_short_name] = list()
+        forage[forage_tuple.z_short_name].append(forage_tuple)
+
     return render(request=request,
                   template_name="items/view_item.html",
                   context={
@@ -149,5 +163,6 @@ def view_item(request, item_id):
                       "created_by_these_tradeskill_recipes": created_by_these_tradeskill_recipes,
                       "used_in_these_tradeskill_recipes": used_in_these_tradeskill_recipes,
                       "sold_by": sold_by,
+                      "forage": forage,
                       "ground_spawns": ground_spawns,
                   })

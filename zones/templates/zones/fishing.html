@@ -18,7 +18,7 @@
                     <tr>
                         <td><img src="{% static '/images/items' %}/item_{{ item_icon }}.png"
                                  alt="item_{{ item_icon }}.png">
-                            <a href="https://www.takproject.net/allaclone/item.php?id={{ item_id }}"
+                            <a href="/items/view/{{ item_id }}"
                                target="_blank">{{ item_name }}</a>
                         </td>
                         <td>{{ skill_level }}</td>
