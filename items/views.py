@@ -125,6 +125,21 @@ def view_item(request, item_id):
                 sold_by[result_tuple.z_short_name] = list()
             sold_by[result_tuple.z_short_name].append(result_tuple)
 
+    cursor.execute("""SELECT zone.short_name, zone.long_name, ground_spawns.max_x, ground_spawns.max_y, 
+                        ground_spawns.max_z, ground_spawns.min_x, ground_spawns.min_y
+                      FROM ground_spawns, zone
+                      WHERE item=%s
+                        AND ground_spawns.zoneid=zone.zoneidnumber""", [[item_id]])
+    ground_spawns_results = cursor.fetchall()
+    GroundSpawnsTuple = namedtuple('GroundSpawnsTuple', ['z_short_name', 'z_long_name', 'max_x',
+                                                         'max_y', 'max_z', 'min_x', 'min_y'])
+    ground_spawns = dict()
+    for result in ground_spawns_results:
+        result_tuple = GroundSpawnsTuple(*result)
+        if result_tuple.z_short_name not in ground_spawns:
+            ground_spawns[result_tuple.z_short_name] = list()
+        ground_spawns[result_tuple.z_short_name].append(result_tuple)
+
     return render(request=request,
                   template_name="items/view_item.html",
                   context={
@@ -134,4 +149,5 @@ def view_item(request, item_id):
                       "created_by_these_tradeskill_recipes": created_by_these_tradeskill_recipes,
                       "used_in_these_tradeskill_recipes": used_in_these_tradeskill_recipes,
                       "sold_by": sold_by,
+                      "ground_spawns": ground_spawns,
                   })

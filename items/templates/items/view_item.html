@@ -34,7 +34,7 @@
                                     {% if item.delay %}Atk Delay:&nbsp;{{ item.delay }}{% endif %}
                                     <br/>
                                 {% endif %}
-                                {% if item.damage %}DMG:&nbsp;{{ item.damage }}<br />{% endif %}
+                                {% if item.damage %}DMG:&nbsp;{{ item.damage }}<br/>{% endif %}
                                 {% if item.max_charges > 0 %}Charges: {{ item.max_charges }}<br/>{% endif %}
                                 {% if item.ac %}AC: {{ item.ac }}<br/>{% endif %}
                                 {% if item.aagi or item.acha or item.adex or item.aint or item.asta or item.astr or item.awis %}
@@ -47,7 +47,7 @@
                                     {% if item.aagi %}AGI:&nbsp;{{ item.aagi|positive_negative }}{% endif %}
                                     {% if item.hp %}HP:&nbsp;{{ item.hp|positive_negative }}{% endif %}
                                     {% if item.mana %}MANA:&nbsp;+{{ item.mana }}{% endif %}
-                                    <br />
+                                    <br/>
                                 {% endif %}
                                 {% if item.fr or item.dr or item.cr or item.mr or item.pr %}
                                     {% if item.fr %}SV FIRE:&nbsp;+{{ item.fr }}{% endif %}
@@ -55,19 +55,22 @@
                                     {% if item.cr %}SV COLD:&nbsp;+{{ item.cr }}{% endif %}
                                     {% if item.mr %}SV MAGIC:&nbsp;+{{ item.mr }}{% endif %}
                                     {% if item.pr %}SV POISON:&nbsp;+{{ item.pr }}{% endif %}
-                                    <br />
+                                    <br/>
                                 {% endif %}
-                                {% if item.rec_level %}Recommended level of {{ item.rec_level }}.<br />{% endif %}
+                                {% if item.rec_level %}Recommended level of {{ item.rec_level }}.<br/>{% endif %}
                                 {# stackable == 3 means Spell Effect; this field is perhaps poorly named  #}
                                 {% if item.stackable == 3 %}
                                     {% if item.click_type > 0 %}
                                         Effect: {{ effect_name }}
-                                        ({% if item.click_type == 1 %}Any Slot,{% endif %}{% if item.click_type == 4 %}Must Equip.{% endif %}
-                                        Casting Time:&nbsp;{% if item.cast_time == 0 %}Instant{% else %}{{ item.cast_time|ms_to_seconds }} sec{% endif %})<br/>
+                                        ({% if item.click_type == 1 %}Any Slot,{% endif %}{% if item.click_type == 4 %}
+                                        Must Equip.{% endif %}
+                                        Casting Time:&nbsp;{% if item.cast_time == 0 %}Instant
+                                        {% else %}{{ item.cast_time|ms_to_seconds }} sec{% endif %})<br/>
                                     {% endif %}
                                     {% if item.worn_type > 0 %}
-                                        Effect:&nbsp;{{ effect_name }}&nbsp;{% if item.worn_type == 2 %}(Worn){% endif %}
-                                        <br />
+                                        Effect:&nbsp;{{ effect_name }}&nbsp;{% if item.worn_type == 2 %}(Worn)
+                                    {% endif %}
+                                        <br/>
                                     {% endif %}
                                     {% if item.proc_type > 0 %}
                                         Effect: {{ effect_name }}({% if item.click_type == 1 %}Combat.{% endif %})<br/>
@@ -81,7 +84,10 @@
                         </div>
                         <div class="item_bottom_background"></div>
                         <div>
-                            <span style="background-color:#FFF8DD; font-size: 10pt"><img src="{% static "/images/spell_icons/Spellicon_U.png"%}" style="width:18px;" alt="Lore Icon"><b>Item Lore</b> <span style="font-size:8pt">(from Identify)</span>: {{ item.lore }}</span>
+                            <span style="background-color:#FFF8DD; font-size: 10pt"><img
+                                    src="{% static "/images/spell_icons/Spellicon_U.png" %}" style="width:18px;"
+                                    alt="Lore Icon"><b>Item Lore</b> <span
+                                    style="font-size:8pt">(from Identify)</span>: {{ item.lore }}</span>
                         </div>
                     </div>
                 </div>
@@ -121,11 +127,13 @@
                             <h5>Sold By</h5>
                             <hr/>
                             {% for zone, result_list in sold_by.items %}
-                                <div><a style="text-decoration: none" href="/zones/view/{{ zone }}">{{ result_list.0.z_long_name }}</a></div>
+                                <div><a style="text-decoration: none"
+                                        href="/zones/view/{{ zone }}">{{ result_list.0.z_long_name }}</a></div>
                                 <ul>
                                     {% for merchant in result_list %}
                                         <li><a style="text-decoration: none"
-                                               href="/npcs/view/{{ merchant.npc_id }}">{{ merchant.npc_name|clean_name }}</a></li>
+                                               href="/npcs/view/{{ merchant.npc_id }}">{{ merchant.npc_name|clean_name }}</a>
+                                        </li>
                                     {% endfor %}
                                 </ul>
                             {% endfor %}
@@ -134,6 +142,29 @@
                                 <h5>Sold By</h5>
                                 <hr/>
                                 <p>This item is not found in any merchant lists.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row py-2">
+                    <div class="col">
+                        {% if ground_spawns|length > 0 %}
+                            <h5>Spawns on the ground in:</h5>
+                            <hr/>
+                            {% for zone, coordinate_list in ground_spawns.items  %}
+                                <div><a style="text-decoration: none"
+                                        href="/zones/view/{{ zone }}">{{ coordinate_list.0.z_long_name }}</a>&nbsp;(y, x, z)</div>
+                                <ul style="list-style: square">
+                                {% for coordinates in coordinate_list  %}
+                                    <li>({{ coordinates.max_y }}, {{ coordinates.max_x }}, {{ coordinates.max_z }})</li>
+                                {% endfor %}
+                                </ul>
+                            {% endfor %}
+                        {% else %}
+                            <div class="text-disabled">
+                                <h5>Spawns on the Ground:</h5>
+                                <hr/>
+                                <p>This item does not spawn on the ground.</p>
                             </div>
                         {% endif %}
                     </div>
