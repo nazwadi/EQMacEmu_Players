@@ -76,9 +76,10 @@
                                         Effect: {{ effect_name }}({% if item.click_type == 1 %}Combat.{% endif %})<br/>
                                     {% endif %}
                                 {% endif %}
-                                WT:&nbsp;{{ item.weight|item_weight }}&nbsp;Size: {{ item.size|item_size }}<br/>
-                                Class:&nbsp;{{ item.classes|item_classes }}<br/>
-                                Race:&nbsp;{{ item.races|item_races }}<br/>
+                                WT:&nbsp;{{ item.weight|item_weight }}&nbsp;{% if item.bag_type %}{% if item.bag_wr %}Weight Reduction: {{ item.bag_wr }}%<br />{% endif %}Capacity:&nbsp;{{ item.bag_slots }}{% endif %}
+                                {% if item.bag_type %}&nbsp;Size Capacity:&nbsp;{{ item.bag_size|item_size }}<br />{% else %}&nbsp;Size:&nbsp;{{ item.size|item_size }}<br/>{% endif %}
+                                {% if item.class_name %}Class:&nbsp;{{ item.classes|item_classes }}<br/>{% endif %}
+                                {% if item.race %}Race:&nbsp;{{ item.races|item_races }}<br/>{% endif %}
                                 {% if item.deity > 0 %}Deity:&nbsp;{{ item.deity|item_deities }}{% endif %}
                             </div>
                         </div>

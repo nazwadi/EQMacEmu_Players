@@ -53,6 +53,10 @@ class Items(models.Model):
     deity = models.IntegerField(null=False, default=0)
     damage = models.IntegerField(null=False, default=0)
     rec_level = models.IntegerField(null=False, default=0, db_column='reclevel')
+    bag_size = models.IntegerField(null=False, default=0, db_column='bagsize')
+    bag_slots = models.IntegerField(null=False, default=0, db_column='bagslots')
+    bag_type = models.IntegerField(null=False, default=0, db_column='bagtype')
+    bag_wr = models.IntegerField(null=False, default=0, db_column='bagwr')
 
     class Meta:
         db_table = 'items'
