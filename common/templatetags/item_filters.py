@@ -9,6 +9,7 @@ def positive_negative(value):
         return "+"+str(value)
     return value
 
+
 @register.filter(name='item_type')
 def item_type(item_type):
     match item_type:

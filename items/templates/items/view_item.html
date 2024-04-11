@@ -29,8 +29,8 @@
                                 {% endif %}
                                 {# Slots is a bitfield #}
                                 {% if item.slots %}Slot: {{ item.slots|item_slots }}<br/>{% endif %}
-                                {% if item.item_type and item.delay %}
-                                    {% if item.item_type %}Skill:&nbsp;{{ item.item_type|item_type }}&nbsp;{% endif %}
+                                {% if item.item_type >= 0 and item.delay %}
+                                    {% if item.item_type >= 0 %}Skill:&nbsp;{{ item.item_type|item_type }}&nbsp;{% endif %}
                                     {% if item.delay %}Atk Delay:&nbsp;{{ item.delay }}{% endif %}
                                     <br/>
                                 {% endif %}
