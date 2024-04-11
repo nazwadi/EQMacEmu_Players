@@ -96,13 +96,13 @@ def view_item(request, item_id):
     drops_from_result = cursor.fetchall()
     drops_from = dict()
     DropsFromTuple = namedtuple("DropsFromTuple", ["npc_id", "npc_name", "z_short_name", "z_long_name",
-                                                   "lte_multiplier", "lte_probability", "lde_chance"])
+                                                   "lte_multiplier", "modified_drop_chance"])
     for npc_id, npc_name, z_short_name, z_long_name, lte_multiplier, lte_probability, lde_chance in drops_from_result:
         if z_short_name not in drops_from:
             drops_from[z_short_name] = list()
         drops_from[z_short_name].append(DropsFromTuple(npc_id=npc_id, npc_name=npc_name, z_short_name=z_short_name,
                                                        z_long_name=z_long_name, lte_multiplier=lte_multiplier,
-                                                       lte_probability=lte_probability, lde_chance=lde_chance))
+                                                       modified_drop_chance=(lte_probability*lde_chance)/100))
 
     # Run a quick sanity check before attempting a more compute-intensive query
     is_sold = cursor.execute("""SELECT item FROM merchantlist WHERE item=%s LIMIT 1""", [item_id])

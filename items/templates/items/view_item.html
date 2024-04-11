@@ -107,7 +107,7 @@
                                     <ul>
                                         {% for result in result_list %}
                                             <li><a style="text-decoration: none;"
-                                                   href="/npcs/view/{{ result.npc_id }}">{{ result.npc_name|clean_name }}</a>
+                                                   href="/npcs/view/{{ result.npc_id }}">{{ result.npc_name|clean_name }}</a>&nbsp;({{ result.modified_drop_chance }}% x {{ result.lte_multiplier }})
                                             </li>
                                         {% endfor %}
                                     </ul>
