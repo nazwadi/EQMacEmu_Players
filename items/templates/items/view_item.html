@@ -37,7 +37,7 @@
                                 {% if item.damage %}DMG:&nbsp;{{ item.damage }}<br/>{% endif %}
                                 {% if item.max_charges > 0 %}Charges: {{ item.max_charges }}<br/>{% endif %}
                                 {% if item.ac %}AC: {{ item.ac }}<br/>{% endif %}
-                                {% if item.aagi or item.acha or item.adex or item.aint or item.asta or item.astr or item.awis %}
+                                {% if item.astr or item.adex or item.asta or item.acha or item.awis or item.aint or item.aagi or item.hp or item.mana %}
                                     {% if item.astr %}STR:&nbsp;{{ item.astr|positive_negative }}{% endif %}
                                     {% if item.adex %}DEX:&nbsp;{{ item.adex|positive_negative }}{% endif %}
                                     {% if item.asta %}STA:&nbsp;{{ item.asta|positive_negative }}{% endif %}
