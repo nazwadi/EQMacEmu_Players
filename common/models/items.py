@@ -42,6 +42,8 @@ class Items(models.Model):
     click_type = models.IntegerField(null=False, default=0, db_column='clicktype')
     worn_effect = models.IntegerField(null=False, default=0, db_column='worneffect')
     worn_type = models.IntegerField(null=False, default=0, db_column='worntype')
+    proc_type = models.IntegerField(null=False, default=0, db_column='proctype')
+    proc_level = models.IntegerField(null=False, default=0, db_column='proclevel')
     proc_effect = models.IntegerField(null=False, default=0, db_column='proceffect')
     cast_time = models.IntegerField(null=False, default=0, db_column='casttime')
     weight = models.IntegerField(null=False, default=0)
