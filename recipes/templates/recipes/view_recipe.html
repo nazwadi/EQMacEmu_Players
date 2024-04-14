@@ -47,7 +47,10 @@
                             <dl>
                                 {% for entry in tradeskill_recipe_entries %}
                                     {% if entry.is_container %}
-                                        <dd>{{ entry.item_id }}</dd>
+                                        <dd><img class="no-round"
+                                                 style="background:url(/static/images/icons/blank_slot.gif);"
+                                                 src="/static/images/items/item_{{ entry.item_id.icon }}.png"
+                                                 alt="" />&nbsp;<a style="text-decoration: none; color:#00ba00" href="/items/view/{{ entry.item_id }}">{{ entry.item_id.Name}}</a></dd>
                                     {% endif %}
                                 {% endfor %}
                             </dl>
