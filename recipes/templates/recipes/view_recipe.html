@@ -23,7 +23,7 @@
                 <div class="eq-window-fancy row">
                     <div class="col-12 col-md-4 mb-4">
                         <div class="eq-window-nested-blue">
-                            <h4 class="eq-header text-center">Components Needed: </h4>
+                            <h4 class="eq-header text-center">Components: </h4>
                             <dl>
                                 {% for entry in tradeskill_recipe_entries %}
                                     {% if entry.component_count > 0 %}
@@ -43,7 +43,7 @@
                     </div>
                     <div class="col-12 col-md-4 mb-4">
                         <div class="eq-window-nested-blue">
-                            <h4 class="eq-header text-center">Containers needed: </h4>
+                            <h4 class="eq-header text-center">Containers: </h4>
                             <dl>
                                 {% for entry in tradeskill_recipe_entries %}
                                     {% if entry.is_container %}
@@ -58,7 +58,7 @@
                     </div>
                     <div class="col-12 col-md-4 mb-4">
                         <div class="eq-window-nested-blue">
-                            <h4 class="eq-header text-center">On success: </h4>
+                            <h4 class="eq-header text-center">Product(s): </h4>
                             <dl>
                                 {% for entry in tradeskill_recipe_entries %}
                                     {% if entry.success_count > 0 %}
@@ -72,12 +72,6 @@
                                             </a><span> x1</span></dd>
                                     {% endif %}
                                 {% endfor %}
-                            </dl>
-                        </div>
-                        <div class="eq-window-nested-blue">
-                            <h4 class="eq-header text-center">On failure: </h4>
-                            <dl>
-
                             </dl>
                         </div>
                     </div>
