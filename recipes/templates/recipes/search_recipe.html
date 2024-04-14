@@ -1,0 +1,82 @@
+{% extends 'recipes/header.html' %}
+{% load data_utilities %}
+{% load tradeskill_filters %}
+{% load static %}
+{% block content %}
+    <main class="flex-shrink-0">
+        <div class="container py-4">
+            <div class="row">
+                <div class="col">
+                    <h1 class="text-center mb-4">Recipe Search</h1>
+                    <form class="p-3 mb-4 bg-body-tertiary border" action="/recipes/search" method="post">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-12 col-md-6">
+                                <div class="form-text text-wrap"><label for="recipe_name">Recipe Name</label></div>
+                                <input type="text" class="form-control" id="recipe_name" name="recipe_name"
+                                       placeholder="Banded Mail">
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <div class="form-text text-wrap"><label for="tradeskill">Tradeskill</label></div>
+                                <select id="tradeskill" name="tradeskill" class="form-control">
+                                    <option value="-1" selected>any</option>
+                                    {% for tradeskill_index, tradeskill_name in tradeskill_options.items %}
+                                        <option value="{{ tradeskill_index }}">{{ tradeskill_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-1">
+                                <div class="form-text text-wrap"><label for="min_trivial">Min Trivial</label></div>
+                                <input class="form-control" id="min_trivial" name="min_trivial" type="number" value="0">
+                            </div>
+                            <div class="col-12 col-md-1">
+                                <div class="form-text text-wrap"><label for="max_trivial">Max Trivial</label></div>
+                                <input class="form-control" id="max_trivial" name="max_trivial" type="number" value="300">
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-12">
+                            <div class="d-grid gap-2 py-4">
+                                <button type="submit" class="btn btn-outline-primary">Search</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {% if search_results|length > 1 %}
+
+                <div class="row">
+                    <div class="col-12 col-md-12">
+                        <div class="p-3 mb-4 bg-body-tertiary border">
+                            <h1 class="text-center">Search Results</h1>
+                            <table id="search-results-table" class="display table table-striped">
+                                <thead>
+                                <tr>
+                                    <th class="min">Recipe</th>
+                                    <th class="min">Yield</th>
+                                    <th class="min">Trivial</th>
+                                    <th>Components</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for recipe, recipe_entries in search_results %}
+                                    <tr>
+                                        <td><a href="/recipes/view/{{ recipe.id }}">{{ recipe.name|clean_name }}</a> ({{ recipe.tradeskill|tradeskill_filter }})</td>
+                                        <td>{% for entry in recipe_entries %}{% if entry.success_count > 0 %}{{ entry.success_count }}x&nbsp;<a href="/items/view/{{ entry.item_id.id }}">{{ entry.item_id.Name }}</a>{% endif %}{% endfor %}</td>
+                                        <td>{{ recipe.trivial }}</td>
+                                        <td>{% for entry in recipe_entries %} 
+                                            {% if entry.component_count > 0 %}{{ entry.component_count }}x&nbsp;
+                                                <a href="/items/view/{{ entry.item_id.id }}">{{ entry.item_id.Name }}</a>,&nbsp;{% endif %}
+                                        {% endfor %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </main>
+
+{% endblock %}

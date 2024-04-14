@@ -21,6 +21,8 @@ from common.models.npcs import MerchantListTemp
 from common.models.npcs import NPCFaction
 from common.models.npcs import NPCSpellsEntries
 from common.models.npcs import NPCTypes
+from common.models.tradeskill import TradeskillRecipe
+from common.models.tradeskill import TradeskillRecipeEntries
 from common.models.spawns import SpawnEntry
 from common.models.spawns import Spawn2
 from common.models.spells import SpellsNew
@@ -53,6 +55,8 @@ class GameServerRouter:
                           NPCFaction,
                           NPCTypes,
                           NPCSpellsEntries,
+                          TradeskillRecipe,
+                          TradeskillRecipeEntries,
                           SpawnEntry,
                           Spawn2,
                           SpellsNew,

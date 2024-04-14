@@ -1,0 +1,82 @@
+{% extends 'recipes/header.html' %}
+{% load data_utilities %}
+{% load tradeskill_filters %}
+{% load static %}
+{% block content %}
+    <main class="flex-shrink-0">
+        <div class="container py-4">
+            <div class="">
+                <div class="row">
+                    <div class="eq-window-fancy col-12 col-md-4 mb-4 align-content-center mx-auto">
+                        <div class="eq-window-nested-blue">
+                            <h3 class="eq-header text-center">Recipe: {{ tradeskill_recipe.name }}</h3>
+                            <b>Recipe: </b>{{ tradeskill_recipe.name }}<br/>
+                            <b>Tradeskill: </b>{{ tradeskill_recipe.tradeskill|tradeskill_filter }} <br/>
+                            <b>Skill needed: </b>{{ tradeskill_recipe.skill_needed }}<br/>
+                            <b>Trivial at: </b>{{ tradeskill_recipe.trivial }}<br/>
+
+                            <b>Notes: </b>{% if tradeskill_recipe.note %}{{ tradeskill_recipe.note }}{% else %}
+                            None{% endif %}<br/>
+                        </div>
+                    </div>
+                </div>
+                <div class="eq-window-fancy row">
+                    <div class="col-12 col-md-4 mb-4">
+                        <div class="eq-window-nested-blue">
+                            <h4 class="eq-header text-center">Components Needed: </h4>
+                            <dl>
+                                {% for entry in tradeskill_recipe_entries %}
+                                    {% if entry.component_count > 0 %}
+                                        <dd><img class="no-round"
+                                                 style="background:url(/static/images/icons/blank_slot.gif);"
+                                                 src="/static/images/items/item_{{ entry.item_id.icon }}.png"
+                                                 alt=""/>
+                                            <a style="text-decoration: none; color:#00ba00;"
+                                               href="/items/view/{{ entry.item_id.id }}" data-url="12003"
+                                               class="tooltip-link link" target="_blank">{{ entry.item_id.Name }}</a><span> x{{ entry.component_count }}</span>
+                                        </dd>
+                                    {% endif %}
+                                {% endfor %}
+                            </dl>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4 mb-4">
+                        <div class="eq-window-nested-blue">
+                            <h4 class="eq-header text-center">Containers needed: </h4>
+                            <dl>
+                                {% for entry in tradeskill_recipe_entries %}
+                                    {% if entry.is_container %}
+                                        <dd>({{ entry.item_id }})</dd>
+                                    {% endif %}
+                                {% endfor %}
+                            </dl>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4 mb-4">
+                        <div class="eq-window-nested-blue">
+                            <h4 class="eq-header text-center">On success: </h4>
+                            <dl>
+
+                                <dd><img class="no-round" style="background:url(/static/images/icons/blank_slot.gif);"
+                                         src="/static/images/items/item_538.png" alt=""/> <a style="text-decoration:none;color:#00ba00"
+                                        href="/items/view/3056" data-url="3056" class="tooltip-link link">Banded
+                                    Mail</a><span> x1</span></dd>
+
+                            </dl>
+                        </div>
+                        <div class="eq-window-nested-blue">
+                            <h4 class="eq-header text-center">On failure: </h4>
+                            <dl>
+
+                            </dl>
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+    </main>
+{% endblock %}

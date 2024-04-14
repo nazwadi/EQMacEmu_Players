@@ -50,7 +50,6 @@ CSRF_TRUSTED_ORIGINS = ['https://loginserver.eqarchives.com']
 # Application definition
 
 INSTALLED_APPS = [
-    'polls.apps.PollsConfig',
     'accounts.apps.AccountsConfig',
     'common.apps.CommonConfig',
     'characters.apps.CharactersConfig',
@@ -69,6 +68,8 @@ INSTALLED_APPS = [
     'bootstrap5',
     'items.apps.ItemConfig',
     'npcs.apps.NpcsConfig',
+    'recipes.apps.RecipesConfig',
+    'polls.apps.PollsConfig',
     'zones.apps.ZonesConfig',
 ]
 

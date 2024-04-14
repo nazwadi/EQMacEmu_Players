@@ -29,5 +29,6 @@ urlpatterns = [
     path("npcs/", include("npcs.urls")),
     path("items/", include("items.urls")),
     path("polls/", include("polls.urls")),
+    path("recipes/", include("recipes.urls")),
     path("zones/", include("zones.urls")),
 ]
