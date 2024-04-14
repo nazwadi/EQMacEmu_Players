@@ -33,7 +33,8 @@
                                                  alt=""/>
                                             <a style="text-decoration: none; color:#00ba00;"
                                                href="/items/view/{{ entry.item_id.id }}" data-url="12003"
-                                               class="tooltip-link link" target="_blank">{{ entry.item_id.Name }}</a><span> x{{ entry.component_count }}</span>
+                                               class="tooltip-link link"
+                                               target="_blank">{{ entry.item_id.Name }}</a><span> x{{ entry.component_count }}</span>
                                         </dd>
                                     {% endif %}
                                 {% endfor %}
@@ -56,12 +57,18 @@
                         <div class="eq-window-nested-blue">
                             <h4 class="eq-header text-center">On success: </h4>
                             <dl>
+                                {% for entry in tradeskill_recipe_entries %}
+                                    {% if entry.successcount > 0 %}
 
-                                <dd><img class="no-round" style="background:url(/static/images/icons/blank_slot.gif);"
-                                         src="/static/images/items/item_538.png" alt=""/> <a style="text-decoration:none;color:#00ba00"
-                                        href="/items/view/3056" data-url="3056" class="tooltip-link link">Banded
-                                    Mail</a><span> x1</span></dd>
-
+                                        <dd><img class="no-round"
+                                                 style="background:url(/static/images/icons/blank_slot.gif);"
+                                                 src="/static/images/items/item_{{ entry.item_id.icon }}.png" alt=""/> <a
+                                                style="text-decoration:none;color:#00ba00"
+                                                href="/items/view/{{ entry.item_id.id }}" data-url="{{ entry.item_id.id }}"
+                                                class="tooltip-link link">{{ entry.name }}
+                                            Mail</a><span> x1</span></dd>
+                                    {% endif %}
+                                {% endfor %}
                             </dl>
                         </div>
                         <div class="eq-window-nested-blue">
