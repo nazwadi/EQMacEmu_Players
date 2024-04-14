@@ -60,12 +60,12 @@
                                 <tbody>
                                 {% for recipe, recipe_entries in search_results %}
                                     <tr>
-                                        <td><a href="/recipes/view/{{ recipe.id }}">{{ recipe.name|clean_name }}</a> ({{ recipe.tradeskill|tradeskill_filter }})</td>
-                                        <td>{% for entry in recipe_entries %}{% if entry.success_count > 0 %}{{ entry.success_count }}x&nbsp;<a href="/items/view/{{ entry.item_id.id }}">{{ entry.item_id.Name }}</a>{% endif %}{% endfor %}</td>
+                                        <td><a href="/recipes/view/{{ recipe.id }}" target="_blank">{{ recipe.name|clean_name }}</a> ({{ recipe.tradeskill|tradeskill_filter }})</td>
+                                        <td>{% for entry in recipe_entries %}{% if entry.success_count > 0 %}{{ entry.success_count }}x&nbsp;<a href="/items/view/{{ entry.item_id.id }}" target="_blank">{{ entry.item_id.Name }}</a>{% endif %}{% endfor %}</td>
                                         <td>{{ recipe.trivial }}</td>
                                         <td>{% for entry in recipe_entries %} 
                                             {% if entry.component_count > 0 %}{{ entry.component_count }}x&nbsp;
-                                                <a href="/items/view/{{ entry.item_id.id }}">{{ entry.item_id.Name }}</a>,&nbsp;{% endif %}
+                                                <a href="/items/view/{{ entry.item_id.id }}" target="_blank">{{ entry.item_id.Name }}</a>,&nbsp;{% endif %}
                                         {% endfor %}
                                         </td>
                                     </tr>
