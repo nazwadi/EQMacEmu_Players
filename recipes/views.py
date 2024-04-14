@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
+from django.db import connections
 
 from common.models.tradeskill import TradeskillRecipe
 from common.models.tradeskill import TradeskillRecipeEntries
@@ -79,9 +80,15 @@ def view_recipe(request, recipe_id):
     """
     tradeskill_recipe = TradeskillRecipe.objects.get(id=recipe_id)
     tradeskill_recipe_entries = TradeskillRecipeEntries.objects.filter(recipe_id=recipe_id).order_by("-component_count")
+    cursor = connections['game_database'].cursor()
+    cursor.execute("""SELECT item_id
+                      FROM tradeskill_recipe_entries
+                      WHERE recipe_id=%s AND iscontainer='1';""", [tradeskill_recipe.id])
+    tradeskill_containers = cursor.fetchall()
     return render(request=request,
                   context={
                       "tradeskill_recipe": tradeskill_recipe,
                       "tradeskill_recipe_entries": tradeskill_recipe_entries,
+                      "tradeskill_containers": tradeskill_containers
                   },
                   template_name="recipes/view_recipe.html")

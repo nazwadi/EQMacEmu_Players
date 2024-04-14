@@ -1,10 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.db import connections
-from django.core.exceptions import ObjectDoesNotExist
 
 from common.models.items import Items
 from common.models.spells import SpellsNew
-from common.utils import calculate_item_price
 from collections import namedtuple
 
 

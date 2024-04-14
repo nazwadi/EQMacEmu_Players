@@ -16,6 +16,7 @@
                             <b>Trivial at: </b>{{ tradeskill_recipe.trivial }}<br/>
                             <div class="py-1">
                                 {% if tradeskill_recipe.no_fail %}This recipe cannot fail.<br/>{% endif %}
+                                {% if tradeskill_recipe.replace_container %}The container is replaced on combine.<br/>{% endif %}
                             </div>
                             <b>Notes: </b>{% if tradeskill_recipe.notes %}{{ tradeskill_recipe.notes }}{% else %}
                             None{% endif %}<br/>
@@ -49,12 +50,27 @@
                             <dl>
                                 {% for entry in tradeskill_recipe_entries %}
                                     {% if entry.is_container %}
+                                        {% if entry.item_id %}
                                         <dd><img class="no-round"
                                                  style="background:url(/static/images/icons/blank_slot.gif);"
                                                  src="/static/images/items/item_{{ entry.item_id.icon }}.png"
                                                  alt=""/>&nbsp;<a style="text-decoration: none; color:#00ba00"
                                                                   href="/items/view/{{ entry.item_id }}"
                                                                   target="_blank">{{ entry.item_id.Name }}</a></dd>
+                                        {% else %}
+                                            <dd><img class="no-round"
+                                                     style="background:url(/static/images/icons/blank_slot.gif);"
+                                                     src="/static/images/items/item_{{ entry.item_id.icon }}.png"
+                                                     alt=""/>&nbsp;
+                                            {% for container in tradeskill_containers %}
+                                                {% with container_name=container.0|trade_container_filter %}
+                                                    {% if container_name is not None %}
+                                                        {{ container_name }}
+                                                    {% endif %}
+                                                {% endwith %}
+                                            {% endfor %}
+                                            </dd>
+                                        {% endif %}
                                     {% endif %}
                                 {% endfor %}
                             </dl>
