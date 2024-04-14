@@ -46,4 +46,4 @@ def tradeskill_filter(tradeskill_id):
         case 73:
             return "Taunt"
         case 75:
-            return "N/A (Quest Combine)"
+            return "Quest Combine"

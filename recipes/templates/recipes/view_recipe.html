@@ -14,7 +14,9 @@
                             <b>Tradeskill: </b>{{ tradeskill_recipe.tradeskill|tradeskill_filter }} <br/>
                             <b>Skill needed: </b>{{ tradeskill_recipe.skill_needed }}<br/>
                             <b>Trivial at: </b>{{ tradeskill_recipe.trivial }}<br/>
-
+                            <div class="py-1">
+                                {% if tradeskill_recipe.no_fail %}This recipe cannot fail.<br/>{% endif %}
+                            </div>
                             <b>Notes: </b>{% if tradeskill_recipe.notes %}{{ tradeskill_recipe.notes }}{% else %}
                             None{% endif %}<br/>
                         </div>
@@ -50,7 +52,9 @@
                                         <dd><img class="no-round"
                                                  style="background:url(/static/images/icons/blank_slot.gif);"
                                                  src="/static/images/items/item_{{ entry.item_id.icon }}.png"
-                                                 alt="" />&nbsp;<a style="text-decoration: none; color:#00ba00" href="/items/view/{{ entry.item_id }}" target="_blank">{{ entry.item_id.Name}}</a></dd>
+                                                 alt=""/>&nbsp;<a style="text-decoration: none; color:#00ba00"
+                                                                  href="/items/view/{{ entry.item_id }}"
+                                                                  target="_blank">{{ entry.item_id.Name }}</a></dd>
                                     {% endif %}
                                 {% endfor %}
                             </dl>
@@ -65,10 +69,12 @@
 
                                         <dd><img class="no-round"
                                                  style="background:url(/static/images/icons/blank_slot.gif);"
-                                                 src="/static/images/items/item_{{ entry.item_id.icon }}.png" alt=""/> <a
-                                                style="text-decoration:none;color:#00ba00"
-                                                href="/items/view/{{ entry.item_id.id }}" data-url="{{ entry.item_id.id }}"
-                                                class="tooltip-link link" target="_blank">{{ entry.item_id.Name }}
+                                                 src="/static/images/items/item_{{ entry.item_id.icon }}.png" alt=""/>
+                                            <a
+                                                    style="text-decoration:none;color:#00ba00"
+                                                    href="/items/view/{{ entry.item_id.id }}"
+                                                    data-url="{{ entry.item_id.id }}"
+                                                    class="tooltip-link link" target="_blank">{{ entry.item_id.Name }}
                                             </a><span> x1</span></dd>
                                     {% endif %}
                                 {% endfor %}
