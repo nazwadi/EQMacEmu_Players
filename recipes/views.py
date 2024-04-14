@@ -51,10 +51,11 @@ def search(request):
         max_trivial = request.POST.get("max_trivial")
         if tradeskill == "-1":  # any tradeskill
             results = (TradeskillRecipe.objects.filter(name__icontains=recipe_name)
-                              .filter(trivial__gte=min_trivial).filter(trivial__lte=max_trivial))
+                       .filter(trivial__gte=min_trivial).filter(trivial__lte=max_trivial))
         else:
             results = (TradeskillRecipe.objects.filter(name__icontains=recipe_name).filter(tradeskill=tradeskill)
-                              .filter(trivial__gte=min_trivial).filter(trivial__lte=max_trivial))
+                       .filter(trivial__gte=min_trivial).filter(trivial__lte=max_trivial))
+        print(results)
 
         search_results = list()
         for result in results:
