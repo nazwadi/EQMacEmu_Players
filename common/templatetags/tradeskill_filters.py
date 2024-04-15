@@ -53,44 +53,91 @@ def tradeskill_filter(tradeskill_id):
 def trade_container_filter(container_code):
     match container_code:
         case 9:
-            return "MEDICINEBAG"
+            return "Medicine Bag"
         case 15:
-            return "OVEN"
+            return "Oven"
         case 16:
-            return "SEWINGKIT"
+            return "Loom"
         case 17:
-            return "FORGE"
-        case 0x12:
-            return "FLETCHINGKIT"
-        case 0x13:
-            return "BREWBARREL"
-        case 0x14:
-            return "JEWELERSKIT"
-        case 0x15:
-            return "POTTERYWHEEL"
-        case 0x16:
-            return "KILN"
-        case 0x17:
-            return "KEYMAKER"
-        case 0x18:
-            return "WIZARDLEX"
-        case 0x19:
-            return "MAGELEX"
-        case 0x1A:
-            return "NECROLEX"
-        case 0x1B:
-            return "ENCHLEX"
-        case 0x20:
-            return "TEIRDALFORGE"
-        case 0x21:
-            return "OGGOKFORGE"
-        case 0x22:
-            return "STORMGUARDF"
-        case 0x26:
-            return "CABILISFORGE"
-        case 0x2E:
-            return "TACKLEBOX"
-        case 0x30:
-            return "FIERDALF"
-        case 0x35:
-            return "AUGMENT"
+            return "Forge"
+        case 18:
+            return "Fletching Kit"
+        case 19:
+            return "Brew Barrel"
+        case 20:
+            return "Jeweler's Kit"
+        case 21:
+            return "Pottery Wheel"
+        case 22:
+            return "Kiln"
+        case 23:
+            return "Key Maker"
+        case 24:
+            return "Wizard Lexicon"
+        case 25:
+            return "Mage Lexicon"
+        case 26:
+            return "Necro Lexicon"
+        case 27:
+            return "Enchanter Lexicon"
+        case 32:
+            return "Tier`Dal Forge"
+        case 33:
+            return "Oggok Forge"
+        case 34:
+            return "Storm Guard Forge"
+        case 38:
+            return "Cabilis Forge"
+        case 46:
+            return "Tacklebox"
+        case 48:
+            return "Fier'Dal Forge"
+        case 53:
+            return "Augment Pool"
+
+
+@register.filter(name='trade_icon_filter')
+def trade_icon_filter(container_code):
+    match container_code:
+        case 9:  # Medicine Bag
+            return "item_727.png"
+        case 15:  # Oven
+            return "item_1114.png"
+        case 16:  # Sewing Kit
+            return "item_892.png"
+        case 17:  # Forge
+            return "item_1115.png"
+        case 18:  # Fletching Kit
+            return "item_883.png"
+        case 19:  # Brew Barrel
+            return "item_1116.png"
+        case 20:  # Jeweler's Kit
+            return "item_539.png"
+        case 21:  # Pottery Wheel
+            return "item_1112.png"
+        case 22: # Kiln
+            return "item_1113.png"  # KILN
+        case 23: # Key Maker
+            return "item_716.png"
+        case 24: # Wizard Lexicon
+            return "item_777.png"
+        case 25: # Mage Lexicon
+            return "item_777.png"
+        case 26: # Necro Lexicon
+            return "item_777.png"
+        case 27: # Enchanter Lexicon
+            return "item_777.png"
+        case 32: # Tier`Dal Forge
+            return "item_1115.png"
+        case 33: # Oggok Forge
+            return "item_1115.png"
+        case 34: # Storm Guard Forge
+            return "item_1115.png"
+        case 38: # Cabilis Forge
+            return "item_1115.png"
+        case 46: # Tacklebox
+            return "item_730.png"
+        case 48: # Fier`Dal Forge
+            return "item_1115.png"
+        case 53: # Augment Pool
+            return "item_1142.png"

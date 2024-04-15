@@ -58,13 +58,13 @@
                                                                   href="/items/view/{{ entry.item_id }}"
                                                                   target="_blank">{{ entry.item_id.Name }}</a></dd>
                                         {% else %}
-                                            <dd><img class="no-round"
-                                                     style="background:url(/static/images/icons/blank_slot.gif);"
-                                                     src="/static/images/items/item_{{ entry.item_id.icon }}.png"
-                                                     alt=""/>&nbsp;
                                             {% for container in tradeskill_containers %}
                                                 {% with container_name=container.0|trade_container_filter %}
                                                     {% if container_name is not None %}
+                                                        <dd><img class="no-round"
+                                                                 style="background:url(/static/images/icons/blank_slot.gif);"
+                                                                 src="/static/images/items/{{ container.0|trade_icon_filter }}"
+                                                                 alt=""/>&nbsp;
                                                         {{ container_name }}
                                                     {% endif %}
                                                 {% endwith %}
