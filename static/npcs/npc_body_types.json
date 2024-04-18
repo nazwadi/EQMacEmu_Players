@@ -1,0 +1,164 @@
+{
+  "npc_body_types": [
+    {
+      "id": 1,
+      "type": "Humanoid"
+    },
+    {
+      "id": 2,
+      "type": "Lycanthrope"
+    },
+    {
+      "id": 3,
+      "type": "Undead"
+    },
+    {
+      "id": 4,
+      "type": "Giant"
+    },
+    {
+      "id": 5,
+      "type": "Construct"
+    },
+    {
+      "id": 6,
+      "type": "Extraplanar"
+    },
+    {
+      "id": 7,
+      "type": "Magical"
+    },
+    {
+      "id": 8,
+      "type": "SummonedUndead"
+    },
+    {
+      "id": 9,
+      "type": "BaneGiant"
+    },
+    {
+      "id": 10,
+      "type": "Dain"
+    },
+    {
+      "id": 11,
+      "type": "NoTarget"
+    },
+    {
+      "id": 12,
+      "type": "Vampire"
+    },
+    {
+      "id": 13,
+      "type": "Atenha Ra"
+    },
+    {
+      "id": 14,
+      "type": "Greater Akheva"
+    },
+    {
+      "id": 15,
+      "type": "Khati Sha"
+    },
+    {
+      "id": 16,
+      "type": "Seru"
+    },
+    {
+      "id": 17,
+      "type": "Grieg Veneficus"
+    },
+    {
+      "id": 18,
+      "type": "Draz Nurakk"
+    },
+    {
+      "id": 19,
+      "type": "Zek"
+    },
+    {
+      "id": 20,
+      "type": "Luggald"
+    },
+    {
+      "id": 21,
+      "type": "Animal"
+    },
+    {
+      "id": 22,
+      "type": "Insect"
+    },
+    {
+      "id": 23,
+      "type": "Monster"
+    },
+    {
+      "id": 24,
+      "type": "Summoned"
+    },
+    {
+      "id": 25,
+      "type": "Plant"
+    },
+    {
+      "id": 26,
+      "type": "Dragon"
+    },
+    {
+      "id": 27,
+      "type": "Summoned2"
+    },
+    {
+      "id": 28,
+      "type": "Summoned3"
+    },
+    {
+      "id": 29,
+      "type": "Dragon2"
+    },
+    {
+      "id": 30,
+      "type": "VeliousDragon"
+    },
+    {
+      "id": 31,
+      "type": "Familiar"
+    },
+    {
+      "id": 32,
+      "type": "Dragon3"
+    },
+    {
+      "id": 33,
+      "type": "Boxes"
+    },
+    {
+      "id": 34,
+      "type": "Muramite"
+    },
+    {
+      "id": 60,
+      "type": "NoTarget2"
+    },
+    {
+      "id": 63,
+      "type": "SwarmPet"
+    },
+    {
+      "id": 64,
+      "type": "MonsterSummon"
+    },
+    {
+      "id": 65,
+      "type": "Trap"
+    },
+    {
+      "id": 66,
+      "type": "InvisMan"
+    },
+    {
+      "id": 67,
+      "type": "Special"
+    }
+  ]
+}

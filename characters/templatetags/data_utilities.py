@@ -58,7 +58,6 @@ def yes_no(value):
 
 @register.filter(name='gender')
 def gender_filter(value):
-    print(value)
     match value:
         case 0:
             return "Male"
