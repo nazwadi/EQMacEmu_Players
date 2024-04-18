@@ -36,9 +36,17 @@ def search(request):
     filename = f'static/npcs/npc_body_types.json'
     with open(filename, 'r') as json_file:
         npc_body_types = json.load(json_file)
+
+    filename = f'static/npcs/npc_races.json'
+    with open(filename, 'r') as json_file:
+        npc_races = json.load(json_file)
+
     if request.method == "GET":
         return render(request=request,
-                      context={'npc_body_types': npc_body_types['npc_body_types']},
+                      context={
+                          'npc_body_types': npc_body_types['npc_body_types'],
+                          'npc_races': npc_races['npc_races'],
+                      },
                       template_name="npcs/search_npc.html")
     if request.method == "POST":
         npc_name = request.POST.get("npc_name")
@@ -46,6 +54,7 @@ def search(request):
         min_level = request.POST.get("min_level")
         max_level = request.POST.get("max_level")
         body_type = request.POST.get("select_npc_body_type")
+        npc_race = request.POST.get("select_npc_race")
         cursor = connections['game_database'].cursor()
         query = """SELECT DISTINCT
                             nt.id,
@@ -69,11 +78,14 @@ def search(request):
                             AND nt.LEVEL >= %s
                             AND nt.maxlevel <= %s
         """
-        if body_type != "0":  # any
-            query += """ AND nt.bodytype = %s;"""
-            cursor.execute(query, ['%'+npc_name+'%', min_level, max_level, body_type])
-        else:
-            cursor.execute(query, ['%'+npc_name+'%', min_level, max_level])
+        query_list = ['%' + npc_name + '%', min_level, max_level]
+        if body_type != "-1":  # any
+            query += """ AND nt.bodytype = %s"""
+            query_list.append(body_type)
+        if npc_race != "-1":  # any
+            query += """ AND nt.race = %s"""
+            query_list.append(npc_race)
+        cursor.execute(query, query_list)
         results = cursor.fetchall()
         search_results = list()
         if results:
@@ -87,6 +99,7 @@ def search(request):
                       context={
                           "level_range": range(100),
                           'npc_body_types': npc_body_types['npc_body_types'],
+                          'npc_races': npc_races['npc_races'],
                           "search_results": search_results,
                       })
 

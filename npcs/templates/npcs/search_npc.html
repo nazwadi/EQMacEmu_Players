@@ -18,9 +18,18 @@
                         <div class="col-12 col-md-3">
                             <div class="form-text text-wrap"><label for="select_npc_body_type">Body Type</label></div>
                             <select class="form-select" id="select_npc_body_type" name="select_npc_body_type">
-                                <option value="0">any</option>
+                                <option value="-1">any</option>
                                 {% for body_type in npc_body_types %}
                                     <option value="{{ body_type.id }}">{{ body_type.type }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-3">
+                            <div class="form-text text-wrap"><label for="select_npc_race">Race</label></div>
+                            <select class="form-select" id="select_npc_race" name="select_npc_race">
+                                <option value="-1">any</option>
+                                {% for race in npc_races %}
+                                    <option value="{{ race.id }}">{{ race.race }}</option>
                                 {% endfor %}
                             </select>
                         </div>
