@@ -15,6 +15,17 @@
                             <input type="text" class="form-control" id="npc_name" name="npc_name"
                                    placeholder="a decaying skeleton">
                         </div>
+                        <div class="col-12 col-md-4">
+                            <div class="form-text text-wrap"><label for="select_expansion">Expansion</label></div>
+                            <select class="form-select" id="select_expansion" name="select_expansion">
+                                <option value="-1">any</option>
+                                {% for expansion in expansions %}
+                                    <option value="{{ expansion.id }}">{{ expansion.exp }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-12 col-md-3">
                             <div class="form-text text-wrap"><label for="select_npc_body_type">Body Type</label></div>
                             <select class="form-select" id="select_npc_body_type" name="select_npc_body_type">
@@ -30,6 +41,15 @@
                                 <option value="-1">any</option>
                                 {% for race in npc_races %}
                                     <option value="{{ race.id }}">{{ race.race }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-3">
+                            <div class="form-text text-wrap"><label for="select_npc_class">Class</label></div>
+                            <select class="form-select" id="select_npc_class" name="select_npc_class">
+                                <option value="-1">any</option>
+                                {% for class in npc_classes %}
+                                    <option value="{{ class.id }}">{{ class.class }}</option>
                                 {% endfor %}
                             </select>
                         </div>

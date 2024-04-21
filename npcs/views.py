@@ -39,20 +39,32 @@ def search(request):
     with open(filename, 'r') as json_file:
         npc_races = json.load(json_file)
 
+    filename = f'static/npcs/npc_classes.json'
+    with open(filename, 'r') as json_file:
+        npc_classes = json.load(json_file)
+
+    filename = f'static/common/expansions.json'
+    with open(filename, 'r') as json_file:
+        expansions = json.load(json_file)
+
     if request.method == "GET":
         return render(request=request,
                       context={
+                          'expansions': expansions['expansions'],
                           'npc_body_types': npc_body_types['npc_body_types'],
                           'npc_races': npc_races['npc_races'],
+                          'npc_classes': npc_classes['npc_classes'],
                       },
                       template_name="npcs/search_npc.html")
     if request.method == "POST":
+        body_type = request.POST.get("select_npc_body_type")
+        expansion = request.POST.get("select_expansion")
         npc_name = request.POST.get("npc_name")
         npc_name = npc_name.replace(' ', '_')
         min_level = request.POST.get("min_level")
         max_level = request.POST.get("max_level")
-        body_type = request.POST.get("select_npc_body_type")
         npc_race = request.POST.get("select_npc_race")
+        npc_class = request.POST.get("select_npc_class")
         cursor = connections['game_database'].cursor()
         query = """SELECT DISTINCT
                             nt.id,
@@ -77,12 +89,18 @@ def search(request):
                             AND nt.maxlevel <= %s
         """
         query_list = ['%' + npc_name + '%', min_level, max_level]
+        if expansion != "-1": # any
+            query += """ AND s.min_expansion = %s"""
+            query_list.append(expansion)
         if body_type != "-1":  # any
             query += """ AND nt.bodytype = %s"""
             query_list.append(body_type)
         if npc_race != "-1":  # any
             query += """ AND nt.race = %s"""
             query_list.append(npc_race)
+        if npc_class != "-1": # any
+            query += """ AND nt.class = %s"""
+            query_list.append(npc_class)
         cursor.execute(query, query_list)
         results = cursor.fetchall()
         search_results = list()
@@ -95,9 +113,11 @@ def search(request):
         return render(request=request,
                       template_name="npcs/search_npc.html",
                       context={
+                          'expansions': expansions['expansions'],
                           "level_range": range(100),
                           'npc_body_types': npc_body_types['npc_body_types'],
                           'npc_races': npc_races['npc_races'],
+                          'npc_classes': npc_classes['npc_classes'],
                           "search_results": search_results,
                       })
 

@@ -1,0 +1,144 @@
+{
+  "npc_classes": [
+    {
+      "id": "1",
+      "class": "Warrior"
+    },
+    {
+      "id": "2",
+      "class": "Cleric"
+    },
+    {
+      "id": "3",
+      "class": "Paladin"
+    },
+    {
+      "id": "4",
+      "class": "Ranger"
+    },
+    {
+      "id": "5",
+      "class": "Shadow Knight"
+    },
+    {
+      "id": "6",
+      "class": "Druid"
+    },
+    {
+      "id": "7",
+      "class": "Monk"
+    },
+    {
+      "id": "8",
+      "class": "Bard"
+    },
+    {
+      "id": "9",
+      "class": "Rogue"
+    },
+    {
+      "id": "10",
+      "class": "Shaman"
+    },
+    {
+      "id": "11",
+      "class": "Necromancer"
+    },
+    {
+      "id": "12",
+      "class": "Wizard"
+    },
+    {
+      "id": "13",
+      "class": "Magician"
+    },
+    {
+      "id": "14",
+      "class": "Enchanter"
+    },
+    {
+      "id": "15",
+      "class": "Beastlord"
+    },
+    {
+      "id": "16",
+      "class": "Berserker"
+    },
+    {
+      "id": "17",
+      "class": "Banker"
+    },
+    {
+      "id": "20",
+      "class": "GM Warrior"
+    },
+    {
+      "id": "21",
+      "class": "GM Cleric"
+    },
+    {
+      "id": "22",
+      "class": "GM Paladin"
+    },
+    {
+      "id": "23",
+      "class": "GM Ranger"
+    },
+    {
+      "id": "24",
+      "class": "GM Shadow Knight"
+    },
+    {
+      "id": "25",
+      "class": "GM Druid"
+    },
+    {
+      "id": "26",
+      "class": "GM Monk"
+    },
+    {
+      "id": "27",
+      "class": "GM Bard"
+    },
+    {
+      "id": "28",
+      "class": "GM Rogue"
+    },
+    {
+      "id": "29",
+      "class": "GM Shaman"
+    },
+    {
+      "id": "30",
+      "class": "GM Necromancer"
+    },
+    {
+      "id": "31",
+      "class": "GM Wizard"
+    },
+    {
+      "id": "32",
+      "class": "GM Magician"
+    },
+    {
+      "id": "33",
+      "class": "GM Enchanter"
+    },
+    {
+      "id": "34",
+      "class": "GM Beastlord"
+    },
+    {
+      "id": "35",
+      "class": "GM Berserker"
+    },
+    {
+      "id": "40",
+      "class": "Banker"
+    },
+    {
+      "id": "41",
+      "class": "Shopkeeper"
+    }
+  ]
+}
