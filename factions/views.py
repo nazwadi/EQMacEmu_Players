@@ -65,7 +65,7 @@ def view_faction(request, faction_id):
         faction_name = cursor.fetchone()
 
         # Kill these NPCs to raise faction
-        raise_faction_query = """SELECT
+        raise_faction_query = """SELECT DISTINCT
                                     npc_types.id,
                                     npc_types.NAME,
                                     zone.long_name,
@@ -93,7 +93,7 @@ def view_faction(request, faction_id):
             if row[2] not in raise_faction_groups:
                 raise_faction_groups[row[2]] = list()
             raise_faction_groups[row[2]].append(row)
-        lower_faction_query = """SELECT
+        lower_faction_query = """SELECT DISTINCT
                                     npc_types.id,
                                     npc_types.NAME,
                                     zone.long_name,
