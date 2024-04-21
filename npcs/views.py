@@ -80,9 +80,9 @@ def search(request):
                             nt.MR 
                          FROM
                             npc_types AS nt
-                            INNER JOIN spawnentry AS se ON nt.id = se.npcID
-                            INNER JOIN spawn2 AS s ON se.spawngroupID = s.spawngroupID
-                            INNER JOIN zone AS z ON s.zone = z.short_name 
+                            LEFT JOIN spawnentry AS se ON nt.id = se.npcID
+                            LEFT JOIN spawn2 AS s ON se.spawngroupID = s.spawngroupID
+                            LEFT JOIN zone AS z ON s.zone = z.short_name 
                         WHERE
                             nt.NAME LIKE %s
                             AND nt.LEVEL >= %s
