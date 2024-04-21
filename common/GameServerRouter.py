@@ -9,6 +9,7 @@ from common.models.characters import CharacterKeyring
 from common.models.characters import CharacterLanguages
 from common.models.characters import CharacterSpells
 from common.models.characters import CharacterSkills
+from common.models.faction import FactionList
 from common.models.faction import FactionListMod
 from common.models.guilds import Guilds
 from common.models.guilds import GuildMembers
@@ -44,6 +45,7 @@ class GameServerRouter:
                           CharacterLanguages,
                           CharacterSkills,
                           CharacterSpells,
+                          FactionList,
                           FactionListMod,
                           Guilds,
                           GuildMembers,

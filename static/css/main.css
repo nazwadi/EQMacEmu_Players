@@ -122,3 +122,16 @@ ul {
 .item_icon {
     margin: 0 25px;
 }
+
+.column-list {
+  -webkit-columns: 4 200px;
+  -moz-columns: 4 200px;
+  columns: 4 200px;
+  -webkit-column-gap: 4em;
+  -moz-column-gap: 4em;
+  column-gap: 4em;
+  -webkit-column-rule: 1px dotted;
+  -moz-column-rule: 1px dotted;
+  column-rule: 1px dotted;
+  padding: 5%;
+}

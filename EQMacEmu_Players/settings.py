@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap4',
     'bootstrap5',
+    'factions.apps.FactionConfig',
     'items.apps.ItemConfig',
     'npcs.apps.NpcsConfig',
     'recipes.apps.RecipesConfig',

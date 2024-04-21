@@ -1,0 +1,45 @@
+{% extends 'factions/header.html' %}
+{% load data_utilities %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+    <main class="flex-shrink-0">
+        <div class="container py-4">
+            <h1 class="text-center mb-4">Faction Search</h1>
+            <form class="p-3 mb-4 bg-body-tertiary border" action="" method="post" novalidate>
+                {% csrf_token %}
+                <div class="col-12 col-md-12">
+                    <div class="form-text text-wrap"><label for="faction_name">Faction Name</label></div>
+                    <input class="form-control" id="faction_name" name="faction_name" required type="text" value="">
+                </div>
+                <div class="col-12 col-md-12 py-4">
+                    <div class="d-grid gap-2">
+                        <input class="btn btn-outline-primary" id="submit" name="submit" type="submit" value="Search">
+                    </div>
+                </div>
+            </form>
+        {% if faction_results %}
+            <h2 class="text-center">Search Results</h2>
+            <p class="text-center">Search Results are limited to 50.</p>
+            <table id="search-results-table" class="table">
+                <thead>
+                <tr>
+                    <th>Faction Name</th>
+                    <th>Min Cap</th>
+                    <th>Max Cap</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for id, name, min_cap, max_cap in faction_results %}
+                    <tr>
+                        <td><a href="/factions/view/{{ id }}">{{ name }}</a></td>
+                        <td>{{ min_cap }}</td>
+                        <td>{{ max_cap }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+        </div>
+    </main>
+{% endblock %}

@@ -21,15 +21,13 @@ def index_request(request):
     :param request: Http request
     :return: Http response
     """
-    return render(request=request,
-                  template_name="npcs/view_npc.html")
+    return redirect("/npcs/search")
 
 
 def search(request):
     """
     Search for a npc by name
 
-    :param name: the name of the npc
     :param request: Http request
     :return: Http response
     """

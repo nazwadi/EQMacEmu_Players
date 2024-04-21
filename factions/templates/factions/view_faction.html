@@ -1,0 +1,50 @@
+{% extends 'factions/header.html' %}
+{% load data_utilities %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+    <div class="container py-5">
+    <div class="eq-window row align-items-md-stretch">
+        <div class="col-12"><h2 class="eq-header text-center">{{ faction_name.1 }}</h2></div>
+        <div class="col-12 col-md-6 p-3 mb-4">
+            <div class="p-3 mb-4">
+                <h6 class="eq-header text-center">Slaying these raises faction:</h6>
+                {% for long_name, data in raise_faction.items %}
+                    <article class="eq-window-nested-blue p-3 mb-4">
+                        <h6 class="text-center">{{ long_name }}</h6>
+                        <section class="column-list">
+                            <dl>
+                                {% for id, name, long_name, short_name, value in data %}
+                                    <dd>
+                                        <a style="color:#00ba00;text-decoration:none;" href="/npc/{{ id }}"
+                                           class="link">{{ name|clean_name }}</a><span> (+{{ value }})</span>
+                                    </dd>
+                                {% endfor %}
+                            </dl>
+                        </section>
+                    </article>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 p-3 mb-4">
+            <div class="p-3 mb-4">
+                <h6 class="eq-header text-center">Slaying these lowers faction:</h6>
+                {% for long_name, data in lower_faction.items %}
+                    <article class="eq-window-nested-blue p-3 mb-4">
+                        <h6 class="text-center">{{ long_name }}</h6>
+                        <section class="column-list">
+                            <dl>
+                                {% for id, name, long_name, short_name, value in data %}
+                                    <dd><a style="color:#d71c1c;text-decoration:none;" href="/npc/{{ id }}"
+                                           class="link">{{ name|clean_name }}</a><span> ({{ value }})</span>
+                                    </dd>
+                                {% endfor %}
+                            </dl>
+                        </section>
+                    </article>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
