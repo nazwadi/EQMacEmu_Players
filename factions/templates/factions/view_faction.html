@@ -16,7 +16,7 @@
                             <dl>
                                 {% for id, name, long_name, short_name, value in data %}
                                     <dd>
-                                        <a style="color:#00ba00;text-decoration:none;" href="/npc/{{ id }}"
+                                        <a style="color:#00ba00;text-decoration:none;" href="/npcs/view/{{ id }}"
                                            class="link">{{ name|clean_name }}</a><span> (+{{ value }})</span>
                                     </dd>
                                 {% endfor %}
@@ -36,7 +36,7 @@
                         <section class="column-list">
                             <dl>
                                 {% for id, name, long_name, short_name, value in data %}
-                                    <dd><a style="color:#d71c1c;text-decoration:none;" href="/npc/{{ id }}"
+                                    <dd><a style="color:#d71c1c;text-decoration:none;" href="/npcs/view/{{ id }}"
                                            class="link">{{ name|clean_name }}</a><span> ({{ value }})</span>
                                     </dd>
                                 {% endfor %}
