@@ -238,7 +238,7 @@
                                 <div>{{ tradeskill|tradeskill_filter }}
                                     <ul>
                                         {% for recipe in recipe_list %}
-                                            <li><b>{{ recipe.recipe_name }}</b> (Trivial: {{ recipe.trivial }})</li>
+                                            <li><a style="text-decoration: none" href="/recipes/view/{{ recipe.recipe_id }}">{{ recipe.recipe_name }}</a> (Trivial: {{ recipe.trivial }})</li>
                                         {% endfor %}
                                     </ul>
                                 </div>
