@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.db import connections
 
 from common.models.items import Items
@@ -8,7 +8,7 @@ from collections import namedtuple
 
 def search(request):
     """
-    Search for an item by name
+    Search for an item by name at url https://url.tld/items/search
 
     :param request: Http request
     :return: Http response
@@ -19,7 +19,16 @@ def search(request):
 
     if request.method == "POST":
         item_name = request.POST.get("item_name")
-        search_results = Items.objects.filter(Name__icontains=item_name)
+        query_limit = request.POST.get("query_limit")
+        try:
+            query_limit = int(query_limit)
+        except ValueError:
+            return redirect("/items/search")
+        if query_limit < 0:
+            query_limit = 0
+        elif query_limit > 200:  # yes, this is an arbitrary limit on search results
+            query_limit = 200
+        search_results = Items.objects.filter(Name__icontains=item_name)[:query_limit]
 
         return render(request=request,
                       template_name="items/search_item.html",
