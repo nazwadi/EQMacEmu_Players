@@ -135,3 +135,7 @@ ul {
   column-rule: 1px dotted;
   padding: 5%;
 }
+#logo a {
+  background: url(/static/images/eqalogo.png) right no-repeat;
+  width: 331px;
+}
