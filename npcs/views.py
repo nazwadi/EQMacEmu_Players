@@ -65,6 +65,15 @@ def search(request):
         max_level = request.POST.get("max_level")
         npc_race = request.POST.get("select_npc_race")
         npc_class = request.POST.get("select_npc_class")
+        query_limit = request.POST.get("query_limit")
+        try:
+            query_limit = int(query_limit)
+        except ValueError:
+            return redirect("/npcs/search")
+        if query_limit < 0:
+            query_limit = 0
+        elif query_limit > 200:  # yes, this is an arbitrary limit on search results
+            query_limit = 200
         cursor = connections['game_database'].cursor()
         query = """SELECT DISTINCT
                             nt.id,
@@ -101,6 +110,8 @@ def search(request):
         if npc_class != "-1": # any
             query += """ AND nt.class = %s"""
             query_list.append(npc_class)
+        query += """ LIMIT %s"""
+        query_list.append(int(query_limit))
         cursor.execute(query, query_list)
         results = cursor.fetchall()
         search_results = list()
