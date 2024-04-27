@@ -8,38 +8,48 @@
             <h1 class="text-center mb-4">Faction Search</h1>
             <form class="p-3 mb-4 bg-body-tertiary border" action="" method="post" novalidate>
                 {% csrf_token %}
-                <div class="col-12 col-md-12">
-                    <div class="form-text text-wrap"><label for="faction_name">Faction Name</label></div>
-                    <input class="form-control" id="faction_name" name="faction_name" required type="text" value="">
+                <div class="row">
+                    <div class="col-12 col-md-10">
+                        <div class="form-text text-wrap"><label for="faction_name">Faction Name</label></div>
+                        <input class="form-control" id="faction_name" name="faction_name" required type="text" value="">
+                    </div>
+                    <div class="col-12 col-md-2">
+                        <div class="form-text text-wrap"><label for="query_limit">Query Limit (Max: 200)</label></div>
+                        <input class="form-control" id="query_limit" name="query_limit" type="number" min="0" max="200"
+                               value="50">
+                    </div>
                 </div>
-                <div class="col-12 col-md-12 py-4">
-                    <div class="d-grid gap-2">
-                        <input class="btn btn-outline-primary" id="submit" name="submit" type="submit" value="Search">
+                <div class="row">
+                    <div class="col-12 col-md-12 py-4">
+                        <div class="d-grid gap-2">
+                            <input class="btn btn-outline-primary" id="submit" name="submit" type="submit"
+                                   value="Search">
+                        </div>
                     </div>
                 </div>
             </form>
-        {% if faction_results %}
-            <h2 class="text-center">Search Results</h2>
-            <p class="text-center">Search Results are limited to 50.</p>
-            <table id="search-results-table" class="table">
-                <thead>
-                <tr>
-                    <th>Faction Name</th>
-                    <th>Min Cap</th>
-                    <th>Max Cap</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for id, name, min_cap, max_cap in faction_results %}
+            {% if faction_results %}
+                <h2 class="text-center">Search Results</h2>
+                <p class="text-center">Search Results are limited to {{ query_limit }}.</p>
+                <table id="search-results-table" class="table">
+                    <thead>
                     <tr>
-                        <td><a href="/factions/view/{{ id }}">{{ name }}</a></td>
-                        <td>{{ min_cap }}</td>
-                        <td>{{ max_cap }}</td>
+                        <th>Faction Name</th>
+                        <th>Min Cap</th>
+                        <th>Max Cap</th>
                     </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        {% endif %}
+                    </thead>
+                    <tbody>
+                    {% for id, name, min_cap, max_cap in faction_results %}
+                        <tr>
+                            <td><a href="/factions/view/{{ id }}">{{ name }}</a></td>
+                            <td>{{ min_cap }}</td>
+                            <td>{{ max_cap }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
         </div>
     </main>
 {% endblock %}

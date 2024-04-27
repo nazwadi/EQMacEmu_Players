@@ -24,6 +24,15 @@ def search(request):
                       template_name="factions/search_faction.html")
     if request.method == "POST":
         faction_name = request.POST.get("faction_name")
+        query_limit = request.POST.get("query_limit")
+        try:
+            query_limit = int(query_limit)
+        except ValueError:
+            return redirect("/factions/search")
+        if query_limit < 0:
+            query_limit = 0
+        elif query_limit > 200:  # yes, this is an arbitrary limit on search results
+            query_limit = 200
         cursor = connections['game_database'].cursor()
         query = """SELECT
                     faction_list.id,
@@ -36,11 +45,12 @@ def search(request):
                     faction_list.NAME LIKE %s 
                   ORDER BY
                     faction_list.NAME 
-                    LIMIT 50"""
-        cursor.execute(query, ["%"+faction_name+"%"])
+                    LIMIT %s"""
+        cursor.execute(query, ["%"+faction_name+"%", query_limit])
         faction_results = cursor.fetchall()
         return render(request=request,
-                      context={"faction_results": faction_results},
+                      context={"faction_results": faction_results,
+                               "query_limit": query_limit},
                       template_name="factions/search_faction.html")
 
 
