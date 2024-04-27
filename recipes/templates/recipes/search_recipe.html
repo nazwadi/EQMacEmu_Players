@@ -16,7 +16,7 @@
                                 <input type="text" class="form-control" id="recipe_name" name="recipe_name"
                                        placeholder="Banded Mail">
                             </div>
-                            <div class="col-12 col-md-4">
+                            <div class="col-12 col-md-2">
                                 <div class="form-text text-wrap"><label for="tradeskill">Tradeskill</label></div>
                                 <select id="tradeskill" name="tradeskill" class="form-control">
                                     <option value="-1" selected>any</option>
@@ -27,11 +27,15 @@
                             </div>
                             <div class="col-12 col-md-1">
                                 <div class="form-text text-wrap"><label for="min_trivial">Min Trivial</label></div>
-                                <input class="form-control" id="min_trivial" name="min_trivial" type="number" value="0">
+                                <input class="form-control" id="min_trivial" name="min_trivial" type="number" min="0" max="350" value="0">
                             </div>
                             <div class="col-12 col-md-1">
                                 <div class="form-text text-wrap"><label for="max_trivial">Max Trivial</label></div>
-                                <input class="form-control" id="max_trivial" name="max_trivial" type="number" value="300">
+                                <input class="form-control" id="max_trivial" name="max_trivial" type="number" min="0" max="350" value="300">
+                            </div>
+                            <div class="col-12 col-md-2">
+                                <div class="form-text text-wrap"><label for="query_limit">Query Limit (Max: 200)</label></div>
+                                <input class="form-control" id="query_limit" name="query_limit" type="number" min="0" max="200" value="50">
                             </div>
                         </div>
                         <div class="col-12 col-md-12">

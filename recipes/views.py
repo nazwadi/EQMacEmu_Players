@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.db import connections
 
 from common.models.tradeskill import TradeskillRecipe
@@ -50,12 +50,21 @@ def search(request):
         tradeskill = request.POST.get("tradeskill")
         min_trivial = request.POST.get("min_trivial")
         max_trivial = request.POST.get("max_trivial")
+        query_limit = request.POST.get("query_limit")
+        try:
+            query_limit = int(query_limit)
+        except ValueError:
+            return redirect("/recipes/search")
+        if query_limit < 0:
+            query_limit = 0
+        elif query_limit > 200:  # yes, this is an arbitrary limit on search results
+            query_limit = 200
         if tradeskill == "-1":  # any tradeskill
             results = (TradeskillRecipe.objects.filter(name__icontains=recipe_name)
-                       .filter(trivial__gte=min_trivial).filter(trivial__lte=max_trivial))
+                       .filter(trivial__gte=min_trivial).filter(trivial__lte=max_trivial)[:query_limit])
         else:
             results = (TradeskillRecipe.objects.filter(name__icontains=recipe_name).filter(tradeskill=tradeskill)
-                       .filter(trivial__gte=min_trivial).filter(trivial__lte=max_trivial))
+                       .filter(trivial__gte=min_trivial).filter(trivial__lte=max_trivial)[:query_limit])
 
         search_results = list()
         for result in results:

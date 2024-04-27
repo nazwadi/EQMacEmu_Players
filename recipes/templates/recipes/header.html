@@ -37,7 +37,8 @@
 <script>
     $(document).ready(function () {
         $("#search-results-table").DataTable( {
-            order: [[3, 'desc']]
+            order: [[3, 'desc']],
+            pageLength: 50
         });
     });
 </script>
