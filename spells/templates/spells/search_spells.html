@@ -1,0 +1,46 @@
+{% extends 'spells/header.html' %}
+{% load data_utilities %}
+{% block content %}
+    <main class="flex-shrink-0">
+    <div class="container py-4">
+    <div class="row">
+    <div class="col">
+    <h1 class="text-center mb-4">Spell Search</h1>
+        <form class="p-3 mb-4 bg-body-tertiary border" action="/spells/search" method="post">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    <div class="form-text text-wrap"><label for="spell_name">Spell Name</label></div>
+                    <input type="text" class="form-control" id="spell_name" name="spell_name"
+                           placeholder="Identify">
+                </div>
+                <div class="col-12 col-md-3">
+                    <div class="form-text text-wrap"><label for="class">Class</label></div>
+                    <select id="class" name="class" class="form-control">
+                        <option value="-1" selected>any</option>
+                        {% for index, class in classes.items %}
+                            <option value="{{ class }}">{{ class }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-12 col-md-3">
+                    <div class="form-text text-wrap"><label for="level">Level</label></div>
+                    <select id="level" name="level" class="form-control">
+                        <option value="-1" selected>any</option>
+                        {% for level in 66|django_range %}
+                            <option value="{{ level }}">{{ level }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="col-12 col-md-12">
+                <div class="d-grid gap-2 py-4">
+                    <button type="submit" class="btn btn-outline-primary">Search</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    </div>
+    </div>
+    </main>
+{% endblock %}

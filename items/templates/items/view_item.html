@@ -213,7 +213,7 @@
                                     <ul>
                                         {% for recipe in recipe_list %}
                                             <li>
-                                                <b>Recipe</b>:&nbsp;{{ recipe.recipe_name }}&nbsp;<b>Yield</b>:&nbsp;x{{ recipe.success_count }}
+                                                <b>Recipe</b>:&nbsp;<a style="text-decoration: none" href="/recipes/view/{{ recipe.recipe_id }}">{{ recipe.recipe_name }}</a>&nbsp;<b>Yield</b>:&nbsp;x{{ recipe.success_count }}
                                                 &nbsp;(Trivial: {{ recipe.trivial }})
                                             </li>
                                         {% endfor %}

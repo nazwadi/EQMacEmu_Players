@@ -56,6 +56,11 @@ def yes_no(value):
     return "yes" if value == 1 else "no"
 
 
+@register.filter(name='django_range')
+def django_range(value=5):
+    return range(1,value)
+
+
 @register.filter(name='gender')
 def gender_filter(value):
     match value:

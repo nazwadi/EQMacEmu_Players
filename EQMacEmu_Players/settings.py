@@ -70,7 +70,7 @@ INSTALLED_APPS = [
     'items.apps.ItemConfig',
     'npcs.apps.NpcsConfig',
     'recipes.apps.RecipesConfig',
-    'polls.apps.PollsConfig',
+    'spells.apps.SpellsConfig',
     'zones.apps.ZonesConfig',
 ]
 
