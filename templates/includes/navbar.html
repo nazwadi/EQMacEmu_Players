@@ -23,8 +23,15 @@
             <li class="nav-item">
                 <a class="nav-link" href="/factions/search">Factions</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/items/search">Items</a>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarItemsMenuLink" role="button"
+                   data-bs-toggle="dropdown" aria-expanded="false">
+                    Items
+                </a>
+                <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarItemsMenuLink">
+                    <li><a class="dropdown-item" href="/items/search">Items Search</a></li>
+                    <li><a class="dropdown-item" href="/items/discovered">Discovered Items</a></li>
+                </ul>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/npcs/search">Npcs</a>
@@ -41,16 +48,18 @@
         </ul>
         <div class="d-flex px-5 text-right">
             <div class="dropdown">
-            {% if user.is_authenticated %}
-                    <button class="btn btn-secondary dropdown-toggle" href="#" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="navbarDropdownMenuLink">
+                {% if user.is_authenticated %}
+                    <button class="btn btn-secondary dropdown-toggle" href="#" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false" id="navbarDropdownMenuLink">
                         <i class="fas fa-user"></i> {{ user.username }}
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <li><a class="dropdown-item" href="/accounts/logout">Log Out</a></li>
                     </ul>
-            {% else %}
-                <a class="btn btn-secondary" href="/accounts/login" role="button" id="navbarDropdownMenuLink">Login</a>
-            {% endif %}
+                {% else %}
+                    <a class="btn btn-secondary" href="/accounts/login" role="button"
+                       id="navbarDropdownMenuLink">Login</a>
+                {% endif %}
             </div>
         </div>
     </div>
