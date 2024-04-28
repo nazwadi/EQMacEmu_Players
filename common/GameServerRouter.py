@@ -13,6 +13,7 @@ from common.models.faction import FactionList
 from common.models.faction import FactionListMod
 from common.models.guilds import Guilds
 from common.models.guilds import GuildMembers
+from common.models.items import DiscoveredItems
 from common.models.items import Items
 from common.models.loot import LootTable
 from common.models.loot import LootTableEntries
@@ -45,6 +46,7 @@ class GameServerRouter:
                           CharacterLanguages,
                           CharacterSkills,
                           CharacterSpells,
+                          DiscoveredItems,
                           FactionList,
                           FactionListMod,
                           Guilds,

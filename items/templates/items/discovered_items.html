@@ -1,0 +1,60 @@
+{% extends 'items/header.html' %}
+{% load data_utilities %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+    <div class="container py-4">
+        <div class="row">
+            <div class="col">
+                <h1 class="text-center mb-4">Discovered Item Search</h1>
+                <form class="p-3 mb-4 bg-body-tertiary border" action="/items/discovered" method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-12 col-md-4">
+                            <div class="form-text text-wrap"><label for="item_name">Item Name</label></div>
+                            <input type="text" class="form-control" id="item_name" name="item_name"
+                                   placeholder="a tattered note">
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <div class="form-text text-wrap"><label for="char_name">Character Name</label></div>
+                            <input type="text" class="form-control" id="char_name" name="char_name"
+                                   placeholder="Soandso">
+                        </div>
+                        <div class="col-12 col-md-2">
+                            <div class="form-text text-wrap"><label for="query_limit">Query Limit (Max: 200)</label></div>
+                            <input class="form-control" id="query_limit" name="query_limit" type="number" min="0" max="200" value="50">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-12">
+                        <div class="d-grid gap-2 py-4">
+                            <button type="submit" class="btn btn-outline-primary">Search</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {% if discovered_items_list %}
+            <div class="row py-5">
+                <div class="col">
+                    <h1 class="text-center">Search Results</h1>
+                    <table id="search-results-table" class="display table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Item Name</th>
+                            <th>Character Name</th>
+                            <th>Date</th>
+                        </tr>
+                        </thead>
+                        {% for result in discovered_items_list %}
+                            <tr>
+                                <td><a href="/items/view/{{ result.item_id }}">{{ result.item_id.Name }}</a></td>
+                                <td>{{ result.char_name }}</td>
+                                <td>{{ result.discovered_date|datetime_from_timestamp }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

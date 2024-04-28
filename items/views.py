@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.db import connections
 
+from common.models.items import DiscoveredItems
 from common.models.items import Items
 from common.models.spells import SpellsNew
 from collections import namedtuple
@@ -34,6 +35,45 @@ def search(request):
                       template_name="items/search_item.html",
                       context={"search_results": search_results,
                                "level_range": range(100)})
+
+
+def discovered_items(request):
+    """
+    Defines view for https://url.tld/items/discovered
+
+    :param request: Http request
+    :return: Http response
+    """
+    if request.method == "GET":
+        return render(request=request,
+                      template_name="items/discovered_items.html",
+                      context={})
+    if request.method == "POST":
+        item_name = request.POST.get("item_name")
+        char_name = request.POST.get("char_name")
+        query_limit = request.POST.get("query_limit")
+        try:
+            query_limit = int(query_limit)
+        except ValueError:
+            return redirect("/items/discovered")
+        if query_limit < 0:
+            query_limit = 0
+        elif query_limit > 200:  # yes, this is an arbitrary limit on search results
+            query_limit = 200
+        item_list = Items.objects.filter(Name__icontains=item_name)[:query_limit]
+        item_id_list = [item.id for item in item_list]
+        discovered_items_list = DiscoveredItems.objects.filter(item_id__in=item_id_list).order_by(
+            '-discovered_date')[:query_limit]
+        if char_name:
+            discovered_items_list = DiscoveredItems.objects.filter(char_name__icontains=char_name).order_by(
+                '-discovered_date')[:query_limit]
+        if char_name and item_name:
+            discovered_items_list = DiscoveredItems.objects.filter(item_id__in=item_id_list).filter(
+                char_name__icontains=char_name).order_by(
+                '-discovered_date')[:query_limit]
+        return render(request=request,
+                      template_name="items/discovered_items.html",
+                      context={"discovered_items_list": discovered_items_list})
 
 
 def view_item(request, item_id):
@@ -109,7 +149,7 @@ def view_item(request, item_id):
             drops_from[z_short_name] = list()
         drops_from[z_short_name].append(DropsFromTuple(npc_id=npc_id, npc_name=npc_name, z_short_name=z_short_name,
                                                        z_long_name=z_long_name, lte_multiplier=lte_multiplier,
-                                                       modified_drop_chance=(lte_probability*lde_chance)/100))
+                                                       modified_drop_chance=(lte_probability * lde_chance) / 100))
 
     # Run a quick sanity check before attempting a more compute-intensive query
     is_sold = cursor.execute("""SELECT item FROM merchantlist WHERE item=%s LIMIT 1""", [item_id])

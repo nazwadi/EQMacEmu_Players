@@ -65,3 +65,16 @@ class Items(models.Model):
         managed = False
 
 
+class DiscoveredItems(models.Model):
+    """
+    This model maps to the discovered_items table in the database.
+    """
+    item_id = models.OneToOneField(Items, on_delete=models.DO_NOTHING, primary_key=True, db_column='item_id')
+    char_name = models.CharField(max_length=64, null=False)
+    discovered_date = models.IntegerField(null=False, default=0)
+    account_status = models.IntegerField(null=False, default=0)
+
+    class Meta:
+        db_table = 'discovered_items'
+        managed = False
+
