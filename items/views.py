@@ -49,6 +49,7 @@ def discovered_items(request):
         return render(request=request,
                       template_name="items/discovered_items.html",
                       context={"recent_discoveries": recent_discoveries})
+
     if request.method == "POST":
         item_name = request.POST.get("item_name")
         char_name = request.POST.get("char_name")
@@ -61,20 +62,28 @@ def discovered_items(request):
             query_limit = 0
         elif query_limit > 200:  # yes, this is an arbitrary limit on search results
             query_limit = 200
-        item_list = Items.objects.filter(Name__icontains=item_name)[:query_limit]
-        item_id_list = [item.id for item in item_list]
-        discovered_items_list = DiscoveredItems.objects.filter(item_id__in=item_id_list).order_by(
-            '-discovered_date')[:query_limit]
-        if char_name:
-            discovered_items_list = DiscoveredItems.objects.filter(char_name__icontains=char_name).order_by(
-                '-discovered_date')[:query_limit]
+
+        recent_discoveries = None
+        discovered_items_list = None
         if char_name and item_name:
             discovered_items_list = DiscoveredItems.objects.filter(item_id__in=item_id_list).filter(
                 char_name__icontains=char_name).order_by(
                 '-discovered_date')[:query_limit]
+        elif item_name:
+            item_list = Items.objects.filter(Name__icontains=item_name)[:query_limit]
+            item_id_list = [item.id for item in item_list]
+            discovered_items_list = DiscoveredItems.objects.filter(item_id__in=item_id_list).order_by(
+                '-discovered_date')[:query_limit]
+        elif char_name:
+            discovered_items_list = DiscoveredItems.objects.filter(char_name__icontains=char_name).order_by(
+                '-discovered_date')[:query_limit]
+        else:
+            recent_discoveries = DiscoveredItems.objects.all().order_by('-discovered_date')[:10]
+
         return render(request=request,
                       template_name="items/discovered_items.html",
-                      context={"discovered_items_list": discovered_items_list})
+                      context={"discovered_items_list": discovered_items_list,
+                               "recent_discoveries": recent_discoveries})
 
 
 def view_item(request, item_id):
