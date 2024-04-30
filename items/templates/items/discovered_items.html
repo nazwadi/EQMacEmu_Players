@@ -21,8 +21,10 @@
                                    placeholder="Soandso">
                         </div>
                         <div class="col-12 col-md-2">
-                            <div class="form-text text-wrap"><label for="query_limit">Query Limit (Max: 200)</label></div>
-                            <input class="form-control" id="query_limit" name="query_limit" type="number" min="0" max="200" value="50">
+                            <div class="form-text text-wrap"><label for="query_limit">Query Limit (Max: 200)</label>
+                            </div>
+                            <input class="form-control" id="query_limit" name="query_limit" type="number" min="0"
+                                   max="200" value="50">
                         </div>
                     </div>
                     <div class="col-12 col-md-12">
@@ -33,6 +35,29 @@
                 </form>
             </div>
         </div>
+        {% if recent_discoveries %}
+            <div class="row py-5">
+                <div class="col">
+                    <h1 class="text-center">Recent Discoveries</h1>
+                    <table id="recent-discoveries-table" class="display table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Item Name</th>
+                            <th>Name</th>
+                            <th>Date Discovered</th>
+                        </tr>
+                        </thead>
+                        {% for item in recent_discoveries %}
+                            <tr>
+                                <td><a href="/items/view/{{ item.item_id }}">{{ item.item_id.Name }}</a></td>
+                                <td>{{ item.char_name }}</td>
+                                <td>{{ item.discovered_date|datetime_from_timestamp }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        {% endif %}
         {% if discovered_items_list %}
             <div class="row py-5">
                 <div class="col">
@@ -41,8 +66,8 @@
                         <thead>
                         <tr>
                             <th>Item Name</th>
-                            <th>Character Name</th>
-                            <th>Date</th>
+                            <th>Name</th>
+                            <th>Date Discovered</th>
                         </tr>
                         </thead>
                         {% for result in discovered_items_list %}

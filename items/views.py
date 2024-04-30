@@ -45,9 +45,10 @@ def discovered_items(request):
     :return: Http response
     """
     if request.method == "GET":
+        recent_discoveries = DiscoveredItems.objects.all().order_by('-discovered_date')[:10]
         return render(request=request,
                       template_name="items/discovered_items.html",
-                      context={})
+                      context={"recent_discoveries": recent_discoveries})
     if request.method == "POST":
         item_name = request.POST.get("item_name")
         char_name = request.POST.get("char_name")
