@@ -66,6 +66,8 @@ def discovered_items(request):
         recent_discoveries = None
         discovered_items_list = None
         if char_name and item_name:
+            item_list = Items.objects.filter(Name__icontains=item_name)[:query_limit]
+            item_id_list = [item.id for item in item_list]
             discovered_items_list = DiscoveredItems.objects.filter(item_id__in=item_id_list).filter(
                 char_name__icontains=char_name).order_by(
                 '-discovered_date')[:query_limit]
