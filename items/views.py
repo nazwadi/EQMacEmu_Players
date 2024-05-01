@@ -45,7 +45,7 @@ def discovered_items(request):
     :return: Http response
     """
     if request.method == "GET":
-        recent_discoveries = DiscoveredItems.objects.all().order_by('-discovered_date')[:10]
+        recent_discoveries = DiscoveredItems.objects.all().order_by('-discovered_date')[:100]
         return render(request=request,
                       template_name="items/discovered_items.html",
                       context={"recent_discoveries": recent_discoveries})
@@ -80,7 +80,7 @@ def discovered_items(request):
             discovered_items_list = DiscoveredItems.objects.filter(char_name__icontains=char_name).order_by(
                 '-discovered_date')[:query_limit]
         else:
-            recent_discoveries = DiscoveredItems.objects.all().order_by('-discovered_date')[:10]
+            recent_discoveries = DiscoveredItems.objects.all().order_by('-discovered_date')[:100]
 
         return render(request=request,
                       template_name="items/discovered_items.html",
