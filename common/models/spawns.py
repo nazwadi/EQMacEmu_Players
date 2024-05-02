@@ -52,7 +52,6 @@ class Spawn2(models.Model):
     force_z = models.SmallIntegerField(null=False, default=0)
     min_expansion = models.FloatField(null=False, default=0)  # This will change to tinyint soon
     max_expansion = models.FloatField(null=False, default=0)  # This will change to tinyint soon
-    raid_target_spawnpoint = models.SmallIntegerField(null=False, default=0)
 
     class Meta:
         db_table = "spawn2"

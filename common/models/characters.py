@@ -75,11 +75,6 @@ class Characters(models.Model):
     is_deleted = models.SmallIntegerField(default=0, null=False)
     showhelm = models.SmallIntegerField(default=1, null=False)
     fatigue = models.IntegerField(default=0, null=True)
-    e_self_found = models.SmallIntegerField(default=0, null=False)
-    e_solo_only = models.SmallIntegerField(default=0, null=False)
-    e_hardcore = models.SmallIntegerField(default=0, null=False)
-    e_hardcore_death_time = models.BigIntegerField(default=0, null=False)
-    e_betabuff_gear_flag = models.SmallIntegerField(default='0', null=False)
 
     class Meta:
         db_table = "character_data"
