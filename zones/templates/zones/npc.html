@@ -29,11 +29,10 @@
                         {% else %}
                             <td>{{ level }}</td>
                         {% endif %}
-                        <td><img src="{% static "/images/" %}{{ min_expansion|expansion_icon }}"
+                        <td><img src="{% if min_expansion == -1 %}{% static "/images/Original.gif" %}{% else %}{% static "/images/" %}{{ min_expansion|expansion_icon }}{% endif %}"
                                  alt="{{ min_expansion }}"></td>
-                        <td><img src="{% static "/images/" %}{{ max_expansion|expansion_icon }}"
-                                 alt="{{ min_expansion }}"></td>
-                    </tr>
+                        <td>{% if max_expansion == -1 %}All{% else %}<img src="{% static "/images/" %}{{ max_expansion|expansion_icon }}"
+                                 alt="{{ max_expansion }}">{% endif %}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
