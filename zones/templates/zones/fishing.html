@@ -11,10 +11,12 @@
                     <th>Name</th>
                     <th>Skill Level</th>
                     <th>Chance</th>
+                    <th>Min Expansion</th>
+                    <th>Max Expansion</th>
                 </tr>
                 </thead>
                 <tbody>
-                {% for item_id, item_name, item_icon, skill_level, chance in fish %}
+                {% for item_id, item_name, item_icon, skill_level, chance, min_expansion, max_expansion in fish %}
                     <tr>
                         <td><img src="{% static '/images/items' %}/item_{{ item_icon }}.png"
                                  alt="item_{{ item_icon }}.png">
@@ -23,6 +25,10 @@
                         </td>
                         <td>{{ skill_level }}</td>
                         <td>{{ chance }}</td>
+                        <td><img src="{% if min_expansion == -1 %}{% static "/images/Original.gif" %}{% else %}{% static "/images/" %}{{ min_expansion|expansion_icon }}{% endif %}"
+                                 alt="{{ min_expansion }}"></td>
+                        <td>{% if max_expansion == -1 %}All{% elif max_expansion == 99 %}All Remaining{% else %}<img src="{% static "/images/" %}{{ max_expansion|expansion_icon }}"
+                                                                                                                     alt="{{ max_expansion }}">{% endif %}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -31,6 +37,8 @@
                     <th>Name</th>
                     <th>Skill Level</th>
                     <th>Chance</th>
+                    <th>Min Expansion</th>
+                    <th>Max Expansion</th>
                 </tr>
                 </tfoot>
             </table>

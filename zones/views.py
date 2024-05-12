@@ -72,7 +72,7 @@ def view_zone(request, short_name):
         if spawn_entry_results:
             spawn_points.append((point, spawn_entry_results))
 
-    cursor.execute("""SELECT i.id, i.name, i.icon, f.skill_level, f.chance 
+    cursor.execute("""SELECT i.id, i.name, i.icon, f.skill_level, f.chance, f.min_expansion, f.max_expansion
                       FROM fishing f 
                         JOIN items i on i.id=f.itemid
                       WHERE f.zoneid=%s""", [zone_data.zone_id_number])
