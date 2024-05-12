@@ -26,10 +26,10 @@
                         </td>
                         <td>({{ max_y }}, {{ max_x }}, {{ max_z }})</td>
                         <td>{{ comment }}</td>
-                        <td><img src="{% static "/images/" %}{{ min_expansion|expansion_icon }}"
-                                 alt="{{ point.min_expansion }}"></td>
-                        <td><img src="{% static "/images/" %}{{ max_expansion|expansion_icon }}"
-                                 alt="{{ point.max_expansion }}"></td>
+                        <td><img src="{% if min_expansion == -1 %}{% static "/images/Original.gif" %}{% else %}{% static "/images/" %}{{ min_expansion|expansion_icon }}{% endif %}"
+                                 alt="{{ min_expansion }}"></td>
+                        <td>{% if max_expansion == -1 %}All{% elif max_expansion == 99 %}All Remaining{% else %}<img src="{% static "/images/" %}{{ max_expansion|expansion_icon }}"
+                                                                                                                     alt="{{ max_expansion }}">{% endif %}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
