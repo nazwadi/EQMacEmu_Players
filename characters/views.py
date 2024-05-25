@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from common.models.characters import Characters
 from common.models.characters import CharacterCurrency
 from common.models.characters import CharacterLanguages
+from common.models.items import DiscoveredItems
 from accounts.models import Account
 
 from common.utils import valid_game_account_owner
@@ -79,6 +80,8 @@ def view_character(request, character_name):
         character_spells, spell_list = get_spell_information(character_id=character.id,
                                                              class_id=character.class_name)
 
+        discovered_items = DiscoveredItems.objects.filter(char_name=character.name)
+
         # 0 - Unknown, 1 - Warrior, 7 - Monk, 9 - Rogue
         non_casters = [0, 1, 7, 9]
 
@@ -104,6 +107,7 @@ def view_character(request, character_name):
                           "character_magic_songs": character_magic_songs,
                           "character_skills": character_skills,
                           "character_spells": character_spells,
+                          "discovered_items": discovered_items,
                           "face_image": face_image,
                           "guild": guild,
                           "guild_members": guild_members,

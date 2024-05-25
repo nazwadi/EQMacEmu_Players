@@ -18,6 +18,11 @@
                 </button>
             </li>
             <li class="nav-item" role="presentation">
+                <button class="nav-link" id="discovered-item-tab" data-bs-toggle="tab" data-bs-target="#discovered-item-tab-pane"
+                        type="button" role="tab" aria-controls="discovered-item-tab-pane" aria-selected="true">Discovered Items
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
                 <button class="nav-link" id="faction-tab" data-bs-toggle="tab" data-bs-target="#faction-tab-pane"
                         type="button" role="tab" aria-controls="faction-tab-pane" aria-selected="false">Faction
                 </button>
@@ -330,32 +335,30 @@
                     </div>
                 {% endif %}
             </div>
-            <div class="tab-pane fade" id="faction-tab-pane" role="tabpanel" aria-labelledby="faction-tab" tabindex="1">
+            <div class="tab-pane fade" id="discovered-item-tab-pane" role="tabpanel" aria-labelledby="discovered-item-tab" tabindex="1">
+                {% include "characters/discovered_items.html" %}
+            </div>
+            <div class="tab-pane fade" id="faction-tab-pane" role="tabpanel" aria-labelledby="faction-tab" tabindex="2">
                 {% include "characters/factions.html" %}
             </div>
             {% if guild is not None %}
-                <div class="tab-pane fade" id="guild-tab-pane" role="tabpanel" aria-labelledby="guild-tab"
-                     tabindex="2">
+                <div class="tab-pane fade" id="guild-tab-pane" role="tabpanel" aria-labelledby="guild-tab" tabindex="3">
                     {% include 'characters/guild.html' %}
                 </div>
             {% endif %}
-            <div class="tab-pane fade" id="inventory-tab-pane" role="tabpanel" aria-labelledby="inventory-tab"
-                 tabindex="3">
+            <div class="tab-pane fade" id="inventory-tab-pane" role="tabpanel" aria-labelledby="inventory-tab" tabindex="4">
                 {% include 'characters/inventory.html' %}
             </div>
-            <div class="tab-pane fade" id="skill-tab-pane" role="tabpanel" aria-labelledby="skill-tab"
-                 tabindex="4">
+            <div class="tab-pane fade" id="skill-tab-pane" role="tabpanel" aria-labelledby="skill-tab" tabindex="5">
                 {% include "characters/skills.html" %}
             </div>
-            <div class="tab-pane fade" id="spell-tab-pane" role="tabpanel" aria-labelledby="spell-tab"
-                 tabindex="5">
+            <div class="tab-pane fade" id="spell-tab-pane" role="tabpanel" aria-labelledby="spell-tab" tabindex="6">
                 {% if character.class_name != 0 or 1 or 7 or 9 %}
                     {% include "characters/spells.html" %}
                 {% endif %}
             </div>
             {% if 0 %}
-                <div class="tab-pane fade" id="aa-tab-pane" role="tabpanel" aria-labelledby="aa-tab"
-                     tabindex="6">
+                <div class="tab-pane fade" id="aa-tab-pane" role="tabpanel" aria-labelledby="aa-tab" tabindex="7">
                     <div class="row mt-4">
                         <div class='WindowSuperFancy' style="width:100%;">
                             <div class="row">

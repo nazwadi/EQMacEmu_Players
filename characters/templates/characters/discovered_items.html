@@ -1,0 +1,57 @@
+{% load static %}
+{% load data_utilities %}
+{% load humanize %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="container-fluid content-pop">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="eq-window-fancy">
+                                <div class="row">
+                                    <div class="eq-window-nested-tan col">
+                                        <div class='WindowNestedTanTitleBar eq-header'>
+                                            <h2>You discovered (server first) the following items:</h2>
+                                        </div>
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <label for="discovered-filter"></label>
+                                                <input class="form-control" type="text" id="discovered-filter" placeholder="Type an item name to filter..."/>
+                                            </div>
+                                        </div>
+                                        <table id="discovered-item-table" class="eq-table eq-highlight-rows" style="width:100%;">
+                                            <thead class="eq-table-floating-header">
+                                            <tr>
+                                                <th scope="col">ID</th>
+                                                <th scope="col">Icon</th>
+                                                <th scope="col">Item Name</th>
+                                                <th scope="col">Discovered On</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for entry in discovered_items %}
+                                                <tr>
+                                                    <td style="width: 10px;">{{ entry.item_id }}</td>
+                                                    <td style="width:10px;"><img src="{% static '/images/items' %}/item_{{ entry.item_id.icon }}.png"
+                                                             alt="item_{{ entry.item_id.icon }}.png"></td>
+                                                    <td>
+                                                        <a href="/items/view/{{ entry.item_id }}"
+                                                           target="_blank">{{ entry.item_id.Name }}</a>
+                                                    </td>
+                                                    <td>{{ entry.discovered_date|from_timestamp}}</td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
