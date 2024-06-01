@@ -36,7 +36,7 @@
                         <tr>
                             <td>{{ zone.long_name }} (<span style="color: #535f50">{{ zone.short_name }}</span>)</td>
                             <td>{{ zone.zone_exp_multiplier }}</td>
-                            <td><img src="{% static "/images/" %}{{ zone.expansion|add:"-1"|expansion_icon }}"
+                            <td><img src="{% static "/images/" %}{{ zone.expansion|expansion_icon }}"
                                      alt="{{ zone.expansion|expansion_icon }}"/></td>
                         </tr>
                     {% endfor %}
