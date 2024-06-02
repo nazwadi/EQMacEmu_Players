@@ -93,7 +93,7 @@ def buy_spells(request, class_id):
                 for location in purchase_locations:
                     merchant = location.split(',')
                     zone_key = merchant[3]
-                    merchant_id = merchant[0]
+                    merchant_id = merchant[0].replace(' ', '')
                     merchant_info = merchant[1]
                     if zone_key not in grouped_locations:
                         grouped_locations.update({zone_key: []})

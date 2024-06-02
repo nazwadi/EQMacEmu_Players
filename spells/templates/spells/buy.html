@@ -5,13 +5,13 @@
 {% block content %}
     <main class="flex-shrink-0">
         <div class="container py-4">
-            <div class="row eq-window-complex-fancy">
+            <div class="row eq-window-complex">
                 {% if class_id == '8' %}
                     <h2 class="text-center eq-header">{{ class_id|intword|player_class }} Songs by Level</h2>
                 {% else %}
                     <h2 class="text-center eq-header">{{ class_id|intword|player_class }} Spells by Level</h2>
                 {% endif %}
-                <div class="col-12 p-3 mb-4 eq-window-simple ">
+                <div class="col-12 p-3 mb-4 eq-window-fancy ">
                     <table class="eq-table">
                         <thead class="eq-table-floating-header">
                         <tr>
@@ -25,10 +25,10 @@
                         {% for s in spells %}
                             <tr>
                                 <td class="min"><img src="/static/images/icons/{{ s.new_icon }}.gif"> <a
-                                        href="/spells/view/{{ s.id }}"
-                                        class="link">{{ s.name }}</a></td>
+                                        href="https://lucy.alkabor.com/spell_{{ s.id }}.html"
+                                        class="link" target="_blank">{{ s.name }}</a></td>
                                 <td>{{ s.level }}</td>
-                                <td class="min"><a href="/items/view/{{ s.item_id }}" class="link">{{ s.item_name }}</a>
+                                <td class="min"><a href="/items/view/{{ s.item_id }}" class="link" target="_blank">{{ s.item_name }}</a>
                                 </td>
                                 <td class="min col-2">
                                     {{ s.item_price|multiply:s.item_rate | calculate_item_price|safe }}
@@ -41,7 +41,7 @@
                                                 <li>{{ zone_key }}:
                                                     {% for merchant in merchants %}
                                                         <a class="link" href="/npcs/view/{{ merchant.id }}">
-                                                            {{ merchant.info }}</a>
+                                                            {{ merchant.info|clean_name }}</a>
                                                         {% if not forloop.last %}, {% endif %}
                                                     {% endfor %}
                                                 </li>
