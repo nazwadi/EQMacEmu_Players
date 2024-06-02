@@ -1,4 +1,5 @@
 from django import template
+import math
 
 register = template.Library()
 
@@ -164,6 +165,7 @@ def item_deities(deity_bitmask):
         deities_can_use.append("Veeshan")
     return ' '.join(deities_can_use)
 
+
 @register.filter(name='item_races')
 def item_races(races_bitmask):
     """Match races bitmask from an item row to human-readable value"""
@@ -232,3 +234,28 @@ def item_size(size):
 @register.filter(name='ms_to_seconds')
 def ms_to_seconds(milliseconds):
     return milliseconds/1000
+
+
+@register.filter(name='calculate_item_price')
+def calculate_item_price(item_price: int) -> str:
+    """
+    Takes the item price in copper and returns the price in platinum, gold, silver, and copper
+
+    :param item_price: an integer value in units of copper
+    :return: a list of platinum, gold, silver, and copper
+    """
+    platinum = math.floor(item_price / 1000)
+    gold = math.floor((item_price % 1000) / 100)
+    silver = math.floor((item_price % 100) / 10)
+    copper = item_price % 10
+    html = str(platinum)+'&nbsp;<img src="/static/images/icons/Platinum.png" alt="Platinum.png">&nbsp;'
+    html += str(gold)+'&nbsp;<img src="/static/images/icons/Gold.png" alt="Gold.png">&nbsp;'
+    html += str(silver)+'&nbsp;<img src="/static/images/icons/Silver.png" alt="Silver.png">&nbsp;'
+    html += str(copper)+'&nbsp;<img src="/static/images/icons/Copper.png" alt="Copper.png">'
+
+    return html
+
+
+@register.filter(name='multiply')
+def multiply(x, y):
+    return x * y

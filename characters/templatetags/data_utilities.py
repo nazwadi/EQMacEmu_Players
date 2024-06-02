@@ -1296,3 +1296,8 @@ def npc_special_ability(values):
 @register.filter(name="multiply")
 def multiply(value, arg):
     return value * arg
+
+
+@register.filter(name="split")
+def split(value, arg):
+    return value.split(arg)

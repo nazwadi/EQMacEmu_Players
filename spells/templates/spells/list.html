@@ -1,0 +1,9 @@
+{% extends 'spells/header.html' %}
+{% load data_utilities %}
+{% block content %}
+    {% if class_id == 2 %}
+        {% include "spells/2.html" %}
+    {% elif class_id == 6 %}
+        {% include "spells/6.html" %}
+    {% endif %}
+{% endblock %}

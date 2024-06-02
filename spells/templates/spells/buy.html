@@ -1,0 +1,62 @@
+{% extends 'spells/header.html' %}
+{% load data_utilities %}
+{% load item_filters %}
+{% load humanize %}
+{% block content %}
+    <main class="flex-shrink-0">
+        <div class="container py-4">
+            <div class="row eq-window-complex-fancy">
+                {% if class_id == '8' %}
+                    <h2 class="text-center eq-header">{{ class_id|intword|player_class }} Songs by Level</h2>
+                {% else %}
+                    <h2 class="text-center eq-header">{{ class_id|intword|player_class }} Spells by Level</h2>
+                {% endif %}
+                <div class="col-12 p-3 mb-4 eq-window-simple ">
+                    <table class="eq-table">
+                        <thead class="eq-table-floating-header">
+                        <tr>
+                            <th>Spell</th>
+                            <th class="min">Level</th>
+                            <th>Taught By</th>
+                            <th>Price</th>
+                            <th>Purchase Info</th>
+                        </tr>
+                        </thead>
+                        {% for s in spells %}
+                            <tr>
+                                <td class="min"><img src="/static/images/icons/{{ s.new_icon }}.gif"> <a
+                                        href="/spells/view/{{ s.id }}"
+                                        class="link">{{ s.name }}</a></td>
+                                <td>{{ s.level }}</td>
+                                <td class="min"><a href="/items/view/{{ s.item_id }}" class="link">{{ s.item_name }}</a>
+                                </td>
+                                <td class="min col-2">
+                                    {{ s.item_price|multiply:s.item_rate | calculate_item_price|safe }}
+                                </td>
+                                <td>
+                                    {% if s.purchase_location_info != "None" %}
+                                        <ul>
+                                            {# Output the grouped information with links #}
+                                            {% for zone_key, merchants in s.purchase_location_info.items %}
+                                                <li>{{ zone_key }}:
+                                                    {% for merchant in merchants %}
+                                                        <a class="link" href="/npcs/view/{{ merchant.id }}">
+                                                            {{ merchant.info }}</a>
+                                                        {% if not forloop.last %}, {% endif %}
+                                                    {% endfor %}
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+
+                                    {% else %}
+                                        <p>No purchase info. Likely researched, dropped, or quested.</p>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}
