@@ -11,63 +11,95 @@
                 <li class="breadcrumb-item active" aria-current="page">{{ character.name }}</li>
             </ol>
         </nav>
-        <ul class="nav nav-tabs" id="charViewTab" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="data-tab" data-bs-toggle="tab" data-bs-target="#data-tab-pane"
-                        type="button" role="tab" aria-controls="data-tab-pane" aria-selected="true">Character
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="discovered-item-tab" data-bs-toggle="tab" data-bs-target="#discovered-item-tab-pane"
-                        type="button" role="tab" aria-controls="discovered-item-tab-pane" aria-selected="true">Discovered Items
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="faction-tab" data-bs-toggle="tab" data-bs-target="#faction-tab-pane"
-                        type="button" role="tab" aria-controls="faction-tab-pane" aria-selected="false">Faction
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                {% if guild is None %}
-                    <a class="nav-link disabled" href="#" aria-disabled="true">Guild</a>
-                {% else %}
-                    <button class="nav-link" id="guild-tab" data-bs-toggle="tab" data-bs-target="#guild-tab-pane"
-                            type="button" role="tab" aria-controls="spell-tab-pane" aria-selected="false">Guild
-                    </button>
-                {% endif %}
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="inventory-tab" data-bs-toggle="tab" data-bs-target="#inventory-tab-pane"
-                        type="button" role="tab" aria-controls="inventory-tab-pane" aria-selected="false">Inventory
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="skills-tab" data-bs-toggle="tab" data-bs-target="#skill-tab-pane"
-                        type="button" role="tab" aria-controls="skill-tab-pane" aria-selected="false">Skills
-                </button>
-            </li>
-            {# 0 - Unknown, 1 - Warrior, 7 - Monk, 9 - Rogue  #}
-            {% if character.class_name not in non_casters %}
+        <div class="row">
+            <div class="col-4 mb-4">
+                <label for="character" class="mr-sm-2">Character Selection:</label>
+                <select class="eq-input form-control" aria-label="character"
+                        onchange="location = this.options[this.selectedIndex].value;"
+                        id="character"
+                        name="character">
+                    {% for account in character_list.items %}
+                        {% for toon in account.1.characters.items %}
+                            {% if toon.1.char_name == character.name %}
+                                <option value="/characters/view/{{ toon.1.char_name }}" selected>{{ toon.1.char_name }}
+                                    (Account: {{ toon.1.account_name }})
+                                </option>
+                            {% endif %}
+                            <option value="/characters/view/{{ toon.1.char_name }}">{{ toon.1.char_name }}
+                                (Account: {{ toon.1.account_name }})
+                            </option>
+                        {% endfor %}
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-2 mt-4">
+                <button class="btn btn-primary" type="submit">Go</button>
+            </div>
+        </div>
+        </form>
+        <div class="">
+            <ul class="nav nav-tabs" id="charViewTab" role="tablist">
                 <li class="nav-item" role="presentation">
-                    {# Disable feature until complete #}
-                    {% if 0 %}
-                        <a class="nav-link disabled" href="#" aria-disabled="true">Spells</a>
+                    <button class="nav-link active" id="data-tab" data-bs-toggle="tab" data-bs-target="#data-tab-pane"
+                            type="button" role="tab" aria-controls="data-tab-pane" aria-selected="true">Character
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="discovered-item-tab" data-bs-toggle="tab"
+                            data-bs-target="#discovered-item-tab-pane"
+                            type="button" role="tab" aria-controls="discovered-item-tab-pane" aria-selected="true">
+                        Discovered Items
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="faction-tab" data-bs-toggle="tab" data-bs-target="#faction-tab-pane"
+                            type="button" role="tab" aria-controls="faction-tab-pane" aria-selected="false">Faction
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    {% if guild is None %}
+                        <a class="nav-link disabled" href="#" aria-disabled="true">Guild</a>
                     {% else %}
-                        <button class="nav-link" id="spell-tab" data-bs-toggle="tab" data-bs-target="#spell-tab-pane"
-                                type="button" role="tab" aria-controls="spell-tab-pane" aria-selected="false">Spells
+                        <button class="nav-link" id="guild-tab" data-bs-toggle="tab" data-bs-target="#guild-tab-pane"
+                                type="button" role="tab" aria-controls="spell-tab-pane" aria-selected="false">Guild
                         </button>
                     {% endif %}
                 </li>
-            {% endif %}
-            {% if 0 %}
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="aa-tab" data-bs-toggle="tab" data-bs-target="#aa-tab-pane"
-                            type="button" role="tab" aria-controls="aa-tab-pane" aria-selected="false">Alternate
-                        Advancement
+                    <button class="nav-link" id="inventory-tab" data-bs-toggle="tab"
+                            data-bs-target="#inventory-tab-pane"
+                            type="button" role="tab" aria-controls="inventory-tab-pane" aria-selected="false">Inventory
                     </button>
                 </li>
-            {% endif %}
-        </ul>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="skills-tab" data-bs-toggle="tab" data-bs-target="#skill-tab-pane"
+                            type="button" role="tab" aria-controls="skill-tab-pane" aria-selected="false">Skills
+                    </button>
+                </li>
+                {# 0 - Unknown, 1 - Warrior, 7 - Monk, 9 - Rogue  #}
+                {% if character.class_name not in non_casters %}
+                    <li class="nav-item" role="presentation">
+                        {# Disable feature until complete #}
+                        {% if 0 %}
+                            <a class="nav-link disabled" href="#" aria-disabled="true">Spells</a>
+                        {% else %}
+                            <button class="nav-link" id="spell-tab" data-bs-toggle="tab"
+                                    data-bs-target="#spell-tab-pane"
+                                    type="button" role="tab" aria-controls="spell-tab-pane" aria-selected="false">Spells
+                            </button>
+                        {% endif %}
+                    </li>
+                {% endif %}
+                {% if 0 %}
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="aa-tab" data-bs-toggle="tab" data-bs-target="#aa-tab-pane"
+                                type="button" role="tab" aria-controls="aa-tab-pane" aria-selected="false">Alternate
+                            Advancement
+                        </button>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
         <div class="tab-content" id="charViewTabContent">
             <div class="tab-pane fade show active" id="data-tab-pane" role="tabpanel" aria-labelledby="data-tab"
                  tabindex="0">
@@ -335,7 +367,8 @@
                     </div>
                 {% endif %}
             </div>
-            <div class="tab-pane fade" id="discovered-item-tab-pane" role="tabpanel" aria-labelledby="discovered-item-tab" tabindex="1">
+            <div class="tab-pane fade" id="discovered-item-tab-pane" role="tabpanel"
+                 aria-labelledby="discovered-item-tab" tabindex="1">
                 {% include "characters/discovered_items.html" %}
             </div>
             <div class="tab-pane fade" id="faction-tab-pane" role="tabpanel" aria-labelledby="faction-tab" tabindex="2">
@@ -346,7 +379,8 @@
                     {% include 'characters/guild.html' %}
                 </div>
             {% endif %}
-            <div class="tab-pane fade" id="inventory-tab-pane" role="tabpanel" aria-labelledby="inventory-tab" tabindex="4">
+            <div class="tab-pane fade" id="inventory-tab-pane" role="tabpanel" aria-labelledby="inventory-tab"
+                 tabindex="4">
                 {% include 'characters/inventory.html' %}
             </div>
             <div class="tab-pane fade" id="skill-tab-pane" role="tabpanel" aria-labelledby="skill-tab" tabindex="5">

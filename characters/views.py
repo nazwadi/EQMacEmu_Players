@@ -28,6 +28,13 @@ def index_request(request):
 
 @login_required
 def list_characters(request, game_account_name):
+    """
+    Defines view for https://url.tld/characters/list/<str:game_account_name>
+
+    :param request:
+    :param game_account_name:
+    :return:
+    """
     if request.method == "GET":
 
         forum_name = request.user.username
@@ -52,6 +59,13 @@ def list_characters(request, game_account_name):
 
 @login_required
 def view_character(request, character_name):
+    """
+    Defines view for https://url.tld/characters/view/<str:character_name>
+
+    :param request:
+    :param character_name:
+    :return:
+    """
     if request.method == "GET":
 
         character = Characters.objects.filter(name=character_name).first()
@@ -117,4 +131,5 @@ def view_character(request, character_name):
                           "spell_list": spell_list,
                       }
                       )
+
     return redirect("accounts:login")
