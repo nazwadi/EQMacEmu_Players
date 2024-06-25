@@ -18,6 +18,7 @@ from characters.utils import get_faction_information
 from characters.utils import get_guild_information
 from characters.utils import get_skill_information
 from characters.utils import get_spell_information
+from characters.utils import get_owned_characters
 
 
 def index_request(request):
@@ -103,6 +104,8 @@ def view_character(request, character_name):
 
         character_inventory = get_character_inventory(character_id=character.id)
 
+        character_list = get_owned_characters(forum_name=request.user.username)
+
         last_login = datetime.datetime.fromtimestamp(character.last_login)
         birthday = datetime.datetime.fromtimestamp(character.birthday)
         time_played = datetime.timedelta(seconds=character.time_played)
@@ -118,6 +121,7 @@ def view_character(request, character_name):
                           "character_inventory": character_inventory,
                           "character_keyring": character_keyring,
                           "character_languages": character_languages,
+                          "character_list": character_list,
                           "character_magic_songs": character_magic_songs,
                           "character_skills": character_skills,
                           "character_spells": character_spells,
