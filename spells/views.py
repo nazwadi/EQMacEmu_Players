@@ -1,6 +1,8 @@
 import json
 from django.shortcuts import render, redirect
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import connections
+from common.models.spells import SpellsNew
 
 
 def index(request):
@@ -115,7 +117,11 @@ def view_spell(request, spell_id):
     :return: Http response
     """
     if request.method == "GET":
+        try:
+            spell_data = SpellsNew.objects.get(pk=spell_id)
+        except ObjectDoesNotExist:
+            spell_data = None
         return render(request=request,
                       template_name="spells/view_spell.html",
-                      context={},
+                      context={"spell_data": spell_data},
                       )
