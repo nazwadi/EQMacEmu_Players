@@ -1,8 +1,9 @@
 import json
 from django.shortcuts import render, redirect
 from django.core.exceptions import ObjectDoesNotExist
-from django.db import connections
 from common.models.spells import SpellsNew
+from common.models.items import Items
+from spells.utils import calc_buff_duration
 
 
 def index(request):
@@ -121,7 +122,24 @@ def view_spell(request, spell_id):
             spell_data = SpellsNew.objects.get(pk=spell_id)
         except ObjectDoesNotExist:
             spell_data = None
+        spell_duration = calc_buff_duration(65, spell_data.buff_duration_formula, spell_data.buff_duration)
+        try:
+            scrolls = Items.objects.filter(scroll_effect=spell_data.id, scroll_type=7)
+        except ObjectDoesNotExist:
+            scrolls = None
+        components = list()
+        if spell_data.components1 >= 0:
+            components.append((Items.objects.filter(id=spell_data.components1).first(), spell_data.component_counts1))
+        if spell_data.components2 >= 0:
+            components.append((Items.objects.filter(id=spell_data.components2).first(), spell_data.component_counts2))
+        if spell_data.components3 >= 0:
+            components.append((Items.objects.filter(id=spell_data.components3).first(), spell_data.component_counts3))
+        if spell_data.components4 >= 0:
+            components.append((Items.objects.filter(id=spell_data.components4).first(), spell_data.component_counts4))
         return render(request=request,
                       template_name="spells/view_spell.html",
-                      context={"spell_data": spell_data},
+                      context={"spell_data": spell_data,
+                               "scrolls": scrolls,
+                               "components": components,
+                               "spell_duration": spell_duration},
                       )

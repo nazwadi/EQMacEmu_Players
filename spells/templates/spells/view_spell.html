@@ -1,66 +1,79 @@
 {% extends 'spells/header.html' %}
 {% load data_utilities %}
+{% load spell_page_tags %}
 {% block content %}
     <div class="container">
         {% if spell_data == None %}
             <h3 class="mt-3 text-center">That spell does not exist!</h3>
             <p class="text-center">Please try searching for another spell.</p>
         {% else %}
-            <div class="row mt-2">
-                <div class="col-3">
-                    Alternate Sites:
-                </div>
-                <div class="col-3">
-                    <a href="https://lucy.alkabor.com/spell_{{ spell_data.id }}.html">Alkabor Spell Page</a>
-                </div>
-                <div class="col-3">
-                    <a href="https://lucy.allakhazam.com/spell.html?id={{ spell_data.id }}&source=Live">Lucy Spell Page</a>
-                </div>
-                <div class="col-3">
-                    <a href="https://everquest.allakhazam.com/db/spell.html?spell={{ spell_data.id }}">Allakhazam Spell
-                        Page</a>
-                </div>
-            </div>
             <div class="row">
-                <div class="col">
+                {% if scrolls|length == 0 %}
+                    <div class="mt-3 border text-center alert alert-dark"><img src="/static/images/flag_topbox.png">&nbsp;This
+                        spell ID is not a player obtainable spell!
+                    </div>
+                {% endif %}
+                <div class="col-sm">
+                    <div class="eq-window-simple">
+                        <h3 class="eq-header">EQA Spell Data</h3>
+                        By Class:
+                        <ul>
+                            <li><a href="/spells/list/8">Bard</a></li>
+                            <li><a href="/spells/list/15">Beastlord</a></li>
+                            <li><a href="/spells/list/2">Cleric</a></li>
+                            <li><a href="/spells/list/6">Druid</a></li>
+                            <li><a href="/spells/list/14">Enchanter</a></li>
+                            <li><a href="/spells/list/13">Magician</a></li>
+                            <li><a href="/spells/list/11">Necromancer</a></li>
+                            <li><a href="/spells/list/3">Paladin</a></li>
+                            <li><a href="/spells/list/4">Ranger</a></li>
+                            <li><a href="/spells/list/5">Shadowknight</a></li>
+                            <li><a href="/spells/list/10">Shaman</a></li>
+                            <li><a href="/spells/list/12">Wizard</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-6">
                     <div class="eq-window-simple">
                         <h3 class="eq-header"><img src="/static/images/icons/{{ spell_data.custom_icon }}.gif"
                                                    alt="{{ spell_data.custom_icon }}.gif">&nbsp;{{ spell_data.name }}
                         </h3>
                         <span style="font-weight: bold; color: #8aa3ff;">Spell ID:</span>&nbsp;{{ spell_data.id }} <br/>
-                        <br/>
-                        <span style="font-weight: bold; color: #8aa3ff;">Classes:</span>&nbsp;
-                        {% if spell_data.classes1 != 255 %}WAR{% endif %}
-                        {% if spell_data.classes2 != 255 %}CLR{% endif %}
-                        {% if spell_data.classes3 != 255 %}PAL{% endif %}
-                        {% if spell_data.classes4 != 255 %}RNG{% endif %}
-                        {% if spell_data.classes5 != 255 %}SHD{% endif %}
-                        {% if spell_data.classes6 != 255 %}DRU{% endif %}
-                        {% if spell_data.classes7 != 255 %}MNK{% endif %}
-                        {% if spell_data.classes8 != 255 %}BRD{% endif %}
-                        {% if spell_data.classes9 != 255 %}ROG{% endif %}
-                        {% if spell_data.classes10 != 255 %}SHM{% endif %}
-                        {% if spell_data.classes11 != 255 %}NEC{% endif %}
-                        {% if spell_data.classes12 != 255 %}WIZ{% endif %}
-                        {% if spell_data.classes13 != 255 %}MAG{% endif %}
-                        {% if spell_data.classes14 != 255 %}ENC{% endif %}
-                        {% if spell_data.classes15 != 255 %}BST{% endif %}
-                        <br/>
-                        <span style="font-weight: bold; color: #8aa3ff;">When cast on you:</span>&nbsp;{{ spell_data.cast_on_you }}<br/>
-                        <span style="font-weight: bold; color: #8aa3ff;">When cast on other:</span>&nbsp;Soandso{{ spell_data.cast_on_other }}<br/>
-                        <span style="font-weight: bold; color: #8aa3ff;">When fading:</span>&nbsp;{{ spell_data.spell_fades }}<br/>
-                        <br/>
-                        <span style="font-weight: bold; color: #8aa3ff;">Target Type:</span>&nbsp;{{ spell_data.target_type|spell_target_type }}<br/>
-                        <span style="font-weight: bold; color: #8aa3ff;">Spell Type:</span>&nbsp;{{ spell_data.spell_category }}<br/>
+                        <hr/>
+                        <h6 class="eq-header">Messages</h6>
+                        {% if spell_data.you_cast %}
+                            <span style="font-weight: bold; color: #8aa3ff;">When you cast:</span>&nbsp;
+                            {{ spell_data.you_cast }}<br/>{% endif %}
+                        {% if spell_data.other_casts %}
+                            <span style="font-weight: bold; color: #8aa3ff;">When others cast:</span>&nbsp;
+                            {{ spell_data.other_casts }}<br/>{% endif %}
+                        {% if spell_data.cast_on_you %}
+                            <span style="font-weight: bold; color: #8aa3ff;">When cast on you:</span>&nbsp;
+                            {{ spell_data.cast_on_you }}<br/>{% endif %}
+                        {% if spell_data.cast_on_other %}
+                            <span style="font-weight: bold; color: #8aa3ff;">When cast on other:</span>&nbsp;Soandso
+                            {{ spell_data.cast_on_other }}<br/>{% endif %}
+                        {% if spell_data.spell_fades %}
+                            <span style="font-weight: bold; color: #8aa3ff;">When fading:</span>&nbsp;
+                            {{ spell_data.spell_fades }}<br/>{% endif %}
+                        <hr/>
+                        <h6 class="eq-header">Details</h6>
                         <span style="font-weight: bold; color: #8aa3ff;">Mana:</span>&nbsp;{{ spell_data.mana }}<br/>
+                        <span style="font-weight: bold; color: #8aa3ff;">Casting Time:</span>&nbsp;{{ spell_data.cast_time|spell_time_filter }}s<br/>
+                        <span style="font-weight: bold; color: #8aa3ff;">Recast Time:</span>&nbsp;{{ spell_data.recast_time|spell_time_filter }}s<br/>
+                        <span style="font-weight: bold; color: #8aa3ff;">Recovery Time:</span>&nbsp;{{ spell_data.recovery_time|spell_time_filter }}s<br/>
+                        <span style="font-weight: bold; color: #8aa3ff;">AE Radius:</span>&nbsp;{{ spell_data.aoe_range }}<br/>
+                        <span style="font-weight: bold; color: #8aa3ff;">Target Type:</span>&nbsp;{{ spell_data.target_type|spell_target_type }}<br/>
+                        <span style="font-weight: bold; color: #8aa3ff;">Spell Type:</span>&nbsp;{{ spell_data.spell_category|spell_category_filter }}<br/>
                         <span style="font-weight: bold; color: #8aa3ff;">Range to Target:</span>&nbsp;{{ spell_data.range }}<br/>
-                        <span style="font-weight: bold; color: #8aa3ff;">Casting Time:</span>&nbsp;{{ spell_data.casting_time }}<br/>
-                        <span style="font-weight: bold; color: #8aa3ff;">Recovery Time:</span>&nbsp;{{ spell_data.recovery_time }}<br/>
-                        <span style="font-weight: bold; color: #8aa3ff;">Recast Time:</span>&nbsp;{{ spell_data.recast_time }}<br/>
-                        <span style="font-weight: bold; color: #8aa3ff;">Duration:</span>&nbsp;{{ spell_data.duration }}<br/>
                         <span style="font-weight: bold; color: #8aa3ff;">Skill:</span>&nbsp;{{ spell_data.skill|player_skill }}<br/>
-                        <br/>
-                        <h3 class="eq-header">Effects</h3>
+                        <span style="font-weight: bold; color: #8aa3ff;">Resist Type:</span>&nbsp;{{ spell_data.resist_type|resist_type_filter }}
+                        (<span class="help-tooltip">{{ spell_data.resist_diff }}</span>)<br/>
+                        <span style="font-weight: bold; color: #8aa3ff;">Time of Day:</span>&nbsp;
+                        {% if spell_data.time_of_day == 2 %}Nighttime {% else %}Any{% endif %} <br />
+                        <span style="font-weight: bold; color: #8aa3ff;">Zone Type:</span>&nbsp;{{ spell_data.zone_type|zone_types_filter}}<br/>
+                        <hr/>
+                        <h6 class="eq-header">Effects</h6>
                         <div class="col-6">
                             <table class="eq-table">
                                 <thead>
@@ -70,10 +83,186 @@
                                 </tr>
                                 </thead>
                                 <tbody>
+                                {% if spell_data.effect_base_value1 %}
+                                    <tr>
+                                        <td>1</td>
+                                        <td>{{ spell_data.effect_base_value1 }}</td>
+                                    </tr>{% endif %}
+                                {% if spell_data.effect_base_value2 %}
+                                    <tr>
+                                        <td>2</td>
+                                        <td>{{ spell_data.effect_base_value2 }}</td>
+                                    </tr>{% endif %}
+                                {% if spell_data.effect_base_value3 %}
+                                    <tr>
+                                        <td>3</td>
+                                        <td>{{ spell_data.effect_base_value3 }}</td>
+                                    </tr>{% endif %}
+                                {% if spell_data.effect_base_value4 %}
+                                    <tr>
+                                        <td>4</td>
+                                        <td>{{ spell_data.effect_base_value4 }}</td>
+                                    </tr>{% endif %}
+                                {% if spell_data.effect_base_value5 %}
+                                    <tr>
+                                        <td>5</td>
+                                        <td>{{ spell_data.effect_base_value5 }}</td>
+                                    </tr>{% endif %}
+                                {% if spell_data.effect_base_value6 %}
+                                    <tr>
+                                        <td>6</td>
+                                        <td>{{ spell_data.effect_base_value6 }}</td>
+                                    </tr>{% endif %}
+                                {% if spell_data.effect_base_value7 %}
+                                    <tr>
+                                        <td>7</td>
+                                        <td>{{ spell_data.effect_base_value7 }}</td>
+                                    </tr>{% endif %}
+                                {% if spell_data.effect_base_value8 %}
+                                    <tr>
+                                        <td>8</td>
+                                        <td>{{ spell_data.effect_base_value8 }}</td>
+                                    </tr>{% endif %}
                                 </tbody>
                             </table>
                         </div>
                     </div>
+                </div>
+                <div class="col-3">
+                    <div class="eq-window-simple">
+                        <h4 class="eq-header">Quick Facts</h4>
+                        {# -99 is NPC only spell category #}
+                        {% if spell_data.spell_category != -99 %}
+                            <span style="font-weight: bold; color: #8aa3ff;">Scroll(s):</span><br/>
+                            <ul>
+                                {% for scroll in scrolls %}
+                                    <li>
+                                        &nbsp;<a href="/items/view/{{ scroll.id }}">{{ scroll.Name }}</a></li>
+                                {% endfor %}
+                            </ul>
+                            <hr/>
+                        {% endif %}
+                        {% if components|length > 0 %}
+                            <span style="font-weight: bold; color: #8aa3ff;">Reagents</span><br/>
+                            <ul>
+                                {% for item, count in components %}
+                                    <li><a href="/items/view/{{ item.id }}">{{ item.Name }}</a>&nbsp;x{{ count }}</li>
+                                {% endfor %}
+                            </ul>
+                            <hr/>
+                        {% endif %}
+                        {# -99 is NPC only spell category #}
+                        {% if spell_data.spell_category != -99 %}
+                            <table class="eq-table">
+                                <thead>
+                                <tr>
+                                    <th>Class</th>
+                                    <th>Level</th>
+                                </tr>
+                                </thead>
+                                {% if spell_data.classes1 != 255 %}
+                                    <tr>
+                                        <td>WAR</td>
+                                        <td>{{ spell_data.classes1 }}</td>
+                                    </tr>{% endif %}
+                                {% if spell_data.classes2 != 255 %}
+                                    <tr>
+                                        <td>CLR</td>
+                                        <td>{{ spell_data.classes2 }}</td>
+                                    </tr>{% endif %}
+                                {% if spell_data.classes3 != 255 %}
+                                    <tr>
+                                        <td>PAL</td>
+                                        <td>{{ spell_data.classes3 }}</td>
+                                    </tr>{% endif %}
+                                {% if spell_data.classes4 != 255 %}
+                                    <tr>
+                                        <td>RNG</td>
+                                        <td>{{ spell_data.classes4 }}</td>
+                                    </tr>{% endif %}
+                                {% if spell_data.classes5 != 255 %}
+                                    <tr>
+                                        <td>SHD</td>
+                                        <td>{{ spell_data.classes5 }}</td>
+                                    </tr>{% endif %}
+                                {% if spell_data.classes6 != 255 %}
+                                    <tr>
+                                        <td>DRU</td>
+                                        <td>{{ spell_data.classes6 }}</td>
+                                    </tr>{% endif %}
+                                {% if spell_data.classes7 != 255 %}
+                                    <tr>
+                                        <td>MNK</td>
+                                        <td>{{ spell_data.classes7 }}</td>
+                                    </tr>{% endif %}
+                                {% if spell_data.classes8 != 255 %}
+                                    <tr>
+                                        <td>BRD</td>
+                                        <td>{{ spell_data.classes8 }}</td>
+                                    </tr>{% endif %}
+                                {% if spell_data.classes9 != 255 %}
+                                    <tr>
+                                        <td>ROG</td>
+                                        <td>{{ spell_data.classes9 }}</td>
+                                    </tr>{% endif %}
+                                {% if spell_data.classes10 != 255 %}
+                                    <tr>
+                                        <td>SHM</td>
+                                        <td>{{ spell_data.classes10 }}</td>
+                                    </tr>{% endif %}
+                                {% if spell_data.classes11 != 255 %}
+                                    <tr>
+                                        <td>NEC</td>
+                                        <td>{{ spell_data.classes11 }}</td>
+                                    </tr>{% endif %}
+                                {% if spell_data.classes12 != 255 %}
+                                    <tr>
+                                        <td>WIZ</td>
+                                        <td>{{ spell_data.classes12 }}</td>
+                                    </tr>{% endif %}
+                                {% if spell_data.classes13 != 255 %}
+                                    <tr>
+                                        <td>MAG</td>
+                                        <td>{{ spell_data.classes13 }}</td>
+                                    </tr>{% endif %}
+                                {% if spell_data.classes14 != 255 %}
+                                    <tr>
+                                        <td>ENC</td>
+                                        <td>{{ spell_data.classes14 }}</td>
+                                    </tr>{% endif %}
+                                {% if spell_data.classes15 != 255 %}
+                                    <tr>
+                                        <td>BST</td>
+                                        <td>{{ spell_data.classes15 }}</td>
+                                    </tr>{% endif %}
+                            </table>
+                            <hr/>
+                        {% endif %}
+                        <span style="font-weight: bold; color: #8aa3ff;">Expansion:</span>&nbsp;?
+                        <hr/>
+                        <span style="font-weight: bold; color: #8aa3ff;">Duration:</span>&nbsp;
+                        {% if spell_data.buff_duration == 0 %}
+                            Instant
+                        {% else %}
+                            {{ spell_duration }} sec ({{ spell_data.buff_duration }} ticks)
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-sm">
+                    Alternate Sites:
+                </div>
+                <div class="col-sm">
+                    <a href="https://lucy.alkabor.com/spell_{{ spell_data.id }}.html">Alkabor Spell Page</a>
+                </div>
+                <div class="col-sm">
+                    <a href="https://lucy.allakhazam.com/spell.html?id={{ spell_data.id }}&source=Live">Lucy Spell
+                        Page</a>
+                </div>
+                <div class="col-sm">
+                    <a href="https://everquest.allakhazam.com/db/spell.html?spell={{ spell_data.id }}">Allakhazam Spell
+                        Page</a>
                 </div>
             </div>
         {% endif %}

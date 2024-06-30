@@ -23,6 +23,8 @@
         {% else %}
             <title>{{ class_id|intword|player_class }} Spell Purchase List</title>
         {% endif %}
+    {% elif spell_data %}
+            <title>{{ spell_data.name }}</title>
     {% else %}
         <title>EQ Archives</title>
     {% endif %}

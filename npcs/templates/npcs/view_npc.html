@@ -91,7 +91,7 @@
                                         <img src="
                                                 {% static "/images/icons/" %}{{ npc_spell_proc_data.custom_icon }}.gif"
                                              alt="{{ npc_spell_proc_data.custom_icon }}.gif"/>
-                                        <a href="https://lucy.alkabor.com/spell_{{ npc_spell_proc_data.proc }}.html">{{ npc_spell_proc_data.spell_name }}</a>
+                                        <a href="/spells/view/{{ npc_spell_proc_data.proc }}">{{ npc_spell_proc_data.spell_name }}</a>
                                     </li>
                                 {% else %}
                                     <li>None</li>
@@ -114,7 +114,7 @@
                                         <img src="{% static "/images/icons/" %}{{ custom_icon }}.gif"
                                              alt="{{ custom_icon }}.gif"/>
                                         <span class="px-1"><a
-                                                href="https://lucy.alkabor.com/spell_{{ spell_id }}.html">{{ spell_name }}</a></span>
+                                                href="/spells/view/{{ spell_id }}">{{ spell_name }}</a></span>
                                     </li>
                                 {% empty %}
                                     <li>None</li>
