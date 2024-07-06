@@ -25,7 +25,7 @@
                         {% for s in spells %}
                             <tr>
                                 <td class="min"><img src="/static/images/icons/{{ s.new_icon }}.gif"> <a
-                                        href="https://lucy.alkabor.com/spell_{{ s.id }}.html"
+                                        href="/spells/view/{{ s.id }}"
                                         class="link" target="_blank">{{ s.name }}</a></td>
                                 <td>{{ s.level }}</td>
                                 <td class="min"><a href="/items/view/{{ s.item_id }}" class="link" target="_blank">{{ s.item_name }}</a>
