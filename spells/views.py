@@ -4,8 +4,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from common.models.spells import SpellsNew
 from common.models.items import Items
 from spells.utils import calc_buff_duration
-from spells.utils import spell_effects
 from spells.utils import build_effect_descriptions
+from django.db.models import Q
 
 
 def index(request):
@@ -124,13 +124,17 @@ def view_spell(request, spell_id):
             spell_data = SpellsNew.objects.get(pk=spell_id)
         except ObjectDoesNotExist:
             spell_data = None
-        spell_duration = calc_buff_duration(65, spell_data.buff_duration_formula, spell_data.buff_duration)
 
-        # Calculate the minimum level for this spell for spell effect description purposes
+        # Calculate the minimum level for this spell for spell effect description and spell_min_duration purposes
         min_level = 65
         for i in range(1, 16):
             if getattr(spell_data, 'classes'+str(i)) < min_level:
                 min_level = getattr(spell_data, 'classes'+str(i))
+
+        spell_min_duration = calc_buff_duration(min_level, spell_data.buff_duration_formula, spell_data.buff_duration)
+        spell_min_time = spell_min_duration * 6
+        spell_max_duration = calc_buff_duration(65, spell_data.buff_duration_formula, spell_data.buff_duration)
+        spell_max_time = spell_max_duration * 6
 
         # Extract slot_id, effect_id, base_value, max_value from spell data
         sp_effects = list()
@@ -144,7 +148,8 @@ def view_spell(request, spell_id):
                      spell_data.__getattribute__(f'max{slot_id}'))
                   )
 
-        sp_effects = build_effect_descriptions(sp_effects, spell_duration, min_level)
+        sp_effects = build_effect_descriptions(sp_effects, spell_max_duration, min_level)
+        items_with_effect = Items.objects.filter(Q(click_effect=spell_data.id) | Q(worn_effect=spell_data.id) | Q(proc_effect=spell_data.id))
 
         try:
             scrolls = Items.objects.filter(scroll_effect=spell_data.id, scroll_type=7)
@@ -165,5 +170,10 @@ def view_spell(request, spell_id):
                                "spell_effects": sp_effects,
                                "scrolls": scrolls,
                                "components": components,
-                               "spell_duration": spell_duration},
-                      )
+                               "spell_min_duration": spell_min_duration,
+                               "spell_min_time": spell_min_time,
+                               "spell_max_duration": spell_max_duration,
+                               "spell_max_time": spell_max_time,
+                               "items_with_effect": items_with_effect,
+                               },
+        )

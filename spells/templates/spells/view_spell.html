@@ -2,7 +2,7 @@
 {% load data_utilities %}
 {% load spell_page_tags %}
 {% block content %}
-    <div class="container">
+    <div class="container eq-window-complex-fancy">
         {% if spell_data == None %}
             <h3 class="mt-3 text-center">That spell does not exist!</h3>
             <p class="text-center">Please try searching for another spell.</p>
@@ -40,42 +40,10 @@
                         </h3>
                         <span style="font-weight: bold; color: #8aa3ff;">Spell ID:</span>&nbsp;{{ spell_data.id }} <br/>
                         <hr/>
-                        <h6 class="eq-header">Messages</h6>
-                        {% if spell_data.you_cast %}
-                            <span style="font-weight: bold; color: #8aa3ff;">When you cast:</span>&nbsp;
-                            {{ spell_data.you_cast }}<br/>{% endif %}
-                        {% if spell_data.other_casts %}
-                            <span style="font-weight: bold; color: #8aa3ff;">When others cast:</span>&nbsp;
-                            {{ spell_data.other_casts }}<br/>{% endif %}
-                        {% if spell_data.cast_on_you %}
-                            <span style="font-weight: bold; color: #8aa3ff;">When cast on you:</span>&nbsp;
-                            {{ spell_data.cast_on_you }}<br/>{% endif %}
-                        {% if spell_data.cast_on_other %}
-                            <span style="font-weight: bold; color: #8aa3ff;">When cast on other:</span>&nbsp;Soandso
-                            {{ spell_data.cast_on_other }}<br/>{% endif %}
-                        {% if spell_data.spell_fades %}
-                            <span style="font-weight: bold; color: #8aa3ff;">When fading:</span>&nbsp;
-                            {{ spell_data.spell_fades }}<br/>{% endif %}
-                        <hr/>
-                        <h6 class="eq-header">Details</h6>
-                        <span style="font-weight: bold; color: #8aa3ff;">Mana:</span>&nbsp;{{ spell_data.mana }}<br/>
-                        <span style="font-weight: bold; color: #8aa3ff;">Casting Time:</span>&nbsp;{{ spell_data.cast_time|spell_time_filter }}s<br/>
-                        <span style="font-weight: bold; color: #8aa3ff;">Recast Time:</span>&nbsp;{{ spell_data.recast_time|spell_time_filter }}s<br/>
-                        <span style="font-weight: bold; color: #8aa3ff;">Recovery Time:</span>&nbsp;{{ spell_data.recovery_time|spell_time_filter }}s<br/>
-                        <span style="font-weight: bold; color: #8aa3ff;">AE Radius:</span>&nbsp;{{ spell_data.aoe_range }}<br/>
-                        <span style="font-weight: bold; color: #8aa3ff;">Target Type:</span>&nbsp;{{ spell_data.target_type|spell_target_type }}<br/>
-                        <span style="font-weight: bold; color: #8aa3ff;">Spell Type:</span>&nbsp;{{ spell_data.spell_category|spell_category_filter }}<br/>
-                        <span style="font-weight: bold; color: #8aa3ff;">Range to Target:</span>&nbsp;{{ spell_data.range }}<br/>
-                        <span style="font-weight: bold; color: #8aa3ff;">Skill:</span>&nbsp;{{ spell_data.skill|player_skill }}<br/>
-                        <span style="font-weight: bold; color: #8aa3ff;">Resist Type:</span>&nbsp;{{ spell_data.resist_type|resist_type_filter }}
-                        (<span class="help-tooltip">{{ spell_data.resist_diff }}</span>)<br/>
-                        <span style="font-weight: bold; color: #8aa3ff;">Time of Day:</span>&nbsp;
-                        {% if spell_data.time_of_day == 2 %}Nighttime {% else %}Any{% endif %} <br/>
-                        <span style="font-weight: bold; color: #8aa3ff;">Zone Type:</span>&nbsp;{{ spell_data.zone_type|zone_types_filter }}<br/>
-                        <hr/>
                         <h6 class="eq-header">Effects</h6>
                         <div class="col">
-                            <p class="eq-window-nested-blue">Information not currently available (work in progress). Stay tuned.</p>
+                            <p class="eq-window-nested-blue">Information not currently available (work in progress).
+                                Stay tuned.</p>
                             {#                            <table class="eq-table">#}
                             {#                                <thead>#}
                             {#                                <tr>#}
@@ -93,6 +61,54 @@
                             {#                                </tbody>#}
                             {#                            </table>#}
                         </div>
+                        <hr/>
+                        <h6 class="eq-header">Details</h6>
+                        <div class="row">
+                            <div class="col">
+                                <span style="font-weight: bold; color: #8aa3ff;">Mana:</span>&nbsp;{{ spell_data.mana }}<br/>
+                                <span style="font-weight: bold; color: #8aa3ff;">Casting Time:</span>&nbsp;{{ spell_data.cast_time|spell_time_filter }}s<br/>
+                                <span style="font-weight: bold; color: #8aa3ff;">Recast Time:</span>&nbsp;{{ spell_data.recast_time|spell_time_filter }}s<br/>
+                                <span style="font-weight: bold; color: #8aa3ff;">Recovery Time:</span>&nbsp;{{ spell_data.recovery_time|spell_time_filter }}s<br/>
+                                <span style="font-weight: bold; color: #8aa3ff;">Range to Target:</span>&nbsp;{{ spell_data.range }}<br/>
+                                <span style="font-weight: bold; color: #8aa3ff;">AE Radius:</span>&nbsp;{{ spell_data.aoe_range }}<br/>
+                                <span style="font-weight: bold; color: #8aa3ff;">Zone Type:</span>&nbsp;{{ spell_data.zone_type|zone_types_filter }}<br/>
+                                <span style="font-weight: bold; color: #8aa3ff;">Target Type:</span>&nbsp;{{ spell_data.target_type|spell_target_type }}<br/>
+                            </div>
+                            <div class="col">
+                                <span style="font-weight: bold; color: #8aa3ff;">Skill:</span>&nbsp;{{ spell_data.skill|player_skill }}<br/>
+
+                                <span style="font-weight: bold; color: #8aa3ff;">Resist Type:</span>&nbsp;{{ spell_data.resist_type|resist_type_filter }}
+                                (<span class="help-tooltip">{{ spell_data.resist_diff }}</span>)<br/>
+                                <span style="font-weight: bold; color: #8aa3ff;">Spell Type:</span>&nbsp;{{ spell_data.spell_category|spell_category_filter }}<br/>
+
+                                <span style="font-weight: bold; color: #8aa3ff;">Deleteable</span>&nbsp;{{ spell_data.deleteable|yesno }}<br/>
+                                <span style="font-weight: bold; color: #8aa3ff;">Interruptable</span>&nbsp;{{ spell_data.uninterruptable|invert_1_0|yesno }}<br/>
+                                <span style="font-weight: bold; color: #8aa3ff;">Reflectable</span>&nbsp;{{ spell_data.reflectable|yesno }}<br/>
+                                <span style="font-weight: bold; color: #8aa3ff;">Dispellable</span>&nbsp;{{ spell_data.nodispell|invert_1_0|yesno }}<br/>
+                                <span style="font-weight: bold; color: #8aa3ff;">Short Buff Box</span>&nbsp;{{ spell_data.short_buff_box|yesno }}<br/>
+
+                                <span style="font-weight: bold; color: #8aa3ff;">Time of Day:</span>&nbsp;
+                                {% if spell_data.time_of_day == 2 %}Nighttime {% else %}Any{% endif %} <br/>
+
+                            </div>
+                        </div>
+                        <hr/>
+                        <h6 class="eq-header">Messages</h6>
+                        {% if spell_data.you_cast %}
+                            <span style="font-weight: bold; color: #8aa3ff;">When you cast:</span>&nbsp;
+                            {{ spell_data.you_cast }}<br/>{% endif %}
+                        {% if spell_data.other_casts %}
+                            <span style="font-weight: bold; color: #8aa3ff;">When others cast:</span>&nbsp;
+                            {{ spell_data.other_casts }}<br/>{% endif %}
+                        {% if spell_data.cast_on_you %}
+                            <span style="font-weight: bold; color: #8aa3ff;">When cast on you:</span>&nbsp;
+                            {{ spell_data.cast_on_you }}<br/>{% endif %}
+                        {% if spell_data.cast_on_other %}
+                            <span style="font-weight: bold; color: #8aa3ff;">When cast on other:</span>&nbsp;Soandso
+                            {{ spell_data.cast_on_other }}<br/>{% endif %}
+                        {% if spell_data.spell_fades %}
+                            <span style="font-weight: bold; color: #8aa3ff;">When fading:</span>&nbsp;
+                            {{ spell_data.spell_fades }}<br/>{% endif %}
                     </div>
                 </div>
                 <div class="col-3">
@@ -211,22 +227,41 @@
                         {% if spell_data.buff_duration == 0 %}
                             Instant
                         {% else %}
-                            {{ spell_duration }} sec ({{ spell_data.buff_duration }} ticks)
+                            {{ spell_max_time|datetime_delta }} ({{ spell_max_duration }} ticks)
                         {% endif %}
                         <div class="row mt-2">
                             <div class="col eq-window-nested-tan">
-                                Alternate Sources:
+                                <span style="font-weight: bold; color: #8aa3ff; font-size: 13px;">Alternate Sources:</span><br/>
                                 <ul class="list-group-numbered">
-                                    <li class="list-group-item">[<a
-                                            href="https://lucy.alkabor.com/spell_{{ spell_data.id }}.html" target="_blank">Alkabor Spell
-                                        ID: {{ spell_data.id }}</a>]</li>
-                                    <li class="list-group-item">[<a
-                                            href="https://lucy.allakhazam.com/spell.html?id={{ spell_data.id }}&source=Live" target="_blank">Lucy Spell ID: {{ spell_data.id }}</a>]</li>
-                                    <li class="list-group-item">[<a
-                                            href="https://everquest.allakhazam.com/db/spell.html?spell={{ spell_data.id }}" target="_blank">Allakhazam Spell ID: {{ spell_data.id }}</a>]</li>
+                                    <li class="list-group-item"><a
+                                            href="https://lucy.alkabor.com/spell_{{ spell_data.id }}.html"
+                                            target="_blank">Alkabor Spell
+                                        ID: {{ spell_data.id }}</a>
+                                    </li>
+                                    <li class="list-group-item"><a
+                                            href="https://lucy.allakhazam.com/spell.html?id={{ spell_data.id }}&source=Live"
+                                            target="_blank">Lucy Spell ID: {{ spell_data.id }}</a>
+                                    </li>
+                                    <li class="list-group-item"><a
+                                            href="https://everquest.allakhazam.com/db/spell.html?spell={{ spell_data.id }}"
+                                            target="_blank">Allakhazam Spell ID: {{ spell_data.id }}</a>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="eq-window-simple">
+                        <h3 class="eq-header">Items with Spell Effect:</h3>
+                        <ul>
+                            {% for item in items_with_effect %}
+                                <li><a href="/items/view/{{ item.id }}">{{ item.Name }}</a></li>
+
+                            {% endfor %}
+                        </ul>
                     </div>
                 </div>
             </div>

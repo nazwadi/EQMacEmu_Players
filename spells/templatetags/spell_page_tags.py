@@ -12,6 +12,11 @@ def spell_time_filter(value):
     return spell_time
 
 
+@register.filter(name='invert_1_0')
+def invert_1_0(value):
+    return not value
+
+
 @register.filter(name='duration_filter')
 def duration_filter(value):
     """Returns tick units converted to seconds (6 seconds per tick)"""

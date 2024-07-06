@@ -550,55 +550,61 @@ def build_effect_descriptions(effects: list, spell_duration: int, min_level: int
 
 
 def calc_buff_duration(level, formula, duration):
-    """Calculates the buffer duration of a spell based on a level and formula"""
+    """
+    Returns how many ticks the buff will last
+    A tick is 6 seconds
 
-    def apply_duration(i):
-        return min(max(i, 1), duration) if i < duration else duration
+    :param level: the max level for the server
+    :param formula: buff duration formula from spells_new entry
+    :param duration: buff duration from spells_new_entry
+    :return:
+    """
 
     if formula >= 200:
         return formula
 
+    # Mirrors CalcBuffDuration_formula from Server/zone/spells.cpp
     match formula:
         case 0:  # not a buff
             return 0
         case 1:
             i = level // 2
-            return apply_duration(i)
+            return min(i, 1) if i < duration else duration
         case 2:
             i = 6 if level <= 1 else level // 2 + 5
-            return apply_duration(i)
+            return min(i, 1) if i < duration else duration
         case 3:
             i = level * 30
-            return apply_duration(i)
+            return min(i, 1) if i < duration else duration
         case 4:
             i = 50
-            return i if duration == 0 else min(i, duration)
+            return min(i, duration) if duration else i
         case 5:
             i = 2
-            return i if duration == 0 else min(i, duration)
+            return min(i, duration) if duration else i
         case 6:
             i = level // 2 + 2
-            return i if duration == 0 else min(i, duration)
+            return min(i, duration) if duration else i
         case 7:
             i = level
-            return i if duration == 0 else min(i, duration)
+            return min(i, duration) if duration else i
         case 8:
             i = level + 10
-            return apply_duration(i)
+            return min(i, 1) if i < duration else duration
         case 9:
             i = level * 2 + 10
-            return apply_duration(i)
+            return min(i, 1) if i < duration else duration
         case 10:
             i = level * 3 + 10
-            return apply_duration(i)
+            return min(i, 1) if i < duration else duration
         case 11:
             i = level * 30 + 90
-            return apply_duration(i)
+            return min(i, 1) if i < duration else duration
         case 12:  # not used by any spells
             i = level // 4
             i = max(i, 1)
             return i if duration == 0 else min(i, duration)
         case 50:  # permanent buff
             return 65534
-        case _:
+        case _:  # Unknown formula
             return 0
