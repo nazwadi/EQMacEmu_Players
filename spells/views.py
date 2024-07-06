@@ -4,6 +4,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from common.models.spells import SpellsNew
 from common.models.items import Items
 from spells.utils import calc_buff_duration
+from spells.utils import spell_effects
+from spells.utils import build_effect_descriptions
 
 
 def index(request):
@@ -123,6 +125,27 @@ def view_spell(request, spell_id):
         except ObjectDoesNotExist:
             spell_data = None
         spell_duration = calc_buff_duration(65, spell_data.buff_duration_formula, spell_data.buff_duration)
+
+        # Calculate the minimum level for this spell for spell effect description purposes
+        min_level = 65
+        for i in range(1, 16):
+            if getattr(spell_data, 'classes'+str(i)) < min_level:
+                min_level = getattr(spell_data, 'classes'+str(i))
+
+        # Extract slot_id, effect_id, base_value, max_value from spell data
+        sp_effects = list()
+        for slot_id in range(1, 13):
+            if spell_data.__getattribute__(f'effectid{slot_id}') != 254:
+                print(slot_id, getattr(spell_data, f'effectid{slot_id}'))
+                sp_effects.append(
+                    (slot_id,
+                     getattr(spell_data, f'effectid{slot_id}'),
+                     spell_data.__getattribute__(f'effect_base_value{slot_id}'),
+                     spell_data.__getattribute__(f'max{slot_id}'))
+                  )
+
+        sp_effects = build_effect_descriptions(sp_effects, spell_duration, min_level)
+
         try:
             scrolls = Items.objects.filter(scroll_effect=spell_data.id, scroll_type=7)
         except ObjectDoesNotExist:
@@ -139,6 +162,7 @@ def view_spell(request, spell_id):
         return render(request=request,
                       template_name="spells/view_spell.html",
                       context={"spell_data": spell_data,
+                               "spell_effects": sp_effects,
                                "scrolls": scrolls,
                                "components": components,
                                "spell_duration": spell_duration},

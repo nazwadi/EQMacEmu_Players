@@ -70,61 +70,28 @@
                         <span style="font-weight: bold; color: #8aa3ff;">Resist Type:</span>&nbsp;{{ spell_data.resist_type|resist_type_filter }}
                         (<span class="help-tooltip">{{ spell_data.resist_diff }}</span>)<br/>
                         <span style="font-weight: bold; color: #8aa3ff;">Time of Day:</span>&nbsp;
-                        {% if spell_data.time_of_day == 2 %}Nighttime {% else %}Any{% endif %} <br />
-                        <span style="font-weight: bold; color: #8aa3ff;">Zone Type:</span>&nbsp;{{ spell_data.zone_type|zone_types_filter}}<br/>
+                        {% if spell_data.time_of_day == 2 %}Nighttime {% else %}Any{% endif %} <br/>
+                        <span style="font-weight: bold; color: #8aa3ff;">Zone Type:</span>&nbsp;{{ spell_data.zone_type|zone_types_filter }}<br/>
                         <hr/>
                         <h6 class="eq-header">Effects</h6>
-                        <div class="col-6">
-                            <table class="eq-table">
-                                <thead>
-                                <tr>
-                                    <th style="max-width: 20px;">Slot</th>
-                                    <th>Description</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% if spell_data.effect_base_value1 %}
-                                    <tr>
-                                        <td>1</td>
-                                        <td>{{ spell_data.effect_base_value1 }}</td>
-                                    </tr>{% endif %}
-                                {% if spell_data.effect_base_value2 %}
-                                    <tr>
-                                        <td>2</td>
-                                        <td>{{ spell_data.effect_base_value2 }}</td>
-                                    </tr>{% endif %}
-                                {% if spell_data.effect_base_value3 %}
-                                    <tr>
-                                        <td>3</td>
-                                        <td>{{ spell_data.effect_base_value3 }}</td>
-                                    </tr>{% endif %}
-                                {% if spell_data.effect_base_value4 %}
-                                    <tr>
-                                        <td>4</td>
-                                        <td>{{ spell_data.effect_base_value4 }}</td>
-                                    </tr>{% endif %}
-                                {% if spell_data.effect_base_value5 %}
-                                    <tr>
-                                        <td>5</td>
-                                        <td>{{ spell_data.effect_base_value5 }}</td>
-                                    </tr>{% endif %}
-                                {% if spell_data.effect_base_value6 %}
-                                    <tr>
-                                        <td>6</td>
-                                        <td>{{ spell_data.effect_base_value6 }}</td>
-                                    </tr>{% endif %}
-                                {% if spell_data.effect_base_value7 %}
-                                    <tr>
-                                        <td>7</td>
-                                        <td>{{ spell_data.effect_base_value7 }}</td>
-                                    </tr>{% endif %}
-                                {% if spell_data.effect_base_value8 %}
-                                    <tr>
-                                        <td>8</td>
-                                        <td>{{ spell_data.effect_base_value8 }}</td>
-                                    </tr>{% endif %}
-                                </tbody>
-                            </table>
+                        <div class="col">
+                            <p class="eq-window-nested-blue">Information not currently available (work in progress). Stay tuned.</p>
+                            {#                            <table class="eq-table">#}
+                            {#                                <thead>#}
+                            {#                                <tr>#}
+                            {#                                    <th style="max-width: 20px;">Slot</th>#}
+                            {#                                    <th>Description</th>#}
+                            {#                                </tr>#}
+                            {#                                </thead>#}
+                            {#                                <tbody>#}
+                            {#                                {% for index, spell_description in spell_effects %}#}
+                            {#                                    <tr>#}
+                            {#                                        <td>{{ index }}</td>#}
+                            {#                                        <td>{{ spell_description }}</td>#}
+                            {#                                    </tr>#}
+                            {#                                {% endfor %}#}
+                            {#                                </tbody>#}
+                            {#                            </table>#}
                         </div>
                     </div>
                 </div>
@@ -246,23 +213,21 @@
                         {% else %}
                             {{ spell_duration }} sec ({{ spell_data.buff_duration }} ticks)
                         {% endif %}
+                        <div class="row mt-2">
+                            <div class="col eq-window-nested-tan">
+                                Alternate Sources:
+                                <ul class="list-group-numbered">
+                                    <li class="list-group-item">[<a
+                                            href="https://lucy.alkabor.com/spell_{{ spell_data.id }}.html" target="_blank">Alkabor Spell
+                                        ID: {{ spell_data.id }}</a>]</li>
+                                    <li class="list-group-item">[<a
+                                            href="https://lucy.allakhazam.com/spell.html?id={{ spell_data.id }}&source=Live" target="_blank">Lucy Spell ID: {{ spell_data.id }}</a>]</li>
+                                    <li class="list-group-item">[<a
+                                            href="https://everquest.allakhazam.com/db/spell.html?spell={{ spell_data.id }}" target="_blank">Allakhazam Spell ID: {{ spell_data.id }}</a>]</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <div class="row mt-2">
-                <div class="col-sm">
-                    Alternate Sites:
-                </div>
-                <div class="col-sm">
-                    <a href="https://lucy.alkabor.com/spell_{{ spell_data.id }}.html">Alkabor Spell Page</a>
-                </div>
-                <div class="col-sm">
-                    <a href="https://lucy.allakhazam.com/spell.html?id={{ spell_data.id }}&source=Live">Lucy Spell
-                        Page</a>
-                </div>
-                <div class="col-sm">
-                    <a href="https://everquest.allakhazam.com/db/spell.html?spell={{ spell_data.id }}">Allakhazam Spell
-                        Page</a>
                 </div>
             </div>
         {% endif %}
