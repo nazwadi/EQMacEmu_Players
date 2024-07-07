@@ -140,7 +140,6 @@ def view_spell(request, spell_id):
         sp_effects = list()
         for slot_id in range(1, 13):
             if spell_data.__getattribute__(f'effectid{slot_id}') != 254:
-                print(slot_id, getattr(spell_data, f'effectid{slot_id}'))
                 sp_effects.append(
                     (slot_id,
                      getattr(spell_data, f'effectid{slot_id}'),
