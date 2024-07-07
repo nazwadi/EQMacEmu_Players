@@ -2,17 +2,17 @@
 {% load data_utilities %}
 {% load spell_page_tags %}
 {% block content %}
+    {% if scrolls|length == 0 %}
+        <div class="mt-3 border text-center alert alert-dark"><img src="/static/images/flag_topbox.png">&nbsp;This
+            spell ID is not a player obtainable spell!
+        </div>
+    {% endif %}
     <div class="container eq-window-complex-fancy">
         {% if spell_data == None %}
             <h3 class="mt-3 text-center">That spell does not exist!</h3>
             <p class="text-center">Please try searching for another spell.</p>
         {% else %}
             <div class="row">
-                {% if scrolls|length == 0 %}
-                    <div class="mt-3 border text-center alert alert-dark"><img src="/static/images/flag_topbox.png">&nbsp;This
-                        spell ID is not a player obtainable spell!
-                    </div>
-                {% endif %}
                 <div class="col-sm">
                     <div class="eq-window-simple">
                         <h3 class="eq-header">EQA Spell Data</h3>
@@ -42,24 +42,23 @@
                         <hr/>
                         <h6 class="eq-header">Effects</h6>
                         <div class="col">
-                            <p class="eq-window-nested-blue">Information not currently available (work in progress).
-                                Stay tuned.</p>
-                            {#                            <table class="eq-table">#}
-                            {#                                <thead>#}
-                            {#                                <tr>#}
-                            {#                                    <th style="max-width: 20px;">Slot</th>#}
-                            {#                                    <th>Description</th>#}
-                            {#                                </tr>#}
-                            {#                                </thead>#}
-                            {#                                <tbody>#}
-                            {#                                {% for index, spell_description in spell_effects %}#}
-                            {#                                    <tr>#}
-                            {#                                        <td>{{ index }}</td>#}
-                            {#                                        <td>{{ spell_description }}</td>#}
-                            {#                                    </tr>#}
-                            {#                                {% endfor %}#}
-                            {#                                </tbody>#}
-                            {#                            </table>#}
+                            {#                            <p class="eq-window-nested-blue">Information not currently available (work in progress). Stay tuned.</p>#}
+                            <table class="eq-table">
+                                <thead>
+                                <tr>
+                                    <th style="max-width: 20px;">Slot</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for index, spell_description in spell_effects %}
+                                    <tr>
+                                        <td>{{ index }}</td>
+                                        <td>{{ spell_description|safe }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
                         </div>
                         <hr/>
                         <h6 class="eq-header">Details</h6>

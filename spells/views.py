@@ -144,11 +144,12 @@ def view_spell(request, spell_id):
                 sp_effects.append(
                     (slot_id,
                      getattr(spell_data, f'effectid{slot_id}'),
-                     spell_data.__getattribute__(f'effect_base_value{slot_id}'),
-                     spell_data.__getattribute__(f'max{slot_id}'))
+                     getattr(spell_data, f'formula{slot_id}'),
+                     getattr(spell_data, f'effect_base_value{slot_id}'),
+                     getattr(spell_data, f'max{slot_id}'))
                   )
 
-        sp_effects = build_effect_descriptions(sp_effects, spell_max_duration, min_level)
+        sp_effects = build_effect_descriptions(spell_data, sp_effects, spell_max_duration, min_level)
         items_with_effect = Items.objects.filter(Q(click_effect=spell_data.id) | Q(worn_effect=spell_data.id) | Q(proc_effect=spell_data.id))
 
         try:

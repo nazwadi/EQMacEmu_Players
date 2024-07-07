@@ -1,3 +1,13 @@
+import random
+import math
+from common.models.items import Items
+from common.models.spells import SpellsNew
+from common.constants import RACES
+from common.constants import ZONE_SHORT_TO_LONG
+from common.constants import SPELL_TARGETS
+
+FEAR_MAX_LEVEL = 52
+
 spell_effects = {
     0: "Hitpoints",
     1: "AC",
@@ -57,7 +67,7 @@ spell_effects = {
     55: "Stoneskin",
     56: "True North",
     57: "Levitation",
-    58: "Change Form",
+    58: "Illusion",
     59: "Reflect Damage",
     60: "Transfer Item",
     61: "Identify",
@@ -82,13 +92,13 @@ spell_effects = {
     80: "Enchant: Light",
     81: "Resurrect",
     82: "Summon Player",
-    83: "Portal",
+    83: "Teleport",
     84: "TossUP",
-    85: "Contact Ability",
+    85: "Add Proc:",
     86: "NPC Help Radius",
     87: "Telescope",
     88: "Combat Portal",
-    89: "Height",
+    89: "Player Size",
     90: "Ignore Pet",
     91: "Summon Corpse",
     92: "Instant Hate",
@@ -136,10 +146,10 @@ spell_effects = {
     134: "Limit: Level Max",
     135: "Limit: Resist Type",
     136: "Limit: Target Type",
-    137: "Limit: Which Spell Effect",
+    137: "Limit: Effect",
     138: "Limit: Beneficial",
-    139: "Limit: Which Spell ID",
-    140: "Limit: Duration Min",
+    139: "Limit: Spell",
+    140: "Limit: Min Duration",
     141: "Limit: Instant Only",
     142: "Limit: Level Min",
     143: "Limit: Cast Time Min",
@@ -152,7 +162,7 @@ spell_effects = {
     150: "Death Pact",
     151: "Pocket Pet",
     152: "Pet Swarm",
-    153: "Damage Balance",
+    153: "Balance Party Health",
     154: "Cancel Negative",
     155: "PoP Resurrect",
     156: "Mirror",
@@ -459,40 +469,257 @@ spell_effects = {
 }
 
 
-def build_effect_descriptions(effects: list, spell_duration: int, min_level: int) -> list:
+def calc_spell_effect_value1(formula, base_value, max_value, level):
+    sign = 1
+    ubase = abs(base_value)
+    result = 0
+    if max_value < base_value and max_value != 0:
+        sign = -1
+    match formula:
+        case 0 | 100:
+            result = ubase
+        case 101:
+            result = ubase + sign * (level / 2)
+        case 102:
+            result = ubase + sign * level
+        case 103:
+            result = ubase + sign * level * 2
+        case 104:
+            result = ubase + sign * level * 3
+        case 105 | 107:
+            result = ubase + sign * level * 4
+        case 108:
+            result = math.floor(ubase + sign * level / 3)
+        case 109:
+            result = math.floor(ubase + sign * level / 4)
+        case 110:
+            result = math.floor(ubase + level / 5)
+        case 111:
+            result = ubase + 5 * (level - 16)
+        case 112:
+            result = ubase + 8 * (level - 24)
+        case 113:
+            result = ubase + 12 * (level - 34)
+        case 114:
+            result = ubase + 15 * (level - 44)
+        case 115:
+            result = ubase + 15 * (level - 54)
+        case 116:
+            result = math.floor(ubase + 8 * (level - 24))
+        case 117:
+            result = ubase + 11 * (level - 34)
+        case 118:
+            result = ubase + 17 * (level - 44)
+        case 119:
+            result = math.floor(ubase + level / 8)
+        case 121:
+            result = math.floor(ubase + level / 3)
+        case _:
+            if formula < 100:
+                result = ubase + (level * formula)
+
+    if max_value != 0:
+        if sign == 1:
+            if result > max_value:
+                result = max_value
+        else:
+            if result < max_value:
+                result = max_value
+        if base_value < 0 < result:
+            result *= -1
+
+    return result
+
+
+def calc_spell_effect_value(formula, base_value, max_value, level):
+    """
+
+    :param formula:
+    :param base_value:
+    :param max_value:
+    :param level:
+    :return:
+    """
+    result = 0
+    if base_value < 0:
+        base_value *= -1
+    negation = -1 if max_value < base_value and max_value != 0 else 1
+
+    match formula:
+        case 0 | 100:
+            result = base_value
+        case 101:
+            result = negation * (base_value + (level / 2))
+        case 102:
+            result = negation * (base_value + level)
+        case 103:
+            result = negation * (base_value + (level * 2))
+        case 104:
+            result = negation * (base_value + (level * 3))
+        case 105:
+            result = negation * (base_value + (level * 4))
+        case 107 | 108:
+            result = negation * base_value
+        case 109:
+            result = negation * (base_value + (level / 4))
+        case 110:
+            result = negation * (base_value + (level / 6))
+        case 111:
+            result = negation * (base_value + 6 * (level - 16))
+        case 112:
+            result = negation * (base_value + 8 * (level - 24))
+        case 113:
+            result = negation * (base_value + 10 * (level - 34))
+        case 114:
+            result = negation * (base_value + 15 * (level - 44))
+        case 115:  # only used in Symbol of Transal
+            result = base_value
+            if level > 15:
+                result += 7 * (level - 15)
+        case 116:  # only used in Symbol of Ryltan
+            result = base_value
+            if level > 24:
+                result += 10 * (level - 24)
+        case 117:  # only used in Symbol of Pinzarn
+            result = base_value
+            if level > 34:
+                result += 13 * (level - 34)
+        case 118:  # mainly used in Symbol of Naltron, but a couple others also
+            result = base_value
+            if level > 44:
+                result += 20 * (level - 44)
+
+        case 119:
+            result = base_value + (level / 8)
+        case 120 | 122:  # client duration extension focus effects are disabled for spells that use this formula
+            result = negation * base_value
+        case 121:
+            result = base_value + (level / 3)
+        case 123:
+            result = random.randint(base_value, abs(max_value))
+        case 124:
+            result = base_value
+            if level > 50:
+                result += negation * (level - 50)
+        case 125:
+            result = base_value
+            if level > 50:
+                result += negation * 2 * (level - 50)
+        case 126:
+            result = base_value
+            if level > 50:
+                result += negation * 3 * (level - 50)
+        case 127:
+            result = base_value
+            if level > 50:
+                result += negation * 4 * (level - 50)
+        case 128:
+            result = base_value
+            if level > 50:
+                result += negation * 5 * (level - 50)
+        case 129:
+            result = base_value
+            if level > 50:
+                result += negation * 10 * (level - 50)
+        case 130:
+            result = base_value
+            if level > 50:
+                result += negation * 15 * (level - 50)
+        case 131:
+            result = base_value
+            if level > 50:
+                result += negation * 20 * (level - 50)
+        case 150 | 201 | 202 | 203 | 204 | 205:
+            result = max_value
+        case _:
+            if formula < 100:
+                result = base_value + (level * formula)
+
+    # now check result against the allowed maximum
+    if max_value != 0:
+        if negation == 1:
+            if result > max_value:
+                result = max_value
+        else:
+            if result < max_value:
+                result = max_value
+
+    # if base value is less than zero, then the result needs to be negative too
+    if base_value < 0 < result:
+        result *= -1
+    return result
+
+
+def determine_spell_effect_max_level(formula: int, effect_base_value: int, max_value: int, start_level: int) -> int:
+    """
+    Determines the level where the spell effect reaches its max value (based on the formula)
+
+    There is plenty of room here to optimize how this is done.  However, this is good enough for now.
+
+    :param formula:
+    :param effect_base_value:
+    :param max_value:
+    :param start_level:
+    :return: int: the player level where the spell effect reaches its max_value
+    """
+    temp_max_level = start_level
+    while True:
+        temp_max_value = calc_spell_effect_value(formula, effect_base_value, max_value, temp_max_level)
+        if temp_max_value > 0:
+            if temp_max_value >= max_value:
+                break
+            temp_max_level += 1
+        else:
+            if temp_max_value <= max_value:
+                break
+            temp_max_level += 1
+    return temp_max_level
+
+
+def build_effect_descriptions(spell_data: object, effects: list, spell_duration: int, min_level: int) -> list:
     """
     Convert a list of raw spell effect tuple values into human-readable spell description
 
     :param effects:
+    :param spell_duration:
     :param min_level: the minimum level that any class can scribe this spell
     :return: a list of spell effect descriptions for each of 12 slots as necessary
     """
-    max_level = 65
+    server_max_level = 65
     spell_descriptions = list()
-    for index, effect_id, base, max_value in effects:
+    for slot_id, effect_id, formula, effect_base_value, effect_max_value in effects:
+        base = calc_spell_effect_value(formula, effect_base_value, effect_max_value, min_level)
+        max_value = calc_spell_effect_value(formula, effect_base_value, effect_max_value, server_max_level)
+
+        base = math.floor(base)
+        max_value = math.floor(max_value)
+
+        max_level = determine_spell_effect_max_level(formula, base, max_value, min_level)
+
         description = ""
         match effect_id:
             case 0:  # HP
-                description = f"Decrease " if base < 0 else f"Increase "
-                description += f"{spell_effects[effect_id]}"
+                description = f"{'Decrease' if base < 0 else 'Increase'} {spell_effects[effect_id]}"
+
                 if base != max_value:
-                    if max_value != 0:
-                        description += f" by {abs(base)} (L{min_level}) to {max_value} (L{max_level})"
-                    else:
-                        description += f" by {abs(base)}"
+                    base_string = f"{abs(base)} (L{min_level})"
+                    base_string += f" per tick" if spell_duration > 1 else ""
+
+                    max_string = f"{abs(max_value)} (L{max_level})"
+                    max_string += f" per tick" if spell_duration > 1 else ""
+
+                    description += f" by {base_string} to {max_string}"
                 else:
                     description += f" by {-max_value if max_value < 0 else max_value}"
-                description += " per tick" if spell_duration > 1 else ""
+
             case 1:  # AC
-                if max_value < 0:
-                    description = f"Decrease {spell_effects[effect_id]}"
-                else:
-                    description = f"Increase {spell_effects[effect_id]}"
+                description = f"{'Decrease' if max_value < 0 else 'Increase'} {spell_effects[effect_id]}"
+
                 # Cloth casters have different rules than everybody else for AC buffs
-                all_min = int(int(base / 4) * 1000 / 847)
                 cloth_min = int(int(base / 3) * 1000 / 847)
-                all_max = int(int(max_value / 4) * 1000 / 847)
                 cloth_max = int(int(max_value / 3) * 1000 / 847)
+                all_min = int(int(base / 4) * 1000 / 847)
+                all_max = int(int(max_value / 4) * 1000 / 847)
 
                 if base != max_value:
                     if cloth_min != cloth_max:
@@ -508,21 +735,15 @@ def build_effect_descriptions(effects: list, spell_duration: int, min_level: int
                         max_value = -max_value
                     description += f" for Cloth Casters by {cloth_max}, Everyone else by {all_max}"
 
-            case 2:  # Attack Power
-                pass
             case 3:  # Movement Rate
-                if max_value < 0:
-                    description = f"Decrease {spell_effects[effect_id]}"
-                    if base != max_value:
-                        description += f" by {abs(base)}% (L{min_level}) to {abs(max_value)}% (L{abs(max_level)})"
-                    else:
-                        description += f" by 100%"
+                description = f"{'Decrease' if max_value < 0 else 'Increase'} {spell_effects[effect_id]}"
+                if base != max_value:
+                    description += f" by {abs(base)}% (L{min_level}) to {abs(max_value)}% (L{abs(max_level)})"
                 else:
-                    description = f"Increase {spell_effects[effect_id]}"
-                    if base != max_value:
-                        description += f" by {base}% (L{min_level}) to {max_value}% (L{max_level})"
+                    if max_value < 0:
+                        description += f" by 100%"
                     else:
-                        description += " by " + str(max_value) + "%"
+                        description += f" by {max_value}%"
             case 11:  # Decrease or Increase Attack Speed
                 if max_value < 100:  # Decrease
                     description = f"Decrease Attack Speed"
@@ -536,16 +757,157 @@ def build_effect_descriptions(effects: list, spell_duration: int, min_level: int
                         description += f" by {base - 100}% (L{min_level}) to {max_value - 100}% (L{max_level})"
                     else:
                         description += f" by {max_value - 100}%"
-            case 21:  # stun
-                pass
-            case 147:  # Increase hit points (%)
-                if max_value < 0:
-                    description = "Decrease"
+            case 15 | 100:
+                description = f"{spell_effects[effect_id]}"
+                duration = calc_buff_duration(server_max_level,
+                                              getattr(spell_data, 'buffdurationformula'),
+                                              getattr(spell_data, 'buffduration')
+                                              )
+                if base != max_value:
+                    description += f" by {abs(base)} (L{min_level}) to {abs(max_value)} (L{max_level})"
+                    if duration > 0:
+                        description += f" per tick (total {abs(base * duration)} to {abs(max_value * duration)})"
                 else:
-                    description = "Increase"
+                    description += f" by {max_value}"
+                    if duration > 0:
+                        description += f" per tick (total {abs(max_value * duration)})"
+            case 21:  # stun
+                description = f"{spell_effects[effect_id]}"
+                if base != max_value:
+                    description += f" {base / 1000} sec (L{min_level}) to {max_value / 1000} sec (L{max_level}))"
+                else:
+                    description += f" ({max_value / 1000} sec"
+            case 22 | 31:
+                description += f"{spell_effects[effect_id]} up to level {max_value}"
+            case 23:  # Fear
+                description += f"{spell_effects[effect_id]} up to level {FEAR_MAX_LEVEL}"
+            case 30 | 86:
+                description = f"{spell_effects[effect_id]}"
+                description += f" ({effect_base_value}/{effect_max_value})"
+            case 32:  # Summon Item
+                description = f"{spell_effects[effect_id]}"
+                item = Items.objects.filter(id=effect_base_value).first()
+                if item:
+                    description += f" : <a class='link' href=/items/view/{effect_base_value}>{item.Name}</a>"
+            case 33 | 68 | 106 | 108 | 113 | 152:
+                description = f"{spell_effects[effect_id]}"
+                description += (f" <a class='link' href='/pet/{getattr(spell_data, 'teleport_zone')}'>"
+                                f"{getattr(spell_data, 'teleport_zone')}</a>")
+            case 13 | 18 | 20 | 25 | 26 | 28 | 29 | 40 | 41 | 42 | 44 | 52 | 53 | 54 | 56 | 57 | 61 | 64 | 65 | 66 | 67 | 68 | 73 | 74 | 75 | 76 | 77 | 82 | 90 | 93 | 94 | 95 | 96 | 99 | 101 | 103 | 104 | 105 | 115 | 117 | 135 | 137 | 138 | 141 | 150 | 151 | 154 | 156 | 178 | 179 | 182 | 194 | 195 | 205 | 206 | 311 | 314 | 299:
+                description = f"{spell_effects[effect_id]} ({base})"  # TODO: Fix output here
+            case 58:
+                description = f"{spell_effects[effect_id]}:"
+                description += f"  {RACES[effect_base_value]}"
+            case 59:  # Damage Shields
+                description = f"{spell_effects[effect_id]}"
+                if base != max_value:
+                    description += f" by {base} (L{min_level}) to {max_value} (L{max_level})"
+                else:
+                    description += f" by {-max_value if max_value < 0 else max_value}"
+            case 63 | 120 | 330:
+                description = f"{spell_effects[effect_id]}"
+                description += f" ({max_value}%)"
+            case 81:
+                description = f"{spell_effects[effect_id]}"
+                description += f" and restore {base}% experience"
+            case 83 | 88 | 145:
+                description = (f"{spell_effects[effect_id]} to ({getattr(spell_data, 'effect_base_value1')}, "
+                               f"{getattr(spell_data, 'effect_base_value2')}, "
+                               f"{getattr(spell_data, 'effect_base_value3')}) in")
+                if getattr(spell_data, 'teleport_zone') != "same":
+                    zone_short_name = getattr(spell_data, 'teleport_zone')
+                    zone_long_name = ZONE_SHORT_TO_LONG[zone_short_name]
+                    description += f" <a class='link' href=/zones/view/{zone_short_name}>{zone_long_name}</a>"
+                else:
+                    description += " : same zone"
+            case 85 | 289 | 323:
+                description = f"{spell_effects[effect_id]}"
+                spell = SpellsNew.objects.filter(id=effect_base_value).first()
+                description += f"  <a class='link' href=/spells/view/{effect_base_value}>{spell.name}</a>"
+            case 89:
+                description = f"{'Decrease' if max_value < 0 else 'Increase'} {spell_effects[effect_id]}"
+                base -= 100
+                max_value -= 100
+                if base != max_value:
+                    description += f" by {base}% (L{min_level}) to {max_value}% (L{max_level})"
+                else:
+                    description += f" by {max_value}%"
+            case 87 | 98 | 114 | 119 | 123 | 124 | 125 | 127 | 128 | 129 | 130 | 131 | 132 | 158 | 169 | 173 | 174 | 175 | 176 | 177 | 180 | 181 | 183 | 186 | 188 | 200 | 201 | 216 | 227 | 266 | 273 | 294:
+                description = f"{spell_effects[effect_id]}"
+                if base != max_value:
+                    description += f" by {base}% (L{min_level}) to {max_value}% (L{max_level})"
+                else:
+                    description += f" by {max_value}%"
+            case 121:  # Reverse Damage Shield
+                description = f"{spell_effects[effect_id]}"
+                description += f" (-{max_value})"
+            case 91:
+                description = f"{spell_effects[effect_id]}"
+                description += f" (max level {max_value})"
+            case 136:
+                description = f"{spell_effects[effect_id]}"
+                v = ""
+                if max_value < 0:
+                    max_value = -max_value
+                    v = " excluded"
+                else:
+                    v = ""
+                description += f" ({SPELL_TARGETS[max_value]}) {v}"
+            case 139:  # Limit: Spell
+                description = f"{spell_effects[effect_id]}"
+                v = " excluded" if effect_base_value < 0 else ""
+                spell = SpellsNew.objects.filter(id=abs(effect_base_value)).first()
+                description += f" (<a class='link' href=/spells/view/{abs(effect_base_value)}>{spell.name}</a>{v})"
+            case 140:
+                description = f"{spell_effects[effect_id]}"
+                base *= 6
+                max_value *= 6
+                if base != max_value:
+                    description += f" ({base} sec (L{min_level}) to {max_value} sec (L{max_level})"
+                else:
+                    description += f" ({max_value} sec)"
+            case 143:  # limit min casting time
+                description = f"{spell_effects[effect_id]}"
+                base *= 6
+                max_value *= 6
+                if base != max_value:
+                    description += f" ({base / 6000} sec (L{min_level}) to {max_value / 6000} sec (L{max_level}))"
+                else:
+                    description += f" ({max_value / 6000} sec)"
+            case 148 | 149:  # stacking: overwrite existing spell
+                description = f"{spell_effects[effect_id]}"
+                description += (f" if slot {effect_id - 200} is effect '{spell_effects[effect_base_value]}' and < "
+                                f"{getattr(spell_data, 'effect_limit_value' + str(slot_id))}")
+            case 168 | 172 | 184 | 185:  # all skills modifier %
+                description = f"{'Decrease' if max_value < 0 else 'Increase'} {spell_effects[effect_id]}"
+                if base != max_value:
+                    description += f" by {base}% (L{min_level}) to {max_value}% (L{max_level})"
+                else:
+                    description += f" by {-max_value if max_value < 0 else max_value}%"
+            case 147:  # Increase hit points (%)
+                description = f"{'Decrease' if max_value < 0 else 'Increase'} {spell_effects[effect_id]}"
+                description += f" by {getattr(spell_data, 'max'+str(slot_id))} ({max_value}% max)"
+            case 153:  # balance party health
+                description = f"{spell_effects[effect_id]}"
+                description += f" ({max_value}% penalty)"
+            case 301:
+                name = f"{spell_effects[effect_id]}"
+                if max_value < 0:
+                    name = name.replace("Increase", "Decrease")
+                description = name
+                if base != max_value:
+                    description += f" by {base}% (L{min_level}) to {max_value}% (L{max_level})"
+                else:
+                    description += f" by {-max_value if max_value < 0 else max_value}%"
             case _:
-                continue
-        spell_descriptions.append((index, description))
+                description = f"{'Decrease' if max_value < 0 else 'Increase'} {spell_effects[effect_id]}"
+                if base != max_value:
+                    description += f" by {base} (L{min_level}) to {max_value} (L{max_level})"
+                else:
+                    if max_value < 0:
+                        max_value = -max_value
+                    description += f" by {-max_value if max_value < 0 else max_value}"
+        spell_descriptions.append((slot_id, description))
     return spell_descriptions
 
 
