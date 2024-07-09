@@ -797,7 +797,7 @@ def build_effect_descriptions(spell_data: object, effects: list, spell_duration:
                     description += f" : <a class='link' href=/items/view/{effect_base_value}>{item.Name}</a>"
             case 33 | 68 | 106 | 108 | 113 | 152:
                 description = f"{spell_effects[effect_id]}"
-                description += (f" <a class='link' href='/pet/{getattr(spell_data, 'teleport_zone')}'>"
+                description += (f" <a class='link' href='/pets/view/{getattr(spell_data, 'teleport_zone')}'>"
                                 f"{getattr(spell_data, 'teleport_zone')}</a>")
             case 36:
                 description = f"{'Decrease' if effect_base_value < 0 else 'Increase'} {spell_effects[effect_id]}"

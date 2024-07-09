@@ -1,0 +1,110 @@
+{% extends 'pets/header.html' %}
+{% load data_utilities %}
+{% block content %}
+    <div class="container eq-window-complex-fancy py-4">
+        <div class="row">
+            <div class="col-12"><h1 class="eq-header text-center">Pet: {{ pet.name }}</h1></div>
+            <div class="col-6 col-md-6">
+                <article class="eq-window-simple border p-3">
+                    <h4 class="eq-header text-center">Pet Stats : </h4>
+                    <table class="eq-table">
+                        <tr>
+                            <td><b>Level : </b></td>
+                            <td>{{ pet.level }}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Race : </b></td>
+                            <td>{{ pet.race|npc_race }}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Class : </b></td>
+                            <td>{{ pet.class_name|npc_class }}</td>
+                        </tr>
+                        <tr>
+                            <td><b>HP : </b></td>
+                            <td>{{ pet.hp }}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Damage : </b></td>
+                            <td>{{ pet.mindmg }} to {{ pet.maxdmg }}</td>
+                        </tr>
+                        <tr>
+                            <td><b>HP Regen : </b></td>
+                            <td>{{ pet.hp_regen_rate }} Per Tick</td>
+                        </tr>
+                        <tr>
+                            <td><b>Mana Regen : </b></td>
+                            <td>{{ pet.mana_regen_rate }} Per Tick</td>
+                        </tr>
+
+                        <tr>
+                            <td><b>Strength : </b></td>
+                            <td>{{ pet.STR }}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Stamina : </b></td>
+                            <td>{{ pet.STA }}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Dexterity : </b></td>
+                            <td>{{ pet.DEX }}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Agility : </b></td>
+                            <td>{{ pet.AGI }}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Intelligence : </b></td>
+                             <td>{{ pet.intelligence }}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Wisdom : </b></td>
+                            <td>{{ pet.WIS }}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Charisma : </b></td>
+                            <td>{{ pet.CHA }}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Magic Resist : </b></td>
+                            <td>{{ pet.MR }}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Fire Resist : </b></td>
+                            <td>{{ pet.FR }}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Cold Resist : </b></td>
+                            <td>{{ pet.CR }}</td>
+                        </tr>
+                        <tr>
+                            <td class="min"><b>Disease Resist : </b></td>
+                            <td>{{ pet.DR }}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Poison Resist : </b></td>
+                            <td>{{ pet.PR }}</td>
+                        </tr>
+                        {% if pet.special_abilities != '' %}
+                            <tr>
+                                <td class="min"><b>Special Abilities : </b></td>
+                                    <td>{{ pet.special_abilities|npc_special_ability }}</td>
+                            </tr>{% endif %}
+                    </table>
+                </article>
+            </div>
+            {% if spells != '' %}
+                <div class="col-6 col-md-6">
+                    <article class="eq-window-simple border p-3">
+                        <h6 class="text-center">This pet casts the following spells : </h6>
+                        <dl>
+                            {% for spell in spells %}
+                                <dd>{{ spell.spellid|safe }}</dd>
+                            {% endfor %}
+                        </dl>
+                    </article>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

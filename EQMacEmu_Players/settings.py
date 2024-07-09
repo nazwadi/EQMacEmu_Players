@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     'factions.apps.FactionConfig',
     'items.apps.ItemConfig',
     'npcs.apps.NpcsConfig',
+    'pets.apps.PetsConfig',
     'recipes.apps.RecipesConfig',
     'spells.apps.SpellsConfig',
     'zones.apps.ZonesConfig',

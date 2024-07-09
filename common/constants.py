@@ -331,6 +331,18 @@ RACES = {
     329: 'Portal'
 }
 
+PET_CLASSES = {
+    2: "Cleric",
+    5: "Shadow Knight",
+    6: "Druid",
+    10: "Shaman",
+    11: "Necromancer",
+    12: "Wizard",
+    13: "Magician",
+    14: "Enchanter",
+    15: "Beastlord"
+}
+
 
 ZONE_SHORT_TO_LONG = {
     "qeynos": "South Qeynos",

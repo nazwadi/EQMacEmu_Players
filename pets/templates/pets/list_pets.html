@@ -1,0 +1,73 @@
+{% extends 'pets/header.html' %}
+{% load data_utilities %}
+{% block content %}
+    <div class="container eq-window-complex-fancy py-4">
+        <div class="col-12"><h2 class="text-center mb-4 eq-header">Pets By Class</h2></div>
+
+        <div class="row row-cols-9 mb-4">
+            {% for pet_class in pet_classes.items %}
+                <div class="col">
+                {% if pet_id == pet_class.0 %}
+                    <a href="/pets/list/{{ pet_class.0 }}"
+                       class="btn eq-button-fancy-highlighted eq-button-fancy d-flex flex-column align-items-center rounded-0"
+                       style="height: 100px;">
+                        <img src="/static/images/class_icons/{{ pet_class.0 }}.gif" class="img-fluid"
+                             alt="{{ pet_class.1 }}" style="max-height: 70%; max-width: 70%;">
+                        <span class="text-truncate">{{ pet_class.1 }}</span>
+                    </a>
+                    {% else %}
+                    <a href="/pets/list/{{ pet_class.0 }}"
+                       class="btn eq-button-fancy d-flex flex-column align-items-center rounded-0"
+                       style="height: 100px;">
+                        <img src="/static/images/class_icons/{{ pet_class.0 }}.gif" class="img-fluid"
+                             alt="{{ pet_class.1 }}" style="max-height: 70%; max-width: 70%;">
+                        <span class="text-truncate">{{ pet_class.1 }}</span>
+                    </a>
+                {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if pets %}
+            <div class="col-12 col-md-12 mb-4">
+                <article class="border p-3">
+                    <table class="eq-table">
+                        <thead>
+                        <tr>
+                            <th>Level</th>
+                            <th>Icon</th>
+                            <th>Spell Name</th>
+                            <th>Details</th>
+                            <th>Race</th>
+                            <th>Pet Level</th>
+                            <th>Pet Class</th>
+                            <th>HP</th>
+                            <th>Mana</th>
+                            <th>AC</th>
+                            <th>Min Damage</th>
+                            <th>Max Damage</th>
+                        </tr>
+                        </thead>
+                        {% for p in pets %}
+                            <tr>
+                                <td>{{ p.plevel }}</td>
+                                <td><img src="/static/images/icons/{{ p.new_icon }}.gif" alt="Pet Spell Icon"></td>
+                                <td><a href="/spells/view/{{ p.id }}" class="link">{{ p.name }}</a></td>
+                                <td><a href="/pets/view/{{ p.teleport_zone }}" class="link">View</a></td>
+                                <td>{{ p.npc_race|npc_race }}</td>
+                                <td>{{ p.level }}</td>
+                                <td>{{ p.npc_class|npc_class }}</td>
+                                <td>{{ p.hp }}</td>
+                                <td>{{ p.mana }}</td>
+                                <td>{{ p.AC }}</td>
+                                <td>{{ p.mindmg }}</td>
+                                <td>{{ p.maxdmg }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+
+                </article>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
