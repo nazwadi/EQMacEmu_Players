@@ -20,7 +20,6 @@ def list_pets(request, pet_class_id: int = None):
                       f" INNER JOIN npc_types ON npc_types.NAME = spells_new.teleport_zone "
                       f"WHERE {'spells_new.classes' + str(pet_class_id)} > 0 AND {'spells_new.classes' + str(pet_class_id)} < 70 "
                       f"ORDER BY {'spells_new.classes' + str(pet_class_id)}")
-        print(pets_query)
         cursor = connections['game_database'].cursor()
         cursor.execute(pets_query)
         results = cursor.fetchall()
