@@ -26,7 +26,7 @@
                         </tr>
                         <tr>
                             <td><b>Damage : </b></td>
-                            <td>{{ pet.mindmg }} to {{ pet.maxdmg }}</td>
+                            <td>{{ pet.min_dmg }} to {{ pet.max_dmg }}</td>
                         </tr>
                         <tr>
                             <td><b>HP Regen : </b></td>
@@ -98,8 +98,8 @@
                     <article class="eq-window-simple border p-3">
                         <h6 class="text-center">This pet casts the following spells : </h6>
                         <dl>
-                            {% for spell in spells %}
-                                <dd>{{ spell.spellid|safe }}</dd>
+                            {% for spell in spell_list %}
+                                <dd><img src="/static/images/icons/{{ spell.new_icon }}.gif" alt="spell icon"> <a href="/spells/view/{{ spell.id }}" class="link spell-tooltip" data-url="{{ spell.id }}">{{ spell.name }}</a></dd>
                             {% endfor %}
                         </dl>
                     </article>

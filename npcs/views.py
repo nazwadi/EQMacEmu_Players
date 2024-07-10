@@ -11,7 +11,6 @@ from common.models.npcs import MerchantList
 from common.models.spawns import SpawnEntry
 from common.models.spawns import Spawn2
 from common.utils import calculate_item_price
-from common.constants import PET_CLASSES
 from collections import namedtuple
 
 
@@ -23,40 +22,6 @@ def index_request(request):
     :return: Http response
     """
     return redirect("/npcs/search")
-
-
-def view_pets(request, pet_id: int = None):
-    """
-
-    :param request:  Http request
-    :param pet_id: pet id
-    :return:  Http response
-    """
-    if pet_id != None:
-        pets_query = (f"SELECT spells_new.NAME, spells_new.id, spells_new.new_icon, spells_new.teleport_zone,"
-                      f"{'spells_new.classes'+str(pet_id)} AS plevel, npc_types.race, npc_types.`level`,npc_types.class, npc_types.hp, npc_types.mana,"
-                      f"npc_types.AC, npc_types.mindmg,npc_types.maxdmg FROM spells_new INNER JOIN pets ON pets.`type` = spells_new.teleport_zone"
-                      f" INNER JOIN npc_types ON npc_types.NAME = spells_new.teleport_zone "
-                      f"WHERE {'spells_new.classes'+str(pet_id)} > 0 AND {'spells_new.classes'+str(pet_id)} < 70")
-#                        GROUP BY spells_new.teleport_zone ORDER BY %s """
-        cursor = connections['game_database'].cursor()
-        cursor.execute(pets_query)
-        results = cursor.fetchall()
-        PetData = namedtuple("PetData", ["name", "id", "new_icon", "teleport_zone", "plevel",
-                                             "npc_race", "level", "npc_class", "hp", "mana", "AC", "mindmg",
-                                         "maxdmg"])
-        pets = list()
-        for result in results:
-            pets.append(PetData(*result))
-        return render(request=request,
-                      template_name="npcs/pets.html",
-                      context={"pet_id": pet_id,
-                               "pet_classes": PET_CLASSES,
-                               "pets": pets})
-    return render(request=request,
-                  template_name="npcs/pets.html",
-                  context={"pet_id": pet_id,
-                           "pet_classes": PET_CLASSES})
 
 
 def search(request):

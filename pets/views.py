@@ -1,5 +1,6 @@
 from common.constants import PET_CLASSES
 from common.models.npcs import NPCTypes
+from common.models.spells import SpellsNew
 from django.shortcuts import render
 from django.db import connections
 from collections import namedtuple
@@ -48,15 +49,23 @@ def view_pet(request, pet_name: str = None):
     pet_spells = cursor.fetchall()
     if pet_spells:
         spells_query = """SELECT npc_spells_entries.spellid
-                            FROM npc_spells_entries
-                            WHERE npc_spells_entries.npc_spells_id = %s
-                            AND npc_spells_entries.minlevel <= %s
-                            AND npc_spells_entries.maxlevel >= %s
-                            ORDER BY npc_spells_entries.priority DESC"""
+                          FROM npc_spells_entries
+                          WHERE npc_spells_entries.npc_spells_id = %s
+                              AND npc_spells_entries.minlevel <= %s
+                              AND npc_spells_entries.maxlevel >= %s
+                          ORDER BY npc_spells_entries.priority DESC"""
         cursor.execute(spells_query, [pet.npc_spells_id, pet.level, pet.level])
         spells = cursor.fetchall()
+        spell_list = list()
+        for entry in spells:
+            entry = entry[0]
+            spell = SpellsNew.objects.filter(id=entry).first()
+            spell_list.append(spell)
 
+        return render(request=request,
+                      template_name="pets/view_pet.html",
+                      context={"pet": pet,
+                               "spell_list": spell_list})
     return render(request=request,
                   template_name="pets/view_pet.html",
-                  context={"pet": pet,
-                           "spells": spells})
+                  context={"pet": pet,})
