@@ -18,8 +18,9 @@ def list_pets(request, pet_class_id: int = None):
                       f"{'spells_new.classes' + str(pet_class_id)} AS plevel, npc_types.race, npc_types.`level`,npc_types.class, npc_types.hp, npc_types.mana,"
                       f"npc_types.AC, npc_types.mindmg,npc_types.maxdmg FROM spells_new INNER JOIN pets ON pets.`type` = spells_new.teleport_zone"
                       f" INNER JOIN npc_types ON npc_types.NAME = spells_new.teleport_zone "
-                      f"WHERE {'spells_new.classes' + str(pet_class_id)} > 0 AND {'spells_new.classes' + str(pet_class_id)} < 70")
-        #                        GROUP BY spells_new.teleport_zone ORDER BY %s """
+                      f"WHERE {'spells_new.classes' + str(pet_class_id)} > 0 AND {'spells_new.classes' + str(pet_class_id)} < 70 "
+                      f"ORDER BY {'spells_new.classes' + str(pet_class_id)}")
+        print(pets_query)
         cursor = connections['game_database'].cursor()
         cursor.execute(pets_query)
         results = cursor.fetchall()
