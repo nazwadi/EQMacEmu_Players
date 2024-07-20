@@ -60,8 +60,8 @@
                                                 <td>{{ row.spell.skill|player_skill }}</td>
                                                 <td class="min">
                                                     {% for effect in row.spell_effects %}
-                                                        <span style="font-weight: bold;">Slot {{ effect.0|safe }} : </span>
-                                                        &nbsp;{{ effect.1 }}<br/>
+                                                        <span style="font-weight: bold;">Slot {{ effect.0 }} : </span>
+                                                        &nbsp;{{ effect.1|safe }}<br/>
                                                     {% endfor %}
                                                 </td>
                                             </tr>
