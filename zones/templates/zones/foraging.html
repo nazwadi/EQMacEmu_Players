@@ -5,6 +5,8 @@
         <div class="col">
             <span style="font-weight: bold;">Foraging</span> -
             <span style="font-style: italic">Found {{ forage|length }} forage able items in {{ zone_data.short_name|zone_short_to_long }}:</span>
+        <input id="tooltip" title="tooltip here" value="place mouse here">
+
             <table id="foraging-table" class="display table table-striped" style="width: 100%;">
                 <thead>
                 <tr>
@@ -20,15 +22,20 @@
                     <tr>
                         <td><img src="{% static '/images/items' %}/item_{{ item_icon }}.png"
                                  alt="item_{{ item_icon }}.png">
-                            <a href="/items/view/{{ item_id }}"
-                               target="_blank">{{ item_name }}</a>
+                            <a href="/items/view/{{ item_id }}" target="_blank">{{ item_name }}</a>
                         </td>
                         <td>{{ skill_level }}</td>
                         <td>{{ chance }}%</td>
-                        <td><img src="{% if min_expansion == -1 %}{% static "/images/Original.gif" %}{% else %}{% static "/images/" %}{{ min_expansion|expansion_icon }}{% endif %}"
+                        <td><img src="
+                                {% if min_expansion == -1 %}
+                                    {% static "/images/Original.gif" %}
+                                {% else %}
+                                    {% static "/images/" %}{{ min_expansion|expansion_icon }}
+                                {% endif %}"
                                  alt="{{ min_expansion }}"></td>
-                        <td>{% if max_expansion == -1 %}All{% elif max_expansion == 99 %}All Remaining{% else %}<img src="{% static "/images/" %}{{ max_expansion|expansion_icon }}"
-                                                                                                                     alt="{{ max_expansion }}">{% endif %}</td>
+                        <td>{% if max_expansion == -1 %}All{% elif max_expansion == 99 %}All Remaining{% else %}
+                            <img src="{% static "/images/" %}{{ max_expansion|expansion_icon }}"
+                                 alt="{{ max_expansion }}">{% endif %}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
