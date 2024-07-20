@@ -1,9 +1,78 @@
 {% extends 'spells/header.html' %}
 {% load data_utilities %}
 {% block content %}
-    {% if class_id == 2 %}
-        {% include "spells/2.html" %}
-    {% elif class_id == 6 %}
-        {% include "spells/6.html" %}
-    {% endif %}
+    <main class="flex-shrink-0">
+        <div class="container py-4">
+            <div class="row eq-window-complex-fancy">
+                {% if class_id|player_class == 'Bard' %}
+                    <h2 class="col-12 text-center eq-header">{{ class_id|player_class }} Songs by Level</h2>
+                {% else %}
+                    <h2 class="col-12 text-center eq-header">{{ class_id|player_class }} Spells by Level</h2>
+                {% endif %}
+                <div class="col-12">
+                    <ul class="nav justify-content-center py-3">
+                        {% for  level, spell in spells.items %}
+                            <li class="nav-item border"><a href="#level{{ level }}"
+                                                           class="border-0 btn btn-outline-secondary btn-sm rounded-0">Level {{ level }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    {% for level, spells_in_level in spells.items %}
+                        <div class="col-12 padding eq-window-simple" id='level{{ level }}'>
+                            <article class="col-12 px-3 py-2 mb-4">
+                                <ul class="nav nav-pills nav-fill py-2">
+                                    <li class="nav-item"><a href="#top" class="btn btn-outline-secondary">
+                                        <span>Top</span>
+                                        <svg class="bi my-1 theme-icon-active" fill="currentColor" width="1em"
+                                             height="1em">
+                                            <use href="/static/bootstrap-images/icons.svg#chevron-up"></use>
+                                        </svg>
+                                    </a></li>
+                                    <li class="nav-item"><h3>Level {{ level }}</h3></li>
+                                    <li class="nav-item"><a href="#top" class="btn btn-outline-secondary">
+                                        <span>Top</span>
+                                        <svg class="bi my-1 theme-icon-active" fill="currentColor" width="1em"
+                                             height="1em">
+                                            <use href="/static/bootstrap-images/icons.svg#chevron-up"></use>
+                                        </svg>
+                                    </a></li>
+                                </ul>
+                                <section>
+                                    <table class="eq-table eq-highlight-rows">
+                                        <thead class="eq-table-floating-header">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Name</th>
+                                            <th>Target Type</th>
+                                            <th>Skill</th>
+                                            <th>Effect</th>
+                                        </tr>
+                                        </thead>
+                                        {% for row in spells_in_level %}
+                                            <tr>
+                                                <td>{{ forloop.counter }}</td>
+                                                <td><img src="/static/images/icons/{{ row.spell.new_icon }}.gif"
+                                                         alt="{{ row.spell.new_icon }}.gif"> <a
+                                                        href="/spells/view/{{ row.spell.id }}"
+                                                        class="link">{{ row.spell.name }}</a>
+                                                </td>
+                                                <td>{{ row.spell.target_type|spell_target_type }}</td>
+                                                <td>{{ row.spell.skill|player_skill }}</td>
+                                                <td class="min">
+                                                    {% for effect in row.spell_effects %}
+                                                        <span style="font-weight: bold;">Slot {{ effect.0 }} : </span>
+                                                        &nbsp;{{ effect.1 }}<br/>
+                                                    {% endfor %}
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </table>
+                                </section>
+                            </article>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </main>
 {% endblock %}

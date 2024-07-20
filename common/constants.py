@@ -454,6 +454,15 @@ ZONE_SHORT_TO_LONG = {
     "nurga": "The Mines of Nurga",
     "veeshan": "Veeshan's Peak",
     "veksar": "Veksar",
+    "grimling": "The Grimling Forest",
+    "nexus": "The Nexus",
+    "twilight": "Twilight",
+    "dawnshroud": "Dawnshroud",
+    "poknowledge": "Plane of Knowledge",
+    "iceclad": "Iceclad Ocean",
+    "greatdivide": "The Great Divide",
+    "wakening": "The Wakening Lands",
+    "cobaltscar": "Cobalt Scar",
 }
 
 SPELL_TARGETS = {
