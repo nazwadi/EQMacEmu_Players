@@ -1,5 +1,9 @@
 import datetime
 from django import template
+from common.constants import PLAYER_CLASSES
+from common.constants import PLAYER_DEITIES
+from common.constants import PLAYER_LANGUAGES
+from common.constants import PLAYER_RACES
 from common.constants import RACES
 from common.constants import ZONE_SHORT_TO_LONG
 
@@ -293,25 +297,7 @@ def inventory_slot(value):
 
 @register.filter(name='player_class')
 def player_class(value):
-    classes = {
-        0: "Unknown",
-        1: "Warrior",
-        2: "Cleric",
-        3: "Paladin",
-        4: "Ranger",
-        5: "Shadowknight",
-        6: "Druid",
-        7: "Monk",
-        8: "Bard",
-        9: "Rogue",
-        10: "Shaman",
-        11: "Necromancer",
-        12: "Wizard",
-        13: "Magician",
-        14: "Enchanter",
-        15: "Beastlord",
-    }
-    return classes[value] if value in classes else "Unknown"
+    return PLAYER_CLASSES[value] if value in PLAYER_CLASSES else "Unknown"
 
 
 @register.filter(name='spell_target_type')
@@ -414,25 +400,7 @@ def npc_race(value):
 
 @register.filter(name='player_race')
 def player_race(value):
-    races = {
-        0: "Unknown",
-        1: "Human",
-        2: "Barbarian",
-        3: "Erudite",
-        4: "Wood Elf",
-        5: "High Elf",
-        6: "Dark Elf",
-        7: "Half Elf",
-        8: "Dwarf",
-        9: "Troll",
-        10: "Ogre",
-        11: "Halfling",
-        12: "Gnome",
-        13: "Iksar",
-        14: "Vah Shir",
-        128: "Iksar",
-    }
-    return races[value] if value in races else value
+    return PLAYER_RACES[value] if value in PLAYER_RACES else value
 
 
 @register.filter(name='player_deity')
@@ -443,27 +411,7 @@ def player_deity(value):
     :param value: the deity id piped to the filter
     :return: a human-readable player deity name
     """
-    deities = {
-        140: "Agnostic",
-        396: "Agnostic",  # Yes, the duplicate is intentional
-        201: "Bertoxxulous",
-        202: "Brell Serilis",
-        203: "Cazic Thule",
-        204: "Erollisi Marr",
-        205: "Bristlebane",
-        206: "Innoruuk",
-        207: "Karana",
-        208: "Mithaniel Marr",
-        209: "Prexus",
-        210: "Quellious",
-        211: "Rallos Zek",
-        212: "Rodcet Nife",
-        213: "Solusek Ro",
-        214: "The Tribunal",
-        215: "Tunare",
-        216: "Veeshan",
-    }
-    return deities[value] if value in deities else "Unknown"
+    return PLAYER_DEITIES[value] if value in PLAYER_DEITIES else "Unknown"
 
 
 @register.filter(name='player_skill')
@@ -555,36 +503,7 @@ def player_skill(value):
 
 @register.filter(name='player_language')
 def player_language(value):
-    player_languages = {
-        0: "Common Tongue",
-        1: "Barbarian",
-        2: "Erudian",
-        3: "Elvish",
-        4: "Dark Elvish",
-        5: "Dwarvish",
-        6: "Troll",
-        7: "Ogre",
-        8: "Gnomish",
-        9: "Halfling",
-        10: "Thieves Cant",
-        11: "Old Erudian",
-        12: "Elder Elvish",
-        13: "Froglok",
-        14: "Goblin",
-        15: "Gnoll",
-        16: "Combine Tongue",
-        17: "Elder Teir`dal",
-        18: "Lizardman",
-        19: "Orcish",
-        20: "Faerie",
-        21: "Dragon",
-        22: "Elder Dragon",
-        23: "Dark Speech",
-        24: "Vah Shir",
-        25: "Unknown1",
-        26: "Unknown2",
-    }
-    return player_languages[value] if value in player_languages else "Unknown" + str(value)
+    return PLAYER_LANGUAGES[value] if value in PLAYER_LANGUAGES else "Unknown" + str(value)
 
 
 @register.filter(name='zone_short_to_long')

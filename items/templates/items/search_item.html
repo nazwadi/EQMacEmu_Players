@@ -16,6 +16,28 @@
                                    placeholder="a tattered note">
                         </div>
                         <div class="col-12 col-md-2">
+                            <div class="form-text text-wrap"><label for="player_class">Class</label></div>
+                            <select class="form-select" id="player_class" name="player_class" aria-label="player_class">
+                                <option value="0" selected>Any</option>
+                                {% for class in PLAYER_CLASSES %}
+                                    {% if class != 0 %}
+                                        <option value="{{ class }}">{{ class|player_class }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-2">
+                            <div class="form-text text-wrap"><label for="player_race">Race</label></div>
+                            <select class="form-select" id="player_race" name="player_race" aria-label="player_race">
+                                <option value="0" selected>Any</option>
+                                {% for race in PLAYER_RACES %}
+                                    {% if race != 0 %}
+                                        <option value="{{ race }}">{{ race|player_race }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-2">
                             <div class="form-text text-wrap"><label for="query_limit">Query Limit (Max: 200)</label></div>
                             <input class="form-control" id="query_limit" name="query_limit" type="number" min="0" max="200" value="50">
                         </div>

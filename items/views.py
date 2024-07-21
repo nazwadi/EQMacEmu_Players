@@ -1,6 +1,11 @@
 from django.shortcuts import render, redirect
+from django.contrib import messages
 from django.db import connections
 
+from items.utils import get_class_bitmask
+from items.utils import get_race_bitmask
+from common.constants import PLAYER_CLASSES
+from common.constants import PLAYER_RACES
 from common.models.items import DiscoveredItems
 from common.models.items import Items
 from common.models.spells import SpellsNew
@@ -16,10 +21,16 @@ def search(request):
     """
     if request.method == "GET":
         return render(request=request,
+                      context={
+                          "PLAYER_CLASSES": PLAYER_CLASSES,
+                          "PLAYER_RACES": PLAYER_RACES,
+                      },
                       template_name="items/search_item.html")
 
     if request.method == "POST":
         item_name = request.POST.get("item_name")
+        player_class = request.POST.get("player_class")
+        player_race = request.POST.get("player_race")
         query_limit = request.POST.get("query_limit")
         try:
             query_limit = int(query_limit)
@@ -29,11 +40,42 @@ def search(request):
             query_limit = 0
         elif query_limit > 200:  # yes, this is an arbitrary limit on search results
             query_limit = 200
-        search_results = Items.objects.filter(Name__icontains=item_name)[:query_limit]
+
+        # Begin building query
+        search_results = Items.objects.filter(Name__icontains=item_name)
+
+        try:
+            player_class = int(player_class)
+        except ValueError:
+            messages.error(request, "Invalid player class.  Valid options are between 1 and 15.")
+            return redirect("/items/search")
+        if player_class != 0:  # zero means "any" class so no need to filter
+            search_results = search_results.extra(
+                where=[
+                    f"((classes & {get_class_bitmask(player_class)}) = {get_class_bitmask(player_class)}) "
+                    f"OR (classes = '32767')"])
+
+        try:
+            player_race = int(player_race)
+        except ValueError:
+            messages.error(request, "Invalid player race.")
+            return redirect("/items/search")
+        if player_race != 0:  # zero means "any" race so no need to filter
+            search_results = search_results.extra(
+                where=[
+                    f"((races & {get_race_bitmask(player_race)}) = {get_race_bitmask(player_race)}) "
+                    f"OR (races = '16384')"])
+
+        search_results = search_results[:query_limit]
+
+        if len(search_results) == 0:
+            messages.info(request, "No search results found.")
 
         return render(request=request,
                       template_name="items/search_item.html",
                       context={"search_results": search_results,
+                               "PLAYER_CLASSES": PLAYER_CLASSES,
+                               "PLAYER_RACES": PLAYER_RACES,
                                "level_range": range(100)})
 
 
@@ -225,3 +267,21 @@ def view_item(request, item_id):
                       "forage": forage,
                       "ground_spawns": ground_spawns,
                   })
+
+
+def best_in_slot(request):
+    """
+    Defines view for https://url.tld/items/bis/<str:class_name>
+
+    :param request: Http request
+    :param class_name:
+    :return:
+    """
+    with open('items/templates/items/best_in_slot/bard.md', 'r') as md_file:
+        bard_bis = md_file.read()
+    with open('items/templates/items/best_in_slot/cleric.md', 'r') as md_file:
+        cleric_bis = md_file.read()
+    return render(request=request,
+                  template_name="items/best_in_slot.html",
+                  context={"bard_bis": bard_bis,
+                           "cleric_bis": cleric_bis})
