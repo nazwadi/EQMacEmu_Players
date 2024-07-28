@@ -432,6 +432,33 @@ PET_CLASSES = {
     15: "Beastlord"
 }
 
+EQUIPMENT_SLOTS = {
+    #    1: "Cursor",
+    # 2: "Ear01",
+    4: "Head",
+    8: "Face",
+    # 16: "Ear02",
+    18: "Ears",
+    32: "Neck",
+    64: "Shoulders",
+    128: "Arms",
+    256: "Back",
+    # 512: "Bracer01",
+    # 1024: "Bracer02",
+    1536: "Wrists",
+    2048: "Range",
+    4096: "Hands",
+    8192: "Primary",
+    16384: "Secondary",
+    # 32768: "Ring01",
+    # 65536: "Ring02",
+    98304: "Fingers",
+    131072: "Chest",
+    262144: "Legs",
+    524288: "Feet",
+    1048576: "Waist",
+    2097152: "Ammo",
+}
 
 ZONE_SHORT_TO_LONG = {
     "qeynos": "South Qeynos",

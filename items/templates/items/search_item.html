@@ -10,7 +10,7 @@
                 <form class="p-3 mb-4 bg-body-tertiary border" action="/items/search" method="post">
                     {% csrf_token %}
                     <div class="row">
-                        <div class="col-12 col-md-4">
+                        <div class="col-12 col-md-6">
                             <div class="form-text text-wrap"><label for="item_name">Item Name</label></div>
                             <input type="text" class="form-control" id="item_name" name="item_name"
                                    placeholder="a tattered note">
@@ -38,8 +38,54 @@
                             </select>
                         </div>
                         <div class="col-12 col-md-2">
-                            <div class="form-text text-wrap"><label for="query_limit">Query Limit (Max: 200)</label></div>
-                            <input class="form-control" id="query_limit" name="query_limit" type="number" min="0" max="200" value="50">
+                            <div class="form-text text-wrap"><label for="query_limit">Query Limit (Max: 200)</label>
+                            </div>
+                            <input class="form-control" id="query_limit" name="query_limit" type="number" min="0"
+                                   max="200" value="50">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-md-2">
+                            <div class="form-text text-wrap"><label for="item_slot">Equip Slot</label></div>
+                            <select class="form-select" id="item_slot" name="item_slot" aria-label="item_slot">
+                                <option value="0" selected>Any</option>
+                                {% for slot, slot_name in EQUIPMENT_SLOTS.items %}
+                                    {% if slot != 0 %}
+                                        <option value="{{ slot }}">{{ slot_name }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-3">
+                            <div class="d-flex">
+                                <div class="col">
+                                    <div class="form-text text-wrap"><label for="resists_type">Resist Type</label></div>
+                                    <select class="form-select" id="resists_type" name="resists_type"
+                                            style="width: 14ch">
+                                        <option value="Resist">Resist</option>
+                                        <option value="mr">Resist Magic</option>
+                                        <option value="fr">Resist Fire</option>
+                                        <option value="cr">Resist Cold</option>
+                                        <option value="pr">Resist Poison</option>
+                                        <option value="dr">Resist Disease</option>
+                                    </select>
+                                </div>
+                                <div class="col">
+                                    <div class="form-text text-wrap"><label for="resists_operator">Operator</label></div>
+                                    <select class="form-select" id="resists_operator" name="resists_operator" style="width: 10ch">
+                                        <option value=">">&gt;</option>
+                                        <option value=">=">&gt;=</option>
+                                        <option value="=">=</option>
+                                        <option value="<=">&lt;=</option>
+                                        <option value="<">&lt;</option>
+                                    </select>
+                                </div>
+                                <div class="col">
+                                    <div class="form-text text-wrap"><label for="resists_value">Resist Value</label></div>
+                                    <input class="form-control" id="resists_value" name="resists_value" style="width: 10ch"
+                                           type="number" min="0" value="0">
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="col-12 col-md-12">
@@ -63,7 +109,7 @@
                         {% for result in search_results %}
                             <tr>
                                 <td>
-                                    <img src="{% static "/images/items/" %}item_{{ result.icon}}.png"
+                                    <img src="{% static "/images/items/" %}item_{{ result.icon }}.png"
                                          alt="item_{{ result.icon }}.png">
                                     <a href="/items/view/{{ result.id }}">{{ result.Name }}</a>
                                 </td>

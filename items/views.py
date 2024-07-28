@@ -6,6 +6,7 @@ from items.utils import get_class_bitmask
 from items.utils import get_race_bitmask
 from common.constants import PLAYER_CLASSES
 from common.constants import PLAYER_RACES
+from common.constants import EQUIPMENT_SLOTS
 from common.models.items import DiscoveredItems
 from common.models.items import Items
 from common.models.spells import SpellsNew
@@ -22,6 +23,7 @@ def search(request):
     if request.method == "GET":
         return render(request=request,
                       context={
+                          "EQUIPMENT_SLOTS": EQUIPMENT_SLOTS,
                           "PLAYER_CLASSES": PLAYER_CLASSES,
                           "PLAYER_RACES": PLAYER_RACES,
                       },
@@ -29,9 +31,105 @@ def search(request):
 
     if request.method == "POST":
         item_name = request.POST.get("item_name")
+        item_slot = request.POST.get("item_slot")
+        resists_type = request.POST.get("resists_type")
+        resists_operator = request.POST.get("resists_operator")
+        resists_value = request.POST.get("resists_value")
         player_class = request.POST.get("player_class")
         player_race = request.POST.get("player_race")
         query_limit = request.POST.get("query_limit")
+
+        is_where_clause = False
+        params_list = []
+
+        # Begin building query
+        query = "SELECT * FROM items"
+        if item_name:
+            query += " WHERE (LOWER(items.Name) LIKE %s)"
+            is_where_clause = True
+            params_list.append(f"%{item_name.lower()}%")
+
+        try:
+            player_class = int(player_class)
+        except ValueError:
+            messages.error(request, "Invalid player class.  Valid options are between 1 and 15.")
+            return redirect("/items/search")
+        if player_class != 0:  # zero means "any" class so no need to filter
+            if is_where_clause:
+                clause = "AND"
+            else:
+                clause = "WHERE"
+                is_where_clause = True
+            query += f" {clause} (((classes & %s) = %s) OR (classes = '32767'))"
+            player_class = get_class_bitmask(player_class)
+            # yes, twice - there are two parameters above
+            params_list.append(player_class)
+            params_list.append(player_class)
+
+        try:
+            player_race = int(player_race)
+        except ValueError:
+            messages.error(request, "Invalid player race.")
+            return redirect("/items/search")
+        if player_race != 0:  # zero means "any" race so no need to filter
+            if is_where_clause:
+                clause = "AND"
+            else:
+                clause = "WHERE"
+                is_where_clause = True
+            query += f" {clause} (((races & %s) = %s) OR (races = '16384'))"
+            player_race = get_race_bitmask(player_race)
+            # yes, twice - there are two parameters above
+            params_list.append(player_race)
+            params_list.append(player_race)
+
+        try:
+            item_slot = int(item_slot)
+        except ValueError:
+            messages.error(request, "Invalid item slot.")
+            return redirect("/items/search")
+        if item_slot != 0:  # zero means "any" slot so no need to filter
+            if is_where_clause:
+                clause = "AND"
+            else:
+                clause = "WHERE"
+                is_where_clause = True
+            query += f" {clause} ((slots & %s) = %s)"
+            # yes, twice - there are two parameters above
+            params_list.append(item_slot)
+            params_list.append(item_slot)
+
+        try:
+            resists_value = int(resists_value)
+        except ValueError:
+            messages.error(request, "Invalid resist value. Must be an integer.")
+            return redirect("/items/search")
+
+        if resists_type != 'Resist':  # if no resist type was set, no need to filter
+            allowed_resist_types = {'mr': 'mr', 'fr': 'fr', 'cr': 'cr', 'dr': 'dr', 'pr': 'pr'}
+            if resists_type not in allowed_resist_types.keys():
+                messages.error(request, "Invalid resist type.")
+                return redirect("/items/search")
+            else:
+                resists_type = allowed_resist_types[resists_type]  # just an extra precaution
+            allowed_resists_operators = {'>': '>', '>=': '>=', '=': '=', '<=': '<=', '<': '<'}
+            if resists_operator not in ['>', '>=', '=', '<=', '<']:
+                messages.error(request, "Invalid resist operator.")
+                return redirect("/items/search")
+            else:
+                resists_operator = allowed_resists_operators[resists_operator]
+            if 0 <= resists_value <= 300:
+                if is_where_clause:
+                    clause = "AND"
+                else:
+                    clause = "WHERE"
+                    is_where_clause = True
+                query += f" {clause} {resists_type} {resists_operator} %s"
+                params_list.append(resists_value)
+            else:
+                messages.error(request, f"Invalid resist value, '{resists_value}'.  Must be between 0 and 300.")
+                return redirect("/items/search")
+
         try:
             query_limit = int(query_limit)
         except ValueError:
@@ -40,33 +138,10 @@ def search(request):
             query_limit = 0
         elif query_limit > 200:  # yes, this is an arbitrary limit on search results
             query_limit = 200
+        query += " LIMIT %s"
+        params_list.append(query_limit)
 
-        # Begin building query
-        search_results = Items.objects.filter(Name__icontains=item_name)
-
-        try:
-            player_class = int(player_class)
-        except ValueError:
-            messages.error(request, "Invalid player class.  Valid options are between 1 and 15.")
-            return redirect("/items/search")
-        if player_class != 0:  # zero means "any" class so no need to filter
-            search_results = search_results.extra(
-                where=[
-                    f"((classes & {get_class_bitmask(player_class)}) = {get_class_bitmask(player_class)}) "
-                    f"OR (classes = '32767')"])
-
-        try:
-            player_race = int(player_race)
-        except ValueError:
-            messages.error(request, "Invalid player race.")
-            return redirect("/items/search")
-        if player_race != 0:  # zero means "any" race so no need to filter
-            search_results = search_results.extra(
-                where=[
-                    f"((races & {get_race_bitmask(player_race)}) = {get_race_bitmask(player_race)}) "
-                    f"OR (races = '16384')"])
-
-        search_results = search_results[:query_limit]
+        search_results = Items.objects.raw(query, params_list)
 
         if len(search_results) == 0:
             messages.info(request, "No search results found.")
@@ -74,6 +149,7 @@ def search(request):
         return render(request=request,
                       template_name="items/search_item.html",
                       context={"search_results": search_results,
+                               "EQUIPMENT_SLOTS": EQUIPMENT_SLOTS,
                                "PLAYER_CLASSES": PLAYER_CLASSES,
                                "PLAYER_RACES": PLAYER_RACES,
                                "level_range": range(100)})
