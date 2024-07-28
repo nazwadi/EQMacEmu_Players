@@ -46,7 +46,7 @@
                                             {% for id, name, modifiers, min_cap, max_cap, value in character_faction_values %}
                                                 <tr>
                                                     <td>
-                                                        <a href="https://www.takproject.net/allaclone/faction.php?id={{ id }}"
+                                                        <a href="/factions/view/{{ id }}"
                                                            target="_blank">{{ name }}</a></td>
                                                     <td>{{ value }}</td>
                                                     <td>{{ modifiers }}</td>
