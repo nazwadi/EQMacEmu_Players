@@ -107,7 +107,7 @@ def search(request):
         except ValueError:
             messages.error(request, "Invalid item type.")
             return redirect("/items/search")
-        if item_slot != -1:
+        if item_type != -1:
             if is_where_clause:
                 clause = "AND"
             else:
@@ -159,7 +159,6 @@ def search(request):
         params_list.append(query_limit)
 
         search_results = Items.objects.raw(query, params_list)
-        print(search_results)
 
         if len(search_results) == 0:
             messages.info(request, "No search results found.")
