@@ -7,6 +7,7 @@ from items.utils import get_race_bitmask
 from common.constants import PLAYER_CLASSES
 from common.constants import PLAYER_RACES
 from common.constants import EQUIPMENT_SLOTS
+from common.constants import ITEM_TYPES
 from common.models.items import DiscoveredItems
 from common.models.items import Items
 from common.models.spells import SpellsNew
@@ -26,12 +27,14 @@ def search(request):
                           "EQUIPMENT_SLOTS": EQUIPMENT_SLOTS,
                           "PLAYER_CLASSES": PLAYER_CLASSES,
                           "PLAYER_RACES": PLAYER_RACES,
+                          "ITEM_TYPES": ITEM_TYPES,
                       },
                       template_name="items/search_item.html")
 
     if request.method == "POST":
         item_name = request.POST.get("item_name")
         item_slot = request.POST.get("item_slot")
+        item_type = request.POST.get("item_type")
         resists_type = request.POST.get("resists_type")
         resists_operator = request.POST.get("resists_operator")
         resists_value = request.POST.get("resists_value")
@@ -100,6 +103,20 @@ def search(request):
             params_list.append(item_slot)
 
         try:
+            item_type = int(item_type)
+        except ValueError:
+            messages.error(request, "Invalid item type.")
+            return redirect("/items/search")
+        if item_slot != -1:
+            if is_where_clause:
+                clause = "AND"
+            else:
+                clause = "WHERE"
+                is_where_clause = True
+            query += f" {clause} itemtype = %s"
+            params_list.append(item_type)
+
+        try:
             resists_value = int(resists_value)
         except ValueError:
             messages.error(request, "Invalid resist value. Must be an integer.")
@@ -113,11 +130,11 @@ def search(request):
             else:
                 resists_type = allowed_resist_types[resists_type]  # just an extra precaution
             allowed_resists_operators = {'>': '>', '>=': '>=', '=': '=', '<=': '<=', '<': '<'}
-            if resists_operator not in ['>', '>=', '=', '<=', '<']:
+            if resists_operator not in allowed_resists_operators.keys():
                 messages.error(request, "Invalid resist operator.")
                 return redirect("/items/search")
             else:
-                resists_operator = allowed_resists_operators[resists_operator]
+                resists_operator = allowed_resists_operators[resists_operator]  # just an extra precaution
             if 0 <= resists_value <= 300:
                 if is_where_clause:
                     clause = "AND"
@@ -142,6 +159,7 @@ def search(request):
         params_list.append(query_limit)
 
         search_results = Items.objects.raw(query, params_list)
+        print(search_results)
 
         if len(search_results) == 0:
             messages.info(request, "No search results found.")
@@ -150,6 +168,7 @@ def search(request):
                       template_name="items/search_item.html",
                       context={"search_results": search_results,
                                "EQUIPMENT_SLOTS": EQUIPMENT_SLOTS,
+                               "ITEM_TYPES": ITEM_TYPES,
                                "PLAYER_CLASSES": PLAYER_CLASSES,
                                "PLAYER_RACES": PLAYER_RACES,
                                "level_range": range(100)})

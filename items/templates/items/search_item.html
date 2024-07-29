@@ -10,11 +10,19 @@
                 <form class="p-3 mb-4 bg-body-tertiary border" action="/items/search" method="post">
                     {% csrf_token %}
                     <div class="row">
-                        <div class="col-12 col-md-6">
+                        <div class="col-12 col-md-10">
                             <div class="form-text text-wrap"><label for="item_name">Item Name</label></div>
                             <input type="text" class="form-control" id="item_name" name="item_name"
                                    placeholder="a tattered note">
                         </div>
+                        <div class="col-12 col-md-2">
+                            <div class="form-text text-wrap"><label for="query_limit">Query Limit (Max: 200)</label>
+                            </div>
+                            <input class="form-control" id="query_limit" name="query_limit" type="number" min="0"
+                                   max="200" value="50">
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-12 col-md-2">
                             <div class="form-text text-wrap"><label for="player_class">Class</label></div>
                             <select class="form-select" id="player_class" name="player_class" aria-label="player_class">
@@ -38,14 +46,6 @@
                             </select>
                         </div>
                         <div class="col-12 col-md-2">
-                            <div class="form-text text-wrap"><label for="query_limit">Query Limit (Max: 200)</label>
-                            </div>
-                            <input class="form-control" id="query_limit" name="query_limit" type="number" min="0"
-                                   max="200" value="50">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12 col-md-2">
                             <div class="form-text text-wrap"><label for="item_slot">Equip Slot</label></div>
                             <select class="form-select" id="item_slot" name="item_slot" aria-label="item_slot">
                                 <option value="0" selected>Any</option>
@@ -53,6 +53,15 @@
                                     {% if slot != 0 %}
                                         <option value="{{ slot }}">{{ slot_name }}</option>
                                     {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-2">
+                            <div class="form-text text-wrap"><label for="item_type">Item Type</label></div>
+                            <select class="form-select" id="item_type" name="item_type" aria-label="item_type">
+                                <option value="-1" selected>Any</option>
+                                {% for type, type_name in ITEM_TYPES.items %}
+                                    <option value="{{ type }}">{{ type_name }}</option>
                                 {% endfor %}
                             </select>
                         </div>
