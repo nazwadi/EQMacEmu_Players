@@ -6,9 +6,25 @@
             <h4>{{ zone_data.long_name }}</h4>
             <ul class="list-group list-group-horizontal">
                 <li class="list-group-item" style="background-color:#cedff2; width: 170px;border-top: 1px solid">
-                    Expansion:
+                    Level of Monsters: 
                 </li>
                 <li class="list-group-item" style="width:90%;border:0;border-top:1px solid;">
+                    {{ zone_data.level_of_monsters }}
+                </li>
+            </ul>
+            <ul class="list-group list-group-horizontal">
+                <li class="list-group-item" style="background-color:#cedff2; width: 170px;">
+                    Types of Monsters:
+                </li>
+                <li class="list-group-item" style="width:90%;border:0;">
+                    {{ zone_data.types_of_monsters }}
+                </li>
+            </ul>
+            <ul class="list-group list-group-horizontal">
+                <li class="list-group-item" style="background-color:#cedff2; width: 170px;">
+                    Expansion:
+                </li>
+                <li class="list-group-item" style="width:90%;border:0;">
                     <img src="{% static "/images/" %}{{ zone_data.expansion|expansion_icon }}"
                          alt="{{ zone_data.expansion|expansion_icon }}"/>
                     {% if zone_data.short_name == 'warrens' or zone_data.short_name == 'stonebrunt' %}
