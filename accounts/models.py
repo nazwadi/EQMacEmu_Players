@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from datetime import datetime
 
 
 # Create your models here.
@@ -29,6 +30,7 @@ class LoginServerAccounts(models.Model):
     class Meta:
         db_table = "tblLoginServerAccounts"
         verbose_name_plural = "Login Server Accounts"
+        managed = False
 
 
 class ServerAdminRegistration(models.Model):
@@ -51,6 +53,7 @@ class ServerAdminRegistration(models.Model):
     class Meta:
         db_table = "tblServerAdminRegistration"
         verbose_name_plural = "Server Admin Registrations"
+        managed = False
 
 
 class ServerListType(models.Model):
@@ -67,6 +70,7 @@ class ServerListType(models.Model):
     class Meta:
         db_table = "tblServerListType"
         verbose_name_plural = "Server List Types"
+        managed = False
 
 
 class WorldServerRegistration(models.Model):
@@ -91,6 +95,7 @@ class WorldServerRegistration(models.Model):
     class Meta:
         db_table = "tblWorldServerRegistration"
         verbose_name_plural = "World Server Registrations"
+        managed = False
 
 
 class Account(models.Model):
@@ -116,7 +121,7 @@ class Account(models.Model):
     minilogin_ip = models.CharField(max_length=32, null=False)
     hideme = models.SmallIntegerField(default=0, null=False)
     rulesflag = models.SmallIntegerField(default=0, null=False)
-    suspendeduntil = models.DateTimeField(default='0000-00-00 00:00:00', null=True, blank=True)
+    suspendeduntil = models.DateTimeField(default=datetime.now, null=True, blank=True)
     time_creation = models.IntegerField(default=0, null=False)
     expansion = models.SmallIntegerField(default=12, null=False)
     ban_reason = models.TextField(default=None, null=True, blank=True)
@@ -130,4 +135,5 @@ class Account(models.Model):
 
     class Meta:
         db_table = "account"
+        managed = False
 
