@@ -635,8 +635,23 @@ ZONE_SHORT_TO_LONG = {
     "poknowledge": "Plane of Knowledge",
     "iceclad": "Iceclad Ocean",
     "greatdivide": "The Great Divide",
+    "velketor": "Velketor's Labryninth",
     "wakening": "The Wakening Lands",
     "cobaltscar": "Cobalt Scar",
+    "eastwastes": "Eastern Wastes",
+    "westwastes": "Western Wastes",
+    "crystal" : "Crystal Caverns",
+    "kael" : "Kael Drakkel",
+    "thurgadina" : "The City of Thurgadin",
+    "thurgadinb" : "Icewell Keep",
+    "skyshrine" : "Skyshrine",
+    "necropolis" : "Dragon Necropolis",
+    "sirens" : "Siren's Grotto",
+    "sleeper" : "Sleeper's Tomb",
+    "templeveeshan" : "Temple of Veeshan",
+    "mischiefplane" : "Plane of Mischief",
+    "growthplane" : "Plane of Growth",
+    "frozenshadow" : "Tower of Frozen Shadow",
 }
 
 SPELL_TARGETS = {
