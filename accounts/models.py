@@ -116,7 +116,7 @@ class Account(models.Model):
     minilogin_ip = models.CharField(max_length=32, null=False)
     hideme = models.SmallIntegerField(default=0, null=False)
     rulesflag = models.SmallIntegerField(default=0, null=False)
-    suspendeduntil = models.DateTimeField(default='0000-00-00 00:00:00', null=False)
+    suspendeduntil = models.DateTimeField(default='0000-00-00 00:00:00', null=False, blank=True)
     time_creation = models.IntegerField(default=0, null=False)
     expansion = models.SmallIntegerField(default=12, null=False)
     ban_reason = models.TextField(default=None, null=True, blank=True)
