@@ -1,5 +1,6 @@
 {% load static %}
 {% load data_utilities %}
+{% load humanize %}
 <div class="container-fluid">
     <div class="row">
         <div class="col">
@@ -13,12 +14,18 @@
                     <th>Class</th>
                     <th>Gender</th>
                     <th>Level(s)</th>
+                    <th>HP</th>
+                    <th>MR</th>
+                    <th>CR</th>
+                    <th>FR</th>
+                    <th>DR</th>
+                    <th>PR</th>
                     <th>Min Expansion</th>
                     <th>Max Expansion</th>
                 </tr>
                 </thead>
                 <tbody>
-                {% for id, name, race, class, gender, level, max_level, min_expansion, max_expansion in npc_results %}
+                {% for id, name, race, class, gender, level, hp, MR, CR, FR, DR, PR, max_level, min_expansion, max_expansion in npc_results %}
                     <tr>
                         <td><a href="/npcs/view/{{ id }}">{{ name|clean_name }}</a></td>
                         <td>{{ race|npc_race }}</td>
@@ -29,6 +36,12 @@
                         {% else %}
                             <td>{{ level }}</td>
                         {% endif %}
+                        <td>{{ hp|intcomma }}</td>
+                        <td>{{ MR }}</td>
+                        <td>{{ CR }}</td>
+                        <td>{{ FR }}</td>
+                        <td>{{ DR }}</td>
+                        <td>{{ PR }}</td>
                         <td><img src="{% if min_expansion == -1 %}{% static "/images/Original.gif" %}{% else %}{% static "/images/" %}{{ min_expansion|expansion_icon }}{% endif %}"
                                  alt="{{ min_expansion }}"></td>
                         <td>{% if max_expansion == -1 %}All{% elif max_expansion == 99 %}All Remaining{% else %}<img src="{% static "/images/" %}{{ max_expansion|expansion_icon }}"
