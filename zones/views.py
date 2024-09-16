@@ -42,7 +42,7 @@ def view_zone(request, short_name):
 
     zone_page_text = ZonePage.objects.filter(short_name=zone_data.short_name).first()
 
-    cursor.execute("""SELECT DISTINCT d.id, d.name, d.race, d.class, d.gender, d.level, d.maxlevel, a.min_expansion, a.max_expansion 
+    cursor.execute("""SELECT DISTINCT d.id, d.name, d.race, d.class, d.gender, d.level, d.hp, d.MR, d.CR, d.FR, d.DR, d.PR, d.maxlevel, a.min_expansion, a.max_expansion 
                       FROM spawn2 a
                         JOIN spawngroup b ON b.id = a.spawngroupID
                         JOIN spawnentry c ON c.spawngroupID = b.id
