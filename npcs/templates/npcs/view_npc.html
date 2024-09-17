@@ -75,6 +75,7 @@
                         <td><span style="font-weight: bold;">Damage Per Hit:</span>&nbsp;{{ npc_data.min_dmg }}
                             - {{ npc_data.max_dmg }}</td>
                     </tr>
+                    <tr><td><span style="font-weight: bold;">ATK Delay:</span> {{ npc_data.attack_delay }}</td></tr>
                     <tr>
                         <td><span
                                 style="font-weight: bold;">Special Abilities:</span>&nbsp;{{ npc_data.special_abilities|npc_special_ability }}
@@ -449,6 +450,7 @@
                 {x: {{ sp.x|multiply:-1 }}, y: {{ sp.y|multiply:-1 }}},
             {% endfor %}
         ];
+        {#const creaturePathPoints = {{  }}#}
     </script>
     <script src="/static/konvamap.js"></script>
 {% endblock %}

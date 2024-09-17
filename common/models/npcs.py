@@ -87,6 +87,7 @@ class NPCTypes(models.Model):
     intelligence = models.IntegerField(null=False, default=80, db_column='_INT')
     WIS = models.IntegerField(null=False, default=75)
     CHA = models.IntegerField(null=False, default=75)
+    attack_delay = models.SmallIntegerField(null=False, default=30)
     attack_count = models.SmallIntegerField(null=False, default=-1)
     hp_regen_rate = models.IntegerField(null=False, default=0)
     mana_regen_rate = models.IntegerField(null=False, default=0)
