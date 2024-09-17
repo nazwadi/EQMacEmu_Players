@@ -101,6 +101,10 @@
                             <th>Gender</th>
                             <th>Hit Points</th>
                             <th>MR</th>
+                            <th>CR</th>
+                            <th>FR</th>
+                            <th>DR</th>
+                            <th>PR</th>
                         </tr>
                         </thead>
                         {% for result in search_results %}
@@ -118,6 +122,10 @@
                                 <td>{{ result.gender|gender }}</td>
                                 <td>{{ result.hp|intcomma }}</td>
                                 <td>{{ result.MR }}</td>
+                                <td>{{ result.CR }}</td>
+                                <td>{{ result.FR }}</td>
+                                <td>{{ result.DR }}</td>
+                                <td>{{ result.PR }}</td>
                             </tr>
                         {% endfor %}
                     </table>

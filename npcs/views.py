@@ -86,7 +86,11 @@ def search(request):
                             nt.class,
                             nt.gender,
                             nt.hp,
-                            nt.MR 
+                            nt.MR,
+                            nt.CR,
+                            nt.FR, 
+                            nt.DR,
+                            nt.PR
                          FROM
                             npc_types AS nt
                             LEFT JOIN spawnentry AS se ON nt.id = se.npcID
@@ -118,7 +122,7 @@ def search(request):
         if results:
             for result in results:
                 NpcTuple = namedtuple("NpcTuple", ["id", "name", "min_expansion", "long_name", "level",
-                                                "maxlevel", "race", "class_name", "gender", "hp", "MR"])
+                                                "maxlevel", "race", "class_name", "gender", "hp", "MR", "CR", "FR", "DR", "PR"])
                 search_results.append(NpcTuple(*result))
 
         return render(request=request,
