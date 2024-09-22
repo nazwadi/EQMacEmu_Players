@@ -54,10 +54,10 @@ L 637.3, -90.0, 0.0, 637.3, -20.0, 0.0, 255, 0, 0
 P 0, 1800, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsinger
 P 0, 2000, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 0, 2200, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P 0, 2400, 0, 240, 240, 0, 2, Restless_Ice_Fishing_Ground_Spawn:_south_half_of_zone
-P 0, 2600, 0, 127, 0, 127, 2, Don`t_be_a_Guppy_Mob_Drop:_ulthorks
-P 0, 2800, 0, 0, 0, 0, 2, Unclutched_Pearls_Mob_Drop:_sirens/neriads
-P 0, 3000, 0, 240, 240, 240, 2, Life_Aquatic_Ground_Spawn:_siren_area
+P 0, 2400, 0, 240, 240, 0, 2, Restless_Ice_Fishing_Ground_Spawn_(South_half_of_zone)
+P 0, 2600, 0, 127, 0, 127, 2, Don`t_be_a_Guppy
+P 0, 2800, 0, 0, 0, 0, 2, Unclutched_Pearls
+P 0, 3000, 0, 240, 240, 240, 2, Life_Aquatic_Ground_Spawn_(Siren_area)
 P 0, 3200, 0, 127, 64, 0, 2, Delmare_Undertow_PH=a_neriad_guard
 P 0, 3400, 0, 127, 64, 0, 2, Desirae_Fanfare_PH=an_alluring_siren
 P 0, 3600, 0, 127, 64, 0, 2, Kirezlbough_PH=?wyvern

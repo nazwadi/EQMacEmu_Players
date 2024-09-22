@@ -659,10 +659,10 @@ L 1280, 3410, 0, 1250, 3410, 0, 255, 0, 0
 P 100, 1600, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsinger
 P 100, 1800, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 100, 2000, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P 100, 2200, 0, 127, 0, 127, 2, Empty_Nester_Mob_Drop:_phlarg_fiends,_shiknars,_diggers,_mushrooms
-P 100, 2400, 0, 0, 0, 0, 2, Vestiges_of_Rampage_Mob_Drop:_debris,_animated
-P 100, 2600, 0, 240, 240, 240, 2, The_Ax_Forgets,_But_The_Tree_Remembers_Ground_Spawn:_north_&_east_side
-P 100, 2800, 0, 240, 240, 0, 2, The_Unbearable_Weight_of_Massive_Teachings_Ground_Spawn:_west_side
+P 100, 2200, 0, 127, 0, 127, 2, Empty_Nester_Mob_Drop:_Phlarg_Fiends,_Shiknars,_Diggers,_Mushrooms
+P 100, 2400, 0, 0, 0, 0, 2, Vestiges_of_Rampage_Mob_Drop:_Debris,_Animated
+P 100, 2600, 0, 240, 240, 240, 2, The_Ax_Forgets,_But_The_Tree_Remembers_Ground_Spawn,_North_and_East_side
+P 100, 2800, 0, 240, 240, 0, 2, The_Unbearable_Weight_of_Massive_Teachings_Ground_Spawn,_West_Side
 P 100, 3000, 0, 127, 64, 0, 2, Brute_PH=a_toughed_phlarg_fiend
 P 100, 3200, 0, 127, 64, 0, 2, Flail_PH=spirit-touched_rubble
 P 100, 3400, 0, 127, 64, 0, 2, Mace_PH=animated_scrap

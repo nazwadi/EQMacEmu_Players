@@ -619,7 +619,7 @@ L 2050, 4120, 0, 2080, 4120, 0, 255, 0, 0
 L 2050, 4150, 0, 2080, 4150, 0, 255, 0, 0
 L 2050, 4090, 0, 2050, 4150, 0, 255, 0, 0
 L 2080, 4090, 0, 2050, 4090, 0, 255, 0, 0
-P 900, 2400, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P 900, 2400, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P 900, 2600, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 900, 2800, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
 P 900, 3000, 0, 127, 64, 0, 2, Aquadominus_Selestain

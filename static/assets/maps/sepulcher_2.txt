@@ -695,21 +695,21 @@ L 1150, 3150, 0, 1180, 3150, 0, 255, 0, 0
 L 1150, 3090, 0, 1150, 3150, 0, 255, 0, 0
 L 1180, 3090, 0, 1150, 3090, 0, 255, 0, 0
 P 0, 1200, 0, 0, 0, 0, 2, Original_Map:_Caudyr
-P 0, 1400, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P 0, 1400, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P 0, 1600, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 0, 1800, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P 0, 2000, 0, 127, 64, 0, 2, Agralta_PH=thelara_alsa_ril_of_Alra
-P 0, 2200, 0, 127, 64, 0, 2, Alsara_the_Ansel_Ereth_PH=a_departed_thelasa
-P 0, 2400, 0, 127, 64, 0, 2, Bonemeal_PH=a_denuded_ser_thel
-P 0, 2600, 0, 127, 64, 0, 2, Champion_of_the_Triumvirate_PH=a_protector_of_alsa_thel
-P 0, 2800, 0, 127, 64, 0, 2, Clampgrit_PH=a_starving_raptor
-P 0, 3000, 0, 127, 64, 0, 2, Eldanum_of_the_Ser_Alsa_PH=an_ereth_of_law
-P 0, 3200, 0, 127, 64, 0, 2, Excrucidator_PH=brutalizer_of_alsa_thelara
-P 0, 3400, 0, 127, 64, 0, 2, Gleaming_Tricor_PH=a_sublime_tricrystal
-P 0, 3600, 0, 127, 64, 0, 2, Paleodontis_PH=a_fortified_tideshell
-P 0, 3800, 0, 127, 64, 0, 2, Primoridial_Steel_PH=a_zephyr_of_steel
-P 0, 4000, 0, 127, 64, 0, 2, Spernal_PH=a_wind_liege
-P 0, 4200, 0, 127, 64, 0, 2, Tegleth_PH=a_blade_mentor_of_alsa_thelara
-P 0, 4400, 0, 127, 64, 0, 2, Tendros_PH=a_dense_mound
-P 0, 4600, 0, 127, 64, 0, 2, The_Dark_PH=an_aspect_of_darkness
-P 0, 4800, 0, 127, 64, 0, 2, The_Exalted_Ser_Alsa_Thel_PH=any_telmiran_type_mob
+P 0, 2000, 0, 127, 64, 0, 2, Agralta_PH=_thelara_alsa_ril_of_Alra
+P 0, 2200, 0, 127, 64, 0, 2, Alsara_the_Ansel_Ereth_PH=_a_departed_thelasa
+P 0, 2400, 0, 127, 64, 0, 2, Bonemeal_PH=_a_denuded_ser_thel
+P 0, 2600, 0, 127, 64, 0, 2, Champion_of_the_Triumvirate_PH=_a_protector_of_alsa_thel
+P 0, 2800, 0, 127, 64, 0, 2, Clampgrit_PH=_a_starving_raptor
+P 0, 3000, 0, 127, 64, 0, 2, Eldanum_of_the_Ser_Alsa_PH=_an_ereth_of_law
+P 0, 3200, 0, 127, 64, 0, 2, Excrucidator_PH=_brutalizer_of_alsa_thelara
+P 0, 3400, 0, 127, 64, 0, 2, Gleaming_Tricor_PH=_a_sublime_tricrystal
+P 0, 3600, 0, 127, 64, 0, 2, Paleodontis_PH=_a_fortified_tideshell
+P 0, 3800, 0, 127, 64, 0, 2, Primoridial_Steel_PH=_a_zephyr_of_steel
+P 0, 4000, 0, 127, 64, 0, 2, Spernal_PH=_a_wind_liege
+P 0, 4200, 0, 127, 64, 0, 2, Tegleth_PH=_a_blade_mentor_of_alsa_thelara
+P 0, 4400, 0, 127, 64, 0, 2, Tendros_PH=_a_dense_mound
+P 0, 4600, 0, 127, 64, 0, 2, The_Dark_PH=_an_aspect_of_darkness
+P 0, 4800, 0, 127, 64, 0, 2, The_Exalted_Ser_Alsa_Thel_PH=_any_telmiran_type_mob

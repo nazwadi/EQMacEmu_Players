@@ -694,14 +694,14 @@ L 1450, 2760, 0, 1480, 2760, 0, 255, 0, 0
 L 1450, 2790, 0, 1480, 2790, 0, 255, 0, 0
 L 1450, 2730, 0, 1450, 2790, 0, 255, 0, 0
 L 1480, 2730, 0, 1450, 2730, 0, 255, 0, 0
-P 300, 800, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P 300, 800, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P 300, 1000, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 300, 1200, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P 300, 1400, 0, 127, 64, 0, 2, Bloodmane_PH=a_dripping_blood_elemental
-P 300, 1600, 0, 127, 64, 0, 2, Bodabas_PH=a_bloodthirsty_beast
-P 300, 1800, 0, 127, 64, 0, 2, Icefang_PH=a_hungry_beast
-P 300, 2000, 0, 127, 64, 0, 2, Icy_Devourer_PH=an_icy_ooze
-P 300, 2200, 0, 127, 64, 0, 2, Nightfang_PH=a_funnelweb_spider
-P 300, 2400, 0, 127, 64, 0, 2, Rotticus_PH=a_filthy_rotdog
-P 300, 2600, 0, 127, 64, 0, 2, Spitecrawler_PH=a_nightmarish_centipede
-P 300, 2800, 0, 127, 64, 0, 2, Swirling_Fog_Elemental_PH=a_drifting_fog_elemental
+P 300, 1400, 0, 127, 64, 0, 2, Bloodmane_PH=_a_dripping_blood_elemental
+P 300, 1600, 0, 127, 64, 0, 2, Bodabas_PH=_a_bloodthirsty_beast
+P 300, 1800, 0, 127, 64, 0, 2, Icefang_PH=_a_hungry_beast
+P 300, 2000, 0, 127, 64, 0, 2, Icy_Devourer_PH=_an_icy_ooze
+P 300, 2200, 0, 127, 64, 0, 2, Nightfang_PH=_a_funnelweb_spider
+P 300, 2400, 0, 127, 64, 0, 2, Rotticus_PH=_a_filthy_rotdog
+P 300, 2600, 0, 127, 64, 0, 2, Spitecrawler_PH=_a_nightmarish_centipede
+P 300, 2800, 0, 127, 64, 0, 2, Swirling_Fog_Elemental_PH=_a_drifting_fog_elemental

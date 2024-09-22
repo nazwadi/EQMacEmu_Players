@@ -695,14 +695,14 @@ L 850, 5890, 0, 880, 5890, 0, 255, 0, 0
 L 850, 5830, 0, 850, 5890, 0, 255, 0, 0
 L 880, 5830, 0, 850, 5830, 0, 255, 0, 0
 P -300, 3900, 0, 0, 0, 0, 2, Original_Map:_Caudyr
-P -300, 4100, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P -300, 4100, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P -300, 4300, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P -300, 4500, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P -300, 4700, 0, 240, 240, 0, 2, A._No_Body_Left_Behind_Ground_Spawn
-P -300, 4900, 0, 0, 0, 0, 2, B._Kill_Them_Before_They_Grow_Mob_Drop
-P -300, 5100, 0, 127, 64, 0, 2, Alsecht_the_Believer_PH=an_enraged_believer
-P -300, 5300, 0, 127, 64, 0, 2, Deathfist_PH=an_enraged:_any
-P -300, 5500, 0, 127, 64, 0, 2, Harbinger_Krask_PH=an_enraged_harbinger
-P -300, 5700, 0, 127, 64, 0, 2, Ocululor_PH=an_enraged:_any
-P -300, 5900, 0, 127, 64, 0, 2, Ulzschanoth_PH=an_enraged:_any
-P -300, 6100, 0, 127, 64, 0, 2, Ythan_the_Gutripper_PH=an_enraged:_any
+P -300, 4700, 0, 240, 240, 0, 2, A._No_Body_Left_Behind_ground_spawn
+P -300, 4900, 0, 0, 0, 0, 2, B._Kill_Them_Before_They_Grow_mob_drop
+P -300, 5100, 0, 127, 64, 0, 2, Alsecht_the_Believer_PH=_an_enraged_believer
+P -300, 5300, 0, 127, 64, 0, 2, Deathfist_PH=_an_enraged_(any)
+P -300, 5500, 0, 127, 64, 0, 2, Harbinger_Krask_PH=_an_enraged_harbinger
+P -300, 5700, 0, 127, 64, 0, 2, Ocululor_PH=_an_enraged_(any)
+P -300, 5900, 0, 127, 64, 0, 2, Ulzschanoth_PH=_an_enraged_(any)
+P -300, 6100, 0, 127, 64, 0, 2, Ythan_the_Gutripper_PH=_an_enraged_(any)

@@ -682,7 +682,7 @@ L 1750, 4260, 0, 1780, 4260, 0, 255, 0, 0
 L 1750, 4290, 0, 1780, 4290, 0, 255, 0, 0
 L 1750, 4230, 0, 1750, 4290, 0, 255, 0, 0
 L 1780, 4230, 0, 1750, 4230, 0, 255, 0, 0
-P 600, 2300, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P 600, 2300, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P 600, 2500, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 600, 2700, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
 P 600, 2900, 0, 127, 64, 0, 2, Boilingwind

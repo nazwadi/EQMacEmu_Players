@@ -653,16 +653,16 @@ L 1150, 2670, 0, 1180, 2670, 0, 255, 0, 0
 L 1150, 2610, 0, 1150, 2670, 0, 255, 0, 0
 L 1180, 2610, 0, 1150, 2610, 0, 255, 0, 0
 P 0, 800, 0, 0, 0, 0, 2, Original_Map:_Breganz_of_Crimson_Tempest
-P 0, 1000, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P 0, 1000, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P 0, 1200, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 0, 1400, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P 0, 1600, 0, 240, 240, 0, 2, A._Comfort_in_the_Deep_Ground_Spawn
-P 0, 1800, 0, 240, 240, 240, 2, B._Keep_Keepsakes_Ground_Spawn
-P 0, 2000, 0, 127, 0, 127, 2, C._Tools_of_the_Assassins_Ground_Spawn:_Castle_Relic_HA
-P 0, 2200, 0, 0, 0, 0, 2, D._Keepsakes_of_the_Murdered_Mob_Drop
-P 0, 2400, 0, 127, 64, 0, 2, Commander_Alast_Degmar_PH=Sub_Commander_Hob_Stetson
-P 0, 2600, 0, 127, 64, 0, 2, Enraged_Spectral_Reveler_PH=an_angry_spectral_reveler
-P 0, 2800, 0, 127, 64, 0, 2, Frantic_Smith_PH=a_confused_smith
-P 0, 3000, 0, 127, 64, 0, 2, Ghostly_Guard_PH=a_haunted_Degmar_guard_(Castle_Relic_HA)
-P 0, 3200, 0, 127, 64, 0, 2, Horthin_Blackbook_PH=a_dirty_digger
-P 0, 3400, 0, 127, 64, 0, 2, Psychotic_Prisoner_PH=a_crazed_prisoner
+P 0, 1600, 0, 240, 240, 0, 2, A._Comfort_in_the_Deep_ground_spawn
+P 0, 1800, 0, 240, 240, 240, 2, B._Keep_Keepsakes_ground_spawn
+P 0, 2000, 0, 127, 0, 127, 2, C._Tools_of_the_Assassins_ground_spawn_(Castle_Relic_HA)
+P 0, 2200, 0, 0, 0, 0, 2, D._Keepsakes_of_the_Murdered_mob_drop
+P 0, 2400, 0, 127, 64, 0, 2, Commander_Alast_Degmar_PH=_Sub_Commander_Hob_Stetson
+P 0, 2600, 0, 127, 64, 0, 2, Enraged_Spectral_Reveler_PH=_an_angry_spectral_reveler
+P 0, 2800, 0, 127, 64, 0, 2, Frantic_Smith_PH=_a_confused_smith
+P 0, 3000, 0, 127, 64, 0, 2, Ghostly_Guard_(Castle_Relic_HA)
+P 0, 3200, 0, 127, 64, 0, 2, Horthin_Blackbook_PH=_a_dirty_digger
+P 0, 3400, 0, 127, 64, 0, 2, Psychotic_Prisoner_PH=_a_crazed_prisoner

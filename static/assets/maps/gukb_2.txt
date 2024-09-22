@@ -620,7 +620,7 @@ L 1350, 2050, 0, 1380, 2050, 0, 255, 0, 0
 L 1350, 1990, 0, 1350, 2050, 0, 255, 0, 0
 L 1380, 1990, 0, 1350, 1990, 0, 255, 0, 0
 P 200, 300, 0, 0, 0, 0, 2, The_Drowning_Crypt_(GUKB)
-P 200, 500, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P 200, 500, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P 200, 700, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 200, 900, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
 P 200, 1100, 0, 127, 64, 0, 2, Corpseripper

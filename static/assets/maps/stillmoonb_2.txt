@@ -619,7 +619,7 @@ L 50, 1920, 0, 80, 1920, 0, 255, 0, 0
 L 50, 1950, 0, 80, 1950, 0, 255, 0, 0
 L 50, 1890, 0, 50, 1950, 0, 255, 0, 0
 L 80, 1890, 0, 50, 1890, 0, 255, 0, 0
-P -1100, 200, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P -1100, 200, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P -1100, 400, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P -1100, 600, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
 P -1100, 800, 0, 127, 64, 0, 2, crazed_statue

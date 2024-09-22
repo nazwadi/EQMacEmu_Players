@@ -622,10 +622,10 @@ L 1280, 4990, 0, 1250, 4990, 0, 255, 0, 0
 P 100, 3300, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsinger
 P 100, 3500, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 100, 3700, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P 100, 3900, 0, 240, 240, 0, 2, Nails_and_Teeth_Ground_Spawn
-P 100, 4100, 0, 0, 0, 0, 2, Items_Lost_Mob_Drop
-P 100, 4300, 0, 240, 240, 240, 2, Frozen_Fauna_Ground_Spawn
-P 100, 4500, 0, 0, 0, 0, 2, Restlessly_Shattered_Mob_Drop
+P 100, 3900, 0, 240, 240, 0, 2, Nails_and_Teeth_ground_spawn
+P 100, 4100, 0, 0, 0, 0, 2, Items_Lost_mob_drop
+P 100, 4300, 0, 240, 240, 240, 2, Frozen_Fauna_ground_spawn
+P 100, 4500, 0, 0, 0, 0, 2, Restlessly_Shattered_mob_drop
 P 100, 4700, 0, 127, 64, 0, 2, a_returned_dracoliche_PH=a_restless_dracoliche
 P 100, 4900, 0, 127, 64, 0, 2, Bolman_PH=a_frozen_horror
 P 100, 5100, 0, 127, 64, 0, 2, Cadcane_the_Unmourned_PH=a_cold_skeleton

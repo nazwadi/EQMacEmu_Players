@@ -652,10 +652,10 @@ L 2680, 5510, 0, 2650, 5510, 0, 255, 0, 0
 P 1500, 3700, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsinger
 P 1500, 3900, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 1500, 4100, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P 1500, 4300, 0, 240, 240, 0, 2, Weapon_Fragments_Ground_Spawn
-P 1500, 4500, 0, 240, 240, 240, 2, Spoils_of_War_Ground_Spawn
-P 1500, 4700, 0, 0, 0, 0, 2, Pieces_of_a_Civilization_Mob_Drop
-P 1500, 4900, 0, 0, 0, 0, 2, Chilly_Critters_Mob_Drop
+P 1500, 4300, 0, 240, 240, 0, 2, Weapon_Fragments_ground_spawn
+P 1500, 4500, 0, 240, 240, 240, 2, Spoils_of_War_ground_spawn
+P 1500, 4700, 0, 0, 0, 0, 2, Pieces_of_a_Civilization_mob_drop
+P 1500, 4900, 0, 0, 0, 0, 2, Chilly_Critters_mob_drop
 P 1500, 5100, 0, 127, 64, 0, 2, Black_Fang_PH=a_storm_giant_soldier
 P 1500, 5300, 0, 127, 64, 0, 2, Direfang_PH=a_restless_direwolf
 P 1500, 5500, 0, 127, 64, 0, 2, Drendar_Blackblade_PH=a_storm_giant_soldier

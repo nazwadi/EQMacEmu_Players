@@ -619,7 +619,7 @@ L 850, 2120, 0, 880, 2120, 0, 255, 0, 0
 L 850, 2150, 0, 880, 2150, 0, 255, 0, 0
 L 850, 2090, 0, 850, 2150, 0, 255, 0, 0
 L 880, 2090, 0, 850, 2090, 0, 255, 0, 0
-P -300, 400, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P -300, 400, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P -300, 600, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P -300, 800, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
 P -300, 1000, 0, 127, 64, 0, 2, Distraught_Slimesnipper

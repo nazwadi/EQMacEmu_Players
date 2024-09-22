@@ -591,10 +591,10 @@ L 1380, 3770, 0, 1350, 3770, 0, 255, 0, 0
 P 200, 2200, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsinger
 P 200, 2400, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 200, 2600, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P 200, 2800, 0, 127, 0, 127, 2, Prop_Hunt_Mob_Drop:_elementals_with_actor_names
-P 200, 3000, 0, 0, 0, 0, 2, A_Bunch_of_Wild_and_Fungis_Mob_Drop:_mushrooms
-P 200, 3200, 0, 240, 240, 240, 2, Color_Theory_Ground_Spawn:_top_level
-P 200, 3400, 0, 240, 240, 0, 2, Places,_People!_Places!_Ground_Spawn:_bottom_level
+P 200, 2800, 0, 127, 0, 127, 2, Prop_Hunt_Mob_Drop:_Elementals_with_actor_names
+P 200, 3000, 0, 0, 0, 0, 2, A_Bunch_of_Wild_and_Fungis_Mob_Drop:_Mushrooms
+P 200, 3200, 0, 240, 240, 240, 2, Color_Theory_Ground_Spawn:_Top_level
+P 200, 3400, 0, 240, 240, 0, 2, Places,_People!_Places!_Ground_Spawn:_Bottom_level
 P 200, 3600, 0, 127, 64, 0, 2, Agaricusus_PH=a_hearty_saprophyte
 P 200, 3800, 0, 127, 64, 0, 2, Ayoaenae_PH=an_apathetic_thespian
 P 200, 4000, 0, 127, 64, 0, 2, Bavajam_PH=a_spectral_grizzly

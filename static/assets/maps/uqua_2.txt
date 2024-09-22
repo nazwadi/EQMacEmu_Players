@@ -619,6 +619,6 @@ L 1850, 3420, 0, 1880, 3420, 0, 255, 0, 0
 L 1850, 3450, 0, 1880, 3450, 0, 255, 0, 0
 L 1850, 3390, 0, 1850, 3450, 0, 255, 0, 0
 L 1880, 3390, 0, 1850, 3390, 0, 255, 0, 0
-P 700, 1700, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P 700, 1700, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P 700, 1900, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 700, 2100, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)

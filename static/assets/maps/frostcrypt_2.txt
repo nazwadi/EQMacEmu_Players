@@ -725,7 +725,7 @@ L 950, 2810, 0, 980, 2810, 0, 255, 0, 0
 L 950, 2750, 0, 950, 2810, 0, 255, 0, 0
 L 980, 2750, 0, 950, 2750, 0, 255, 0, 0
 P -200, 700, 0, 0, 0, 0, 2, Original_Map:_Grendel_and_Obsqura_the_Friendless_Lizard
-P -200, 900, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P -200, 900, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P -200, 1100, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P -200, 1300, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
 P -200, 1500, 0, 0, 0, 0, 2, Height_Filter:_40/40

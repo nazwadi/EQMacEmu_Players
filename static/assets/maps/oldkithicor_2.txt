@@ -619,7 +619,7 @@ L 1550, 3420, 0, 1580, 3420, 0, 255, 0, 0
 L 1550, 3450, 0, 1580, 3450, 0, 255, 0, 0
 L 1550, 3390, 0, 1550, 3450, 0, 255, 0, 0
 L 1580, 3390, 0, 1550, 3390, 0, 255, 0, 0
-P 400, 1700, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P 400, 1700, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P 400, 1900, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 400, 2100, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
 P 400, 2300, 0, 127, 64, 0, 2, a_large_kodiak

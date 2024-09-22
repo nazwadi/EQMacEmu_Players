@@ -591,10 +591,10 @@ L 1380, 4470, 0, 1350, 4470, 0, 255, 0, 0
 P 200, 2900, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsinger
 P 200, 3100, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 200, 3300, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P 200, 3500, 0, 240, 240, 0, 2, Elysians_Bone_Relics_Mob_Drop
-P 200, 3700, 0, 240, 240, 240, 2, Crude_Fyr_Jen_Tools_Mob_Drop
-P 200, 3900, 0, 127, 0, 127, 2, Twilight_Orchid_Medley_Ground_Spawn
-P 200, 4100, 0, 0, 0, 0, 2, Bountiful_Poisonous_Webcaps_Ground_Spawn
+P 200, 3500, 0, 240, 240, 0, 2, Elysians_Bone_Relics
+P 200, 3700, 0, 240, 240, 240, 2, Crude_Fyr_Jen_Tools
+P 200, 3900, 0, 127, 0, 127, 2, Twilight_Orchid_Medley
+P 200, 4100, 0, 0, 0, 0, 2, Bountiful_Poisonous_Webcaps
 P 200, 4300, 0, 127, 64, 0, 2, Bloodwretch_PH=a_netherbian_ripper
 P 200, 4500, 0, 127, 64, 0, 2, Captain_Resh_Sogran_PH=a_fallen_sergeant
 P 200, 4700, 0, 127, 64, 0, 2, Fleshrot_PH=a_netherbian_carrion

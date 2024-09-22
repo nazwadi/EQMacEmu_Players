@@ -619,7 +619,7 @@ L 1350, 3020, 0, 1380, 3020, 0, 255, 0, 0
 L 1350, 3050, 0, 1380, 3050, 0, 255, 0, 0
 L 1350, 2990, 0, 1350, 3050, 0, 255, 0, 0
 L 1380, 2990, 0, 1350, 2990, 0, 255, 0, 0
-P 200, 1300, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P 200, 1300, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P 200, 1500, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 200, 1700, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
 P 200, 1900, 0, 127, 64, 0, 2, Hexxt_Gkon

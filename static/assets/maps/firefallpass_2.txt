@@ -591,10 +591,10 @@ L 1480, 1970, 0, 1450, 1970, 0, 255, 0, 0
 P 300, 400, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsinger
 P 300, 600, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 300, 800, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P 300, 1000, 0, 240, 240, 0, 2, Onokiwan_Toys_Ground_Spawn:_east_side
-P 300, 1200, 0, 240, 240, 240, 2, Journal_of_an_Original_Ground_Spawn:_west_side
-P 300, 1400, 0, 127, 0, 127, 2, Firefall_Artifacts_Mob_Drop:_inside_caves
-P 300, 1600, 0, 0, 0, 0, 2, Hawks`_Pilfered_Trinkets_Mob_Drop:_firefall_hawks
+P 300, 1000, 0, 240, 240, 0, 2, Onokiwan_Toys_Ground_Spawn,_Right_Side
+P 300, 1200, 0, 240, 240, 240, 2, Journal_of_an_Original_Ground_Spawn,_Left_Side
+P 300, 1400, 0, 127, 0, 127, 2, Firefall_Artifacts_Mob_Drop,_Inside_Caves
+P 300, 1600, 0, 0, 0, 0, 2, Hawks`_Pilfered_Trinkets_Mob_Drop:_Firefall_Hawks
 P 300, 1800, 0, 127, 64, 0, 2, Bedrock_Burrower_PH=a_Firefall_hollower
 P 300, 2000, 0, 127, 64, 0, 2, Diabo_Xi_Vesta_PH=Qua_Centien
 P 300, 2200, 0, 127, 64, 0, 2, Firefalllizard_PH=a_cinderscale_saurek

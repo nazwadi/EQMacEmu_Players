@@ -619,7 +619,7 @@ L 450, 2820, 0, 480, 2820, 0, 255, 0, 0
 L 450, 2850, 0, 480, 2850, 0, 255, 0, 0
 L 450, 2790, 0, 450, 2850, 0, 255, 0, 0
 L 480, 2790, 0, 450, 2790, 0, 255, 0, 0
-P -700, 1100, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P -700, 1100, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P -700, 1300, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P -700, 1500, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
 P -700, 1700, 0, 127, 64, 0, 2, a_corathus_infector

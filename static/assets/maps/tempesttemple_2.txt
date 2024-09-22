@@ -620,19 +620,19 @@ L 1150, 2850, 0, 1180, 2850, 0, 255, 0, 0
 L 1150, 2790, 0, 1150, 2850, 0, 255, 0, 0
 L 1180, 2790, 0, 1150, 2790, 0, 255, 0, 0
 P 0, 1100, 0, 0, 0, 0, 2, Original_Map:_Breganz_of_Crimson_Tempest
-P 0, 1300, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P 0, 1300, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P 0, 1500, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 0, 1700, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P 0, 1900, 0, 240, 240, 0, 2, A._Articles_of_Ambition_Ground_Spawn:_southeast_island
-P 0, 2100, 0, 240, 240, 240, 2, B._Subtle_Extiction_Ground_Spawn:_coastline
-P 0, 2300, 0, 127, 0, 127, 2, C._Preserver's_Prizes_Mob_Drop_&_Ground_Spawn:_Storm_of_Sorts_HA
-P 0, 2500, 0, 0, 0, 0, 2, D._Ritualistic_Remains_Mob_Drop
-P 0, 2700, 0, 127, 64, 0, 2, Aquinus_PH=an_ocean_caller
-P 0, 2900, 0, 127, 64, 0, 2, Captain_John_PH=First_Mate_Parsons
-P 0, 3100, 0, 127, 64, 0, 2, Nulian_the_Stormwarden_PH=a_storm_champion
-P 0, 3300, 0, 127, 64, 0, 2, Reefmaw_PH=an_enraged_reef_crawler
-P 0, 3500, 0, 127, 64, 0, 2, Scalithid_the_Deepwalker_PH=a_deepwalker_naga
-P 0, 3700, 0, 127, 64, 0, 2, Serisaria_PH=a_lost_siren_(Storm_of_Sorts_HA)
-P 0, 3900, 0, 127, 64, 0, 2, Serpentil_PH=a_coral_serpent
-P 0, 4100, 0, 127, 64, 0, 2, Stormrock_PH=a_tempest_dervish
-P 0, 4300, 0, 127, 64, 0, 2, Strangacul_PH=an_enraged_rocksnapper
+P 0, 1900, 0, 240, 240, 0, 2, A._Articles_of_Ambition_ground_spawn_(Southeast_Island)
+P 0, 2100, 0, 240, 240, 240, 2, B._Subtle_Extiction_ground_spawn_(Coastline)
+P 0, 2300, 0, 127, 0, 127, 2, C._Preserver's_Prizes_mob_drop_&_ground_spawn_(Storm_of_Sorts_HA)
+P 0, 2500, 0, 0, 0, 0, 2, D._Ritualistic_Remains_mob_drop
+P 0, 2700, 0, 127, 64, 0, 2, Aquinus_PH=_an_ocean_caller
+P 0, 2900, 0, 127, 64, 0, 2, Captain_John_PH=_First_Mate_Parsons
+P 0, 3100, 0, 127, 64, 0, 2, Nulian_the_Stormwarden_PH=_a_storm_champion
+P 0, 3300, 0, 127, 64, 0, 2, Reefmaw_PH=_an_enraged_reef_crawler
+P 0, 3500, 0, 127, 64, 0, 2, Scalithid_the_Deepwalker_PH=_a_deepwalker_naga
+P 0, 3700, 0, 127, 64, 0, 2, Serisaria_(Storm_of_Sorts_HA)
+P 0, 3900, 0, 127, 64, 0, 2, Serpentil_PH=_a_coral_serpent
+P 0, 4100, 0, 127, 64, 0, 2, Stormrock_PH=_a_tempest_dervish
+P 0, 4300, 0, 127, 64, 0, 2, Strangacul_PH=_an_enraged_rocksnapper

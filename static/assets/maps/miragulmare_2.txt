@@ -694,14 +694,14 @@ L 850, 2860, 0, 880, 2860, 0, 255, 0, 0
 L 850, 2890, 0, 880, 2890, 0, 255, 0, 0
 L 850, 2830, 0, 850, 2890, 0, 255, 0, 0
 L 880, 2830, 0, 850, 2830, 0, 255, 0, 0
-P -300, 900, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P -300, 900, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P -300, 1100, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P -300, 1300, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P -300, 1500, 0, 127, 64, 0, 2, Bloodfeather_PH=a_darkshadow_raven
-P -300, 1700, 0, 127, 64, 0, 2, Fearstalker_PH=a_mournful_shade
-P -300, 1900, 0, 127, 64, 0, 2, Foeslicer_PH=an_ancient_guardian
-P -300, 2100, 0, 127, 64, 0, 2, Gilibus_the_Unseen_PH=an_unseen_warrior
-P -300, 2300, 0, 127, 64, 0, 2, Iglum_the_Deformed_PH=a_darkbone_golem
-P -300, 2500, 0, 127, 64, 0, 2, Shadowlord_Gixblat_PH=a_darkshadow_mephit
-P -300, 2700, 0, 127, 64, 0, 2, Sotor_the_Unmerciful_PH=a_shadow_mephit
-P -300, 2900, 0, 127, 64, 0, 2, Soul_Taster_PH=a_silent_shadow
+P -300, 1500, 0, 127, 64, 0, 2, Bloodfeather_PH=_a_darkshadow_raven
+P -300, 1700, 0, 127, 64, 0, 2, Fearstalker_PH=_a_mournful_shade
+P -300, 1900, 0, 127, 64, 0, 2, Foeslicer_PH=_an_ancient_guardian
+P -300, 2100, 0, 127, 64, 0, 2, Gilibus_the_Unseen_PH=_an_unseen_warrior
+P -300, 2300, 0, 127, 64, 0, 2, Iglum_the_Deformed_PH=_a_darkbone_golem
+P -300, 2500, 0, 127, 64, 0, 2, Shadowlord_Gixblat_PH=_a_darkshadow_mephit
+P -300, 2700, 0, 127, 64, 0, 2, Sotor_the_Unmerciful_PH=_a_shadow_mephit
+P -300, 2900, 0, 127, 64, 0, 2, Soul_Taster_PH=_a_silent_shadow

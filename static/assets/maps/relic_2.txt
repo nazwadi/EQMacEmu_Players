@@ -619,7 +619,7 @@ L 1150, 2920, 0, 1180, 2920, 0, 255, 0, 0
 L 1150, 2950, 0, 1180, 2950, 0, 255, 0, 0
 L 1150, 2890, 0, 1150, 2950, 0, 255, 0, 0
 L 1180, 2890, 0, 1150, 2890, 0, 255, 0, 0
-P 0, 1200, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P 0, 1200, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P 0, 1400, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 0, 1600, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
 P 0, 1800, 0, 240, 127, 0, 2, Shar`Drahn

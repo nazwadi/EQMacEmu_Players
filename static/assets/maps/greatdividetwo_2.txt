@@ -622,10 +622,10 @@ L 1580, 6990, 0, 1550, 6990, 0, 255, 0, 0
 P 400, 5300, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsinger
 P 400, 5500, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 400, 5700, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P 400, 5900, 0, 0, 0, 0, 2, Tools_of_the_Lost_Miners_Mob_Drop
-P 400, 6100, 0, 0, 0, 0, 2, Earning_Our_Keep_Ground_Spawn
-P 400, 6300, 0, 240, 240, 0, 2, Remnants_of_a_Somber_Divide_Ground_Spawn
-P 400, 6500, 0, 240, 240, 240, 2, Bare_Necessities_of_a_Simpler_Time_Mob_Drop
+P 400, 5900, 0, 0, 0, 0, 2, Tools_of_the_Lost_Miners_mob_drop
+P 400, 6100, 0, 0, 0, 0, 2, Earning_Our_Keep_ground_spawn
+P 400, 6300, 0, 240, 240, 0, 2, Remnants_of_a_Somber_Divide_ground_spawn
+P 400, 6500, 0, 240, 240, 240, 2, Bare_Necessities_of_a_Simpler_Time_mob_drop
 P 400, 6700, 0, 127, 64, 0, 2, a_forgotten_raid_leader_PH=a_forgotten_enforcer
 P 400, 6900, 0, 127, 64, 0, 2, a_tizmak_augur_PH=a_restless_tizmak
 P 400, 7100, 0, 127, 64, 0, 2, Blizzent_PH=a_restless_wurm
@@ -637,4 +637,4 @@ P 400, 8100, 0, 127, 64, 0, 2, Loremaster_Metiheib_the_Lost_PH=a_frosttouched_co
 P 400, 8300, 0, 127, 64, 0, 2, Lost_Squre_of_Narandi_PH=a_forgotten_enforcer
 P 400, 8500, 0, 127, 64, 0, 2, Margidor_PH=a_windchilled_marrow
 P 400, 8700, 0, 127, 64, 0, 2, Orfur,_Priest_of_Zek_PH=a_cold_screamer
-P 400, 8900, 0, 127, 64, 0, 2, Thosgromri_Warmgranite_PH=a_relentless_tizmak/a_frigid_cadaver
+P 400, 8900, 0, 127, 64, 0, 2, Thosgromri_Warmgranite_PH=a_relentless_tizmak,_a_frigid_cadaver

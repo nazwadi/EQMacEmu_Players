@@ -672,20 +672,20 @@ L 1250, 3100, 0, 1280, 3100, 0, 255, 0, 0
 L 1250, 3130, 0, 1280, 3130, 0, 255, 0, 0
 L 1250, 3070, 0, 1250, 3130, 0, 255, 0, 0
 L 1280, 3070, 0, 1250, 3070, 0, 255, 0, 0
-P 100, 1300, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P 100, 1300, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P 100, 1500, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 100, 1700, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P 100, 1900, 0, 240, 240, 0, 2, A._Night_Crawlers_Ground_Spawn
-P 100, 2100, 0, 240, 240, 240, 2, B._Markers_of_Death_Ground_Spawn
-P 100, 2300, 0, 127, 0, 127, 2, C._Medal_from_the_Living_Mob_Drop_&_Ground_Spawn:_in_HA's
-P 100, 2500, 0, 127, 64, 0, 2, The_Curator_PH=a_tireless_sentinel
-P 100, 2700, 0, 127, 64, 0, 2, Emma,_a_True_Believer_PH=a_worn_administrator
-P 100, 2900, 0, 127, 64, 0, 2, Eunice,_Well-Wisher_PH=a_mournful_peasant/a_burly_cultist
-P 100, 3100, 0, 127, 64, 0, 2, High_Bokon_Cleret_PH=a_grand_bokon_(Fate_Rewards_the_Bold_HA)
-P 100, 3300, 0, 127, 64, 0, 2, Master_of_the_House_PH=a_retired_salesperson
-P 100, 3500, 0, 127, 64, 0, 2, The_Perforator_PH=a_mute_citizen_(Deadline_HA)
-P 100, 3700, 0, 127, 64, 0, 2, The_Remnants_of_the_Darkseer_PH=an_assistant_to_Darkseer
-P 100, 3900, 0, 127, 64, 0, 2, The_Sleepbringer_PH=a_tsetse_eater/a_tsetse_swarmborn
-P 100, 4100, 0, 127, 64, 0, 2, Svea_Haire_PH=an_impatient_wanderer
-P 100, 4300, 0, 127, 64, 0, 2, Tarris_Ellam_PH=a_wandering_official_(Undead_Underground_HA)
-P 100, 4500, 0, 127, 64, 0, 2, Zikursch_the_Corrupt_PH=an_unpleasant_bureaucrat
+P 100, 1900, 0, 240, 240, 0, 2, A._Night_Crawlers_ground_spawn
+P 100, 2100, 0, 240, 240, 240, 2, B._Markers_of_Death_ground_spawn
+P 100, 2300, 0, 127, 0, 127, 2, C._Medal_from_the_Living_mob_drop_&_ground_spawn_(in_HA's)
+P 100, 2500, 0, 127, 64, 0, 2, The_Curator_PH=_a_tireless_sentinel
+P 100, 2700, 0, 127, 64, 0, 2, Emma,_a_True_Believer_PH=_a_worn_administrator
+P 100, 2900, 0, 127, 64, 0, 2, Eunice,_Well-Wisher_PH=_a_mournful_peasant/a_burly_cultist
+P 100, 3100, 0, 127, 64, 0, 2, High_Bokon_Cleret_(Fate_Rewards_the_Bold_HA)
+P 100, 3300, 0, 127, 64, 0, 2, Master_of_the_House_PH=_a_retired_salesperson
+P 100, 3500, 0, 127, 64, 0, 2, The_Perforator_(Deadline_HA)
+P 100, 3700, 0, 127, 64, 0, 2, The_Remnants_of_the_Darkseer_PH=_an_assistant_to_Darkseer
+P 100, 3900, 0, 127, 64, 0, 2, The_Sleepbringer_PH=_a_tsetse_eater/a_tsetse_swarmborn
+P 100, 4100, 0, 127, 64, 0, 2, Svea_Haire_PH=_an_impatient_wanderer
+P 100, 4300, 0, 127, 64, 0, 2, Tarris_Ellam_(Undead_Underground_HA)
+P 100, 4500, 0, 127, 64, 0, 2, Zikursch_the_Corrupt_PH=_an_unpleasant_bureaucrat

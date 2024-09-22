@@ -589,20 +589,20 @@ L 1050, 7430, 0, 1080, 7430, 0, 255, 0, 0
 L 1050, 7370, 0, 1050, 7430, 0, 255, 0, 0
 L 1080, 7370, 0, 1050, 7370, 0, 255, 0, 0
 P -100, 5800, 0, 0, 0, 0, 2, Original_Map:_Drogba_of_Cazic-Thule
-P -100, 6000, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P -100, 6000, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P -100, 6200, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P -100, 6400, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P -100, 6600, 0, 240, 240, 0, 2, A._Burned_Wood_Ground_Spawn
-P -100, 6800, 0, 0, 0, 0, 2, B._When_the_Stars_Fell_Mob_Drop:_elementals
-P -100, 7000, 0, 0, 0, 0, 2, C._Unearthing_the_Sky_Mob_Drop:_burynai
-P -100, 7200, 0, 0, 0, 0, 2, D._Big_Time_Mob_Drop:_giants
-P -100, 7400, 0, 127, 64, 0, 2, Caradawg_Gwyn_PH=a_majestic_sureshot
-P -100, 7600, 0, 127, 64, 0, 2, Carpenter_Adomnan_PH=a_forest_giant_carpenter
-P -100, 7800, 0, 127, 64, 0, 2, Cathal_Paclock_PH=a_forest_giant_fury
-P -100, 8000, 0, 127, 64, 0, 2, Gullerback_Undying_PH=an_ancient_tatterback
-P -100, 8200, 0, 127, 64, 0, 2, Plaguebringer_PH=an_ancient_plaguebone
-P -100, 8400, 0, 127, 64, 0, 2, Searstinger_PH=an_immolator_hornet
-P -100, 8600, 0, 127, 64, 0, 2, Sovarak_Klyseer_PH=a_Sarnak_shadowknight
-P -100, 8800, 0, 127, 64, 0, 2, Spirit_of_Incineration_PH=a_spirit_of_flame
-P -100, 9000, 0, 127, 64, 0, 2, The_Ore-mad_Prophet_PH=a_burynai_prophet
-P -100, 9200, 0, 127, 64, 0, 2, Zakija_PH=a_wurm-scorched_skeleton
+P -100, 6600, 0, 240, 240, 0, 2, A._Burned_Wood_ground_spawn
+P -100, 6800, 0, 0, 0, 0, 2, B._When_the_Stars_Fell_mob_drop_(elementals)
+P -100, 7000, 0, 0, 0, 0, 2, C._Unearthing_the_Sky_mob_drop_(burynai)
+P -100, 7200, 0, 0, 0, 0, 2, D._Big_Time_mob_drop_(giants)
+P -100, 7400, 0, 127, 64, 0, 2, Caradawg_Gwyn_PH=_a_majestic_sureshot
+P -100, 7600, 0, 127, 64, 0, 2, Carpenter_Adomnan_PH=_a_forest_giant_carpenter
+P -100, 7800, 0, 127, 64, 0, 2, Cathal_Paclock_PH=_a_forest_giant_fury
+P -100, 8000, 0, 127, 64, 0, 2, Gullerback_Undying_PH=_an_ancient_tatterback
+P -100, 8200, 0, 127, 64, 0, 2, Plaguebringer_PH=_an_ancient_plaguebone
+P -100, 8400, 0, 127, 64, 0, 2, Searstinger_PH=_an_immolator_hornet
+P -100, 8600, 0, 127, 64, 0, 2, Sovarak_Klyseer_PH=_a_Sarnak_shadowknight
+P -100, 8800, 0, 127, 64, 0, 2, Spirit_of_Incineration_PH=_a_spirit_of_flame
+P -100, 9000, 0, 127, 64, 0, 2, The_Ore-mad_Prophet_PH=_a_burynai_prophet
+P -100, 9200, 0, 127, 64, 0, 2, Zakija_PH=_a_wurm-scorched_skeleton

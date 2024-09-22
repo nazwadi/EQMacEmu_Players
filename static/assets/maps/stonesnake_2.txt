@@ -588,7 +588,7 @@ L 1350, 3300, 0, 1380, 3300, 0, 255, 0, 0
 L 1350, 3330, 0, 1380, 3330, 0, 255, 0, 0
 L 1350, 3270, 0, 1350, 3330, 0, 255, 0, 0
 L 1380, 3270, 0, 1350, 3270, 0, 255, 0, 0
-P 200, 1700, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P 200, 1700, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P 200, 1900, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 200, 2100, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
 P 200, 2300, 0, 127, 64, 0, 2, Deathspore

@@ -620,7 +620,7 @@ L 250, 3550, 0, 280, 3550, 0, 255, 0, 0
 L 250, 3490, 0, 250, 3550, 0, 255, 0, 0
 L 280, 3490, 0, 250, 3490, 0, 255, 0, 0
 P -900, 1800, 0, 0, 0, 0, 2, Original_Map:_Danille_of_Bristlebane
-P -900, 2000, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P -900, 2000, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P -900, 2200, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P -900, 2400, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
 P -900, 2600, 0, 127, 64, 0, 2, Bazu_Warsmasher

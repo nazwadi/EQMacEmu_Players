@@ -588,7 +588,7 @@ L -750, 2100, 0, -720, 2100, 0, 255, 0, 0
 L -750, 2130, 0, -720, 2130, 0, 255, 0, 0
 L -750, 2070, 0, -750, 2130, 0, 255, 0, 0
 L -720, 2070, 0, -750, 2070, 0, 255, 0, 0
-P -1900, 500, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P -1900, 500, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P -1900, 700, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P -1900, 900, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
 P -1900, 1100, 0, 127, 64, 0, 2, Discordling_Hollower

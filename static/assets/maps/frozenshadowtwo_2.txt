@@ -692,10 +692,10 @@ L 1080, 2130, 0, 1050, 2130, 0, 255, 0, 0
 P -100, 200, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsinger
 P -100, 400, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P -100, 600, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P -100, 800, 0, 0, 0, 0, 2, Wedding_Favors_Mob_Drop
-P -100, 1000, 0, 0, 0, 0, 2, Embalming_Tools_Mob_Drop
-P -100, 1200, 0, 240, 240, 0, 2, How_to_Embalm,_V234.0_Ground_Spawn
-P -100, 1400, 0, 240, 240, 240, 2, Left_in_the_Tower_Ground_Spawn
+P -100, 800, 0, 0, 0, 0, 2, Wedding_Favors_mob_drop
+P -100, 1000, 0, 0, 0, 0, 2, Embalming_Tools_mob_drop
+P -100, 1200, 0, 240, 240, 0, 2, How_to_Embalm,_V234.0_ground_spawn
+P -100, 1400, 0, 240, 240, 240, 2, Left_in_the_Tower_ground_spawn
 P -100, 1600, 0, 127, 64, 0, 2, a_shrouded_bat_PH=a_shrouded_bat
 P -100, 1800, 0, 127, 64, 0, 2, a_skeleton_sleeper_PH=a_shadowbone
 P -100, 2000, 0, 127, 64, 0, 2, Amontehepna_the_Second_PH=a_frost_mummy

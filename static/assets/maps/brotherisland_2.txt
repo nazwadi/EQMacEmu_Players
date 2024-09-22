@@ -620,15 +620,15 @@ L 3750, 7750, 0, 3780, 7750, 0, 255, 0, 0
 L 3750, 7690, 0, 3750, 7750, 0, 255, 0, 0
 L 3780, 7690, 0, 3750, 7690, 0, 255, 0, 0
 P 2600, 6000, 0, 0, 0, 0, 2, Original_Map:_Breganz_of_Crimson_Tempest
-P 2600, 6200, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P 2600, 6200, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P 2600, 6400, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 2600, 6600, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P 2600, 6800, 0, 240, 240, 0, 2, A._Beachcomber's_Booty_Ground_Spawn
-P 2600, 7000, 0, 240, 240, 240, 2, B._Dropped_Detritus_Ground_Spawn
-P 2600, 7200, 0, 0, 0, 0, 2, C._Island_Sands_Mob_Drop
-P 2600, 7400, 0, 0, 0, 0, 2, D._Itching_Insects_Mob_Drop
-P 2600, 7600, 0, 127, 64, 0, 2, Angry_Alfred_PH=an_angry_squawker/a_bothered_squawker
-P 2600, 7800, 0, 127, 64, 0, 2, Lidia_the_Castaway_PH=a_regretful_wanderer/a_vengeful_wanderer
-P 2600, 8000, 0, 127, 64, 0, 2, Mulchmother_PH=a_voracious_tasselvine
-P 2600, 8200, 0, 127, 64, 0, 2, Redstreak_PH=an_angry_furthick/a_furthick_charger
-P 2600, 8400, 0, 127, 64, 0, 2, South_Point_Latcher_PH=a_dripping_razorlatch/a_snipping_razorlatch
+P 2600, 6800, 0, 240, 240, 0, 2, A._Beachcomber's_Booty_ground_spawn
+P 2600, 7000, 0, 240, 240, 240, 2, B._Dropped_Detritus_ground_spawn
+P 2600, 7200, 0, 0, 0, 0, 2, C._Island_Sands_mob_drop
+P 2600, 7400, 0, 0, 0, 0, 2, D._Itching_Insects_mob_drop
+P 2600, 7600, 0, 127, 64, 0, 2, Angry_Alfred_PH=_an_angry_squawker/a_bothered_squawker
+P 2600, 7800, 0, 127, 64, 0, 2, Lidia_the_Castaway_PH=_a_regretful_wanderer/a_vengeful_wanderer
+P 2600, 8000, 0, 127, 64, 0, 2, Mulchmother_PH=_a_voracious_tasselvine
+P 2600, 8200, 0, 127, 64, 0, 2, Redstreak_PH=_an_angry_furthick/a_furthick_charger
+P 2600, 8400, 0, 127, 64, 0, 2, South_Point_Latcher_PH=_a_dripping_razorlatch/a_snipping_razorlatch

@@ -589,6 +589,6 @@ L -1350, 7230, 0, -1320, 7230, 0, 255, 0, 0
 L -1350, 7170, 0, -1350, 7230, 0, 255, 0, 0
 L -1320, 7170, 0, -1350, 7170, 0, 255, 0, 0
 P -2500, 5600, 0, 0, 0, 0, 2, Original_Map:_Latan_of_Saryn
-P -2500, 5800, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P -2500, 5800, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P -2500, 6000, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P -2500, 6200, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)

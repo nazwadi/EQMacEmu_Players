@@ -589,7 +589,7 @@ L 150, 4030, 0, 180, 4030, 0, 255, 0, 0
 L 150, 3970, 0, 150, 4030, 0, 255, 0, 0
 L 180, 3970, 0, 150, 3970, 0, 255, 0, 0
 P -1000, 2400, 0, 0, 0, 0, 2, Original_Map:_Zigie_of_Povar
-P -1000, 2600, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P -1000, 2600, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P -1000, 2800, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P -1000, 3000, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
 P -1000, 3200, 0, 127, 64, 0, 2, Anghel

@@ -695,14 +695,14 @@ L 850, 3790, 0, 880, 3790, 0, 255, 0, 0
 L 850, 3730, 0, 850, 3790, 0, 255, 0, 0
 L 880, 3730, 0, 850, 3730, 0, 255, 0, 0
 P -300, 1800, 0, 0, 0, 0, 2, Original_Map:_Caudyr
-P -300, 2000, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P -300, 2000, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P -300, 2200, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P -300, 2400, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P -300, 2600, 0, 240, 240, 0, 2, A._Hidden_Faces_Ground_Spawn
-P -300, 2800, 0, 0, 0, 0, 2, B._Kill_Them_Before_They_Grow_Mob_Drop
-P -300, 3000, 0, 127, 64, 0, 2, A_Herald_of_Fear_PH=an_enraged_spectre
-P -300, 3200, 0, 127, 64, 0, 2, A_Vision_of_Fear_PH=an_enraged:_any
-P -300, 3400, 0, 127, 64, 0, 2, Grizelna_the_Mad_PH=an_enraged:_any
-P -300, 3600, 0, 127, 64, 0, 2, Simira_the_Dreadwidow_PH=an_enraged:_any
-P -300, 3800, 0, 127, 64, 0, 2, Soulhollow_PH=an_enraged:_any
-P -300, 4000, 0, 127, 64, 0, 2, Yilsme_the_Harbinger_of_Death_PH=an_enraged_widow
+P -300, 2600, 0, 240, 240, 0, 2, A._Hidden_Faces_ground_spawn
+P -300, 2800, 0, 0, 0, 0, 2, B._Kill_Them_Before_They_Grow_mob_drop
+P -300, 3000, 0, 127, 64, 0, 2, A_Herald_of_Fear_PH=_an_enraged_spectre
+P -300, 3200, 0, 127, 64, 0, 2, A_Vision_of_Fear_PH=_an_enraged_(any)
+P -300, 3400, 0, 127, 64, 0, 2, Grizelna_the_Mad_PH=_an_enraged_(any)
+P -300, 3600, 0, 127, 64, 0, 2, Simira_the_Dreadwidow_PH=_an_enraged_(any)
+P -300, 3800, 0, 127, 64, 0, 2, Soulhollow_PH=_an_enraged_(any)
+P -300, 4000, 0, 127, 64, 0, 2, Yilsme_the_Harbinger_of_Death_PH=_an_enraged_widow

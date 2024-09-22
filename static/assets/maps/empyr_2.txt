@@ -622,10 +622,10 @@ L 967, 3601, 0, 937, 3601, 0, 255, 0, 0
 P -213, 1911, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsinger
 P -213, 2111, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P -213, 2311, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P -213, 2511, 0, 0, 0, 0, 2, A._Fire_Forever_Mob_Drop
-P -213, 2711, 0, 0, 0, 0, 2, B._Puzzling_Plantlife_Mob_Drop
-P -213, 2911, 0, 240, 240, 0, 2, C._Lost_in_Place_Ground_Spawn
-P -213, 3111, 0, 240, 240, 0, 2, D._The_Life_of_Fire_Ground_Spawn
+P -213, 2511, 0, 0, 0, 0, 2, A._Fire_Forever_mob_drop
+P -213, 2711, 0, 0, 0, 0, 2, B._Puzzling_Plantlife_mob_drop
+P -213, 2911, 0, 240, 240, 0, 2, C._Lost_in_Place_ground_spawn
+P -213, 3111, 0, 240, 240, 0, 2, D._The_Life_of_Fire_ground_spawn
 P -213, 3311, 0, 127, 64, 0, 2, Ashes_PH=a_sputtering_flameling
 P -213, 3511, 0, 127, 64, 0, 2, Assassin_of_the_Perfect_Dusk_PH=a_fire_giant_knight
 P -213, 3711, 0, 127, 64, 0, 2, Final_Rainbow_PH=a_breeze_mephit

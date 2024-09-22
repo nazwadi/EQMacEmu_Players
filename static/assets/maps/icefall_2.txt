@@ -589,7 +589,7 @@ L 1950, 4230, 0, 1980, 4230, 0, 255, 0, 0
 L 1950, 4170, 0, 1950, 4230, 0, 255, 0, 0
 L 1980, 4170, 0, 1950, 4170, 0, 255, 0, 0
 P 800, 2600, 0, 0, 0, 0, 2, Original_Map:_Zigie_of_Povar
-P 800, 2800, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P 800, 2800, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P 800, 3000, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 800, 3200, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
 P 800, 3400, 0, 127, 64, 0, 2, a_dire_wolf_pup_check_eq

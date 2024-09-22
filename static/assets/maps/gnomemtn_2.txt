@@ -685,10 +685,10 @@ L 963, 2962, 0, 933, 2962, 0, 255, 0, 0
 P -217, 1032, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsinger
 P -217, 1232, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P -217, 1432, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P -217, 1632, 0, 240, 240, 0, 2, Small_Memories_Ground_Spawn:_orc_area
-P -217, 1832, 0, 0, 0, 0, 2, Small_Documents_Mob_Drop
-P -217, 2032, 0, 240, 240, 240, 2, Small_Parts_Ground_Spawn:_gnome_area
-P -217, 2232, 0, 0, 0, 0, 2, Small_Feuds_Mob_Drop
+P -217, 1632, 0, 240, 240, 0, 2, Small_Memories_ground_spawn_(orc_area)
+P -217, 1832, 0, 0, 0, 0, 2, Small_Documents_mob_drop
+P -217, 2032, 0, 240, 240, 240, 2, Small_Parts_ground_spawn_(gnome_area)
+P -217, 2232, 0, 0, 0, 0, 2, Small_Feuds_mob_drop
 P -217, 2432, 0, 127, 64, 0, 2, A_Non-Standard_Deviation_PH=an_iron_legion_climber
 P -217, 2632, 0, 127, 64, 0, 2, Ambassador_of_Loving_PH=a_clockwork_guardian
 P -217, 2832, 0, 127, 64, 0, 2, Best_Museum_Security_PH=a_security_officer

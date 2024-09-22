@@ -620,20 +620,20 @@ L 1750, 2750, 0, 1780, 2750, 0, 255, 0, 0
 L 1750, 2690, 0, 1750, 2750, 0, 255, 0, 0
 L 1780, 2690, 0, 1750, 2690, 0, 255, 0, 0
 P 600, 1000, 0, 0, 0, 0, 2, Original_Map:_Breganz_of_Crimson_Tempest
-P 600, 1200, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P 600, 1200, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P 600, 1400, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 600, 1600, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P 600, 1800, 0, 240, 240, 0, 2, A._Cruelty_T'Vyl_Ground_Spawn
-P 600, 2000, 0, 240, 240, 240, 2, B._Dredging_Drudgery_Ground_Spawn
-P 600, 2200, 0, 127, 0, 127, 2, C._Twenty_Leagues_Ground_Spawn:_Kedge_Counterblow_HA
-P 600, 2400, 0, 0, 0, 0, 2, D._Armatalium_Odalia_Mob_Drop:_Doomscale_mobs
-P 600, 2600, 0, 127, 64, 0, 2, Frachessa_the_Feared_PH=a_hateful_Doomscale_wrathforged
-P 600, 2800, 0, 127, 64, 0, 2, Fractureshell_PH=a_fractured_regrua
-P 600, 3000, 0, 127, 64, 0, 2, High_Guard_Vnayyanye_PH=a_resitve_guard_(Kedge_Counterblow_HA)
-P 600, 3200, 0, 127, 64, 0, 2, Indagator_Mortem_Livianus_PH=a_timid_indagator_vocantem
-P 600, 3400, 0, 127, 64, 0, 2, Necromaticus_Abominatio_PH=an_aboninatio_elementaribus
-P 600, 3600, 0, 127, 64, 0, 2, Praetor_Ledalus_Thaddaeus_PH=a_supurbus_praetor_lucem
-P 600, 3800, 0, 127, 64, 0, 2, Pria_the_Penitent_PH=a_penitent_Doomscale_cultist
-P 600, 4000, 0, 127, 64, 0, 2, Saevus_Lapis_Operarius_PH=an_inconstans_lapis_operarius
-P 600, 4200, 0, 127, 64, 0, 2, Vicarum_Spiritus_Psyche_PH=an_inanimatum_vicarum_spiritus
-P 600, 4400, 0, 127, 64, 0, 2, Warleader_Jocelyn_PH=a_warleader_follower
+P 600, 1800, 0, 240, 240, 0, 2, A._Cruelty_T'Vyl_ground_spawn
+P 600, 2000, 0, 240, 240, 240, 2, B._Dredging_Drudgery_ground_spawn
+P 600, 2200, 0, 127, 0, 127, 2, C._Twenty_Leagues_ground_spawn_(Kedge_Counterblow_HA)
+P 600, 2400, 0, 0, 0, 0, 2, D._Armatalium_Odalia_mob_drop_(Doomscale_mobs)
+P 600, 2600, 0, 127, 64, 0, 2, Frachessa_the_Feared_PH=_a_hateful_Doomscale_wrathforged
+P 600, 2800, 0, 127, 64, 0, 2, Fractureshell_PH=_a_fractured_regrua
+P 600, 3000, 0, 127, 64, 0, 2, High_Guard_Vnayyanye_(Kedge_Counterblow_HA)
+P 600, 3200, 0, 127, 64, 0, 2, Indagator_Mortem_Livianus_PH=_a_timid_indagator_vocantem
+P 600, 3400, 0, 127, 64, 0, 2, Necromaticus_Abominatio_PH=_an_aboninatio_elementaribus
+P 600, 3600, 0, 127, 64, 0, 2, Praetor_Ledalus_Thaddaeus_PH=_a_supurbus_praetor_lucem
+P 600, 3800, 0, 127, 64, 0, 2, Pria_the_Penitent_PH=_a_penitent_Doomscale_cultist
+P 600, 4000, 0, 127, 64, 0, 2, Saevus_Lapis_Operarius_PH=_an_inconstans_lapis_operarius
+P 600, 4200, 0, 127, 64, 0, 2, Vicarum_Spiritus_Psyche_PH=_an_inanimatum_vicarum_spiritus
+P 600, 4400, 0, 127, 64, 0, 2, Warleader_Jocelyn_PH=_a_warleader_follower

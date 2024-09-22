@@ -591,11 +591,11 @@ L 980, 2270, 0, 950, 2270, 0, 255, 0, 0
 P -200, 700, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsinger
 P -200, 900, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P -200, 1100, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P -200, 1300, 0, 240, 240, 0, 2, Froststone_Barter_Ground_Spawn:_coldain_area
-P -200, 1500, 0, 240, 240, 240, 2, Creepy_Crawly_and_Wiggly_Ground_Spawn:_lower_areas
-P -200, 1700, 0, 0, 0, 0, 2, Silk_Silk_Silk_Ground_Spawn
-P -200, 1900, 0, 0, 0, 0, 2, Ice_Stones_Mob_Drop
+P -200, 1300, 0, 240, 240, 0, 2, Froststone_Barter_ground_spawn_(coldain_area)
+P -200, 1500, 0, 240, 240, 240, 2, Creepy_Crawly_and_Wiggly_ground_spawn_(lower_areas)
+P -200, 1700, 0, 0, 0, 0, 2, Silk_Silk_Silk_ground_spawn
+P -200, 1900, 0, 0, 0, 0, 2, Ice_Stones_mob_drop
 P -200, 2100, 0, 127, 64, 0, 2, Crystal_Grinder_PH=a_crystal_skitterer
 P -200, 2300, 0, 127, 64, 0, 2, Gem_collector_PH=a_focus_geonid
-P -200, 2500, 0, 127, 64, 0, 2, Life_Leech_PH=a_terror_carver/a_hollow_carver
+P -200, 2500, 0, 127, 64, 0, 2, Life_Leech_PH=a_terror_carver,_a_hollow_carver
 P -200, 2700, 0, 127, 64, 0, 2, Queen_Dracnia_PH=a_crystal_purifier

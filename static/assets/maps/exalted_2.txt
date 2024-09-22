@@ -672,18 +672,18 @@ L 1250, 3100, 0, 1280, 3100, 0, 255, 0, 0
 L 1250, 3130, 0, 1280, 3130, 0, 255, 0, 0
 L 1250, 3070, 0, 1250, 3130, 0, 255, 0, 0
 L 1280, 3070, 0, 1250, 3070, 0, 255, 0, 0
-P 100, 1300, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P 100, 1300, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P 100, 1500, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 100, 1700, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P 100, 1900, 0, 240, 240, 0, 2, A._Texts_of_Eternity_Ground_Spawn
-P 100, 2100, 0, 127, 64, 0, 2, Arsin_the_Blaze_PH=a_ravenous_citizen_(Under_the_Robe_HA)
-P 100, 2300, 0, 127, 64, 0, 2, Commissioner_Edrun_PH=an_overworked_functionary
-P 100, 2500, 0, 127, 64, 0, 2, The_Darkseer_PH=an_aloof_bokon
-P 100, 2700, 0, 127, 64, 0, 2, Exalted_Dromond_PH=an_honorable_citizen
-P 100, 2900, 0, 127, 64, 0, 2, Glorious_Cistina_PH=a_gleeful_citizen
-P 100, 3100, 0, 127, 64, 0, 2, Guardian_Jenat_PH=a_diligent_guard
-P 100, 3300, 0, 127, 64, 0, 2, Gurndal_the_Graceful_PH=_a_venerated_guard_(We_Make_Our_Own_Rewards_HA)
-P 100, 3500, 0, 127, 64, 0, 2, Mad_Merchant_Marv_PH=a_retired_merchant
-P 100, 3700, 0, 127, 64, 0, 2, Render_PH=an_enraged_follower_(The_Handmaiden_HA)
-P 100, 3900, 0, 127, 64, 0, 2, Terrance_the_Admired_PH=a_delighted_citizen
-P 100, 4100, 0, 127, 64, 0, 2, Vizier_Albert_PH=a_doubtful_functionary
+P 100, 1900, 0, 240, 240, 0, 2, A._Texts_of_Eternity_ground_spawn
+P 100, 2100, 0, 127, 64, 0, 2, Arsin_the_Blaze_(Under_the_Robe_HA)
+P 100, 2300, 0, 127, 64, 0, 2, Commissioner_Edrun_PH=_an_overworked_functionary
+P 100, 2500, 0, 127, 64, 0, 2, The_Darkseer_PH=_an_aloof_bokon
+P 100, 2700, 0, 127, 64, 0, 2, Exalted_Dromond_PH=_an_honorable_citizen
+P 100, 2900, 0, 127, 64, 0, 2, Glorious_Cistina_PH=_a_gleeful_citizen
+P 100, 3100, 0, 127, 64, 0, 2, Guardian_Jenat_PH=_a_diligent_guard
+P 100, 3300, 0, 127, 64, 0, 2, Gurndal_the_Graceful_(We_Make_Our_Own_Rewards_HA)
+P 100, 3500, 0, 127, 64, 0, 2, Mad_Merchant_Marv_PH=_a_retired_merchant
+P 100, 3700, 0, 127, 64, 0, 2, Render_(The_Handmaiden_HA)
+P 100, 3900, 0, 127, 64, 0, 2, Terrance_the_Admired_PH=_a_delighted_citizen
+P 100, 4100, 0, 127, 64, 0, 2, Vizier_Albert_PH=_a_doubtful_functionary

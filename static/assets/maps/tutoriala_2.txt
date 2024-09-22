@@ -619,6 +619,6 @@ L 1150, 2020, 0, 1180, 2020, 0, 255, 0, 0
 L 1150, 2050, 0, 1180, 2050, 0, 255, 0, 0
 L 1150, 1990, 0, 1150, 2050, 0, 255, 0, 0
 L 1180, 1990, 0, 1150, 1990, 0, 255, 0, 0
-P 0, 300, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P 0, 300, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P 0, 500, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 0, 700, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)

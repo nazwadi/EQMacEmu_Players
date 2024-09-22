@@ -591,10 +591,10 @@ L 1280, 2570, 0, 1250, 2570, 0, 255, 0, 0
 P 100, 1000, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsinger
 P 100, 1200, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 100, 1400, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P 100, 1600, 0, 127, 0, 127, 2, Spirit_Imbued_Flora_Mob_Drop:_mantraps
-P 100, 1800, 0, 0, 0, 0, 2, Fragments_of_Kezhda`s_Memories_Mob_Drop:_spirits
-P 100, 2000, 0, 240, 240, 0, 2, Darklight_Critters_Ground_Spawn:_north_side
-P 100, 2200, 0, 240, 240, 240, 2, Musings_of_Kejaan_Kerrath_Ground_Spawn:_south_side
+P 100, 1600, 0, 127, 0, 127, 2, Spirit_Imbued_Flora_Mob_Drop:_Mantraps
+P 100, 1800, 0, 0, 0, 0, 2, Fragments_of_Kezhda`s_Memories_Mob_Drop:_Spirits
+P 100, 2000, 0, 240, 240, 0, 2, Darklight_Critters_Ground_Spawn:_North_side
+P 100, 2200, 0, 240, 240, 240, 2, Musings_of_Kejaan_Kerrath_Ground_Spawn:_South_side
 P 100, 2400, 0, 127, 64, 0, 2, Chromatic_Widow_Queen_PH=an_ethereal_widow
 P 100, 2600, 0, 127, 64, 0, 2, Eelworm_PH=an_overgrown_nematode
 P 100, 2800, 0, 127, 64, 0, 2, Geoxyle_PH=a_root_reaper

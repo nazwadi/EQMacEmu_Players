@@ -624,12 +624,12 @@ P -100, 2300, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P -100, 2500, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
 P -100, 2700, 0, 127, 0, 127, 2, This_Used_to_Be_My_Training_Ground_Mob_Drop:_any_mobs_in_field_below
 P -100, 2900, 0, 240, 240, 0, 2, Shar_Vahl_Guild_Signets_Ground_Spawn
-P -100, 3100, 0, 240, 240, 240, 2, Articles_of_Brokenness_Ground_Spawn:_pit_area
+P -100, 3100, 0, 240, 240, 240, 2, Articles_of_Brokenness_Ground_Spawn,_Pit_Area
 P -100, 3300, 0, 0, 0, 0, 2, Dreams_of_the_Whisperlings_Mob_Drop:_Mean_Street_Mission
 P -100, 3500, 0, 127, 64, 0, 2, Crimsonclaw_PH=a_rockhopper_adolescent
-P -100, 3700, 0, 127, 64, 0, 2, Geerot_Stabgut_PH=a_grimling_invader
+P -100, 3700, 0, 127, 64, 0, 2, Geerot_Stabgut_PH=_a_grimling_invader
 P -100, 3900, 0, 127, 64, 0, 2, Gheg_Gorespit_PH=a_grimling_scout
 P -100, 4100, 0, 127, 64, 0, 2, Kurati_the_Feral_PH=a_feral_Sahtebi
 P -100, 4300, 0, 127, 64, 0, 2, Tailfang_PH=a_scorpion_elder
 P -100, 4500, 0, 127, 64, 0, 2, Toraji,_Korath`s_Warder_PH=a_young_scorpion
-P -100, 4700, 0, 127, 64, 0, 2, Wiggle_PH=a_xakra_worm
+P -100, 4700, 0, 127, 64, 0, 2, Wiggle_PH=_a_xakra_worm

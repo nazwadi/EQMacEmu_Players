@@ -619,18 +619,18 @@ L 1150, 2420, 0, 1180, 2420, 0, 255, 0, 0
 L 1150, 2450, 0, 1180, 2450, 0, 255, 0, 0
 L 1150, 2390, 0, 1150, 2450, 0, 255, 0, 0
 L 1180, 2390, 0, 1150, 2390, 0, 255, 0, 0
-P 0, 700, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P 0, 700, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P 0, 900, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 0, 1100, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P 0, 1300, 0, 240, 240, 0, 2, A._Knives_of_Sacrifice_Ground_Spawn
-P 0, 1500, 0, 240, 240, 240, 2, B._Gathering_Slime_Ground_Spawn
-P 0, 1700, 0, 127, 0, 127, 2, C._Putrid_Poison_Ground_Spawn:_Lxavnom_Labors_HA
-P 0, 1900, 0, 127, 64, 0, 2, Abroan_Drian_PH=a_corrupt_knight
-P 0, 2100, 0, 127, 64, 0, 2, Akkapan_Adan_PH=a_bubonian_warmaster
-P 0, 2300, 0, 127, 64, 0, 2, Brightfire_PH=a_wary_unicorn
-P 0, 2500, 0, 127, 64, 0, 2, Feig_Adan_PH=a_foulest_pusling
-P 0, 2700, 0, 127, 64, 0, 2, Fountainhead_PH=a_welspring_construct
-P 0, 2900, 0, 127, 64, 0, 2, Grublus_PH=a_grumling_(Lxavnom_Labors_HA_after_step_2)
-P 0, 3100, 0, 127, 64, 0, 2, Rusank_PH=a_pusling_(Decay_Decreased_HA)
-P 0, 3300, 0, 127, 64, 0, 2, Seraphina_PH=a_seraph_(Force_the_Forceful_HA)
-P 0, 3500, 0, 127, 64, 0, 2, Xhut_Adan_PH=a_dreadbone_sage
+P 0, 1300, 0, 240, 240, 0, 2, A._Knives_of_Sacrifice_ground_spawn
+P 0, 1500, 0, 240, 240, 240, 2, B._Gathering_Slime_ground_spawn
+P 0, 1700, 0, 127, 0, 127, 2, C._Putrid_Poison_ground_spawn_(Lxavnom_Labors_HA)
+P 0, 1900, 0, 127, 64, 0, 2, Abroan_Drian_PH=_a_corrupt_knight
+P 0, 2100, 0, 127, 64, 0, 2, Akkapan_Adan_PH=_a_bubonian_warmaster
+P 0, 2300, 0, 127, 64, 0, 2, Brightfire_PH=_a_wary_unicorn
+P 0, 2500, 0, 127, 64, 0, 2, Feig_Adan_PH=_a_foulest_pusling
+P 0, 2700, 0, 127, 64, 0, 2, Fountainhead_PH=_a_welspring_construct
+P 0, 2900, 0, 127, 64, 0, 2, Grublus_(Lxavnom_Labors_HA)
+P 0, 3100, 0, 127, 64, 0, 2, Rusank_(Decay_Decreased_HA)
+P 0, 3300, 0, 127, 64, 0, 2, Seraphina_(Force_the_Forceful_HA)
+P 0, 3500, 0, 127, 64, 0, 2, Xhut_Adan_PH=_a_dreadbone_sage

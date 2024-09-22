@@ -659,10 +659,10 @@ L 1072, 2268, 0, 1042, 2268, 0, 255, 0, 0
 P -108, 458, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsinger
 P -108, 658, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P -108, 858, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P -108, 1058, 0, 0, 0, 0, 2, A._Tried_and_Failed_Mob_Drop
-P -108, 1258, 0, 240, 240, 0, 2, B._Feeling_Rocks_Ground_Spawn
-P -108, 1458, 0, 0, 0, 0, 2, C._Dulled_Hues_Mob_Drop
-P -108, 1658, 0, 240, 240, 0, 2, D._Fading_Embers_Ground_Spawn
+P -108, 1058, 0, 0, 0, 0, 2, A._Tried_and_Failed_mob_drop
+P -108, 1258, 0, 240, 240, 0, 2, B._Feeling_Rocks_ground_spawn
+P -108, 1458, 0, 0, 0, 0, 2, C._Dulled_Hues_mob_drop
+P -108, 1658, 0, 240, 240, 0, 2, D._Fading_Embers_ground_spawn
 P -108, 1858, 0, 127, 64, 0, 2, Dirge_of_Lost_Horizons_PH=a_fading_lord
 P -108, 2058, 0, 127, 64, 0, 2, Savage_Irony_of_Will_PH=a_true_flame
 P -108, 2258, 0, 127, 64, 0, 2, Silent_Silken_Song_PH=a_wasting_breezewing

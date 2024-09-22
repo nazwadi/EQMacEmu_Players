@@ -591,10 +591,10 @@ L 980, 2970, 0, 950, 2970, 0, 255, 0, 0
 P -200, 1400, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsinger
 P -200, 1600, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P -200, 1800, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P -200, 2000, 0, 240, 240, 0, 2, Akhevan_Insignia_Mob_Drop
-P -200, 2200, 0, 240, 240, 240, 2, Reliefs_of_Vex_Thal_Ground_Spawn
-P -200, 2400, 0, 127, 0, 127, 2, Captured_Glimpses_Mob_Drop
-P -200, 2600, 0, 0, 0, 0, 2, Vex_Thal_Librarian_Ground_Spawn
+P -200, 2000, 0, 240, 240, 0, 2, Akheva_Insignia
+P -200, 2200, 0, 240, 240, 240, 2, Reliefs_of_Vex_Thal
+P -200, 2400, 0, 127, 0, 127, 2, Captured_Glimpses
+P -200, 2600, 0, 0, 0, 0, 2, Vex_Thal_Librarian
 P -200, 2800, 0, 127, 64, 0, 2, Diabo_Xi_Va_Temariel_PH=Kela_Va
 P -200, 3000, 0, 127, 64, 0, 2, Diabo_Xi_Xin_Thall_PH=Xin_Thall
 P -200, 3200, 0, 127, 64, 0, 2, Kaas_Thox_Xi_Ans_Dyek_PH=Qua_Kaas_Thox

@@ -620,7 +620,7 @@ L 1350, 2550, 0, 1380, 2550, 0, 255, 0, 0
 L 1350, 2490, 0, 1350, 2550, 0, 255, 0, 0
 L 1380, 2490, 0, 1350, 2490, 0, 255, 0, 0
 P 200, 800, 0, 0, 0, 0, 2, The_Ancient_Aqueducts_(GUKC)
-P 200, 1000, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P 200, 1000, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P 200, 1200, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 200, 1400, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
 P 200, 1600, 0, 127, 64, 0, 2, Cursed_Shinta_Protector

@@ -807,10 +807,10 @@ L 980, 2750, 0, 950, 2750, 0, 255, 0, 0
 P -200, 500, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsinger
 P -200, 700, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P -200, 900, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P -200, 1100, 0, 240, 240, 0, 2, Drake_Scales_Ground_Spawn:_first_area
-P -200, 1300, 0, 240, 240, 240, 2, Crystallized_Anatomy_Ground_Spawn:_top_area
-P -200, 1500, 0, 127, 0, 127, 2, More_Lost_Journals_Mob_Drop:_The_Crusaders_mission
-P -200, 1700, 0, 0, 0, 0, 2, Draconic_Artifacts_Mob_Drop
+P -200, 1100, 0, 240, 240, 0, 2, Drake_Scales_Ground_Spawn_(First_area)
+P -200, 1300, 0, 240, 240, 240, 2, Crystallized_Anatomy_Ground_Spawn_(Top_area)
+P -200, 1500, 0, 127, 0, 127, 2, More_Lost_Journals
+P -200, 1700, 0, 0, 0, 0, 2, Draconic_Artifacts
 P -200, 1900, 0, 127, 64, 0, 2, a_blessed_racnar_PH=a_convincing_doomsayer
 P -200, 2100, 0, 127, 64, 0, 2, Dagarn_the_Destroyer_PH=a_pretentious_wurm
 P -200, 2300, 0, 127, 64, 0, 2, Lord_Koi`Doken_PH=an_onyx_conspirator

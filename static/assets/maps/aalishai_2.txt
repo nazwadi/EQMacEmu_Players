@@ -622,10 +622,10 @@ L 1099, 3300, 0, 1069, 3300, 0, 255, 0, 0
 P -81, 1610, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsinger
 P -81, 1810, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P -81, 2010, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P -81, 2210, 0, 0, 0, 0, 2, A._No_Stone_Unturned_Mob_Drop
-P -81, 2410, 0, 240, 240, 0, 2, B._Those_Who_Extinguish_Ground_Spawn
-P -81, 2610, 0, 240, 240, 0, 2, C._The_Ruby_Tear_Ground_Spawn
-P -81, 2810, 0, 0, 0, 0, 2, D._Memories_of_Fire_Mob_Drop
+P -81, 2210, 0, 0, 0, 0, 2, A._No_Stone_Unturned_mob_drop
+P -81, 2410, 0, 240, 240, 0, 2, B._Those_Who_Extinguish_ground_spawn
+P -81, 2610, 0, 240, 240, 0, 2, C._The_Ruby_Tear_ground_spawn
+P -81, 2810, 0, 0, 0, 0, 2, D._Memories_of_Fire_mob_drop
 P -81, 3010, 0, 127, 64, 0, 2, Evasion_Understanding_Flow_PH=an_elemental_of_purest_flame
 P -81, 3210, 0, 127, 64, 0, 2, Final_Blade_Lord_PH=a_scoria_golem
 P -81, 3410, 0, 127, 64, 0, 2, Ghost_Glass_Bitter_PH=a_djinn_scholar

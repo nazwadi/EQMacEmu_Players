@@ -652,10 +652,10 @@ L 1380, 5110, 0, 1350, 5110, 0, 255, 0, 0
 P 200, 3300, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsinger
 P 200, 3500, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 200, 3700, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P 200, 3900, 0, 240, 240, 0, 2, Frosted_Fakes?_Ground_Spawn:_entrance_floor
-P 200, 4100, 0, 240, 240, 240, 2, Scales_of_Justice_Ground_Spawn:_second_floor
-P 200, 4300, 0, 127, 0, 127, 2, Altered_Velium_Mob_Drop:_dragon_kin
-P 200, 4500, 0, 0, 0, 0, 2, Useless_Tools_Mob_Drop:_The_Call_mission
+P 200, 3900, 0, 240, 240, 0, 2, Frosted_Fakes?
+P 200, 4100, 0, 240, 240, 0, 2, Scales_of_Justice
+P 200, 4300, 0, 240, 240, 0, 2, Altered_Velium
+P 200, 4500, 0, 240, 240, 0, 2, Useless_Tools
 P 200, 4700, 0, 127, 64, 0, 2, Kildrukaun_the_Ancient_PH=a_restless_dragon
 P 200, 4900, 0, 127, 64, 0, 2, Milas_An`Rev_PH=a_venerated_sadist
 P 200, 5100, 0, 127, 64, 0, 2, The_Captain_of_the_Guard_PH=The_Captain_of_the_Guard_(fake_version)

@@ -694,10 +694,10 @@ L 1380, 4430, 0, 1350, 4430, 0, 255, 0, 0
 P 200, 2500, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsinger
 P 200, 2700, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 200, 2900, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P 200, 3100, 0, 240, 240, 0, 2, Ethereal_Relics_Ground_Spawn:_central_hall/east_wing
-P 200, 3300, 0, 240, 240, 0, 2, Lost_Journals_Ground_Spawn:_west_wing/north_wing
-P 200, 3500, 0, 240, 240, 0, 2, Dragonkin_Hunting_Mob_Drop:_drakes
-P 200, 3700, 0, 240, 240, 0, 2, Flame-Licked_Clothing_Mob_Drop:_Aaryonar_mission
+P 200, 3100, 0, 240, 240, 0, 2, Ethereal_Relics
+P 200, 3300, 0, 240, 240, 0, 2, Lost_Journals
+P 200, 3500, 0, 240, 240, 0, 2, Dragonkin_Hunting
+P 200, 3700, 0, 240, 240, 0, 2, Flame-Licked_Clothing
 P 200, 3900, 0, 127, 64, 0, 2, Dozekar_the_Cursed_PH=a_shimmering_priest
 P 200, 4100, 0, 127, 64, 0, 2, Feshlak_PH=a_scarlet_sycophant
 P 200, 4300, 0, 127, 64, 0, 2, Gozzrem_PH=a_pious_martyr
@@ -705,4 +705,4 @@ P 200, 4500, 0, 127, 64, 0, 2, Ikatiar_the_Vemom_PH=?
 P 200, 4700, 0, 127, 64, 0, 2, Jorleag_PH=a_distrusting_devout
 P 200, 4900, 0, 127, 64, 0, 2, Ktheek_the_Ripper_PH=a_sapphire_devotee
 P 200, 5100, 0, 127, 64, 0, 2, Lady_Mirenilla_PH=a_shard_hatchling
-P 200, 5300, 0, 127, 64, 0, 2, Lord_Vyemm_PH=a_vile_defender:_then_defender/scholar/warrior
+P 200, 5300, 0, 127, 64, 0, 2, Lord_Vyemm_PH=a_vile_defender_(then_defender,_scholar,_warrior)

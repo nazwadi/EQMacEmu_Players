@@ -591,10 +591,10 @@ L 1880, 2370, 0, 1850, 2370, 0, 255, 0, 0
 P 700, 800, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsinger
 P 700, 1000, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 700, 1200, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P 700, 1400, 0, 240, 240, 0, 2, Prisoner_Grub_Mob_Drop:_akheva/servants
-P 700, 1600, 0, 240, 240, 240, 2, Basillica_Sentencings_Ground_Spawn:_upper_levels
-P 700, 1800, 0, 127, 0, 127, 2, Correspondence_from_Lcea_Katta_Ground_Spawn:_lower_levels
-P 700, 2000, 0, 0, 0, 0, 2, Gargoyle_Fragments_Mob_Drop:_gargoyles
+P 700, 1400, 0, 240, 240, 0, 2, Prisoner_Grub
+P 700, 1600, 0, 240, 240, 240, 2, Basillica_Sentencings
+P 700, 1800, 0, 127, 0, 127, 2, Correspondence_from_Lcea_Katta
+P 700, 2000, 0, 0, 0, 0, 2, Gargoyle_Fragments
 P 700, 2200, 0, 127, 64, 0, 2, Congealed_Shadow_Mass_PH=a_tangible_shadow
 P 700, 2400, 0, 127, 64, 0, 2, Dark_Agent_of_Luclin_PH=a_basilica_secret_keeper
 P 700, 2600, 0, 127, 64, 0, 2, Gloomclaw_PH=an_obsidian_taskmaster

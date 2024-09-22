@@ -588,7 +588,7 @@ L 2350, 1900, 0, 2380, 1900, 0, 255, 0, 0
 L 2350, 1930, 0, 2380, 1930, 0, 255, 0, 0
 L 2350, 1870, 0, 2350, 1930, 0, 255, 0, 0
 L 2380, 1870, 0, 2350, 1870, 0, 255, 0, 0
-P 1200, 300, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P 1200, 300, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P 1200, 500, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 1200, 700, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
 P 1200, 900, 0, 127, 64, 0, 2, Dragorn_Marshal_Greshka

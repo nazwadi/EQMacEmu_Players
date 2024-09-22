@@ -694,7 +694,7 @@ L 1950, 3560, 0, 1980, 3560, 0, 255, 0, 0
 L 1950, 3590, 0, 1980, 3590, 0, 255, 0, 0
 L 1950, 3530, 0, 1950, 3590, 0, 255, 0, 0
 L 1980, 3530, 0, 1950, 3530, 0, 255, 0, 0
-P 800, 1600, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P 800, 1600, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P 800, 1800, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 800, 2000, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
 P 800, 2200, 0, 127, 64, 0, 2, Architect_Vaukin

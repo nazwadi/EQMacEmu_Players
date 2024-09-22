@@ -657,7 +657,7 @@ L 850, 3470, 0, 880, 3470, 0, 255, 0, 0
 L 850, 3410, 0, 850, 3470, 0, 255, 0, 0
 L 880, 3410, 0, 850, 3410, 0, 255, 0, 0
 P -300, 1600, 0, 0, 0, 0, 2, Original_Map:_Goodurden_<RoI>
-P -300, 1800, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P -300, 1800, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P -300, 2000, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P -300, 2200, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
 P -300, 2400, 0, 0, 0, 0, 2, Height_Filter:_50/50

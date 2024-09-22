@@ -620,19 +620,19 @@ L 1250, 3850, 0, 1280, 3850, 0, 255, 0, 0
 L 1250, 3790, 0, 1250, 3850, 0, 255, 0, 0
 L 1280, 3790, 0, 1250, 3790, 0, 255, 0, 0
 P 100, 2100, 0, 0, 0, 0, 2, Original_Map:_Breganz_of_Crimson_Tempest
-P 100, 2300, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P 100, 2300, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P 100, 2500, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 100, 2700, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P 100, 2900, 0, 240, 240, 0, 2, A._Empty_Nest_Ground_Spawn:_near_Bloodfeather_Village
-P 100, 3100, 0, 240, 240, 240, 2, B._Our_Faiding_History_Ground_Spawn:_near_Kromtus_Village
-P 100, 3300, 0, 0, 0, 0, 2, C._The_Last_Boat_Mob_Drop
-P 100, 3500, 0, 127, 64, 0, 2, Blacksmith_Thassis_PH=a_Thaell_Ew_master_smith
-P 100, 3700, 0, 127, 64, 0, 2, Cuisiner_Sraskus_PH=a_tired_Thaell_Ew_cook
-P 100, 3900, 0, 127, 64, 0, 2, Deicoraxius_PH=a_bloodtear_ebonwing_(A_Fateful_Arrival_HA)
-P 100, 4100, 0, 127, 64, 0, 2, Hemocoraxius_PH=a_bloodtear_Ebonwing
-P 100, 4300, 0, 127, 64, 0, 2, Plexipharia_PH=an_elder_glistenwing
-P 100, 4500, 0, 127, 64, 0, 2, Reginasaur_PH=a_tyrannosaurus_matriarch
-P 100, 4700, 0, 127, 64, 0, 2, Rexsaurkarus_PH=an_old_tyrannosaurus_(A_Fateful_Arrival_HA)
-P 100, 4900, 0, 127, 64, 0, 2, Serthuliakar_PH=a_tired_Thaell_Ew_hunter_(A_Fateful_Arrival_HA)
-P 100, 5100, 0, 127, 64, 0, 2, Tricerasaur_PH=an_old_triceratops
-P 100, 5300, 0, 127, 64, 0, 2, Visoracius_PH=an_elder_raptor
+P 100, 2900, 0, 240, 240, 0, 2, A._Empty_Nest_ground_spawn_(near_Bloodfeather_Village)
+P 100, 3100, 0, 240, 240, 240, 2, B._Our_Faiding_History_ground_spawn_(near_Kromtus_Village)
+P 100, 3300, 0, 0, 0, 0, 2, C._The_Last_Boat_mob_drop
+P 100, 3500, 0, 127, 64, 0, 2, Blacksmith_Thassis_PH=_a_Thaell_Ew_master_smith
+P 100, 3700, 0, 127, 64, 0, 2, Cuisiner_Sraskus_PH=_a_tired_Thaell_Ew_cook
+P 100, 3900, 0, 127, 64, 0, 2, Deicoraxius_(A_Fateful_Arrival_HA)
+P 100, 4100, 0, 127, 64, 0, 2, Hemocoraxius_PH=_a_bloodtear_Ebonwing
+P 100, 4300, 0, 127, 64, 0, 2, Plexipharia_PH=_an_elder_glistenwing
+P 100, 4500, 0, 127, 64, 0, 2, Reginasaur_PH=_a_tyrannosaurus_matriarch
+P 100, 4700, 0, 127, 64, 0, 2, Rexsaurkarus_(A_Fateful_Arrival_HA)
+P 100, 4900, 0, 127, 64, 0, 2, Serthuliakar_(A_Fateful_Arrival_HA)
+P 100, 5100, 0, 127, 64, 0, 2, Tricerasaur_PH=_an_old_triceratops
+P 100, 5300, 0, 127, 64, 0, 2, Visoracius_PH=_an_elder_raptor

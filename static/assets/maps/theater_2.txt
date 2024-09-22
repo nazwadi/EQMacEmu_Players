@@ -619,7 +619,7 @@ L -650, 1920, 0, -620, 1920, 0, 255, 0, 0
 L -650, 1950, 0, -620, 1950, 0, 255, 0, 0
 L -650, 1890, 0, -650, 1950, 0, 255, 0, 0
 L -620, 1890, 0, -650, 1890, 0, 255, 0, 0
-P -1800, 200, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P -1800, 200, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P -1800, 400, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P -1800, 600, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
 P -1800, 800, 0, 127, 64, 0, 2, Aesthir_the_Delusioned

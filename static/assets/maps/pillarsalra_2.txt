@@ -619,25 +619,24 @@ L 1150, 3980, 0, 1180, 3980, 0, 255, 0, 0
 L 1150, 4010, 0, 1180, 4010, 0, 255, 0, 0
 L 1150, 3950, 0, 1150, 4010, 0, 255, 0, 0
 L 1180, 3950, 0, 1150, 3950, 0, 255, 0, 0
-P 0, 2300, 0, 0, 0, 0, 2, Original_Map:_Caudyr
-P 0, 2500, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsinger_(Cazic-Thule)
-P 0, 2700, 0, 0, 0, 0, 2, http://www.eqmaps.info
-P 0, 2900, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P 0, 3100, 0, 127, 64, 0, 2, an_unusual_creature_PH=selyrahs/frogs
-P 0, 3300, 0, 127, 64, 0, 2, Cysivir_the_Constructor_PH=an_essence_keeper
-P 0, 3500, 0, 127, 64, 0, 2, Il'Valrikar_the_Purifier_PH=an_essence_purifier
-P 0, 3700, 0, 127, 64, 0, 2, Ivrikdal_the_Infuser_PH=alarans
-P 0, 3900, 0, 127, 64, 0, 2, Korellister_the_Stoic_PH=ardent_scholar/a_student_of_Erion
-P 0, 4100, 0, 127, 64, 0, 2, Orpholonas_the_Harvester_PH=a_light_harvester
-P 0, 4300, 0, 127, 64, 0, 2, Peacekeeper_of_Anriella_PH=any_mob_in_Nature
-P 0, 4500, 0, 127, 64, 0, 2, Peacekeeper_of_Erion_PH=any_mob_in_Light
-P 0, 4700, 0, 127, 64, 0, 2, Peacekeeper_of_Fal'Kaa_PH=any_mob_in_Shadow
-P 0, 4900, 0, 127, 64, 0, 2, Peacekeeper_of_Melretia_PH=any_mob_in_Arcane
-P 0, 5100, 0, 127, 64, 0, 2, Soliadal_the_Timid_PH=a_manatender
-P 0, 5300, 0, 127, 64, 0, 2, The_Ut'len_Depthkeeper_PH=an_ut'len_flaremind
-P 0, 5500, 0, 127, 64, 0, 2, Tonmek_the_Mind-Drainer_PH=a_mana_harvester
-P 0, 5700, 0, 127, 64, 0, 2, Tsianvar_the_Studious_PH=a_pensive_scholar
-P 0, 5900, 0, 127, 64, 0, 2, V'Dralk_the_Construct_of_Shade_PH=a_greater_blistering_shade
-P 0, 6100, 0, 127, 64, 0, 2, Vak'Ridel_the_Sahadowcaller_PH=any_sitting_alaran
-P 0, 6300, 0, 127, 64, 0, 2, Varinyr_the_construct_of_Life_PH=a_greater_life-essence
-P 0, 6500, 0, 127, 64, 0, 2, Wreliard_the_Arctender_PH=an_essence_esencegazer
+P 0, 2300, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsiger_(Cazic-Thule)
+P 0, 2500, 0, 0, 0, 0, 2, http://www.eqmaps.info
+P 0, 2700, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
+P 0, 2900, 0, 127, 64, 0, 2, an_unusual_creature_PH=_selyrahs/frogs
+P 0, 3100, 0, 127, 64, 0, 2, Cysivir_the_Constructor_PH=_an_essence_keeper
+P 0, 3300, 0, 127, 64, 0, 2, Il'Valrikar_the_Purifier_PH=_an_essence_purifier
+P 0, 3500, 0, 127, 64, 0, 2, Ivrikdal_the_Infuser_PH=_alarans
+P 0, 3700, 0, 127, 64, 0, 2, Korellister_the_Stoic_PH=_ardent_scholar/a_student_of_Erion
+P 0, 3900, 0, 127, 64, 0, 2, Orpholonas_the_Harvester_PH=_a_light_harvester
+P 0, 4100, 0, 127, 64, 0, 2, Peacekeeper_of_Anriella_PH=_any_mob_in_Nature
+P 0, 4300, 0, 127, 64, 0, 2, Peacekeeper_of_Erion_PH=_any_mob_in_Light
+P 0, 4500, 0, 127, 64, 0, 2, Peacekeeper_of_Fal'Kaa_PH=_any_mob_in_Shadow
+P 0, 4700, 0, 127, 64, 0, 2, Peacekeeper_of_Melretia_PH=_any_mob_in_Arcane
+P 0, 4900, 0, 127, 64, 0, 2, Soliadal_the_Timid_PH=_a_manatender
+P 0, 5100, 0, 127, 64, 0, 2, The_Ut'len_Depthkeeper_PH=_an_ut'len_flaremind
+P 0, 5300, 0, 127, 64, 0, 2, Tonmek_the_Mind-Drainer_PH=_a_mana_harvester
+P 0, 5500, 0, 127, 64, 0, 2, Tsianvar_the_Studious_PH=_a_pensive_scholar
+P 0, 5700, 0, 127, 64, 0, 2, V'Dralk_the_Construct_of_Shade_PH=_a_greater_blistering_shade
+P 0, 5900, 0, 127, 64, 0, 2, Vak'Ridel_the_Sahadowcaller_PH=_any_sitting_alaran
+P 0, 6100, 0, 127, 64, 0, 2, Varinyr_the_construct_of_Life_PH=_a_greater_life-essence
+P 0, 6300, 0, 127, 64, 0, 2, Wreliard_the_Arctender_PH=_an_essence_esencegazer

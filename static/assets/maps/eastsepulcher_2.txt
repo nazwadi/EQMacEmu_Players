@@ -732,13 +732,13 @@ L 2250, 2870, 0, 2280, 2870, 0, 255, 0, 0
 L 2250, 2810, 0, 2250, 2870, 0, 255, 0, 0
 L 2280, 2810, 0, 2250, 2810, 0, 255, 0, 0
 P 1100, 800, 0, 0, 0, 0, 2, Original_Map:_Caudyr
-P 1100, 1000, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P 1100, 1000, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P 1100, 1200, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 1100, 1400, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P 1100, 1600, 0, 127, 64, 0, 2, Kelkos_the_Berserk_PH=a_conqueror_of_Kolos
-P 1100, 1800, 0, 127, 64, 0, 2, Master_Arcania_PH=arcane_magic_caster
-P 1100, 2000, 0, 127, 64, 0, 2, Master_Illum_PH=light_magic_caster
-P 1100, 2200, 0, 127, 64, 0, 2, Rykens_Boast_PH=air_elemental
-P 1100, 2400, 0, 127, 64, 0, 2, Shadow_of_the_Domain_PH=a_trapper_of_Kolos
-P 1100, 2600, 0, 127, 64, 0, 2, The_Vine_Tender_PH=a_warden_of_Lunanyn/a_farmer_of_Lunanyn
-P 1100, 2800, 0, 127, 64, 0, 2, Word_Lord_PH=a_philosopher_of_Ryken/sophist_of_Ryken
+P 1100, 1600, 0, 127, 64, 0, 2, Kelkos_the_Berserk_PH=_a_conqueror_of_Kolos
+P 1100, 1800, 0, 127, 64, 0, 2, Master_Arcania_PH=_arcane_magic_caster
+P 1100, 2000, 0, 127, 64, 0, 2, Master_Illum_PH=_light_magic_caster
+P 1100, 2200, 0, 127, 64, 0, 2, Rykens_Boast_PH=_air_elemental
+P 1100, 2400, 0, 127, 64, 0, 2, Shadow_of_the_Domain_PH=_a_trapper_of_Kolos
+P 1100, 2600, 0, 127, 64, 0, 2, The_Vine_Tender_PH=_a_warden_of_Lunanyn/a_farmer_of_Lunanyn
+P 1100, 2800, 0, 127, 64, 0, 2, Word_Lord_PH=_a_philosopher_of_Ryken/sophist_of_Ryken

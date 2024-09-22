@@ -593,8 +593,8 @@ P 700, 2100, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 700, 2300, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
 P 700, 2500, 0, 240, 240, 0, 2, Path_of_Shadow,_Protected_by_Blood_Ground_Spawn
 P 700, 2700, 0, 240, 240, 240, 2, Quiet_as_a_Church_Mouse_Ground_Spawn
-P 700, 2900, 0, 127, 0, 127, 2, Lingering_Shadows_Mob_Drop
-P 700, 3100, 0, 0, 0, 0, 2, Sacrificial_Artifacts_Mob_Drop
+P 700, 2900, 0, 127, 0, 127, 2, Lingering_Shadows
+P 700, 3100, 0, 0, 0, 0, 2, Sacrificial_Artifacts
 P 700, 3300, 0, 127, 64, 0, 2, Centi_Thall_PH=Centi_Atulus
 P 700, 3500, 0, 127, 64, 0, 2, Diabo_Tatrua_PH=Gel`Temariel_Centi
 P 700, 3700, 0, 127, 64, 0, 2, Diabo_Va_Thall_PH=Fer`Tatrua_Centi

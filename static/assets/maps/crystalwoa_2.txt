@@ -622,8 +622,8 @@ L 1780, 1890, 0, 1750, 1890, 0, 255, 0, 0
 P 600, 200, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsinger
 P 600, 400, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 600, 600, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P 600, 800, 0, 240, 240, 0, 2, Messy_Miners_Ground_Spawn
-P 600, 1000, 0, 240, 240, 240, 2, Orcish_Earrings_Ground_Spawn
-P 600, 1200, 0, 0, 0, 0, 2, Frozen_Equipment_Mob_Drop
-P 600, 1400, 0, 127, 64, 0, 2, Ry`Gorr_Herbalist_PH=a_restless_Ry`Gorr_apprentice
-P 600, 1600, 0, 127, 64, 0, 2, Ry`Gorr_Inspector_PH=a_restless_Ry`Gorr_foreman
+P 600, 800, 0, 240, 240, 0, 2, Messy_Miners_ground_spawn
+P 600, 1000, 0, 240, 240, 240, 2, Orcish_Earrings_ground_spawn
+P 600, 1200, 0, 0, 0, 0, 2, Frozen_Equipment_mob_drop
+P 600, 1400, 0, 127, 64, 0, 2, Ry`Gorr_Herbalist_PH=_a_restless_Ry`Gorr_apprentice
+P 600, 1600, 0, 127, 64, 0, 2, Ry`Gorr_Inspector_PH=_a_restless_Ry`Gorr_foreman

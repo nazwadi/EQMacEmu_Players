@@ -619,20 +619,20 @@ L 1250, 2320, 0, 1280, 2320, 0, 255, 0, 0
 L 1250, 2350, 0, 1280, 2350, 0, 255, 0, 0
 L 1250, 2290, 0, 1250, 2350, 0, 255, 0, 0
 L 1280, 2290, 0, 1250, 2290, 0, 255, 0, 0
-P 100, 600, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P 100, 600, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P 100, 800, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 100, 1000, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P 100, 1200, 0, 240, 240, 0, 2, A._Makeshift_Materials_Ground_Spawn:_bottom_three_floors
-P 100, 1400, 0, 240, 240, 240, 2, B._Tools_to_Build_a_Tower_Ground_Spawn:_top_five_floors
-P 100, 1600, 0, 127, 0, 127, 2, C._Unnatural_Life_Ground_Spawn:_Brendaleen's_Scheme_HA
-P 100, 1800, 0, 0, 0, 0, 2, D._Explorer's_Relics_Mob_Drop
-P 100, 2000, 0, 127, 64, 0, 2, Brexx_Darkpaw_PH=a_frenzied_gnoll
-P 100, 2200, 0, 127, 64, 0, 2, Captain_Nathan_Flock_PH=a_cavalier_of_life
-P 100, 2400, 0, 127, 64, 0, 2, Commander_Kurt_Ellis_PH=a_restless_deceiver
-P 100, 2600, 0, 127, 64, 0, 2, Corpseflower_PH=a_noxious_deathcap
-P 100, 2800, 0, 127, 64, 0, 2, Garath_Sulfada_PH=a_hand_of_Sulfada
-P 100, 3000, 0, 127, 64, 0, 2, Guardian_Roger_Macholeth_PH=Macholeth`s_squire_Sairia_(Bredaleen's_Scheme_HA_after_step_3)
-P 100, 3200, 0, 127, 64, 0, 2, Mad_Martyr_PH=a_scion_of_the_tower_(A_Rotten_Heart_HA_after_step_7)
-P 100, 3400, 0, 127, 64, 0, 2, The_Forgotten_Sapper_PH=a_furious_miner
-P 100, 3600, 0, 127, 64, 0, 2, The_Lost_Devourer_PH=a_bloated_devourer
-P 100, 3800, 0, 127, 64, 0, 2, Vicar_Lucilia_Belyea_PH=a_vicar_of_life
+P 100, 1200, 0, 240, 240, 0, 2, A._Makeshift_Materials_ground_spawn_(bottom_three_floors)
+P 100, 1400, 0, 240, 240, 240, 2, B._Tools_to_Build_a_Tower_ground_spawn_(top_five_floors)
+P 100, 1600, 0, 127, 0, 127, 2, C._Unnatural_Life_ground_spawn_(Brendaleen's_Scheme_HA)
+P 100, 1800, 0, 0, 0, 0, 2, D._Explorer's_Relics_mob_drop
+P 100, 2000, 0, 127, 64, 0, 2, Brexx_Darkpaw_PH=_a_frenzied_gnoll
+P 100, 2200, 0, 127, 64, 0, 2, Captain_Nathan_Flock_PH=_a_cavalier_of_life
+P 100, 2400, 0, 127, 64, 0, 2, Commander_Kurt_Ellis_PH=_a_restless_deceiver
+P 100, 2600, 0, 127, 64, 0, 2, Corpseflower_PH=_a_noxious_deathcap
+P 100, 2800, 0, 127, 64, 0, 2, Garath_Sulfada_PH=_a_hand_of_Sulfada
+P 100, 3000, 0, 127, 64, 0, 2, Guardian_Roger_Macholeth_(Bredaleen's_Scheme_HA)
+P 100, 3200, 0, 127, 64, 0, 2, Mad_Martyr_(A_Rotten_Heart_HA)
+P 100, 3400, 0, 127, 64, 0, 2, The_Forgotten_Sapper_PH=_a_furious_miner
+P 100, 3600, 0, 127, 64, 0, 2, The_Lost_Devourer_PH=_a_bloated_devourer
+P 100, 3800, 0, 127, 64, 0, 2, Vicar_Lucilia_Belyea_PH=_a_vicar_of_life

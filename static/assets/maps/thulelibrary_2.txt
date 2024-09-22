@@ -620,15 +620,15 @@ L 1150, 2150, 0, 1180, 2150, 0, 255, 0, 0
 L 1150, 2090, 0, 1150, 2150, 0, 255, 0, 0
 L 1180, 2090, 0, 1150, 2090, 0, 255, 0, 0
 P 0, 400, 0, 0, 0, 0, 2, Original_Map:_Goodurden_<RoI>
-P 0, 600, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P 0, 600, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P 0, 800, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 0, 1000, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
 P 0, 1200, 0, 0, 0, 0, 2, Height_Filter:_26/26
-P 0, 1400, 0, 127, 64, 0, 2, Archivist_Herrdar_PH=a_languid_poetry_teacher
-P 0, 1600, 0, 127, 64, 0, 2, Ardull_the_Watcher_PH=an_ethereal_watcher
-P 0, 1800, 0, 127, 64, 0, 2, Chronicler_Cerro_PH=a_corporeal_scholarly_researcher
-P 0, 2000, 0, 127, 64, 0, 2, Compendium_of_Nightmares_PH=an_unusual_tome
-P 0, 2200, 0, 127, 64, 0, 2, Curator_Majda_PH=a_curious_custodian
-P 0, 2400, 0, 127, 64, 0, 2, Head_Librarian_Matilda_PH=a_dutiful_librarian
-P 0, 2600, 0, 127, 64, 0, 2, Professor_Glumb_PH=a_lonely_librarian
-P 0, 2800, 0, 127, 64, 0, 2, Tome_of_the_Fallen_PH=a_dusty_codex
+P 0, 1400, 0, 127, 64, 0, 2, Archivist_Herrdar_PH=_a_languid_poetry_teacher
+P 0, 1600, 0, 127, 64, 0, 2, Ardull_the_Watcher_PH=_an_ethereal_watcher
+P 0, 1800, 0, 127, 64, 0, 2, Chronicler_Cerro_PH=_a_corporeal_scholarly_researcher
+P 0, 2000, 0, 127, 64, 0, 2, Compendium_of_Nightmares_PH=_an_unusual_tome
+P 0, 2200, 0, 127, 64, 0, 2, Curator_Majda_PH=_a_curious_custodian
+P 0, 2400, 0, 127, 64, 0, 2, Head_Librarian_Matilda_PH=_a_dutiful_librarian
+P 0, 2600, 0, 127, 64, 0, 2, Professor_Glumb_PH=_a_lonely_librarian
+P 0, 2800, 0, 127, 64, 0, 2, Tome_of_the_Fallen_PH=_a_dusty_codex

@@ -619,15 +619,15 @@ L 1250, 2520, 0, 1280, 2520, 0, 255, 0, 0
 L 1250, 2550, 0, 1280, 2550, 0, 255, 0, 0
 L 1250, 2490, 0, 1250, 2550, 0, 255, 0, 0
 L 1280, 2490, 0, 1250, 2490, 0, 255, 0, 0
-P 100, 800, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P 100, 800, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P 100, 1000, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 100, 1200, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P 100, 1400, 0, 240, 240, 0, 2, A._Idols_of_Rot_Ground_Spawn
-P 100, 1600, 0, 240, 240, 240, 2, B._Dregs_of_Decay_Ground_Spawn
-P 100, 1800, 0, 127, 64, 0, 2, Bokon_Revel_the_Reborn_PH=an_unliving_hulk
-P 100, 2000, 0, 127, 64, 0, 2, Citizen_Pain_PH=a_reserved_worshiper_(To_The_Brave,_Go_The_Spoils!_HA_after_step_2)
-P 100, 2200, 0, 127, 64, 0, 2, Devourer_of_All_PH=an_insatiable_fiend
-P 100, 2400, 0, 127, 64, 0, 2, Grinder_PH=a_faithblind_hulk_(The_Head_of_the_Snake_HA)
-P 100, 2600, 0, 127, 64, 0, 2, High_Priestess_Kal'vius_PH=a_high_bokon
-P 100, 2800, 0, 127, 64, 0, 2, Spine_Eater_PH=a_drooling_ghoul_(The_Bokon_High_Council_HA)
-P 100, 3000, 0, 127, 64, 0, 2, The_Watcher_PH=a_skeletal_sentinel
+P 100, 1400, 0, 240, 240, 0, 2, A._Idols_of_Rot_ground_spawn
+P 100, 1600, 0, 240, 240, 240, 2, B._Dregs_of_Decay_ground_spawn
+P 100, 1800, 0, 127, 64, 0, 2, Bokon_Revel_the_Reborn_PH=_an_unliving_hulk
+P 100, 2000, 0, 127, 64, 0, 2, Citizen_Pain_(To_the_brave,_go_the_spoils!_HA)
+P 100, 2200, 0, 127, 64, 0, 2, Devourer_of_All_PH=_an_insatiable_fiend
+P 100, 2400, 0, 127, 64, 0, 2, Grinder_(The_Head_of_the_Snake_HA)
+P 100, 2600, 0, 127, 64, 0, 2, High_Priestess_Kal'vius_PH=_a_high_bokon
+P 100, 2800, 0, 127, 64, 0, 2, Spine_Eater_(The_Bokon_High_Council_HA)
+P 100, 3000, 0, 127, 64, 0, 2, The_Watcher_PH=_a_skeletal_sentinel

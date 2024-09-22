@@ -702,7 +702,7 @@ L 1650, 4460, 0, 1680, 4460, 0, 255, 0, 0
 L 1650, 4490, 0, 1680, 4490, 0, 255, 0, 0
 L 1650, 4430, 0, 1650, 4490, 0, 255, 0, 0
 L 1680, 4430, 0, 1650, 4430, 0, 255, 0, 0
-P 500, 2500, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P 500, 2500, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P 500, 2700, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 500, 2900, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
 P 500, 3100, 0, 240, 127, 0, 2, Pixtt_Suir_Mindrider

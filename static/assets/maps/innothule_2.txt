@@ -589,6 +589,6 @@ L 650, 4830, 0, 680, 4830, 0, 255, 0, 0
 L 650, 4770, 0, 650, 4830, 0, 255, 0, 0
 L 680, 4770, 0, 650, 4770, 0, 255, 0, 0
 P -500, 3200, 0, 0, 0, 0, 2, Original_Map:_EverQuest_Default
-P -500, 3400, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P -500, 3400, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P -500, 3600, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P -500, 3800, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)

@@ -591,10 +591,10 @@ L 1180, 2570, 0, 1150, 2570, 0, 255, 0, 0
 P 0, 1000, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsinger
 P 0, 1200, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 0, 1400, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P 0, 1600, 0, 240, 240, 0, 2, Drops_of_Blood_Ground_Spawn:_lower_areas
-P 0, 1800, 0, 240, 240, 240, 2, Bloodfalls_Battlefield_Mob_Drop:_blood_ticks/vampires
-P 0, 2000, 0, 127, 0, 127, 2, Vampire_Chess_Mob_Drop:_Close_the_Gate_mission
-P 0, 2200, 0, 0, 0, 0, 2, Flora_of_Bloodfalls_Ground_Spawn:_upper_areas
+P 0, 1600, 0, 240, 240, 0, 2, Drops_of_Blood
+P 0, 1800, 0, 240, 240, 240, 2, Bloodfalls_Battlefield
+P 0, 2000, 0, 127, 0, 127, 2, Vampire_Chess
+P 0, 2200, 0, 0, 0, 0, 2, Flora_of_Bloodfalls
 P 0, 2400, 0, 127, 64, 0, 2, A_Retainer_of_Shadow_PH=a_laborer_of_shadow
 P 0, 2600, 0, 127, 64, 0, 2, Centien_Xi_Va_Xakra_PH=a_war_shade
 P 0, 2800, 0, 127, 64, 0, 2, Coagulus_PH=a_viscious_blood_bag

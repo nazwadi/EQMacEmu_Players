@@ -620,6 +620,6 @@ L 950, 2150, 0, 980, 2150, 0, 255, 0, 0
 L 950, 2090, 0, 950, 2150, 0, 255, 0, 0
 L 980, 2090, 0, 950, 2090, 0, 255, 0, 0
 P -200, 400, 0, 0, 0, 0, 2, Original_Map:_Blindheart_of_Drinal
-P -200, 600, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P -200, 600, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P -200, 800, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P -200, 1000, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)

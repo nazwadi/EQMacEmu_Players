@@ -725,13 +725,13 @@ L 850, 3710, 0, 880, 3710, 0, 255, 0, 0
 L 850, 3650, 0, 850, 3710, 0, 255, 0, 0
 L 880, 3650, 0, 850, 3650, 0, 255, 0, 0
 P -300, 1600, 0, 0, 0, 0, 2, Original_Map:_Goodurden_<RoI>
-P -300, 1800, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P -300, 1800, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P -300, 2000, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P -300, 2200, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P -300, 2400, 0, 240, 240, 0, 2, A._Taken_Tokens_Ground_Spawn
-P -300, 2600, 0, 240, 240, 240, 2, B._Mountain_Death_Trinkets_Ground_Spawn
-P -300, 2800, 0, 127, 0, 127, 2, C._Memories_of_Nurga_Ground_Spawn
-P -300, 3000, 0, 0, 0, 0, 2, D._Stinkin'_Badges_Mob_Drop
+P -300, 2400, 0, 240, 240, 0, 2, A._Taken_Tokens_ground_spawn
+P -300, 2600, 0, 240, 240, 240, 2, B._Mountain_Death_Trinkets_ground_spawn
+P -300, 2800, 0, 127, 0, 127, 2, C._Memories_of_Nurga_ground_spawn
+P -300, 3000, 0, 0, 0, 0, 2, D._Stinkin'_Badges_mob_drop
 P -300, 3200, 0, 127, 64, 0, 2, Black_Spot_PH=a_goblin_slave
 P -300, 3400, 0, 127, 64, 0, 2, Blood_of_Droga_PH=a_blightcaller_bloodtender
 P -300, 3600, 0, 127, 64, 0, 2, Bore_PH=mudman_dredger
@@ -740,14 +740,14 @@ P -300, 4000, 0, 127, 64, 0, 2, Cook_Eepvibles_PH=a_goblin_cook
 P -300, 4200, 0, 127, 64, 0, 2, Cook_Jexnait_PH=a_devout_goblin_cook
 P -300, 4400, 0, 127, 64, 0, 2, Home_Master_Kaziql_PH=a_homesafe_goblin_sentry
 P -300, 4600, 0, 127, 64, 0, 2, Izisyl_Peppershiv_PH=a_goblin_caveshadow
-P -300, 4800, 0, 127, 64, 0, 2, Jailor_Muxfan_PH=a_goblin_jailor/_a_stalwart_goblin_jailor
-P -300, 5000, 0, 127, 64, 0, 2, Master_Kizzixik_PH=a_goblin_slave_master/a_goblin_slave_dealer
-P -300, 5200, 0, 127, 64, 0, 2, Merchant_Triala_PH=a_goblin_slinker_(Goblins_and_Fools_HA)
+P -300, 4800, 0, 127, 64, 0, 2, Jailor_Muxfan_PH=a_goblin_jailor,_a_stalwart_goblin_jailor
+P -300, 5000, 0, 127, 64, 0, 2, Master_Kizzixik_PH=a_goblin_slave_master,_a_goblin_slave_dealer
+P -300, 5200, 0, 127, 64, 0, 2, Merchant_Triala_(Goblins_and_Fools_HA)
 P -300, 5400, 0, 127, 64, 0, 2, Miner_Groundfuse_PH=a_goblin_dredger
 P -300, 5600, 0, 127, 64, 0, 2, Most_Devout_Sentry_PH=a_devout_goblin_sentry
 P -300, 5800, 0, 127, 64, 0, 2, Overseer_Vakov_PH=a_hearty_goblin_taskmaster
 P -300, 6000, 0, 127, 64, 0, 2, Sentry_Rixzeel_PH=a_expert_goblin_sentry
 P -300, 6200, 0, 127, 64, 0, 2, Spirit_Master_Wigaue_PH=a_goblin_fanatic
-P -300, 6400, 0, 127, 64, 0, 2, Spiritwatcher_Scrollhallow_PH=a_goblin_mystic/a_goblin_adept_mystic
+P -300, 6400, 0, 127, 64, 0, 2, Spiritwatcher_Scrollhallow_PH=a_goblin_mystic,_a_goblin_adept_mystic
 P -300, 6600, 0, 127, 64, 0, 2, War_Leader_Callex_PH=a_goblin_forerunner_sentry
-P -300, 6800, 0, 127, 64, 0, 2, Whip_Cracker_Krassex_PH=a_goblin_whip_lord
+P -300, 6800, 0, 127, 64, 0, 2, Whip_Cracker_Krassex_PH=_a_goblin_whip_lord

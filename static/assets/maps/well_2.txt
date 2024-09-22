@@ -51,9 +51,9 @@ L 599.0, -90.0, 0.0, 637.3, -90.0, 0.0, 255, 0, 0
 L 599.0, -20.0, 0.0, 637.3, -20.0, 0.0, 255, 0, 0
 L 599.0, -90.0, 0.0, 599.0, -20.0, 0.0, 255, 0, 0
 L 637.3, -90.0, 0.0, 637.3, -20.0, 0.0, 255, 0, 0
-P 600, 900, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P 600, 900, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P 600, 1100, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 600, 1300, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P 600, 1500, 0, 127, 64, 0, 2, Death_Stinger_PH=a_feldark_scorpion
-P 600, 1700, 0, 127, 64, 0, 2, Death_Spider_PH=a_feldark_spider
-P 600, 1900, 0, 127, 64, 0, 2, Doom_Snake_PH=a_bold_cave_viper
+P 600, 1500, 0, 127, 64, 0, 2, Death_Stinger_PH=_a_feldark_scorpion
+P 600, 1700, 0, 127, 64, 0, 2, Death_Spider_PH=_a_feldark_spider
+P 600, 1900, 0, 127, 64, 0, 2, Doom_Snake_PH=_a_bold_cave_viper

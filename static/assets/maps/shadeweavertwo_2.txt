@@ -591,10 +591,10 @@ L 1380, 2470, 0, 1350, 2470, 0, 255, 0, 0
 P 200, 900, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsinger
 P 200, 1100, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 200, 1300, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P 200, 1500, 0, 127, 0, 127, 2, Gor_Taku_Masonry_Tools_Mob_Drop:_tegi_mobs
-P 200, 1700, 0, 240, 240, 240, 2, Nepeta_Petals_Ground_Spawn:_east_side
-P 200, 1900, 0, 0, 0, 0, 2, Loda_Kai_Poacher_Tools_Mob_Drop:_loda_kais
-P 200, 2100, 0, 240, 240, 0, 2, Pigmented_Lava_Glass_Ground_Spawn:_west_side
+P 200, 1500, 0, 127, 0, 127, 2, Gor_Taku_Masonry_Tools_Mob_Drop:_Tegi_Mobs
+P 200, 1700, 0, 240, 240, 240, 2, Nepeta_Petals_Ground_Spawn,_East_Side
+P 200, 1900, 0, 0, 0, 0, 2, Loda_Kai_Poacher_Tools_Mob_Drop:_Loda_Kais
+P 200, 2100, 0, 240, 240, 0, 2, Pigmented_Lava_Glass_Ground_Spawn,_West_Side
 P 200, 2300, 0, 127, 64, 0, 2, Commander_Esline_PH=a_Loda_Kai_guard_commander
 P 200, 2500, 0, 127, 64, 0, 2, Molten_Wildfire_PH=a_painted_elemental
 P 200, 2700, 0, 127, 64, 0, 2, Scorched_Cackling_Bones_PH=scorched_bones

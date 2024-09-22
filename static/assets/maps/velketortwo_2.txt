@@ -698,10 +698,10 @@ L 1380, 2530, 0, 1350, 2530, 0, 255, 0, 0
 P 200, 600, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsinger
 P 200, 800, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 200, 1000, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P 200, 1200, 0, 0, 0, 0, 2, Eight_Legged_Bits_Mob_Drop
-P 200, 1400, 0, 240, 240, 0, 2, Useless_Tools_Ground_Spawn
-P 200, 1600, 0, 240, 240, 240, 2, Unfit_for_Adventures_Ground_Spawn
-P 200, 1800, 0, 0, 0, 0, 2, Trash_from_the_Past_Mob_Drop
+P 200, 1200, 0, 0, 0, 0, 2, Eight_Legged_Bits_mob_drop
+P 200, 1400, 0, 240, 240, 0, 2, Useless_Tools_ground_spawn
+P 200, 1600, 0, 240, 240, 240, 2, Unfit_for_Adventures_ground_spawn
+P 200, 1800, 0, 0, 0, 0, 2, Trash_from_the_Past_mob_drop
 P 200, 2000, 0, 127, 64, 0, 2, a_restless_devourer_PH=a_restless_spider
 P 200, 2200, 0, 127, 64, 0, 2, a_restless_tarantula_PH=a_wandering_arachnid
 P 200, 2400, 0, 127, 64, 0, 2, a_velium_horror_PH=a_glaring_gargoyle

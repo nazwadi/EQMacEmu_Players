@@ -620,7 +620,7 @@ L 750, 2250, 0, 780, 2250, 0, 255, 0, 0
 L 750, 2190, 0, 750, 2250, 0, 255, 0, 0
 L 780, 2190, 0, 750, 2190, 0, 255, 0, 0
 P -400, 500, 0, 0, 0, 0, 2, The_Asylum_of_Invoked_Stone_(MMCC)
-P -400, 700, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P -400, 700, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P -400, 900, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P -400, 1100, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
 P -400, 1300, 0, 127, 64, 0, 2, Despairing_Trueborn_Soul

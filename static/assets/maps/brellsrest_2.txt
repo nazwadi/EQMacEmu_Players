@@ -619,7 +619,7 @@ L 1150, 3220, 0, 1180, 3220, 0, 255, 0, 0
 L 1150, 3250, 0, 1180, 3250, 0, 255, 0, 0
 L 1150, 3190, 0, 1150, 3250, 0, 255, 0, 0
 L 1180, 3190, 0, 1150, 3190, 0, 255, 0, 0
-P 0, 1500, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P 0, 1500, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P 0, 1700, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 0, 1900, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
 P 0, 2100, 0, 127, 64, 0, 2, Bermax_Flamepaw

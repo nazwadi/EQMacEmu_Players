@@ -1,4 +1,4 @@
-P 1263.8687, 557.6389, 9.9064, 255, 0, 0, 3, to_The_Plane_of_Knowledge_(Click_Book)
+P 1263.8687, 557.6389, 9.9064, 255, 0, 0, 3,  to_The_Plane_of_Knowledge_(Click_Book)
 P -1389.9515, 803.7581, -8.3741, 255, 0, 0, 3, to_The_Liberated_Citadel_of_Runnyeye
 P 2550.5840, -408.3348, -8.2490, 255, 0, 0, 3, to_Rivervale
 P 1834.7112, 531.2221, 120.4015, 255, 0, 0, 2, Druid_Ring

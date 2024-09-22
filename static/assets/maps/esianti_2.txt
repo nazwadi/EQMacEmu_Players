@@ -622,10 +622,10 @@ L 2324, 3173, 0, 2294, 3173, 0, 255, 0, 0
 P 1144, 1483, 0, 0, 0, 0, 2, Original_Map:_Brewall_Rainsinger
 P 1144, 1683, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 1144, 1883, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P 1144, 2083, 0, 0, 0, 0, 2, A._Guests,_Gusts,_Gifts_Mob_Drop
-P 1144, 2283, 0, 240, 240, 0, 2, B._Natural_Wonder_Ground_Spawn
-P 1144, 2483, 0, 240, 240, 0, 2, C._Palace_Aides_Ground_Spawn
-P 1144, 2683, 0, 0, 0, 0, 2, D._Elementary_Accommodation_Mob_Drop
+P 1144, 2083, 0, 0, 0, 0, 2, A._Guests,_Gusts,_Gifts_mob_drop
+P 1144, 2283, 0, 240, 240, 0, 2, B._Natural_Wonder_ground_spawn
+P 1144, 2483, 0, 240, 240, 0, 2, C._Palace_Aides_ground_spawn
+P 1144, 2683, 0, 0, 0, 0, 2, D._Elementary_Accommodation_mob_drop
 P 1144, 2883, 0, 127, 64, 0, 2, Blessed_Wind_PH=a_djinn_teacher
 P 1144, 3083, 0, 127, 64, 0, 2, Copper_Star_PH=a_jopal_warder
 P 1144, 3283, 0, 127, 64, 0, 2, Depth_of_Iron_PH=a_vekerchiki_warder

@@ -695,17 +695,17 @@ L 1350, 4690, 0, 1380, 4690, 0, 255, 0, 0
 L 1350, 4630, 0, 1350, 4690, 0, 255, 0, 0
 L 1380, 4630, 0, 1350, 4630, 0, 255, 0, 0
 P 200, 2700, 0, 0, 0, 0, 2, Original_Map:_Caudyr_&_Beimeith
-P 200, 2900, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P 200, 2900, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P 200, 3100, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 200, 3300, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
 P 200, 3500, 0, 0, 0, 0, 2, Height_Filter:_25/25
-P 200, 3700, 0, 240, 240, 0, 2, A._Whuzzle's_Worst_Nightmares_Ground_Spawn
-P 200, 3900, 0, 0, 0, 0, 2, B._Kill_Them_Before_They_Grow_Mob_Drop
-P 200, 4100, 0, 127, 64, 0, 2, A_Hoary_Gargoyle_PH=an_enraged:_any
-P 200, 4300, 0, 127, 64, 0, 2, Enasni_the_Demented_PH=an_enraged_mephit
-P 200, 4500, 0, 127, 64, 0, 2, Glubbus_the_Fleshmelter_PH=an_enraged:_any
-P 200, 4700, 0, 127, 64, 0, 2, Ixmilsh_the_Terrortangler_PH=an_enraged:_any
-P 200, 4900, 0, 127, 64, 0, 2, Silandra_the_Cruel_PH=an_enraged_harbinger
-P 200, 5100, 0, 127, 64, 0, 2, Torglog_the_Impaler_PH=an_enraged_harbinger
-P 200, 5300, 0, 127, 64, 0, 2, Vizlix_the_Deceiver_PH=an_enraged_shiverback
-P 200, 5500, 0, 127, 64, 0, 2, Zixial_the_Scaremonger_PH=an_enraged_harbinger
+P 200, 3700, 0, 240, 240, 0, 2, A._Whuzzle's_Worst_Nightmares_ground_spawn
+P 200, 3900, 0, 0, 0, 0, 2, B._Kill_Them_Before_They_Grow_mob_drop
+P 200, 4100, 0, 127, 64, 0, 2, A_Hoary_Gargoyle_PH=_an_enraged_(any)
+P 200, 4300, 0, 127, 64, 0, 2, Enasni_the_Demented_PH=_an_enraged_mephit
+P 200, 4500, 0, 127, 64, 0, 2, Glubbus_the_Fleshmelter_PH=_an_enraged_(any)
+P 200, 4700, 0, 127, 64, 0, 2, Ixmilsh_the_Terrortangler_PH=_an_enraged_(any)
+P 200, 4900, 0, 127, 64, 0, 2, Silandra_the_Cruel_PH=_an_enraged_harbinger
+P 200, 5100, 0, 127, 64, 0, 2, Torglog_the_Impaler_PH=_an_enraged_harbinger
+P 200, 5300, 0, 127, 64, 0, 2, Vizlix_the_Deceiver_PH=_an_enraged_shiverback
+P 200, 5500, 0, 127, 64, 0, 2, Zixial_the_Scaremonger_PH=_an_enraged_harbinger

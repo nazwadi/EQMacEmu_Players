@@ -620,16 +620,16 @@ L 1150, 3850, 0, 1180, 3850, 0, 255, 0, 0
 L 1150, 3790, 0, 1150, 3850, 0, 255, 0, 0
 L 1180, 3790, 0, 1150, 3790, 0, 255, 0, 0
 P 0, 2100, 0, 0, 0, 0, 2, Original_Map:_Breganz_of_Crimson_Tempest
-P 0, 2300, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsinger_(Cazic-Thule)
+P 0, 2300, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsiger_(Cazic-Thule)
 P 0, 2500, 0, 0, 0, 0, 2, http://www.eqmaps.info
 P 0, 2700, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P 0, 2900, 0, 240, 240, 0, 2, A._Seabed_Treasures_Ground_Spawn:_south_of_main_temple_under_the_water
-P 0, 3100, 0, 240, 240, 240, 2, B._Shissar_Armory_Ground_Spawn:_near_Shissar
-P 0, 3300, 0, 127, 0, 127, 2, C._Waterlogged_Tomes_Ground_Spawn:_main_temple_&_basement
-P 0, 3500, 0, 0, 0, 0, 2, D._Katta_Castrum_Mementos_Mob_Drop
-P 0, 3700, 0, 127, 64, 0, 2, Chief_Librarian_Lars_PH=a_shissar_arbiter/a_shissar_defiler
-P 0, 3900, 0, 127, 64, 0, 2, Darkmud_Keeper_PH=a_darkmud_keeper/a_darkmud_watcher
-P 0, 4100, 0, 127, 64, 0, 2, Essence_of_the_Deep_PH=an_essence_vortex
-P 0, 4300, 0, 127, 64, 0, 2, Thallus_the_Whip_PH=a_shissar_taskmaster
-P 0, 4500, 0, 127, 64, 0, 2, Vizat_the_Defiled_PH=a_shissar_revenant
-P 0, 4700, 0, 127, 64, 0, 2, Yulin_the_Flameweaver_PH=a_shissar_flameweaver
+P 0, 2900, 0, 240, 240, 0, 2, A._Seabed_Treasures_ground_spawn_(South_of_main_temple_under_the_water)
+P 0, 3100, 0, 240, 240, 240, 2, B._Shissar_Armory_ground_spawn_(near_Shissar)
+P 0, 3300, 0, 127, 0, 127, 2, C._Waterlogged_Tomes_ground_spawn_(main_temple_&_basement)
+P 0, 3500, 0, 0, 0, 0, 2, D._Katta_Castrum_Mementos_mob_drop
+P 0, 3700, 0, 127, 64, 0, 2, Chief_Librarian_Lars_PH=_a_shissar_arbiter/a_shissar_defiler
+P 0, 3900, 0, 127, 64, 0, 2, Darkmud_Keeper_PH=_a_darkmud_keeper/a_darkmud_watcher
+P 0, 4100, 0, 127, 64, 0, 2, Essence_of_the_Deep_PH=_an_essence_vortex
+P 0, 4300, 0, 127, 64, 0, 2, Thallus_the_Whip_PH=_a_shissar_taskmaster
+P 0, 4500, 0, 127, 64, 0, 2, Vizat_the_Defiled_PH=_a_shissar_revenant
+P 0, 4700, 0, 127, 64, 0, 2, Yulin_the_Flameweaver_PH=_a_shissar_flameweaver

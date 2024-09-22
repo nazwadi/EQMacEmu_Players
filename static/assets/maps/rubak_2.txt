@@ -619,15 +619,14 @@ L 1150, 2280, 0, 1180, 2280, 0, 255, 0, 0
 L 1150, 2310, 0, 1180, 2310, 0, 255, 0, 0
 L 1150, 2250, 0, 1150, 2310, 0, 255, 0, 0
 L 1180, 2250, 0, 1150, 2250, 0, 255, 0, 0
-P 0, 600, 0, 0, 0, 0, 2, Original_Map:_Caudyr
-P 0, 800, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsinger_(Cazic-Thule)
-P 0, 1000, 0, 0, 0, 0, 2, http://www.eqmaps.info
-P 0, 1200, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
-P 0, 1400, 0, 127, 64, 0, 2, Curate_Zlinair_PH=a_priest
-P 0, 1600, 0, 127, 64, 0, 2, Evangelizer_Runarn_PH=an_acolyte
-P 0, 1800, 0, 127, 64, 0, 2, Holy_Ophidian_PH=a_coral_snake
-P 0, 2000, 0, 127, 64, 0, 2, Sacred_Ophidian_PH=a_coral_snake
-P 0, 2200, 0, 127, 64, 0, 2, Slorn_the_Holy_PH=a_zealot
-P 0, 2400, 0, 127, 64, 0, 2, Templar_Razkin_PH=an_acolyte
-P 0, 2600, 0, 127, 64, 0, 2, Tiuanid_the_Faithful_PH=a_priest
-P 0, 2800, 0, 127, 64, 0, 2, Zealot_of_Oseka_PH=a_zealot
+P 0, 600, 0, 0, 0, 0, 2, Revised_Map:_Brewall_Rainsiger_(Cazic-Thule)
+P 0, 800, 0, 0, 0, 0, 2, http://www.eqmaps.info
+P 0, 1000, 0, 0, 0, 0, 2, Return_of_the_Exiled_(www.roteguild.org)
+P 0, 1200, 0, 127, 64, 0, 2, Curate_Zlinair_PH=_a_priest
+P 0, 1400, 0, 127, 64, 0, 2, Evangelizer_Runarn_PH=_an_acolyte
+P 0, 1600, 0, 127, 64, 0, 2, Holy_Ophidian_PH=_a_coral_snake
+P 0, 1800, 0, 127, 64, 0, 2, Sacred_Ophidian_PH=_a_coral_snake
+P 0, 2000, 0, 127, 64, 0, 2, Slorn_the_Holy_PH=_a_zealot
+P 0, 2200, 0, 127, 64, 0, 2, Templar_Razkin_PH=_an_acolyte
+P 0, 2400, 0, 127, 64, 0, 2, Tiuanid_the_Faithful_PH=_a_priest
+P 0, 2600, 0, 127, 64, 0, 2, Zealot_of_Oseka_PH=_a_zealot
