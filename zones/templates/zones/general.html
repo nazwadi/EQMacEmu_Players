@@ -82,41 +82,41 @@
     </div>
     <div class="row py-2">
         <h5>Maps</h5>
-        <ul class="nav nav-tabs" id="charViewTab" role="tablist">
+        <ul class="nav nav-tabs" id="mapViewTab" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="classic-map-tab" data-bs-toggle="tab"
-                        data-bs-target="#classic-map-tab-pane"
-                        type="button" role="tab" aria-controls="classic-map-tab-pane" aria-selected="true">Classic
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="interactive-map-tab" data-bs-toggle="tab"
+                <button class="nav-link active" id="interactive-map-tab" data-bs-toggle="tab"
                         data-bs-target="#interactive-map-tab-pane"
                         type="button" role="tab" aria-controls="interactive-map-tab-pane" aria-selected="true">
                     Interactive
                 </button>
             </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="classic-map-tab" data-bs-toggle="tab"
+                        data-bs-target="#classic-map-tab-pane"
+                        type="button" role="tab" aria-controls="classic-map-tab-pane" aria-selected="true">Classic
+                </button>
+            </li>
         </ul>
         <hr/>
         <div class="tab-content" id="mapViewTabContent">
-            <div class="tab-pane fade show active" id="classic-map-tab-pane" role="tabpanel"
-                 aria-labelledby="classic-map-tab"
-                 tabindex="0">
-                <div class="col px-5">
-                    <div class="row"
-                         style="border: 1px solid gray; max-width: 1200px; width: 90%; background-color:#f0f0ff; padding: 10px;">
-                        {{ zone_page_text.map|safe }}
-                    </div>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="interactive-map-tab-pane" role="tabpanel"
+            <div class="tab-pane fade show active" id="interactive-map-tab-pane" role="tabpanel"
                  aria-labelledby="interactive-map-tab"
-                 tabindex="1">
+                 tabindex="0">
                 <div class="row align-items-md-stretch">
                     <div class="col-12 col-md-10">
                         <div id="map" class="border" style="min-width: 400px; height: 600px;position:relative;"></div>
                     </div>
                     <script src="{% static "leafmap.js"  %}"></script>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="classic-map-tab-pane" role="tabpanel"
+                 aria-labelledby="classic-map-tab"
+                 tabindex="1">
+                <div class="col px-5">
+                    <div class="row"
+                         style="border: 1px solid gray; max-width: 1200px; width: 90%; background-color:#f0f0ff; padding: 10px;">
+                        {{ zone_page_text.map|safe }}
+                    </div>
                 </div>
             </div>
         </div>

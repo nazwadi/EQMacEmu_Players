@@ -13,16 +13,6 @@
     <link rel="stylesheet" href="{% static 'css/eq-ui.css' %}">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
     <link href="https://cdn.datatables.net/v/bs5/dt-2.0.2/datatables.min.css" rel="stylesheet">
-    <script type="text/javascript">
-        mapBaseName = JSON.parse('"{{ zone_data.short_name }}"')
-    </script>
-    <script type="text/javascript" src="{% static "leaflet.js" %}"></script>
-    <script type="text/javascript" src="{% static "L.SimpleGraticule.js" %}"></script>
-    <script type="text/javascript" src="{% static "L.Control.MousePosition.js" %}"></script>
-    <link href="{% static "leaflet.css" %}" rel="stylesheet">
-    <link href="{% static "L.Control.MousePosition.css" %}" rel="stylesheet">
-    <link href="{% static "nouislider.css" %}" rel="stylesheet">
-    <script src="{% static "nouislider.js" %}"></script>
 
     {% if zone_data.short_name %}
         <title>{{ zone_data.long_name }} - EQ Archives</title>
@@ -76,5 +66,15 @@
         });
     });
 </script>
+<script type="text/javascript">
+    mapBaseName = JSON.parse('"{{ zone_data.short_name }}"')
+</script>
+<script type="text/javascript" src="{% static "leaflet.js" %}"></script>
+<script type="text/javascript" src="{% static "L.SimpleGraticule.js" %}"></script>
+<script type="text/javascript" src="{% static "L.Control.MousePosition.js" %}"></script>
+<link href="{% static "leaflet.css" %}" rel="stylesheet">
+<link href="{% static "L.Control.MousePosition.css" %}" rel="stylesheet">
+<link href="{% static "nouislider.css" %}" rel="stylesheet">
+<script src="{% static "nouislider.js" %}"></script>
 </body>
 </html>
