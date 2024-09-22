@@ -349,10 +349,12 @@ def view_item(request, item_id):
             forage[forage_tuple.z_short_name] = list()
         forage[forage_tuple.z_short_name].append(forage_tuple)
 
+    obj_path = f"/static/models/equip/{item.idfile.lower()}{'.glb'}"
     return render(request=request,
                   template_name="items/view_item.html",
                   context={
                       "item": item,
+                      "obj_path": obj_path,
                       "drops_from": drops_from,
                       "effect_name": effect_name,
                       "created_by_these_tradeskill_recipes": created_by_these_tradeskill_recipes,
@@ -373,9 +375,53 @@ def best_in_slot(request):
     """
     with open('items/templates/items/best_in_slot/bard.md', 'r') as md_file:
         bard_bis = md_file.read()
+    with open('items/templates/items/best_in_slot/beastlord.md', 'r') as md_file:
+        beastlord_bis = md_file.read()
+    with open('items/templates/items/best_in_slot/berserker.md', 'r') as md_file:
+        berserker_bis = md_file.read()
     with open('items/templates/items/best_in_slot/cleric.md', 'r') as md_file:
         cleric_bis = md_file.read()
+    with open('items/templates/items/best_in_slot/druid.md', 'r') as md_file:
+        druid_bis = md_file.read()
+    with open('items/templates/items/best_in_slot/enchanter.md', 'r') as md_file:
+        enchanter_bis = md_file.read()
+    with open('items/templates/items/best_in_slot/magician.md', 'r') as md_file:
+        magician_bis = md_file.read()
+    with open('items/templates/items/best_in_slot/monk.md', 'r') as md_file:
+        monk_bis = md_file.read()
+    with open('items/templates/items/best_in_slot/necromancer.md', 'r') as md_file:
+        necromancer_bis = md_file.read()
+    with open('items/templates/items/best_in_slot/paladin.md', 'r') as md_file:
+        paladin_bis = md_file.read()
+    with open('items/templates/items/best_in_slot/ranger.md', 'r') as md_file:
+        ranger_bis = md_file.read()
+    with open('items/templates/items/best_in_slot/rogue.md', 'r') as md_file:
+        rogue_bis = md_file.read()
+    with open('items/templates/items/best_in_slot/shadowknight.md', 'r') as md_file:
+        shadowknight_bis = md_file.read()
+    with open('items/templates/items/best_in_slot/shaman.md', 'r') as md_file:
+        shaman_bis = md_file.read()
+    with open('items/templates/items/best_in_slot/warrior.md', 'r') as md_file:
+        warrior_bis = md_file.read()
+    with open('items/templates/items/best_in_slot/wizard.md', 'r') as md_file:
+        wizard_bis = md_file.read()
     return render(request=request,
                   template_name="items/best_in_slot.html",
-                  context={"bard_bis": bard_bis,
-                           "cleric_bis": cleric_bis})
+                  context={
+                           "bard_bis": bard_bis,
+                           "beastlord_bis": beastlord_bis,
+                           "berserker_bis": berserker_bis,
+                           "cleric_bis": cleric_bis,
+                           "druid_bis": druid_bis,
+                           "enchanter_bis": enchanter_bis,
+                           "magician_bis": magician_bis,
+                           "monk_bis": monk_bis,
+                           "necromancer_bis": necromancer_bis,
+                           "paladin_bis": paladin_bis,
+                           "ranger_bis": ranger_bis,
+                           "rogue_bis": rogue_bis,
+                           "shadowknight_bis": shadowknight_bis,
+                           "shaman_bis": shaman_bis,
+                           "warrior_bis": warrior_bis,
+                           "wizard_bis": wizard_bis,
+                           })

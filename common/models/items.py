@@ -9,6 +9,7 @@ class Items(models.Model):
         return str(self.id)
 
     id = models.IntegerField(primary_key=True, null=False, default=0)
+    idfile = models.CharField(null=False, max_length=30)
     minstatus = models.SmallIntegerField(null=False, default=0)
     Name = models.CharField(max_length=64, null=False, default=0)
     aagi = models.IntegerField(null=False, default=0)

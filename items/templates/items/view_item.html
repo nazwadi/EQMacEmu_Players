@@ -62,20 +62,29 @@
                                 {# stackable == 3 means Spell Effect; this field is perhaps poorly named  #}
                                 {% if item.stackable == 3 %}
                                     {% if item.click_type == 1 or item.click_type == 3 or item.click_type == 4 or item.click_type == 5 %}
-                                        Effect: <a style="text-decoration:none;color:#00ba00;" href="https://lucy.alkabor.com/spell_{{ item.click_effect }}.html" target="_blank">{{ effect_name }}</a>
+                                        Effect:<a style="text-decoration:none;color:#00ba00;"
+                                                  href="https://lucy.alkabor.com/spell_{{ item.click_effect }}.html"
+                                                  target="_blank">{{ effect_name }}</a>
                                         ({% if item.click_type == 1 %}Any Slot,{% endif %}{% if item.click_type == 4 %}
                                         Must Equip.{% endif %}
                                         Casting Time:&nbsp;{% if item.cast_time == 0 or item.cast_time == -1 %}Instant
                                         {% else %}{{ item.cast_time|ms_to_seconds }} sec{% endif %})<br/>
                                     {% endif %}
                                     {% if item.worn_type == 2 %}
-                                        Effect:&nbsp;<a style="text-decoration: none; color:#00ba00;" href="https://lucy.alkabor.com/spell_{{ item.worn_effect }}.html" target="_blank">{{ effect_name }}</a>&nbsp;{% if item.worn_type == 2 %}(Worn)
-                                    {% endif %}
+                                        Effect:&nbsp;<a style="text-decoration: none; color:#00ba00;"
+                                                        href="https://lucy.alkabor.com/spell_{{ item.worn_effect }}.html"
+                                                        target="_blank">{{ effect_name }}</a>&nbsp;
+                                        {% if item.worn_type == 2 %}(Worn)
+                                        {% endif %}
                                         <br/>
                                     {% endif %}
                                     {% if item.proc_type == 0 and item.proc_effect > 0 %}
-                                        Effect: <a style="text-decoration:none;color:#00ba00;" href="https://lucy.alkabor.com/spell_{{ item.proc_effect }}.html" target="_blank">{{ effect_name }}</a>&nbsp;(Combat, Casting Time:{% if item.cast_time == 0 %}
-                                        Instant{% else %}{{ item.cast_time|ms_to_seconds }} sec{% endif %}) at Level {{ item.proc_level }}<br/>
+                                        Effect:<a style="text-decoration:none;color:#00ba00;"
+                                                  href="https://lucy.alkabor.com/spell_{{ item.proc_effect }}.html"
+                                                  target="_blank">{{ effect_name }}</a>&nbsp;(Combat, Casting Time:
+                                        {% if item.cast_time == 0 %}
+                                            Instant{% else %}{{ item.cast_time|ms_to_seconds }} sec{% endif %}) at Level
+                                        {{ item.proc_level }}<br/>
                                     {% endif %}
                                 {% endif %}
                                 WT:&nbsp;{{ item.weight|item_weight }}&nbsp;{% if item.bag_type %}{% if item.bag_wr %}
@@ -96,6 +105,17 @@
                                     style="font-size:8pt">(from Identify)</span>: {{ item.lore }}</span>
                         </div>
                     </div>
+                    {% if item.idfile != "IT63" and item.idfile != "0" %}
+                        <div class="col-12 col-md-4">
+                            <model-viewer
+                                    alt="3D model of {{ item.Name }}" class="float-end border bg-body-tertiary"
+                                    style="min-height: 200px; max-height 300px;"
+                                    src="{{ obj_path }}"
+                                    shadow-intensity="1" camera-controls
+                                    camera-orbit="45deg 55deg 4m"
+                                    touch-action="pan-y"></model-viewer>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -213,7 +233,8 @@
                                     <ul>
                                         {% for recipe in recipe_list %}
                                             <li>
-                                                <b>Recipe</b>:&nbsp;<a style="text-decoration: none" href="/recipes/view/{{ recipe.recipe_id }}">{{ recipe.recipe_name }}</a>&nbsp;<b>Yield</b>:&nbsp;x{{ recipe.success_count }}
+                                                <b>Recipe</b>:&nbsp;<a style="text-decoration: none"
+                                                                       href="/recipes/view/{{ recipe.recipe_id }}">{{ recipe.recipe_name }}</a>&nbsp;<b>Yield</b>:&nbsp;x{{ recipe.success_count }}
                                                 &nbsp;(Trivial: {{ recipe.trivial }})
                                             </li>
                                         {% endfor %}
@@ -238,7 +259,10 @@
                                 <div>{{ tradeskill|tradeskill_filter }}
                                     <ul>
                                         {% for recipe in recipe_list %}
-                                            <li><a style="text-decoration: none" href="/recipes/view/{{ recipe.recipe_id }}">{{ recipe.recipe_name }}</a> (Trivial: {{ recipe.trivial }})</li>
+                                            <li><a style="text-decoration: none"
+                                                   href="/recipes/view/{{ recipe.recipe_id }}">{{ recipe.recipe_name }}</a>
+                                                (Trivial: {{ recipe.trivial }})
+                                            </li>
                                         {% endfor %}
                                     </ul>
                                 </div>
