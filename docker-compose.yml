@@ -1,0 +1,78 @@
+version: '3.6'
+
+services:
+  ls_db:
+    image: mysql:8.0.39-bookworm
+    container_name: eqmacemu_players_loginserver_db
+    restart: always
+    volumes:
+      - ls_data:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=${LS_DB_NAME}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER=${LS_DB_USER}
+      - MYSQL_PASSWORD=${LS_DB_PASSWORD}
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysql", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}", "-e", "SELECT 1"]
+      timeout: 20s
+      retries: 10
+  app_db:
+    image: mysql:8.0.39-bookworm
+    container_name: eqmacemu_players_app_db
+    restart: always
+    volumes:
+      - app_data:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=${DJANGO_APP_DB_NAME}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER=${DJANGO_APP_DB_USER}
+      - MYSQL_PASSWORD=${DJANGO_APP_DB_PASSWORD}
+    ports:
+      - "33306:3306"
+    healthcheck:
+      test: ["CMD", "mysql", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}", "-e", "SELECT 1"]
+      timeout: 20s
+      retries: 10
+  game_db:
+    image: mysql:8.0.39-bookworm
+    container_name: eqmacemu_players_game_db
+    restart: always
+    volumes:
+      - game_data:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=${GAME_DB_NAME}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER=${GAME_DB_USER}
+      - MYSQL_PASSWORD=${GAME_DB_PASSWORD}
+    healthcheck:
+      test: ["CMD", "mysql", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}", "-e", "SELECT 1"]
+      timeout: 20s
+      retries: 10
+
+  backend:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: eqmacemu_players_backend
+    command: sh -c "python3 manage.py migrate --noinput && python3 manage.py collectstatic --noinput && python manage.py runserver 0.0.0.0:8000"
+    restart: always
+    user: appuser
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      app_db:
+        condition: service_healthy
+      game_db:
+        condition: service_healthy
+      ls_db:
+        condition: service_healthy
+volumes:
+  ls_data:
+  game_data:
+  app_data:

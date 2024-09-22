@@ -9,7 +9,7 @@ django-debug-toolbar==4.3.0
 django-tables2==2.7.0
 isort==5.13.2
 mccabe==0.7.0
-mysqlclient==2.2.1
+mysqlclient==2.2.4
 platformdirs==4.2.0
 pylint==3.0.3
 python-dotenv==1.0.1

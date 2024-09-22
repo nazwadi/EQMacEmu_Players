@@ -21,14 +21,17 @@ load_dotenv()
 LS_DB_NAME = os.environ.get("LS_DB_NAME")
 LS_DB_USER = os.environ.get("LS_DB_USER")
 LS_DB_PASSWORD = os.environ.get("LS_DB_PASSWORD")
+LS_DB_HOST = os.environ.get("LS_DB_HOST")
 LS_DB_PORT = os.environ.get("LS_DB_PORT")
 GAME_DB_NAME = os.environ.get("GAME_DB_NAME")
 GAME_DB_USER = os.environ.get("GAME_DB_USER")
 GAME_DB_PASSWORD = os.environ.get("GAME_DB_PASSWORD")
+GAME_DB_HOST = os.environ.get("GAME_DB_HOST")
 GAME_DB_PORT = os.environ.get("GAME_DB_PORT")
 DJANGO_APP_DB_NAME = os.environ.get("DJANGO_APP_DB_NAME")
 DJANGO_APP_DB_USER = os.environ.get("DJANGO_APP_DB_USER")
 DJANGO_APP_DB_PASSWORD = os.environ.get("DJANGO_APP_DB_PASSWORD")
+DJANGO_APP_DB_HOST = os.environ.get("DJANGO_APP_DB_HOST")
 DJANGO_APP_DB_PORT = os.environ.get("DJANGO_APP_DB_PORT")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -65,7 +68,7 @@ INSTALLED_APPS = [
     'django_tables2',
     'crispy_forms',
     'crispy_bootstrap4',
-    'bootstrap5',
+#    'bootstrap5',
     'factions.apps.FactionConfig',
     'items.apps.ItemConfig',
     'npcs.apps.NpcsConfig',
@@ -135,7 +138,7 @@ DATABASES = {
         "NAME": DJANGO_APP_DB_NAME,
         "USER": DJANGO_APP_DB_USER,
         "PASSWORD": DJANGO_APP_DB_PASSWORD,
-        "HOST": "127.0.0.1",
+        "HOST": DJANGO_APP_DB_HOST,
         "PORT": DJANGO_APP_DB_PORT
 
     },
@@ -144,7 +147,7 @@ DATABASES = {
         "NAME": GAME_DB_NAME,
         "USER": GAME_DB_USER,
         "PASSWORD": GAME_DB_PASSWORD,
-        "HOST": "127.0.0.1",
+        "HOST": GAME_DB_HOST,
         "PORT": GAME_DB_PORT
     },
     "login_server_database": {
@@ -152,7 +155,7 @@ DATABASES = {
         "NAME": LS_DB_NAME,
         "USER": LS_DB_USER,
         "PASSWORD": LS_DB_PASSWORD,
-        "HOST": "127.0.0.1",
+        "HOST": LS_DB_HOST,
         "PORT": LS_DB_PORT
     }
 }
@@ -200,11 +203,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
-]
-#STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

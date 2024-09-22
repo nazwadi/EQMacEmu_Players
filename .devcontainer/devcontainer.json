@@ -1,4 +1,32 @@
 {
-  "image": "mcr.microsoft.com/devcontainers/base:debian-12",
-  "postCreateCommand": "pip3 install --user -r requirements.txt"
+  "name": "EQMacEmu Players App",
+
+  // Update the 'dockerComposeFile' list if you have more compose files or use different names.
+  // The .devcontainer/docker-compose.yml file contains any overrides you need/want to make.
+  "dockerComposeFile":[
+    "../docker-compose.yml",
+    "docker-compose.yml"
+  ],
+
+  // The 'service' property is the name of the service for the container that VS Code should
+  // use.  Update this value and .devcontainer/docker-compose.yml to the real service name.
+  "service": "backend",
+
+  // The optional 'workspaceFolder' property is the path VS Code should open by default when
+  // connected.  This is typically a file mount in .devcontainer/docker-compose.yml
+  "workspaceFolder": "/app",
+  "remoteUser": "appuser",
+  "containerUser": "appuser",
+
+//  "image": "mcr.microsoft.com/devcontainers/base:debian-12",
+//  "postCreateCommand": "pip3 install --user -r requirements.txt",
+  "postAttachCommand": "sudo chown -R appuser:appuser /app",
+  "customizations": {
+    "vscode": {
+      "settings": {},
+      "extensions": [
+        "ms-python.python"
+      ]
+    }
+  }
 }
