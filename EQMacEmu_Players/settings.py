@@ -41,7 +41,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("DJANGO_APP_SECRET_KEY")
+SECRET_KEY = os.environ.get("DJANGO_APP_SECRET_KEY", "INSECURE")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ['DEBUG'] == 'TRUE'
@@ -67,8 +67,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_tables2',
     'crispy_forms',
-    'crispy_bootstrap4',
-#    'bootstrap5',
+    'crispy_bootstrap5',
     'factions.apps.FactionConfig',
     'items.apps.ItemConfig',
     'npcs.apps.NpcsConfig',
@@ -86,8 +85,8 @@ MESSAGE_TAGS = {
     messages.ERROR: 'alert-danger',
 }
 
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
-DJANGO_TABLES2_TEMPLATE = 'django_tables2/bootstrap4-responsive.html'
+CRISPY_TEMPLATE_PACK = 'bootstrap5'
+DJANGO_TABLES2_TEMPLATE = 'django_tables2/bootstrap5-responsive.html'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 INTERNAL_IPS = [
@@ -204,7 +203,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = '/static/'
-#STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
@@ -228,4 +227,3 @@ LOGGING = {
         },
     },
 }
-
