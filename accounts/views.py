@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.db import connections
 from django.shortcuts import render, redirect
 
+from .models import Account
 from .models import LoginServerAccounts
 from .models import WorldServerRegistration
 from .tables import LoginServerAccountTable
@@ -155,10 +156,10 @@ def update_account(request, pk):
                 queryset.update(AccountPassword=sha1_password(form.cleaned_data['AccountPassword']),
                                 AccountEmail=form.cleaned_data['AccountEmail'],
                                 LastIPAddress=get_client_ip(request))
-                messages.success(request, "Update successful for "+data['AccountName']+".")
+                messages.success(request, "Update successful for " + data['AccountName'] + ".")
                 return redirect("accounts:list_accounts")
             for key, value in form.errors.items():
-                messages.error(request, "Update unsuccessful. "+key+", "+''.join(value))
+                messages.error(request, "Update unsuccessful. " + key + ", " + ''.join(value))
 
         # For all other request methods that are not POST - including GET requests
         form = UpdateLSAccountForm(initial={'AccountEmail': data['AccountEmail']})
@@ -180,3 +181,52 @@ def delete_account(request, pk):
     messages.error(request,
                    "Unsuccessful delete attempt. The target account either does not exist or doesn't belong to you.")
     return redirect("accounts:list_accounts")
+
+
+@login_required
+def inventory_search(request):
+    """Defines view for https://url.tld/accounts/inventory/search"""
+    if request.method == "POST":
+        if request.user.is_authenticated:
+            # 1) Get a list of loginserver accounts associated with the currently logged in forum name
+            forum_name = request.user.username
+
+            cursor = connections['login_server_database'].cursor()
+            cursor.execute("""
+                SELECT LoginServerID
+                FROM tblLoginServerAccounts
+                WHERE ForumName = %s""", [forum_name])
+            ls_accounts_results = cursor.fetchall()
+
+            # 2) For each login server account this user has, get all characters. For each character,
+            # show results where the item_name occurs in their inventory
+            cursor = connections['game_database'].cursor()
+            item_name = request.POST.get("item_name")
+            cursor.execute("""SELECT 
+                                cd.name, 
+                                ci.id, 
+                                i.icon, 
+                                ci.slotid, 
+                                i.Name, 
+                                ci.itemid, 
+                                ci.charges
+                              FROM account as acc 
+                                JOIN character_data as cd ON acc.id = cd.account_id 
+                                JOIN character_inventory as ci ON cd.id = ci.id
+                                JOIN items as i ON i.id = ci.itemid
+                              WHERE 
+                                acc.lsaccount_id IN %s 
+                                AND i.Name LIKE %s""",
+                           [ls_accounts_results, "%"+item_name.lower()+"%"])
+            character_inventory_results = cursor.fetchall()
+
+            return render(request=request,
+                          template_name="accounts/inventory_search.html",
+                          context={"search_results": character_inventory_results}
+                          )
+
+    return render(request=request,
+                  template_name="accounts/inventory_search.html",
+                  context={
+                  }
+                  )
