@@ -10,7 +10,7 @@
                 <form class="p-3 mb-4 bg-body-tertiary border" action="/npcs/search" method="post">
                     {% csrf_token %}
                     <div class="row">
-                        <div class="col-12 col-md-4">
+                        <div class="col-12 col-md-6">
                             <div class="form-text text-wrap"><label for="npc_name">NPC Name</label></div>
                             <input type="text" class="form-control" id="npc_name" name="npc_name"
                                    placeholder="a decaying skeleton">
@@ -25,8 +25,10 @@
                             </select>
                         </div>
                         <div class="col-12 col-md-2">
-                            <div class="form-text text-wrap"><label for="query_limit">Query Limit (Max: 200)</label></div>
-                            <input class="form-control" id="query_limit" name="query_limit" type="number" min="0" max="200" value="50">
+                            <div class="form-text text-wrap"><label for="query_limit">Query Limit (Max: 200)</label>
+                            </div>
+                            <input class="form-control" id="query_limit" name="query_limit" type="number" min="0"
+                                   max="200" value="50">
                         </div>
                     </div>
                     <div class="row">
@@ -77,6 +79,14 @@
                             </div>
                         {% endif %}
                     </div>
+                    <div class="row">
+                        <div class="col-12 col-md-3">
+                            <div class="form-check text-wrap"></div>
+                            <input class="form-check-input" type="checkbox" value="" id="exclude_merchants"
+                                   name="exclude_merchants">
+                            <label for="exclude_merchants">Exclude Merchants</label>
+                        </div>
+                    </div>
                     <div class="col-12 col-md-12">
                         <div class="d-grid gap-2 py-4">
                             <button type="submit" class="btn btn-outline-primary">Search</button>
@@ -110,7 +120,8 @@
                         {% for result in search_results %}
                             <tr>
                                 <td><a href="/npcs/view/{{ result.id }}">{{ result.name|clean_name }}</a></td>
-                                <td><img src="{% static "/images/"  %}{{ result.min_expansion|expansion_icon }}" alt="{{ result.min_expansion|expansion_icon }}"></td>
+                                <td><img src="{% static "/images/" %}{{ result.min_expansion|expansion_icon }}"
+                                         alt="{{ result.min_expansion|expansion_icon }}"></td>
                                 <td><a href="/zones/view/{{ result.short_name }}">{{ result.long_name }}</a></td>
                                 {% if result.maxlevel %}
                                     <td>{{ result.level }} - {{ result.maxlevel }}</td>

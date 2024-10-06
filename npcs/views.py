@@ -66,6 +66,7 @@ def search(request):
         npc_race = request.POST.get("select_npc_race")
         npc_class = request.POST.get("select_npc_class")
         query_limit = request.POST.get("query_limit")
+        exclude_merchants = request.POST.get("exclude_merchants")
         try:
             query_limit = int(query_limit)
         except ValueError:
@@ -102,6 +103,9 @@ def search(request):
                             AND nt.LEVEL >= %s
                             AND nt.maxlevel <= %s
         """
+        print(exclude_merchants)
+        if exclude_merchants is not None:
+            query += " AND nt.merchant_id = 0"
         query_list = ['%' + npc_name + '%', min_level, max_level]
         if expansion != "-1":  # any
             query += """ AND s.min_expansion = %s"""
@@ -116,6 +120,7 @@ def search(request):
             query += """ AND nt.class = %s"""
             query_list.append(npc_class)
         query += """ LIMIT %s"""
+        print(query)
         query_list.append(int(query_limit))
         cursor.execute(query, query_list)
         results = cursor.fetchall()
