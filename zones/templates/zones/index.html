@@ -80,14 +80,75 @@ If you buy me a sip of brandy, of course!
                     <div class="tab-pane fade" id="maps-tab-pane" role="tabpanel" aria-labelledby="maps-tab"
                          tabindex="2">
                         <div class="container-fluid">
-                            <h3>Classic Zone Connection Map</h3>
-                            <img class="image-fluid" style="max-width: 100%;"
-                                 src="{% static "images/Classic_Zone_Connection.jpg" %}"
-                                 alt="Classic Zone Connection Map">
-                            <h3>Kunark Zone Connection Map</h3>
-                            <img class="image-fluid" style="max-width: 100%;"
-                                 src="{% static "images/Kunark_Zone_Connection.png" %}"
-                                 alt="Classic Zone Connection Map">
+                            <ul class="nav justify-content-center py-3">
+                                <li class="nav-item border"><a href="#classic"
+                                                               class="border-0 btn btn-outline-secondary btn-sm rounded-0">Classic</a>
+                                </li>
+                                <li class="nav-item border"><a href="#kunark"
+                                                               class="border-0 btn btn-outline-secondary btn-sm rounded-0">Kunark</a>
+                                </li>
+                                <li class="nav-item border"><a href="#velious"
+                                                               class="border-0 btn btn-outline-secondary btn-sm rounded-0">Velious</a>
+                                </li>
+                            </ul>
+                            <hr />
+                            <div id="classic">
+                                <ul class="nav nav-pills nav-fill py-2">
+                                    <li class="nav-item"><a href="#top" class="btn btn-outline-secondary">
+                                        <span>Top</span>
+                                        <svg class="bi my-1 theme-icon-active" fill="currentColor" width="1em"
+                                             height="1em">
+                                            <use href="/static/bootstrap-images/icons.svg#chevron-up"></use>
+                                        </svg>
+                                    </a></li>
+                                </ul>
+                                <h3>Classic Zone Connection Map</h3>
+                                <img class="image-fluid" style="max-width: 100%;"
+                                     src="{% static "images/Classic_Zone_Connection.jpg" %}"
+                                     alt="Classic Zone Connection Map">
+                            </div>
+                            <hr />
+                            <div id="kunark">
+                                <ul class="nav nav-pills nav-fill py-2">
+                                    <li class="nav-item"><a href="#top" class="btn btn-outline-secondary">
+                                        <span>Top</span>
+                                        <svg class="bi my-1 theme-icon-active" fill="currentColor" width="1em"
+                                             height="1em">
+                                            <use href="/static/bootstrap-images/icons.svg#chevron-up"></use>
+                                        </svg>
+                                    </a></li>
+                                </ul>
+                                <h3>Kunark Zone Connection Map</h3>
+                                <img class="image-fluid" style="max-width: 100%;"
+                                     src="{% static "images/Kunark_Zone_Connection.png" %}"
+                                     alt="Classic Zone Connection Map">
+                            </div>
+                            <hr />
+                            <div id="velious">
+                                <ul class="nav nav-pills nav-fill py-2">
+                                    <li class="nav-item"><a href="#top" class="btn btn-outline-secondary">
+                                        <span>Top</span>
+                                        <svg class="bi my-1 theme-icon-active" fill="currentColor" width="1em"
+                                             height="1em">
+                                            <use href="/static/bootstrap-images/icons.svg#chevron-up"></use>
+                                        </svg>
+                                    </a></li>
+                                </ul>
+                                <h3>Velious Zone Connection Map</h3>
+                                <img class="image-fluid" style="max-width: 100%;"
+                                     src="{% static "images/Velious_Zone_Connection_Mapmaster255.jpg" %}"
+                                     alt="Velious Zone Connection Map">
+                            </div>
+                            <hr />
+                            <ul class="nav nav-pills nav-fill py-2">
+                                <li class="nav-item"><a href="#top" class="btn btn-outline-secondary">
+                                    <span>Top</span>
+                                    <svg class="bi my-1 theme-icon-active" fill="currentColor" width="1em"
+                                         height="1em">
+                                        <use href="/static/bootstrap-images/icons.svg#chevron-up"></use>
+                                    </svg>
+                                </a></li>
+                            </ul>
                         </div>
                     </div>
                 </div>
