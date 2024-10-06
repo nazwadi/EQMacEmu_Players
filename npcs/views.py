@@ -80,6 +80,7 @@ def search(request):
                             nt.NAME,
                             s.min_expansion,
                             z.long_name,
+                            z.short_name,
                             nt.LEVEL,
                             nt.maxlevel,
                             nt.race,
@@ -102,7 +103,7 @@ def search(request):
                             AND nt.maxlevel <= %s
         """
         query_list = ['%' + npc_name + '%', min_level, max_level]
-        if expansion != "-1": # any
+        if expansion != "-1":  # any
             query += """ AND s.min_expansion = %s"""
             query_list.append(expansion)
         if body_type != "-1":  # any
@@ -111,7 +112,7 @@ def search(request):
         if npc_race != "-1":  # any
             query += """ AND nt.race = %s"""
             query_list.append(npc_race)
-        if npc_class != "-1": # any
+        if npc_class != "-1":  # any
             query += """ AND nt.class = %s"""
             query_list.append(npc_class)
         query += """ LIMIT %s"""
@@ -121,8 +122,9 @@ def search(request):
         search_results = list()
         if results:
             for result in results:
-                NpcTuple = namedtuple("NpcTuple", ["id", "name", "min_expansion", "long_name", "level",
-                                                "maxlevel", "race", "class_name", "gender", "hp", "MR", "CR", "FR", "DR", "PR"])
+                NpcTuple = namedtuple("NpcTuple", ["id", "name", "min_expansion", "long_name",
+                                                   "short_name", "level", "maxlevel", "race", "class_name", "gender",
+                                                   "hp", "MR", "CR", "FR", "DR", "PR"])
                 search_results.append(NpcTuple(*result))
 
         return render(request=request,
@@ -282,17 +284,17 @@ def view_npc(request, npc_id):
     return render(request=request,
                   template_name="npcs/view_npc.html",
                   context={
-                           "expansion": expansion,
-                           "factions": factions,
-                           "loottable": loottable,
-                           "loot_tables": loot_tables,
-                           "merchant_list": merchant_list,
-                           "npc_data": npc_data,
-                           "npc_page_text": npc_page_text,
-                           "npc_spells_entries": npc_spells_entries,
-                           "npc_spell_proc_data": npc_spell_proc_data,
-                           "opposing_factions": opposing_factions,
-                           "spawn_point_list": spawn_point_list,
-                           "spawn_groups": spawn_groups,
-                           "zone": zone,
+                      "expansion": expansion,
+                      "factions": factions,
+                      "loottable": loottable,
+                      "loot_tables": loot_tables,
+                      "merchant_list": merchant_list,
+                      "npc_data": npc_data,
+                      "npc_page_text": npc_page_text,
+                      "npc_spells_entries": npc_spells_entries,
+                      "npc_spell_proc_data": npc_spell_proc_data,
+                      "opposing_factions": opposing_factions,
+                      "spawn_point_list": spawn_point_list,
+                      "spawn_groups": spawn_groups,
+                      "zone": zone,
                   })

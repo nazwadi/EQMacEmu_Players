@@ -111,7 +111,7 @@
                             <tr>
                                 <td><a href="/npcs/view/{{ result.id }}">{{ result.name|clean_name }}</a></td>
                                 <td><img src="{% static "/images/"  %}{{ result.min_expansion|expansion_icon }}" alt="{{ result.min_expansion|expansion_icon }}"></td>
-                                <td>{{ result.long_name }}</td>
+                                <td><a href="/zones/view/{{ result.short_name }}">{{ result.long_name }}</a></td>
                                 {% if result.maxlevel %}
                                     <td>{{ result.level }} - {{ result.maxlevel }}</td>
                                 {% else %}
