@@ -203,13 +203,15 @@ def inventory_search(request):
             cursor = connections['game_database'].cursor()
             item_name = request.POST.get("item_name")
             cursor.execute("""SELECT 
-                                cd.name, 
-                                ci.id, 
-                                i.icon, 
-                                ci.slotid, 
-                                i.Name, 
                                 ci.itemid, 
-                                ci.charges
+                                i.icon, 
+                                i.Name, 
+                                ci.slotid, 
+                                ci.charges,
+                                i.maxcharges,
+                                i.stackable,
+                                i.stacksize,
+                                cd.name
                               FROM account as acc 
                                 JOIN character_data as cd ON acc.id = cd.account_id 
                                 JOIN character_inventory as ci ON cd.id = ci.id
