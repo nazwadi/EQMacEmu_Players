@@ -67,12 +67,21 @@
                 <li class="list-group-item" style="width:90%;border:0">{{ zone_data.can_bind|can_bind_filter }}</li>
             </ul>
             <ul class="list-group list-group-horizontal">
-                <li class="list-group-item" style="background-color:#cedff2; width: 170px;border-bottom: 1px solid;">
+                <li class="list-group-item" style="background-color:#cedff2; width: 170px;">
                     Levitate:
                 </li>
                 <li class="list-group-item"
-                    style="width:90%;border:0;border-bottom: 1px solid">{{ zone_data.can_levitate|yes_no }}</li>
+                    style="width:90%;border:0;">{{ zone_data.can_levitate|yes_no }}</li>
             </ul>
+            {% if zone_data.min_level > 0 %}
+                <ul class="list-group list-group-horizontal">
+                    <li class="list-group-item" style="background-color:#cedff2; width: 170px;border-bottom: 1px solid;">
+                        Level Required:
+                    </li>
+                    <li class="list-group-item"
+                        style="width:90%;border:0;border-bottom: 1px solid">{{ zone_data.min_level }}</li>
+                </ul>
+            {% endif %}
         </div>
         <div class="row py-2">
             <div class="col">
