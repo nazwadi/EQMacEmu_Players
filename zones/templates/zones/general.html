@@ -2,8 +2,8 @@
 {% load static %}
 <div class="container-fluid">
     <div class="row">
-        <div class="col">
-            <h4>{{ zone_data.long_name }}</h4>
+        <h4>{{ zone_data.long_name }}</h4>
+        <div class="col-12 col-md-8">
             <ul class="list-group list-group-horizontal">
                 <li class="list-group-item" style="background-color:#cedff2; width: 170px;border-top: 1px solid">
                     Level of Monsters:
@@ -18,18 +18,6 @@
                 </li>
                 <li class="list-group-item" style="width:90%;border:0;">
                     {{ zone_page_text.types_of_monsters|safe }}
-                </li>
-            </ul>
-            <ul class="list-group list-group-horizontal">
-                <li class="list-group-item" style="background-color:#cedff2; width: 170px;">
-                    Expansion:
-                </li>
-                <li class="list-group-item" style="width:90%;border:0;">
-                    <img src="{% static "/images/" %}{{ zone_data.expansion|expansion_icon }}"
-                         alt="{{ zone_data.expansion|expansion_icon }}"/>
-                    {% if zone_data.short_name == 'warrens' or zone_data.short_name == 'stonebrunt' %}
-                        (Custom - normally Velious)
-                    {% endif %}
                 </li>
             </ul>
             <ul class="list-group list-group-horizontal">
@@ -62,26 +50,85 @@
                 <li class="list-group-item" style="background-color:#cedff2; width: 170px;">ZEM:</li>
                 <li class="list-group-item" style="width:90%;border:0">{{ zone_data.zone_exp_multiplier }}</li>
             </ul>
-            <ul class="list-group list-group-horizontal">
-                <li class="list-group-item" style="background-color:#cedff2; width: 170px;">Casters Can Bind:</li>
-                <li class="list-group-item" style="width:90%;border:0">{{ zone_data.can_bind|can_bind_filter }}</li>
-            </ul>
-            <ul class="list-group list-group-horizontal">
-                <li class="list-group-item" style="background-color:#cedff2; width: 170px;">
-                    Levitate:
-                </li>
-                <li class="list-group-item"
-                    style="width:90%;border:0;">{{ zone_data.can_levitate|yes_no }}</li>
-            </ul>
-            {% if zone_data.min_level > 0 %}
-                <ul class="list-group list-group-horizontal">
-                    <li class="list-group-item" style="background-color:#cedff2; width: 170px;border-bottom: 1px solid;">
-                        Level Required:
-                    </li>
-                    <li class="list-group-item"
-                        style="width:90%;border:0;border-bottom: 1px solid">{{ zone_data.min_level }}</li>
-                </ul>
-            {% endif %}
+        </div>
+        <div class="col-12 col-md-2">
+            <article class="p-3 bg-body-tertiary border">
+                <h5 class="text-center">Quick Facts</h5>
+                <dl>
+                    <dd>Expansion:
+                        <img src="{% static "/images/" %}{{ zone_data.expansion|expansion_icon }}"
+                             alt="{{ zone_data.expansion|expansion_icon }}"/>
+                        {% if zone_data.short_name == 'warrens' or zone_data.short_name == 'stonebrunt' %}
+                            (Custom - normally Velious)
+                        {% endif %}
+                    </dd>
+{#                    <dd>Instanced: {{ zone_data.instanced }}</dd>#}
+{#                    <dd>Keyed: {{ zone_data.keyed }}</dd>#}
+                    <dd>
+                        <svg class="bi my-1 theme-icon-active" fill="currentColor" width="1em" height="1em">
+                            {% if zone_data.cast_outdoor == 1 %}
+                                <use href="/static/bootstrap-images/icons.svg#check2"></use>
+                            {% else %}
+                                <use href="/static/bootstrap-images/icons.svg#x-circle"></use>
+                            {% endif %}
+                        </svg>
+                        Cast Outdoor
+                    </dd>
+                    <dd>
+                        <svg class="bi my-1 theme-icon-active" fill="currentColor" width="1em" height="1em">
+                            {% if zone_data.cast_dungeon == 1 %}
+                                <use href="/static/bootstrap-images/icons.svg#check2"></use>
+                            {% else %}
+                                <use href="/static/bootstrap-images/icons.svg#x-circle"></use>
+                            {% endif %}
+                        </svg>
+                        Cast Dungeon Only
+                    </dd>
+                    <dd>
+                        <svg class="bi my-1 theme-icon-active" fill="currentColor" width="1em" height="1em">
+                            {% if zone_data.can_levitate == 1 %}
+                                <use href="/static/bootstrap-images/icons.svg#check2"></use>
+                            {% else %}
+                                <use href="/static/bootstrap-images/icons.svg#x-circle"></use>
+                            {% endif %}
+                        </svg>
+                        Levitate
+                    </dd>
+                    <dd>
+                        {% if zone_data.can_bind == 0 %}
+                            <svg class="bi my-1 theme-icon-active" fill="currentColor" width="1em" height="1em">
+                                <use href="/static/bootstrap-images/icons.svg#x-circle"></use>
+                            </svg>
+                            None Can Bind
+                        {% elif zone_data.can_bind == 1 %}
+                            <svg class="bi my-1 theme-icon-active" fill="currentColor" width="1em" height="1em">
+                                <use href="/static/bootstrap-images/icons.svg#book"></use>
+                            </svg>
+                            Casters can Bind
+                        {% elif zone_data.can_bind == 2 %}
+                            <svg class="bi my-1 theme-icon-active" fill="currentColor" width="1em" height="1em">
+                                <use href="/static/bootstrap-images/icons.svg#check2"></use>
+                            </svg>
+                            All can Bind
+                        {% elif zone_data.can_bind == 3 %}
+                            <svg class="bi my-1 theme-icon-active" fill="currentColor" width="1em" height="1em">
+                                <use href="/static/bootstrap-images/icons.svg#map"></use>
+                            </svg>
+                            Bind in certain areas
+                        {% else %}
+                            <use href="/static/bootstrap-images/icons.svg#check2"></use>
+                        {% endif %}
+                    </dd>
+                    {% if zone_data.min_level > 0 %}
+                        <dd>
+                            <svg class="bi my-1 theme-icon-active" fill="currentColor" width="1em" height="1em">
+                                <use href="/static/bootstrap-images/icons.svg#info-circle"></use>
+                            </svg>
+                            Level Required:&nbsp;{{ zone_data.min_level }}
+                        </dd>
+                    {% endif %}
+                </dl>
+            </article>
         </div>
         <div class="row py-2">
             <div class="col">
@@ -115,7 +162,7 @@
                     <div class="col-12 col-md-10">
                         <div id="map" class="border" style="min-width: 400px; height: 600px;position:relative;"></div>
                     </div>
-                    <script src="{% static "leafmap.js"  %}"></script>
+                    <script src="{% static "leafmap.js" %}"></script>
                 </div>
             </div>
             <div class="tab-pane fade" id="classic-map-tab-pane" role="tabpanel"

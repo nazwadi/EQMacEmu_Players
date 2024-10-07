@@ -64,6 +64,8 @@ class Zone(models.Model):
     can_bind = models.SmallIntegerField(null=False, default=1, db_column="canbind")
     can_combat = models.SmallIntegerField(null=False, default=1, db_column="cancombat")
     can_levitate = models.SmallIntegerField(null=False, default=1, db_column="canlevitate")
+    cast_outdoor = models.SmallIntegerField(null=False, default=1, db_column="castoutdoor")
+    cast_dungeon = models.SmallIntegerField(null=False, default=1, db_column="castdungeon")
     expansion = models.SmallIntegerField(null=False, default=0)
 
     class Meta:
