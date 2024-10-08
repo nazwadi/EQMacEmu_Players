@@ -4,21 +4,47 @@
 {% block content %}
 
     <div class="container py-5">
-        <p>
-            Welcome! This app will allow you to manage your login server (aka <i>game</i>) accounts.
-        </p>
-        <p>
-            To get started, select the "Accounts" link at the top to create an account, or follow the client setup
-            instructions below.
-        </p>
-        <h3>Client Setup</h3>
-        <h4>Installing the Client</h4>
+        <h3>What is EQA?</h3>
+        <p>EQA is an EQ emulator progression server that advances when selected raid targets in the current expansion
+            are defeated. You can choose to raid as part of a guild, or participate in the weekly server-wide open
+            raids.</p>
+
+        <h3>What is the ruleset?</h3>
+        <ul>
+            <li>Firiona Vie-style Free Trade. Almost all items are tradeable!</li>
+            <li>Legacy item drops remain in game permanently at adjusted rarity. Items don't get nerfed.</li>
+            <li>Keyrings are enabled from launch, along with custom keyring settings (e.g. Plane of Sky keys go to
+                keyring)
+            </li>
+            <li>Miragul's Highway is implemented (travel by firepots)</li>
+            <li>Experience bonuses for the 4th, 5th, and 6th group members</li>
+            <li>Server launched at Kunark expansion. New expansions release approximately six months after all raid
+                targets in
+                the current expansion have been defeated.
+            </li>
+            <li>3-Box Limit. This is enforced by IP and GM Logs.</li>
+            <li>/ooc and /auction are server-wide</li>
+            <li>Player vs Environment (PVE)</li>
+        </ul>
+        <h3>Web Tools</h3>
+        <p>The website you're at now is where you can query the live game database for information of various kinds.</p>
+        <p>Some key features we've implemented:</p>
+        <ul>
+            <li>Character viewer that shows you everything about your characters (faction, inventory, spell lists including which ones you've scribed)</li>
+            <li>Global inventory search across all of your characters (must be logged in)</li>
+            <li>Self-service character transfer between game accounts associated with your EQA account (must be logged in)</li>
+            <li>Search items, factions, NPCs, Recipes, pets, spell lists, zones</li>
+            <li>Zone pages list npcs, foraged items, fishing, spawn points, etc...</li>
+        </ul>
+        <h3>How to Play</h3>
+        <h5>Download the Client</h5>
+        <p>You can play the client on Windows, Linux, or a 32-bit MacOS machine if you still have one!</p>
         <p>Go to <a href="https://wiki.takp.info/index.php/Getting_Started" target="top">https://wiki.takp.info/index.php/Getting_Started</a>
             for client install instructions.
         </p>
-        <h4>Configure eqhost.txt</h4>
+        <h5>Configure eqhost.txt</h5>
         <p>Edit your client eqhost.txt file to the following:
-<pre>
+        <pre>
 [Registration Servers]
 {
 "loginserver.eqarchives.com:6999"
@@ -28,9 +54,15 @@
 "loginserver.eqarchives.com:6000"
 }
 </pre>
-        <h4>Create your Login Accounts</h4>
-        <p>Go to <a href="/accounts/list">Accounts</a> or select it from the navbar on the top of this page.</p>
-        <p>Once you have installed your client, configured eqhosts.txt, and created a login account, you're all set to play the game.</p>
+        <h5>Create EQA Accounts</h5>
+        <ol>
+            <li>First <a href="/accounts/register" target="_top">create an EQA Web Account</a>, or <a
+                    href="/accounts/login" target="_top">Login</a> if you already have one.
+            </li>
+            <li>Once you've logged in, go to the <a href="/accounts/list">Accounts</a> page and create your first Game Account.  This is the account you will use to login to the game from the EQ client.</li>
+        </ol>
+        <h5>Join us on Discord!</h5>
+        <p>EQA is all about a community of EQ fans many of whom have been playing since beta. We use the discord to get server announcements, various updates, talk strategy, post auctions when not in-game, voice chat during open server raids, post raid announcements, post bug reports, etc... Join us there at <a href="https://discord.gg/9e5N8VAu7n" target="_top">https://discord.gg/9e5N8VAu7n</a>!</p>
         <p>-Nazwadi</p>
     </div>
 

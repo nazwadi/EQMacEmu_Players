@@ -24,7 +24,7 @@ def index_request(request):
     if request.method == "GET" or request.method == "POST":
         if request.user.is_authenticated:
             return render(request=request, template_name="accounts/index.html")
-    return redirect("accounts:login")
+    return render(request=request, template_name="accounts/index.html")
 
 
 def server_list(request):
