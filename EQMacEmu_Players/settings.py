@@ -48,7 +48,7 @@ DEBUG = os.environ['DEBUG'] == 'TRUE'
 
 ALLOWED_HOSTS = ['loginserver.eqarchives.com', 'eqarchives.com', 'localhost']
 #ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ['https://loginserver.eqarchives.com']
+CSRF_TRUSTED_ORIGINS = ['https://loginserver.eqarchives.com', 'https://www.eqarchives.com']
 
 # Application definition
 
