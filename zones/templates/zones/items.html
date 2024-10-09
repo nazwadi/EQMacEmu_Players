@@ -1,0 +1,57 @@
+{% load static %}
+{% load data_utilities %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <span style="font-weight: bold;">Items</span> -
+            <span style="font-style: italic">Found {{ items|length }} items that drop in {{ zone_data.short_name|zone_short_to_long }}:</span>
+            <table id="items-table" class="display table table-striped" style="width: 100%;">
+                <thead>
+                <tr>
+                    <th>Item Name</th>
+                    <th>Dropped By</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for id, name, icon, dropping_npcs in items %}
+                    <tr>
+                        <td>
+                            <img src="{% static "/images/items/" %}item_{{ icon }}.png"
+                                 alt="item_{{ icon }}.png">
+                            <a href="/items/view/{{ id }}">{{ name|clean_name }}</a>
+                        </td>
+                        <td>
+                            {% with dropping_npcs|split:"," as npc_list %}
+                                {% if npc_list|length > 1 %}
+                                    <details>
+                                        <summary>Multiple mobs</summary>
+                                        <ul>
+                                            {% for npc in npc_list %}
+                                                {% with npc|split:":" as npc_info %}
+                                                    <li><a class="link"
+                                                           href="/npcs/view/{{ npc_info.1 }}">{{ npc_info.0 }}</a></li>
+                                                {% endwith %}
+                                            {% endfor %}
+                                        </ul>
+                                    </details>
+                                {% else %}
+                                    {% with npc_list.0|split:":" as npc_info %}
+                                        <a class="link"
+                                           href="/npcs/view/{{ npc_info.1 }}">{{ npc_info.0 }}</a>
+                                    {% endwith %}
+                                {% endif %}
+                            {% endwith %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+                <tfoot>
+                <tr>
+                    <th>Item Name</th>
+                    <th>Dropped By</th>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>

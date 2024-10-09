@@ -92,12 +92,32 @@ def view_zone(request, short_name):
                       WHERE nt.merchant_id > 0 and z.short_name = %s;""", [zone_data.short_name])
     merchant_results = cursor.fetchall()
 
+    cursor.execute("""SELECT
+                        i.id,
+                        i.NAME,
+                        i.icon,
+                        GROUP_CONCAT( DISTINCT CONCAT( n.NAME, ':', n.id ) ORDER BY n.NAME SEPARATOR ',' ) AS DroppingNPCs 
+                      FROM
+                        spawnentry se
+                        INNER JOIN ( SELECT * FROM spawn2 WHERE zone = %s ) AS A ON se.spawngroupID = A.spawngroupID
+                        INNER JOIN npc_types n ON n.id = se.npcID
+                        INNER JOIN ( SELECT DISTINCT lte.lootdrop_id, lte.loottable_id FROM loottable_entries lte ) AS B ON n.loottable_id = B.loottable_id
+                        INNER JOIN ( SELECT DISTINCT lde.item_id, lde.lootdrop_id FROM lootdrop_entries lde ) AS C ON B.lootdrop_id = C.lootdrop_id
+                        INNER JOIN items i ON C.item_id = i.id 
+                      GROUP BY
+                        i.id,
+                        i.NAME 
+                      ORDER BY
+                        i.NAME;""", [zone_data.short_name])
+    items_result = cursor.fetchall()
+
     return render(request=request,
                   template_name="zones/view_zone.html",
                   context={"zone_data": zone_data,
                            "zone_points": zone_points,
                            "zone_page_text": zone_page_text,
                            "merchants": merchant_results,
+                           "items": items_result,
                            "npc_results": npc_results,
                            "ground_spawns": ground_spawn_results,
                            "spawn_points": spawn_points,
