@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="{% static 'css/eq-ui.css' %}">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
     <link href="https://cdn.datatables.net/v/bs5/dt-2.0.2/datatables.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/buttons/3.1.2/css/buttons.dataTables.css" rel="stylesheet">
 
     {% if zone_data.short_name %}
         <title>{{ zone_data.long_name }} - EQ Archives</title>
@@ -41,30 +42,72 @@
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
 <script src="https://cdn.datatables.net/v/bs5/dt-2.0.2/datatables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.1.2/js/dataTables.buttons.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.dataTables.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.print.min.js"></script>
 <script>
     $(document).ready(function () {
         $("#zem-table").DataTable({
             order: [[3, 'desc']]
         });
         $("#items-table").DataTable({
+            layout: {
+                bottom: {
+                    buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
+                },
+            },
             order: [[3, 'desc']]
         });
         $("#npc-table").DataTable({
+            layout: {
+                bottom: {
+                    buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
+                },
+            },
             order: [[3, 'desc']]
         });
         $("#ground-spawns-table").DataTable({
+            layout: {
+                bottom: {
+                    buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
+                },
+            },
             order: [[3, 'desc']]
         });
         $("#fishing-table").DataTable({
+            layout: {
+                bottom: {
+                    buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
+                },
+            },
             order: [[3, 'desc']]
         });
         $("#foraging-table").DataTable({
+            layout: {
+                bottom: {
+                    buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
+                },
+            },
             order: [[3, 'desc']]
         });
         $("#merchants-table").DataTable({
+            layout: {
+                bottom: {
+                    buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
+                },
+            },
             order: [[3, 'desc']]
         });
         $("#spawn-table").DataTable({
+            layout: {
+                bottom: {
+                    buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
+                },
+            },
             order: [[3, 'desc']]
         });
     });
