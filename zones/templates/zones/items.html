@@ -29,7 +29,7 @@
                                             {% for npc in npc_list %}
                                                 {% with npc|split:":" as npc_info %}
                                                     <li><a class="link"
-                                                           href="/npcs/view/{{ npc_info.1 }}">{{ npc_info.0 }}</a></li>
+                                                           href="/npcs/view/{{ npc_info.1 }}">{{ npc_info.0|clean_name }}</a></li>
                                                 {% endwith %}
                                             {% endfor %}
                                         </ul>
@@ -37,7 +37,7 @@
                                 {% else %}
                                     {% with npc_list.0|split:":" as npc_info %}
                                         <a class="link"
-                                           href="/npcs/view/{{ npc_info.1 }}">{{ npc_info.0 }}</a>
+                                           href="/npcs/view/{{ npc_info.1 }}">{{ npc_info.0|clean_name }}</a>
                                     {% endwith %}
                                 {% endif %}
                             {% endwith %}
