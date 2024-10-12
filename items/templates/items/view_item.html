@@ -62,8 +62,8 @@
                                 {# stackable == 3 means Spell Effect; this field is perhaps poorly named  #}
                                 {% if item.stackable == 3 %}
                                     {% if item.click_type == 1 or item.click_type == 3 or item.click_type == 4 or item.click_type == 5 %}
-                                        Effect:<a style="text-decoration:none;color:#00ba00;"
-                                                  href="https://lucy.alkabor.com/spell_{{ item.click_effect }}.html"
+                                        Effect:&nbsp;<a style="text-decoration:none;color:#00ba00;"
+                                                  href="/spells/view/{{ item.click_effect }}"
                                                   target="_blank">{{ effect_name }}</a>
                                         ({% if item.click_type == 1 %}Any Slot,{% endif %}{% if item.click_type == 4 %}
                                         Must Equip.{% endif %}

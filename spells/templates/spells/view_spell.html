@@ -251,18 +251,60 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col">
-                    <div class="eq-window-simple">
-                        <h3 class="eq-header">Items with Spell Effect:</h3>
-                        <ul>
-                            {% for item in items_with_effect %}
-                                <li><a href="/items/view/{{ item.id }}">{{ item.Name }}</a></li>
-
-                            {% endfor %}
-                        </ul>
+                <div class="eq-window-simple">
+                    <div class="row">
+                    <h3 class="eq-header text-center">Items with Spell Effect:</h3>
+                    <div class="col-12 col-md-4">
+                        <article class="p-3">
+                            <h6 class="text-center">Worn:</h6>
+                            <ul>
+                                {% for item in items_with_effect %}
+                                    {% if item.worn_effect == spell_data.id %}
+                                        <li>
+                                            <img class="no-round" style="background:url(/static/images/icons/blank_slot.gif);"
+                                                 src="/static/images/items/item_{{ item.icon }}.png" alt=""/> 
+                                            <a href="/items/view/{{ item.id }}" data-url="{{ item.id }}">{{ item.Name }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </article>
                     </div>
+                    <div class="col-12 col-md-4">
+                        <article class="p-3">
+                            <h6 class="text-center">Click:</h6>
+                            <ul>
+                                {% for item in items_with_effect %}
+                                    {% if item.click_effect == spell_data.id %}
+                                        <li>
+                                            <img class="no-round" style="background:url(/static/images/icons/blank_slot.gif);"
+                                                 src="/static/images/items/item_{{ item.icon }}.png" alt=""/>
+                                            <a href="/items/view/{{ item.id }}" data-url="{{ item.id }}">{{ item.Name }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </article>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <article class="p-3">
+                            <h6 class="text-center">Proc:</h6>
+                            <ul>
+                                {% for item in items_with_effect %}
+                                    {% if item.proc_effect == spell_data.id %}
+                                        <li>
+                                            <img class="no-round" style="background:url(/static/images/icons/blank_slot.gif);"
+                                                 src="/static/images/items/item_{{ item.icon }}.png" alt=""/>
+                                            <a href="/items/view/{{ item.id }}" data-url="{{ item.id }}">{{ item.Name }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </article>
+                    </div>
+
                 </div>
+            </div>
             </div>
         {% endif %}
     </div>
