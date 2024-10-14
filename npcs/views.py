@@ -103,7 +103,6 @@ def search(request):
                             AND nt.LEVEL >= %s
                             AND nt.maxlevel <= %s
         """
-        print(exclude_merchants)
         if exclude_merchants is not None:
             query += " AND nt.merchant_id = 0"
         query_list = ['%' + npc_name + '%', min_level, max_level]

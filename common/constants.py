@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class SE(Enum):
     Hitpoints = 0
     AC = 1
@@ -291,6 +292,7 @@ class SE(Enum):
     Head_Shot_Level = 346
     Limit_Spell_Group = 385
     Finishing_Blow_Level = 440
+
 
 PLAYER_CLASSES = {
     0: "Unknown",
@@ -812,6 +814,57 @@ ITEM_TYPES = {
     54: "Augmentation",
 }
 
+ITEM_STATS = {
+    "hp": "Hit Points",
+    "mana": "Mana",
+    "ac": "AC",
+    "attack": "Attack",
+    "aagi": "Agility",
+    "acha": "Charisma",
+    "adex": "Dexterity",
+    "aint": "Intelligence",
+    "asta": "Stamina",
+    "astr": "Strength",
+    "awis": "Wisdom",
+    "damage": "Damage",
+    "delay": "Delay",
+}
+
+CONTAINER_TYPES = {
+    1 : "Just a Bag",
+    2 : "Quiver",
+    3 : "Pouch",
+    4 : "Pouch",
+    5 : "Backpack",
+    6 : "Tupperware",
+    7 : "Box",
+    8 : "Bandolier",
+    9 : "Alchemy",
+    10 : "Tinkering",
+    11 : "Research",
+    12 : "Poison making",
+    13 : "Special quests",
+    14 : "Baking",
+    15 : "Baking",
+    16 : "Tailoring",
+    18 : "Fletching",
+    19 : "Brewing",
+    20 : "Jewelry",
+    24 : "Wizard Research",
+    25 : "Mage Research",
+    26 : "Necro Research",
+    27 : "Enchanter Research",
+    28 : "Plat Storage",
+    29 : "Practice Research",
+    30 : "Pottery",
+    41 : "Tailoring",
+    42 : "Tailoring",
+    43 : "Tailoring",
+    44 : "Fletching",
+    46 : "Fishing",
+    51 : "Bazaar",
+}
+
 ZONE_SHORT_TO_LONG = {
     "qeynos": "South Qeynos",
     "qeynos2": "North Qeynos",
@@ -934,18 +987,18 @@ ZONE_SHORT_TO_LONG = {
     "cobaltscar": "Cobalt Scar",
     "eastwastes": "Eastern Wastes",
     "westwastes": "Western Wastes",
-    "crystal" : "Crystal Caverns",
-    "kael" : "Kael Drakkel",
-    "thurgadina" : "The City of Thurgadin",
-    "thurgadinb" : "Icewell Keep",
-    "skyshrine" : "Skyshrine",
-    "necropolis" : "Dragon Necropolis",
-    "sirens" : "Siren's Grotto",
-    "sleeper" : "Sleeper's Tomb",
-    "templeveeshan" : "Temple of Veeshan",
-    "mischiefplane" : "Plane of Mischief",
-    "growthplane" : "Plane of Growth",
-    "frozenshadow" : "Tower of Frozen Shadow",
+    "crystal": "Crystal Caverns",
+    "kael": "Kael Drakkel",
+    "thurgadina": "The City of Thurgadin",
+    "thurgadinb": "Icewell Keep",
+    "skyshrine": "Skyshrine",
+    "necropolis": "Dragon Necropolis",
+    "sirens": "Siren's Grotto",
+    "sleeper": "Sleeper's Tomb",
+    "templeveeshan": "Temple of Veeshan",
+    "mischiefplane": "Plane of Mischief",
+    "growthplane": "Plane of Growth",
+    "frozenshadow": "Tower of Frozen Shadow",
 }
 
 SPELL_TARGETS = {

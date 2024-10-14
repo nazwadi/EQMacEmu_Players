@@ -4,10 +4,13 @@ from django.db import connections
 
 from items.utils import get_class_bitmask
 from items.utils import get_race_bitmask
+from items.utils import build_stat_query
 from common.constants import PLAYER_CLASSES
 from common.constants import PLAYER_RACES
 from common.constants import EQUIPMENT_SLOTS
 from common.constants import ITEM_TYPES
+from common.constants import ITEM_STATS
+from common.constants import CONTAINER_TYPES
 from common.models.items import DiscoveredItems
 from common.models.items import Items
 from common.models.spells import SpellsNew
@@ -28,6 +31,8 @@ def search(request):
                           "PLAYER_CLASSES": PLAYER_CLASSES,
                           "PLAYER_RACES": PLAYER_RACES,
                           "ITEM_TYPES": ITEM_TYPES,
+                          "CONTAINER_TYPES": CONTAINER_TYPES,
+                          "ITEM_STATS": ITEM_STATS,
                       },
                       template_name="items/search_item.html")
 
@@ -38,18 +43,47 @@ def search(request):
         resists_type = request.POST.get("resists_type")
         resists_operator = request.POST.get("resists_operator")
         resists_value = request.POST.get("resists_value")
+        stat1 = request.POST.get("stat1")
+        stat1_operator = request.POST.get("stat1_operator")
+        stat1_value = request.POST.get("stat1_value")
+        stat2 = request.POST.get("stat2")
+        stat2_operator = request.POST.get("stat2_operator")
+        stat2_value = request.POST.get("stat2_value")
+        item_effect = request.POST.get("item_effect")
+        item_has_proc = request.POST.get("item_has_proc")
+        item_has_click = request.POST.get("item_has_click")
+        item_has_focus = request.POST.get("item_has_focus")
+        item_has_worn = request.POST.get("item_has_worn")
         player_class = request.POST.get("player_class")
         player_race = request.POST.get("player_race")
+        container_select = request.POST.get("container_select")
+        container_slots = request.POST.get("container_slots")
+        container_wr = request.POST.get("container_wr")
         query_limit = request.POST.get("query_limit")
 
-        is_where_clause = False
         params_list = []
+        clause = ""
 
         # Begin building query
         query = "SELECT * FROM items"
+        if item_effect:
+            clause = "AND" if clause == "WHERE" or clause == "AND" else "WHERE"
+            query += """ LEFT JOIN spells_new AS proc_s ON proceffect = proc_s.id
+                                        LEFT JOIN spells_new AS worn_s ON worneffect = worn_s.id
+                                        LEFT JOIN spells_new AS focus_s ON focuseffect = focus_s.id
+                                        LEFT JOIN spells_new AS click_s ON clickeffect = click_s.id
+                                        WHERE (proc_s.name LIKE %s
+                                            OR worn_s.name LIKE %s
+                                            OR focus_s.name LIKE %s
+                                            OR click_s.name LIKE %s)"""
+            params_list.append(item_effect)
+            params_list.append(item_effect)
+            params_list.append(item_effect)
+            params_list.append(item_effect)
+
         if item_name:
-            query += " WHERE (LOWER(items.Name) LIKE %s)"
-            is_where_clause = True
+            clause = "AND" if clause == "WHERE" or clause == "AND" else "WHERE"
+            query += f" {clause} (LOWER(items.Name) LIKE %s)"
             params_list.append(f"%{item_name.lower()}%")
 
         try:
@@ -58,11 +92,7 @@ def search(request):
             messages.error(request, "Invalid player class.  Valid options are between 1 and 15.")
             return redirect("/items/search")
         if player_class != 0:  # zero means "any" class so no need to filter
-            if is_where_clause:
-                clause = "AND"
-            else:
-                clause = "WHERE"
-                is_where_clause = True
+            clause = "AND" if clause == "WHERE" or clause == "AND" else "WHERE"
             query += f" {clause} (((classes & %s) = %s) OR (classes = '32767'))"
             player_class = get_class_bitmask(player_class)
             # yes, twice - there are two parameters above
@@ -75,11 +105,7 @@ def search(request):
             messages.error(request, "Invalid player race.")
             return redirect("/items/search")
         if player_race != 0:  # zero means "any" race so no need to filter
-            if is_where_clause:
-                clause = "AND"
-            else:
-                clause = "WHERE"
-                is_where_clause = True
+            clause = "AND" if clause == "WHERE" or clause == "AND" else "WHERE"
             query += f" {clause} (((races & %s) = %s) OR (races = '16384'))"
             player_race = get_race_bitmask(player_race)
             # yes, twice - there are two parameters above
@@ -92,11 +118,7 @@ def search(request):
             messages.error(request, "Invalid item slot.")
             return redirect("/items/search")
         if item_slot != 0:  # zero means "any" slot so no need to filter
-            if is_where_clause:
-                clause = "AND"
-            else:
-                clause = "WHERE"
-                is_where_clause = True
+            clause = "AND" if clause == "WHERE" or clause == "AND" else "WHERE"
             query += f" {clause} ((slots & %s) = %s)"
             # yes, twice - there are two parameters above
             params_list.append(item_slot)
@@ -108,11 +130,7 @@ def search(request):
             messages.error(request, "Invalid item type.")
             return redirect("/items/search")
         if item_type != -1:
-            if is_where_clause:
-                clause = "AND"
-            else:
-                clause = "WHERE"
-                is_where_clause = True
+            clause = "AND" if clause == "WHERE" or clause == "AND" else "WHERE"
             query += f" {clause} itemtype = %s"
             params_list.append(item_type)
 
@@ -136,16 +154,56 @@ def search(request):
             else:
                 resists_operator = allowed_resists_operators[resists_operator]  # just an extra precaution
             if 0 <= resists_value <= 300:
-                if is_where_clause:
-                    clause = "AND"
-                else:
-                    clause = "WHERE"
-                    is_where_clause = True
-                query += f" {clause} {resists_type} {resists_operator} %s"
+                clause = "AND" if clause == "WHERE" or clause == "AND" else "WHERE"
+                query += f" {clause} items.{resists_type} {resists_operator} %s"
                 params_list.append(resists_value)
             else:
                 messages.error(request, f"Invalid resist value, '{resists_value}'.  Must be between 0 and 300.")
                 return redirect("/items/search")
+
+        if stat1 != "stat1":  # if the field was not left blank
+            clause = "AND" if clause == "WHERE" or clause == "AND" else "WHERE"
+            partial_query, error_messages = build_stat_query(clause, stat1, stat1_operator)
+            if len(error_messages) == 0:
+                query += partial_query
+                params_list.append(stat1_value)
+            else:
+                error_message = "<br />".join(error_messages)
+                messages.error(request, error_message)
+                return redirect("/items/search")
+
+        if stat2 != "stat2":  # if the field was not left blank
+            clause = "AND" if clause == "WHERE" or clause == "AND" else "WHERE"
+            partial_query, error_messages = build_stat_query(clause, stat2, stat2_operator)
+            if len(error_messages) == 0:
+                query += partial_query
+                params_list.append(stat2_value)
+            else:
+                error_message = "<br />".join(error_messages)
+                messages.error(request, error_message)
+                return redirect("/items/search")
+
+        if container_select != "Container":
+            clause = "AND" if clause == "WHERE" or clause == "AND" else "WHERE"
+            query += f" {clause} bagtype = %s"
+            params_list.append(container_select)
+        if container_slots != '0':
+            clause = "AND" if clause == "WHERE" or clause == "AND" else "WHERE"
+            query += f" {clause} bagslots >= %s"
+            params_list.append(container_slots)
+        if container_wr != '0':
+            clause = "AND" if clause == "WHERE" or clause == "AND" else "WHERE"
+            query += f" {clause} bagwr >= %s"
+            params_list.append(container_wr)
+
+        if item_has_proc:
+            query += " AND (proceffect > 0 and proceffect < 4679)"
+        if item_has_click:
+            query += " AND (clickeffect > 0 and clickeffect < 4679)"
+        if item_has_focus:
+            query += " AND (focuseffect > 0 and focuseffect < 4679) AND bagtype = 0"
+        if item_has_worn:
+            query += " AND (worneffect > 0 and worneffect < 4679)"
 
         try:
             query_limit = int(query_limit)
@@ -168,6 +226,8 @@ def search(request):
                       context={"search_results": search_results,
                                "EQUIPMENT_SLOTS": EQUIPMENT_SLOTS,
                                "ITEM_TYPES": ITEM_TYPES,
+                               "CONTAINER_TYPES": CONTAINER_TYPES,
+                               "ITEM_STATS": ITEM_STATS,
                                "PLAYER_CLASSES": PLAYER_CLASSES,
                                "PLAYER_RACES": PLAYER_RACES,
                                "level_range": range(100)})
@@ -408,20 +468,20 @@ def best_in_slot(request):
     return render(request=request,
                   template_name="items/best_in_slot.html",
                   context={
-                           "bard_bis": bard_bis,
-                           "beastlord_bis": beastlord_bis,
-                           "berserker_bis": berserker_bis,
-                           "cleric_bis": cleric_bis,
-                           "druid_bis": druid_bis,
-                           "enchanter_bis": enchanter_bis,
-                           "magician_bis": magician_bis,
-                           "monk_bis": monk_bis,
-                           "necromancer_bis": necromancer_bis,
-                           "paladin_bis": paladin_bis,
-                           "ranger_bis": ranger_bis,
-                           "rogue_bis": rogue_bis,
-                           "shadowknight_bis": shadowknight_bis,
-                           "shaman_bis": shaman_bis,
-                           "warrior_bis": warrior_bis,
-                           "wizard_bis": wizard_bis,
-                           })
+                      "bard_bis": bard_bis,
+                      "beastlord_bis": beastlord_bis,
+                      "berserker_bis": berserker_bis,
+                      "cleric_bis": cleric_bis,
+                      "druid_bis": druid_bis,
+                      "enchanter_bis": enchanter_bis,
+                      "magician_bis": magician_bis,
+                      "monk_bis": monk_bis,
+                      "necromancer_bis": necromancer_bis,
+                      "paladin_bis": paladin_bis,
+                      "ranger_bis": ranger_bis,
+                      "rogue_bis": rogue_bis,
+                      "shadowknight_bis": shadowknight_bis,
+                      "shaman_bis": shaman_bis,
+                      "warrior_bis": warrior_bis,
+                      "wizard_bis": wizard_bis,
+                  })

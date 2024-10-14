@@ -1,3 +1,5 @@
+from common.constants import ITEM_STATS
+
 def get_class_bitmask(class_id):
     """
 
@@ -46,7 +48,6 @@ def check_class_can_use_item(classes_bitmask, class_id):
     :param classes_bitmask:
     :return:
     """
-    result = 0
     match class_id:
         case 1:  # WAR
             result = classes_bitmask & 1
@@ -120,3 +121,28 @@ def get_race_bitmask(race_id: int):
             return 8192
         case _:
             return 0
+
+def build_stat_query(clause: str,
+                     stat: str,
+                     operator: str) -> (str, list):
+    """
+
+    :param clause: either WHERE or AND (the latter if WHERE is already part of the query)
+    :param stat: an item stat (found in common.constants.ITEM_STATS)
+    :param operator: a comparison operator (e.g. >, <, <=, >=, = )
+    :return: the partial query and error messages if they occurred
+    """
+    error_messages = []
+
+
+    if stat not in ITEM_STATS.keys():
+        error_messages.append("Invalid item stat submitted")
+
+    allowed_operators = {'>': '>', '>=': '>=', '=': '=', '<=': '<=', '<': '<'}
+    if operator not in allowed_operators.keys():
+        error_messages.append("Invalid stat operator submitted")
+    else:
+        operator = allowed_operators[operator]  # just an extra precaution
+    partial_query = f" {clause} items.{stat} {operator} %s"
+
+    return partial_query, error_messages
