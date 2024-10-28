@@ -29,6 +29,8 @@
 
     {% if item.Name %}
         <title>{{ item.Name|clean_name }} - EQ Archives</title>
+    {% elif selected_class %}
+        <title>Best in Slot - EQ Archives</title>
     {% else %}
         <title>EQ Archives</title>
     {% endif %}

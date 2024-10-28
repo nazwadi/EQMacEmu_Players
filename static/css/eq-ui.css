@@ -1029,3 +1029,18 @@ h6.eq-header {
 .eq-list li {
     list-style-type: circle !important;
 }
+.eq-button-fancy.active {
+    border: 2px solid #fff300; /* some kind of blue border */
+
+    /* other CSS styles */
+
+    /* round the corners */
+    -webkit-border-radius: 7px;
+    -moz-border-radius: 7px;
+    border-radius: 7px;
+
+    /* make it glow! */
+    -webkit-box-shadow: 0px 0px 4px #fff300;
+    -moz-box-shadow: 0px 0px 4px #fff300;
+    box-shadow: 0px 0px 4px #fff300; /* some variation of blue for the shadow */
+}
