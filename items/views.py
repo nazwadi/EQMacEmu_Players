@@ -442,15 +442,15 @@ def best_in_slot(request, class_id: int = None):
                       })
     else:
         selected_class = PLAYER_CLASSES.get(class_id, 0)
-        with open(f"items/templates/items/best_in_slot/{selected_class}/vanilla-pre-planar.md", "r") as md_file:
+        with open(f"items/templates/items/best_in_slot/{selected_class.lower()}/vanilla-pre-planar.md", "r") as md_file:
             vanilla_pre_planar_file = md_file.read()
-        with open(f"items/templates/items/best_in_slot/{selected_class}/vanilla-planar.md", "r") as md_file:
+        with open(f"items/templates/items/best_in_slot/{selected_class.lower()}/vanilla-planar.md", "r") as md_file:
             vanilla_planar_file = md_file.read()
-        with open(f"items/templates/items/best_in_slot/{selected_class}/kunark.md", "r") as md_file:
+        with open(f"items/templates/items/best_in_slot/{selected_class.lower()}/kunark.md", "r") as md_file:
             kunark_file = md_file.read()
-        with open(f"items/templates/items/best_in_slot/{selected_class}/velious-group.md", "r") as md_file:
+        with open(f"items/templates/items/best_in_slot/{selected_class.lower()}/velious-group.md", "r") as md_file:
             velious_group_file = md_file.read()
-        with open(f"items/templates/items/best_in_slot/{selected_class}/velious-raid.md", "r") as md_file:
+        with open(f"items/templates/items/best_in_slot/{selected_class.lower()}/velious-raid.md", "r") as md_file:
             velious_raid_file = md_file.read()
     return render(request=request,
                   template_name="items/best_in_slot.html",
