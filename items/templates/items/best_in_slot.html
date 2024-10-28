@@ -1,330 +1,72 @@
 {% extends 'items/header.html' %}
 {% load markdown_extras %}
 {% block content %}
-    <div class="container-fluid">
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-12 mt-3">
-                    <div class="eq-window-simple pt-0 mt-0">
-                        <h3 class="eq-header text-center">Best in Slot</h3>
-                        <div class="nav me-3 mt-2 mb-2" id="itemTab" role="tablist"
-                             aria-orientation="horizontal">
-                            <div class="row">
-                                <div class="p-0 mr-3 col-sm text-center">Bard
-                                    <button class="nav-link active" id="bard-tab" data-bs-toggle="pill"
-                                            data-bs-target="#bard-tab-pane" type="button" role="tab"
-                                            aria-controls="bard-tab-pane" aria-selected="true">
-                                        <span class="hover-highlight-inner highlight-selected-inner"
-                                              style="width: 40px; border-radius: 7px;">
-                                                <img class="hover-highlight-inner highlight-selected-inner"
-                                                     style="width:40px; border-radius: 7px; border: .5px solid #fff; box-shadow: inset 0 0 7px #fff;"
-                                                     src="/static/images/class_icons/8.gif" alt="bard icon">
-                                        </span>
-                                    </button>
-                                </div>
-                                <div class="p-0 mr-3 col-sm text-center">Beastlord
-                                    <button class="nav-link" id="beastlord-tab" data-bs-toggle="pill"
-                                            data-bs-target="#beastlord-tab-pane" type="button" role="tab"
-                                            aria-controls="beastlord-tab-pane" aria-selected="true">
-                                                <span class=""
-                                                      style="width: 40px; border-radius: 7px;">
-                                                    <img class=""
-                                                         style="width:40px; border-radius: 7px; border: .5px solid #fff; box-shadow: inset 0 0 7px #fff;"
-                                                         src="/static/images/class_icons/15.gif" alt="beastlord icon">
-                                                </span>
-                                    </button>
-                                </div>
-                                <div class="p-0 mr-3 col-sm text-center">Berserker
-                                    <button class="nav-link" id="berserker-tab" data-bs-toggle="pill"
-                                            data-bs-target="#berserker-tab-pane" type="button" role="tab"
-                                            aria-controls="berserker-tab-pane" aria-selected="true">
-                                                <span class=""
-                                                      style="width: 40px; border-radius: 7px;">
-                                                    <img class=""
-                                                         style="width:40px; border-radius: 7px; border: .5px solid #fff; box-shadow: inset 0 0 7px #fff;"
-                                                         src="/static/images/class_icons/16.gif" alt="berserker icon">
-                                                </span>
-                                    </button>
-                                </div>
-                                <div class="p-0 mr-3 col-sm text-center">Cleric
-                                    <button class="nav-link" id="cleric-tab" data-bs-toggle="pill"
-                                            data-bs-target="#cleric-tab-pane" type="button" role="tab"
-                                            aria-controls="cleric-tab-pane" aria-selected="true">
-                                                <span class=""
-                                                      style="width: 40px; border-radius: 7px;">
-                                                    <img class=""
-                                                         style="width:40px; border-radius: 7px; border: .5px solid #fff; box-shadow: inset 0 0 7px #fff;"
-                                                         src="/static/images/class_icons/2.gif" alt="cleric icon">
-                                                </span>
-                                    </button>
-                                </div>
-                                <div class="p-0 mr-3 col-sm text-center">Druid
-                                    <button class="nav-link" id="druid-tab" data-bs-toggle="pill"
-                                            data-bs-target="#druid-tab-pane" type="button" role="tab"
-                                            aria-controls="druid-tab-pane" aria-selected="true">
-                                                <span class=""
-                                                      style="width: 40px; border-radius: 7px;">
-                                                    <img class=""
-                                                         style="width:40px; border-radius: 7px; border: .5px solid #fff; box-shadow: inset 0 0 7px #fff;"
-                                                         src="/static/images/class_icons/6.gif" alt="druid icon">
-                                                </span>
-                                    </button>
-                                </div>
-                                <div class="p-0 mr-3 col-sm text-center">Enchanter
-                                    <button class="nav-link" id="enchanter-tab" data-bs-toggle="pill"
-                                            data-bs-target="#enchanter-tab-pane" type="button" role="tab"
-                                            aria-controls="enchanter-tab-pane" aria-selected="true">
-                                                <span class="hover-highlight-inner highlight-selected-inner"
-                                                      style="width: 40px; border-radius: 7px;">
-                                                    <img class="hover-highlight-inner highlight-selected-inner"
-                                                         style="width:40px; border-radius: 7px; border: .5px solid #fff; box-shadow: inset 0 0 7px #fff;"
-                                                         src="/static/images/class_icons/14.gif" alt="enchanter icon">
-                                                </span>
-                                    </button>
-                                </div>
-                                <div class="p-0 mr-3 col-sm text-center">Magician
-                                    <button class="nav-link" id="magician-tab" data-bs-toggle="pill"
-                                            data-bs-target="#magician-tab-pane" type="button" role="tab"
-                                            aria-controls="magician-tab-pane" aria-selected="true">
-                                                <span class="hover-highlight-inner highlight-selected-inner"
-                                                      style="width: 40px; border-radius: 7px;">
-                                                    <img class="hover-highlight-inner highlight-selected-inner"
-                                                         style="width:40px; border-radius: 7px; border: .5px solid #fff; box-shadow: inset 0 0 7px #fff;"
-                                                         src="/static/images/class_icons/13.gif" alt="magician icon">
-                                                </span>
-                                    </button>
-                                </div>
-                                <div class="p-0 mr-3 col-sm text-center">Monk
-                                    <button class="nav-link" id="monk-tab" data-bs-toggle="pill"
-                                            data-bs-target="#monk-tab-pane" type="button" role="tab"
-                                            aria-controls="monk-tab-pane" aria-selected="true">
-                                                <span class="hover-highlight-inner highlight-selected-inner"
-                                                      style="width: 40px; border-radius: 7px;">
-                                                    <img class="hover-highlight-inner highlight-selected-inner"
-                                                         style="width:40px; border-radius: 7px; border: .5px solid #fff; box-shadow: inset 0 0 7px #fff;"
-                                                         src="/static/images/class_icons/7.gif" alt="monk icon">
-                                                </span>
-                                    </button>
-                                </div>
-                                <div class="p-0 mr-3 col-sm text-center">Necromancer
-                                    <button class="nav-link" id="necromancer-tab" data-bs-toggle="pill"
-                                            data-bs-target="#necromancer-tab-pane" type="button" role="tab"
-                                            aria-controls="necromancer-tab-pane" aria-selected="true">
-                                                <span class="hover-highlight-inner highlight-selected-inner"
-                                                      style="width: 40px; border-radius: 7px;">
-                                                    <img class="hover-highlight-inner highlight-selected-inner"
-                                                         style="width:40px; border-radius: 7px; border: .5px solid #fff; box-shadow: inset 0 0 7px #fff;"
-                                                         src="/static/images/class_icons/11.gif" alt="necromancer icon">
-                                                </span>
-                                    </button>
-                                </div>
-                                <div class="p-0 mr-3 col-sm text-center">Paladin
-                                    <button class="nav-link" id="paladin-tab" data-bs-toggle="pill"
-                                            data-bs-target="#paladin-tab-pane" type="button" role="tab"
-                                            aria-controls="paladin-tab-pane" aria-selected="true">
-                                                <span class="hover-highlight-inner highlight-selected-inner"
-                                                      style="width: 40px; border-radius: 7px;">
-                                                    <img class="hover-highlight-inner highlight-selected-inner"
-                                                         style="width:40px; border-radius: 7px; border: .5px solid #fff; box-shadow: inset 0 0 7px #fff;"
-                                                         src="/static/images/class_icons/3.gif" alt="paladin icon">
-                                                </span>
-                                    </button>
-                                </div>
-                                <div class="p-0 mr-3 col-sm text-center">Ranger
-                                    <button class="nav-link" id="ranger-tab" data-bs-toggle="pill"
-                                            data-bs-target="#ranger-tab-pane" type="button" role="tab"
-                                            aria-controls="ranger-tab-pane" aria-selected="true">
-                                                <span class="hover-highlight-inner highlight-selected-inner"
-                                                      style="width: 40px; border-radius: 7px;">
-                                                    <img class="hover-highlight-inner highlight-selected-inner"
-                                                         style="width:40px; border-radius: 7px; border: .5px solid #fff; box-shadow: inset 0 0 7px #fff;"
-                                                         src="/static/images/class_icons/4.gif" alt="ranger icon">
-                                                </span>
-                                    </button>
-                                </div>
-                                <div class="p-0 mr-3 col-sm text-center">Rogue
-                                    <button class="nav-link" id="rogue-tab" data-bs-toggle="pill"
-                                            data-bs-target="#rogue-tab-pane" type="button" role="tab"
-                                            aria-controls="rogue-tab-pane" aria-selected="true">
-                                                <span class="hover-highlight-inner highlight-selected-inner"
-                                                      style="width: 40px; border-radius: 7px;">
-                                                    <img class="hover-highlight-inner highlight-selected-inner"
-                                                         style="width:40px; border-radius: 7px; border: .5px solid #fff; box-shadow: inset 0 0 7px #fff;"
-                                                         src="/static/images/class_icons/9.gif" alt="rogue icon">
-                                                </span>
-                                    </button>
-                                </div>
-                                <div class="p-0 mr-3 col-sm text-center">Shadowknight
-                                    <button class="nav-link" id="ranger-tab" data-bs-toggle="pill"
-                                            data-bs-target="#shadowknight-tab-pane" type="button" role="tab"
-                                            aria-controls="shadowknight-tab-pane" aria-selected="true">
-                                                <span class="hover-highlight-inner highlight-selected-inner"
-                                                      style="width: 40px; border-radius: 7px;">
-                                                    <img class="hover-highlight-inner highlight-selected-inner"
-                                                         style="width:40px; border-radius: 7px; border: .5px solid #fff; box-shadow: inset 0 0 7px #fff;"
-                                                         src="/static/images/class_icons/5.gif" alt="shadowknight icon">
-                                                </span>
-                                    </button>
-                                </div>
-                                <div class="p-0 mr-3 col-sm text-center">Shaman
-                                    <button class="nav-link" id="shaman-tab" data-bs-toggle="pill"
-                                            data-bs-target="#shaman-tab-pane" type="button" role="tab"
-                                            aria-controls="shaman-tab-pane" aria-selected="true">
-                                                <span class="hover-highlight-inner highlight-selected-inner"
-                                                      style="width: 40px; border-radius: 7px;">
-                                                    <img class="hover-highlight-inner highlight-selected-inner"
-                                                         style="width:40px; border-radius: 7px; border: .5px solid #fff; box-shadow: inset 0 0 7px #fff;"
-                                                         src="/static/images/class_icons/10.gif" alt="shaman icon">
-                                                </span>
-                                    </button>
-                                </div>
-                                <div class="p-0 mr-3 col-sm text-center">Warrior
-                                    <button class="nav-link" id="warrior-tab" data-bs-toggle="pill"
-                                            data-bs-target="#warrior-tab-pane" type="button" role="tab"
-                                            aria-controls="warrior-tab-pane" aria-selected="true">
-                                                <span class="hover-highlight-inner highlight-selected-inner"
-                                                      style="width: 40px; border-radius: 7px;">
-                                                    <img class="hover-highlight-inner highlight-selected-inner"
-                                                         style="width:40px; border-radius: 7px; border: .5px solid #fff; box-shadow: inset 0 0 7px #fff;"
-                                                         src="/static/images/class_icons/1.gif" alt="warrior icon">
-                                                </span>
-                                    </button>
-                                </div>
-                                <div class="p-0 mr-3 col-sm text-center">Wizard
-                                    <button class="nav-link" id="wizard-tab" data-bs-toggle="pill"
-                                            data-bs-target="#wizard-tab-pane" type="button" role="tab"
-                                            aria-controls="wizard-tab-pane" aria-selected="true">
-                                                <span class="hover-highlight-inner highlight-selected-inner"
-                                                      style="width: 40px; border-radius: 7px;">
-                                                    <img class="hover-highlight-inner highlight-selected-inner"
-                                                         style="width:40px; border-radius: 7px; border: .5px solid #fff; box-shadow: inset 0 0 7px #fff;"
-                                                         src="/static/images/class_icons/12.gif" alt="wizard icon">
-                                                </span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    <div class="container-fluid eq-window-complex-fancy py-4">
+        <div class="row row-cols-9">
+            {% for index, name in player_classes.items %}
+                <div class="col">
+                    {% if index != 0 and index != 15 %}
+                        {% if index == class_id %}
+                            <a href="/items/bis/{{ index }}"
+                               class="btn eq-button-fancy-highlighted eq-button-fancy d-flex flex-column align-items-center rounded-0"
+                               style="height: 100px;">
+                                <img class="img-fluid" src="/static/images/class_icons/{{ index }}.gif"
+                                     alt="{{ name }} icon" style="max-height: 70%; max-width: 70%;">
+                                <span class="hidden-print">{{ name }}</span>
+                            </a>
+                        {% else %}
+                            <a href="/items/bis/{{ index }}"
+                               class="btn eq-button-fancy d-flex flex-column align-items-center rounded-0"
+                               style="height: 100px;">
+                                <img class="img-fluid" src="/static/images/class_icons/{{ index }}.gif"
+                                     alt="{{ name }} icon" style="max-height: 70%; max-width: 70%;">
+                                <span class="hidden-print">{{ name }}</span>
+                            </a>
+                        {% endif %}
+                    {% endif %}
                 </div>
-            </div>
-            <div class="eq-window-simple">
-                <div class="row">
-                    <div class="col tab-content" id="zonesTabContent">
-                        <div class="tab-pane fade show active" id="bard-tab-pane" role="tabpanel"
-                             aria-labelledby="bard-tab"
-                             tabindex="0">
-                            <div class="row px-4">
-                                {{ bard_bis|render_markdown }}
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="beastlord-tab-pane" role="tabpanel"
-                             aria-labelledby="beastlord-tab"
-                             tabindex="1">
-                            <div class="row px-4">
-                                {{ beastlord_bis|render_markdown }}
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="berserker-tab-pane" role="tabpanel"
-                             aria-labelledby="berserker-tab"
-                             tabindex="2">
-                            <div class="row px-4">
-                                {{ berserker_bis|render_markdown }}
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="cleric-tab-pane" role="tabpanel"
-                             aria-labelledby="cleric-tab"
-                             tabindex="3">
-                            <div class="row px-4">
-                                {{ cleric_bis|render_markdown }}
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="druid-tab-pane" role="tabpanel"
-                             aria-labelledby="druid-tab"
-                             tabindex="4">
-                            <div class="row px-4">
-                                {{ druid_bis|render_markdown }}
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="enchanter-tab-pane" role="tabpanel"
-                             aria-labelledby="enchanter-tab"
-                             tabindex="5">
-                            <div class="row px-4">
-                                {{ enchanter_bis|render_markdown }}
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="magician-tab-pane" role="tabpanel"
-                             aria-labelledby="magician-tab"
-                             tabindex="6">
-                            <div class="row px-4">
-                                {{ magician_bis|render_markdown }}
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="monk-tab-pane" role="tabpanel"
-                             aria-labelledby="monk-tab"
-                             tabindex="7">
-                            <div class="row px-4">
-                                {{ monk_bis|render_markdown }}
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="necromancer-tab-pane" role="tabpanel"
-                             aria-labelledby="necromancer-tab"
-                             tabindex="8">
-                            <div class="row px-4">
-                                {{ necromancer_bis|render_markdown }}
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="paladin-tab-pane" role="tabpanel"
-                             aria-labelledby="paladin-tab"
-                             tabindex="9">
-                            <div class="row px-4">
-                                {{ paladin_bis|render_markdown }}
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="ranger-tab-pane" role="tabpanel"
-                             aria-labelledby="ranger-tab"
-                             tabindex="10">
-                            <div class="row px-4">
-                                {{ ranger_bis|render_markdown }}
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="rogue-tab-pane" role="tabpanel"
-                             aria-labelledby="rogue-tab"
-                             tabindex="11">
-                            <div class="row px-4">
-                                {{ rogue_bis|render_markdown }}
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="shadowknight-tab-pane" role="tabpanel"
-                             aria-labelledby="shadowknight-tab"
-                             tabindex="12">
-                            <div class="row px-4">
-                                {{ shadowknight_bis|render_markdown }}
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="shaman-tab-pane" role="tabpanel"
-                             aria-labelledby="shaman-tab"
-                             tabindex="13">
-                            <div class="row px-4">
-                                {{ shaman_bis|render_markdown }}
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="warrior-tab-pane" role="tabpanel"
-                             aria-labelledby="warrior-tab"
-                             tabindex="14">
-                            <div class="row px-4">
-                                {{ warrior_bis|render_markdown }}
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="wizard-tab-pane" role="tabpanel"
-                             aria-labelledby="wizard-tab"
-                             tabindex="15">
-                            <div class="row px-4">
-                                {{ wizard_bis|render_markdown }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {% endfor %}
         </div>
     </div>
+    <div class="row mt-4">
+        <div class="col-12"><h2 class="text-center mb-4">{{ selected_class }} Best in Slot</h2></div>
+        {% if class_id == None %}
+            <div class="col-2 text-center mt-4 mb-4 align-items-center"><p>Select a class above.</p></div>
+        {% else %}
+            <div class="col-2">
+                <div class="nav flex-column nav-pills me-3" id="bisTab" role="tablist"
+                     aria-orientation="vertical">
+                    <button class="nav-link active" id=vanilla-pre-planar-tab" data-bs-toggle="pill"
+                            data-bs-target="#vanilla-pre-planar-tab-pane" type="button" role="tab"
+                            aria-controls="vanilla-pre-planar-tab-pane" aria-selected="true">Vanilla Pre-Planar Gear
+                    </button>
+                    <button class="nav-link" id=vanilla-planar-tab" data-bs-toggle="pill"
+                            data-bs-target="#vanilla-planar-tab-pane" type="button" role="tab"
+                            aria-controls="vanilla-planar-tab-pane" aria-selected="false">Vanilla Planar Gear
+                    </button>
+                    <button class="nav-link" id=kunark-tab" data-bs-toggle="pill"
+                            data-bs-target="#kunark-tab-pane" type="button" role="tab"
+                            aria-controls="kunark-tab-pane" aria-selected="false">Kunark Gear
+                    </button>
+                    <button class="nav-link" id=velious-group-tab" data-bs-toggle="pill"
+                            data-bs-target="#velious-group-tab-pane" type="button" role="tab"
+                            aria-controls="velious-group-tab-pane" aria-selected="false">Velious Group Gear
+                    </button>
+                    <button class="nav-link" id=velious-raid-tab" data-bs-toggle="pill"
+                            data-bs-target="#velious-raid-tab-pane" type="button" role="tab"
+                            aria-controls="velious-raid-tab-pane" aria-selected="false">Velious Raid Gear
+                    </button>
+                </div>
+            </div>
+            <div class="col tab-content" id="bisTabContent">
+                <div class="tab-pane fade show active" id="class-tab-pane" role="tabpanel"
+                     aria-labelledby="warrior-tab"
+                     tabindex="0">
+                    <div class="row px-4">
+                        {{ bis_file|render_markdown }}
+                    </div>
+                </div>
+            </div>
+            </div>
+        {% endif %}
 {% endblock %}

@@ -18,4 +18,3 @@
 * Primary – 
 * Secondary – 
 * Range – 
-* Instruments - 

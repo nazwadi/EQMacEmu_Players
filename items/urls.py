@@ -8,4 +8,5 @@ urlpatterns = [
     path("discovered", views.discovered_items, name="discovered"),
     path("view/<int:item_id>", views.view_item, name="view"),
     path("bis", views.best_in_slot, name="bis"),
+    path("bis/<int:class_id>", views.best_in_slot, name="bis"),
 ]

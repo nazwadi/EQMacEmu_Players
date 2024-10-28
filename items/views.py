@@ -425,63 +425,30 @@ def view_item(request, item_id):
                   })
 
 
-def best_in_slot(request):
+def best_in_slot(request, class_id: int = None):
     """
-    Defines view for https://url.tld/items/bis/<str:class_name>
+    Defines view for https://url.tld/items/bis/<int:class_id>
 
     :param request: Http request
-    :param class_name:
+    :param class_id:
     :return:
     """
-    with open('items/templates/items/best_in_slot/bard.md', 'r') as md_file:
-        bard_bis = md_file.read()
-    with open('items/templates/items/best_in_slot/beastlord.md', 'r') as md_file:
-        beastlord_bis = md_file.read()
-    with open('items/templates/items/best_in_slot/berserker.md', 'r') as md_file:
-        berserker_bis = md_file.read()
-    with open('items/templates/items/best_in_slot/cleric.md', 'r') as md_file:
-        cleric_bis = md_file.read()
-    with open('items/templates/items/best_in_slot/druid.md', 'r') as md_file:
-        druid_bis = md_file.read()
-    with open('items/templates/items/best_in_slot/enchanter.md', 'r') as md_file:
-        enchanter_bis = md_file.read()
-    with open('items/templates/items/best_in_slot/magician.md', 'r') as md_file:
-        magician_bis = md_file.read()
-    with open('items/templates/items/best_in_slot/monk.md', 'r') as md_file:
-        monk_bis = md_file.read()
-    with open('items/templates/items/best_in_slot/necromancer.md', 'r') as md_file:
-        necromancer_bis = md_file.read()
-    with open('items/templates/items/best_in_slot/paladin.md', 'r') as md_file:
-        paladin_bis = md_file.read()
-    with open('items/templates/items/best_in_slot/ranger.md', 'r') as md_file:
-        ranger_bis = md_file.read()
-    with open('items/templates/items/best_in_slot/rogue.md', 'r') as md_file:
-        rogue_bis = md_file.read()
-    with open('items/templates/items/best_in_slot/shadowknight.md', 'r') as md_file:
-        shadowknight_bis = md_file.read()
-    with open('items/templates/items/best_in_slot/shaman.md', 'r') as md_file:
-        shaman_bis = md_file.read()
-    with open('items/templates/items/best_in_slot/warrior.md', 'r') as md_file:
-        warrior_bis = md_file.read()
-    with open('items/templates/items/best_in_slot/wizard.md', 'r') as md_file:
-        wizard_bis = md_file.read()
+    if class_id is None or not 0 < class_id < 15:
+        return render(request=request,
+                      template_name="items/best_in_slot.html",
+                      context={
+                          "player_classes": PLAYER_CLASSES,
+                          "class_id": None,
+                      })
+    else:
+        selected_class = PLAYER_CLASSES.get(class_id, 0)
+        with open(f"items/templates/items/best_in_slot/{selected_class}.md", "r") as md_file:
+            bis_file = md_file.read()
     return render(request=request,
                   template_name="items/best_in_slot.html",
                   context={
-                      "bard_bis": bard_bis,
-                      "beastlord_bis": beastlord_bis,
-                      "berserker_bis": berserker_bis,
-                      "cleric_bis": cleric_bis,
-                      "druid_bis": druid_bis,
-                      "enchanter_bis": enchanter_bis,
-                      "magician_bis": magician_bis,
-                      "monk_bis": monk_bis,
-                      "necromancer_bis": necromancer_bis,
-                      "paladin_bis": paladin_bis,
-                      "ranger_bis": ranger_bis,
-                      "rogue_bis": rogue_bis,
-                      "shadowknight_bis": shadowknight_bis,
-                      "shaman_bis": shaman_bis,
-                      "warrior_bis": warrior_bis,
-                      "wizard_bis": wizard_bis,
+                      "player_classes": PLAYER_CLASSES,
+                      "selected_class": selected_class,
+                      "bis_file": bis_file,
+                      "class_id": class_id
                   })

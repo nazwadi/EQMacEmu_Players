@@ -70,6 +70,7 @@ class Zone(models.Model):
 
     class Meta:
         db_table = "zone"
+        managed = False
 
 
 class ZonePoints(models.Model):
