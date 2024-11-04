@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
 from django.db import connections
+from django.contrib import messages
+from django.core.exceptions import ObjectDoesNotExist
 
 from common.models.tradeskill import TradeskillRecipe
 from common.models.tradeskill import TradeskillRecipeEntries
@@ -87,7 +89,11 @@ def view_recipe(request, recipe_id):
     :param recipe_id: a tradeskill_recipes id field unique identifier
     :return: Http response
     """
-    tradeskill_recipe = TradeskillRecipe.objects.get(id=recipe_id)
+    try:
+        tradeskill_recipe = TradeskillRecipe.objects.get(id=recipe_id)
+    except ObjectDoesNotExist:
+        messages.error(request, f"Recipe ID {recipe_id} does not exist. Try again.")
+        return redirect("/recipes/search")
     tradeskill_recipe_entries = TradeskillRecipeEntries.objects.filter(recipe_id=recipe_id).order_by("-component_count")
     cursor = connections['game_database'].cursor()
     cursor.execute("""SELECT item_id
