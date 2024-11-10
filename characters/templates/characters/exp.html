@@ -1,0 +1,70 @@
+{% extends 'characters/header.html' %}
+{% load static %}
+{% load data_utilities %}
+{% load humanize %}
+{% block content %}
+    <div class="container py-4">
+        <div class="col-12"><h2 class="text-center">Experience Per Level</h2></div>
+        <ul class="nav justify-content-center py-3">
+            {% for index, data in PLAYER_RACIAL_EXP_MODIFIERS.items %}
+                    <li class="nav-item border"><a class="border-0 btn btn-outline-secondary btn-sm rounded-0"
+                                                   href="/characters/exp/{{ index }}">{{ data.0 }}</a></li>
+            {% endfor %}
+        </ul>
+
+        {% if not level_data %}
+            <div class="p-3 mb-4 border bg-body-tertiary">
+                <div class="row"><p>Select a race from the list above...</p></div>
+            </div>
+        {% else %}
+            <div class="row">
+                <div class="p-3 mb-4 border bg-body-tertiary">
+                    <div class="col-12">
+                        <h4 class="text-center">
+                            {{ selected_race }} - 
+                            {{ racial_modifier }}%
+                        </h4>
+                    </div>
+                    <table class="table" id="exp-table">
+                        <thead>
+                        <tr>
+                            <th>Level</th>
+                            <th>This Level</th>
+                            <th>Modifier</th>
+                            <th>Total</th>
+                            <th>Green Range</th>
+                            <th>Light Blue Range</th>
+                            <th>Blue Range</th>
+                            <th>White Range</th>
+                            <th>Yellow Range</th>
+                            <th>Red Range</th>
+                            <th>Level Mobs Always Resist</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for entry in level_data %}
+                            <tr>
+                                <td>{{ entry.level }}</td>
+                                <td>{{ entry.difference | intcomma }}</td>
+                                <td><strong>&divide;{{ entry.exp_mod }}</strong></td>
+                                <td>{{ entry.experience|intcomma }}</td>
+                                <td class="text-success">{{ entry.con_lvls.green.min }}
+                                    - {{ entry.con_lvls.green.max }}</td>
+                                <td class="text-info">{{ entry.con_lvls.lightblue.min }}
+                                    - {{ entry.con_lvls.lightblue.max }}</td>
+                                <td class="text-primary">{{ entry.con_lvls.blue.min }}
+                                    - {{ entry.con_lvls.blue.max }}</td>
+                                <td>{{ entry.con_lvls.white }}</td>
+                                <td class="text-warning">{{ entry.con_lvls.yellow.min }}
+                                    - {{ entry.con_lvls.yellow.max }}</td>
+                                <td class="text-danger">{{ entry.con_lvls.red.min }} - {{ entry.con_lvls.red.max }}</td>
+                                <td>>= {{ entry.six_rule }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -4,14 +4,17 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db import connections
 
 from common.models.characters import Characters
 from common.models.characters import CharacterCurrency
 from common.models.characters import CharacterLanguages
 from common.models.items import DiscoveredItems
+from common.utils import valid_game_account_owner
+from common.constants import PLAYER_RACIAL_EXP_MODIFIERS
+
 from accounts.models import Account
 
-from common.utils import valid_game_account_owner
 from characters.utils import get_character_keyring
 from characters.utils import get_character_inventory
 from characters.utils import get_faction_information
@@ -19,6 +22,9 @@ from characters.utils import get_guild_information
 from characters.utils import get_skill_information
 from characters.utils import get_spell_information
 from characters.utils import get_owned_characters
+from characters.utils import get_exp_for_level
+from characters.utils import get_consider_levels
+from characters.utils import rule_of_six
 
 
 def index_request(request):
@@ -26,6 +32,39 @@ def index_request(request):
         return render(request=request, template_name="characters/index.html")
     return redirect("accounts:login")
 
+def experience(request, race_id=None):
+    if race_id is not None:
+        cursor = connections['game_database'].cursor()
+        cursor.execute("""SELECT level, exp_mod, aa_exp_mod FROM level_exp_mods""")
+        exp_mod = cursor.fetchall()
+        level_data = []
+        prev_xp =  0
+
+        for i in range(1, 66): # levels 1 through 65 (non-inclusive of last value)
+            current_xp = get_exp_for_level(i, race_id)
+            difference = current_xp - prev_xp
+            consider_levels = get_consider_levels(i)
+            six_rule = rule_of_six(i)
+            level_data.append({
+                'level': i,
+                'experience': current_xp,
+                'difference': difference,
+                'con_lvls': consider_levels,
+                'exp_mod': exp_mod[i-1][1],
+                'six_rule': six_rule
+            })
+            prev_xp = current_xp
+        selected_race, racial_modifier = PLAYER_RACIAL_EXP_MODIFIERS.get(race_id, 0)
+
+        return render(request=request, template_name="characters/exp.html",
+                      context={"PLAYER_RACIAL_EXP_MODIFIERS": PLAYER_RACIAL_EXP_MODIFIERS,
+                               "level_data": level_data,
+                               "selected_race": selected_race,
+                               "racial_modifier": racial_modifier,
+                               "race": race_id})
+    else:
+        return render(request=request, template_name="characters/exp.html",
+                      context={"PLAYER_RACIAL_EXP_MODIFIERS": PLAYER_RACIAL_EXP_MODIFIERS,})
 
 @login_required
 def list_characters(request, game_account_name):

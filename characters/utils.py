@@ -143,3 +143,173 @@ def get_owned_characters(forum_name: str):
                 characters[temp.account_name]['characters'][temp.char_name] = temp
 
     return characters
+
+def get_exp_for_level(check_level, race_id):
+    base = check_level * check_level * check_level
+    playermod = 10
+    mod = 0.0
+
+    match race_id:
+        case 1024: # Halfing
+            playermod *= 95.0
+        case 1|4|8|16|32|64|128|2048|8192:
+            playermod *= 100.0
+        case 2: # Barb
+            playermod *= 105.0
+        case 512: # Ogre
+            playermod *= 115.0
+        case 256|4096: # Troll/Iksar
+            playermod *= 120.0
+        case _:
+            playermod *= 100.0
+    if check_level <= 29:
+        mod = 1.0
+    elif check_level <= 34:
+        mod = 1.1
+    elif check_level <= 39:
+        mod = 1.2
+    elif check_level <= 44:
+        mod = 1.3
+    elif check_level <= 50:
+        mod = 1.4
+    elif check_level == 51:
+        mod = 1.5
+    elif check_level == 52:
+        mod = 1.6
+    elif check_level == 53:
+        mod = 1.7
+    elif check_level == 54:
+        mod = 1.9
+    elif check_level == 55:
+        mod = 2.1
+    elif check_level == 56:
+        mod = 2.3
+    elif check_level == 57:
+        mod = 2.5
+    elif check_level == 58:
+        mod = 2.7
+    elif check_level == 59:
+        mod = 3.0
+    elif check_level == 60:
+        mod = 3.1
+    elif check_level == 61:
+        mod = 3.3
+    elif check_level == 62:
+        mod = 3.5
+    elif check_level == 63:
+        mod = 3.7
+    elif check_level == 64:
+        mod = 3.9
+    else:
+        mod = 4.1
+
+    final_xp = base * playermod * mod
+
+    return int(final_xp)
+
+def get_consider_levels(level):
+    green_high = 0
+    light_blue_high = 0
+
+    if level <= 7:
+        green_high = -4
+    elif level <= 8:
+        green_high = -5
+        light_blue_high = -4
+    elif level <= 12:
+        green_high = -6
+        light_blue_high = -4
+    elif level <= 16:
+        green_high = -7
+        light_blue_high = -5
+    elif level <= 20:
+        green_high = -8
+        light_blue_high = -6
+    elif level <= 24:
+        green_high = -9
+        light_blue_high = -7
+    elif level <= 28:
+        green_high = -10
+        light_blue_high = -8
+    elif level <= 30:
+        green_high = -11
+        light_blue_high = -9
+    elif level <= 32:
+        green_high = -12
+        light_blue_high = -9
+    elif level <= 36:
+        green_high = -13
+        light_blue_high = -10
+    elif level <= 40:
+        green_high = -14
+        light_blue_high = -11
+    elif level <= 44:
+        green_high = -16
+        light_blue_high = -12
+    elif level <= 48:
+        green_high = -17
+        light_blue_high = -13
+    elif level <= 52:
+        green_high = -18
+        light_blue_high = -14
+    elif level <= 54:
+        green_high = -19
+        light_blue_high = -15
+    elif level <= 56:
+        green_high = -20
+        light_blue_high = -15
+    elif level <= 60:
+        green_high = -21
+        light_blue_high = -16
+    elif level <= 61:
+        green_high = -19
+        light_blue_high = -14
+    elif level <= 62:
+        green_high = -17
+        light_blue_high = -12
+    else:
+        green_high = -16
+        light_blue_high = -11
+
+    con = {
+        'green': {
+            'min': 0 if level <= 4 else 1,
+            'max': 0 if level <= 4 else level + green_high},
+        'lightblue': {'min': 0, 'max': 0},
+        'blue': {'min': 0, 'max': 0},
+        'white': level,
+        'yellow': {'min': level + 1, 'max': level + 2},
+        'red': {'min': level + 3, 'max': 68},
+    }
+
+    if level == 1:
+        return con
+
+    if level <= 4:
+        con['blue']['min'] = 1
+        con['blue']['max'] = level - 1
+        return con
+
+    con['green']['min'] = 1
+    con['green']['max'] = level + green_high
+
+    con['blue']['max'] = level - 1
+    if light_blue_high == 0:
+        con['blue']['min'] = con['green']['max'] + 1
+        return con
+
+    con['lightblue']['min'] = con['green']['max'] + 1
+    con['lightblue']['max'] = level + light_blue_high
+    con['blue']['min'] = con['lightblue']['max'] + 1
+
+    return con
+
+def rule_of_six(caster_level):
+    """Rule of six level is the level mobs will, without any doubt, resist your spells.
+    It's actually 7 levels at the start, but the six meant the number of levels you could still hit them.
+    The spectrum gets a little wider later on is why I put them there"""
+    npc_level1 = caster_level + 7
+    npc_level2 = int(caster_level * 1.25)
+    npc_level = max(npc_level1, npc_level2)
+
+    return npc_level

@@ -775,6 +775,12 @@ def npc_special_ability(values):
 def multiply(value, arg):
     return value * arg
 
+@register.filter(name="divide")
+def divide(value, arg):
+    try:
+        return float(value) / float(arg) if float(arg) != 0 else ''
+    except (ValueError, TypeError):
+        return ''
 
 @register.filter(name="split")
 def split(value, arg):

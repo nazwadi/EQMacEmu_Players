@@ -332,6 +332,24 @@ PLAYER_RACES = {
     128: "Iksar",
 }
 
+# id: [race, mod]
+PLAYER_RACIAL_EXP_MODIFIERS = {
+    1: ["Human", 100],
+    2: ["Barbarian", 105],
+    4: ["Erudite", 100],
+    8: ["Wood Elf", 100],
+    16: ["High Elf", 100],
+    32: ["Dark Elf", 100],
+    64: ["Half Elf", 100],
+    128: ["Dwarf", 100],
+    256: ["Troll", 120],
+    512: ["Ogre", 115],
+    1024: ["Halfling", 95],
+    2048: ["Gnome", 100],
+    4096: ["Iksar", 120],
+    8192: ["Vah Shir", 100]
+}
+
 PLAYER_DEITIES = {
     140: "Agnostic",
     396: "Agnostic",  # Yes, the duplicate is intentional
