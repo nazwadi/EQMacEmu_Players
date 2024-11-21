@@ -1,3 +1,6 @@
+"""
+utils.py - reusable utility functions used in character views
+"""
 import json
 
 from collections import namedtuple
@@ -44,7 +47,7 @@ def get_faction_information(character_id: int, race_id: int, class_id: int, deit
            ORDER BY fl.name;
         """, [character_id])
     character_faction_list = cursor.fetchall()
-    final_faction = list()
+    final_faction = []
     race_mod_name = ''.join(['r', str(race_id)])
     class_mod_name = ''.join(['c', str(class_id)])
     deity_mod_name = ''.join(['d', str(deity_id)])
@@ -55,12 +58,15 @@ def get_faction_information(character_id: int, race_id: int, class_id: int, deit
         faction_modifiers = FactionListMod.objects.filter(faction_id=faction_table_row.id)
         fm = FactionMods()
         fm.base_mod = faction_table_row.base
+        fm.race_mod = 0
+        fm.class_mod = 0
+        fm.deity_mod = 0
         for modifier in faction_modifiers:
-            if race_mod_name in modifier.mod_name:
+            if race_mod_name == modifier.mod_name:
                 fm.race_mod = modifier.mod
-            if class_mod_name in modifier.mod_name:
+            if class_mod_name == modifier.mod_name:
                 fm.class_mod = modifier.mod
-            if deity_mod_name in modifier.mod_name:
+            if deity_mod_name == modifier.mod_name:
                 fm.deity_mod = modifier.mod
         modifiers = fm.base_mod + fm.race_mod + fm.class_mod + fm.deity_mod
         row = faction[0], faction[1], modifiers, faction[3], faction[4], faction[5]
@@ -96,7 +102,7 @@ def get_skill_information(character_id: int):
 
 def get_spell_information(character_id: int, class_id: int):
     scribed_spells = CharacterSpells.objects.filter(id=character_id)
-    character_spells = list()
+    character_spells = []
     for spell in scribed_spells:
         try:
             character_spells.append(spell.spell_id.id)
@@ -111,8 +117,8 @@ def get_spell_information(character_id: int, class_id: int):
 def get_owned_characters(forum_name: str):
     ls_accounts = LoginServerAccounts.objects.filter(ForumName=forum_name)
     game_accounts = [Account.objects.filter(lsaccount_id=account.LoginServerID) for account in ls_accounts]
-    characters = dict()
-    accounts = list()
+    characters = {}
+    accounts = []
     for account in game_accounts:
         try:
             accounts.append(account.values('id', 'name', 'time_creation', 'active')[0])

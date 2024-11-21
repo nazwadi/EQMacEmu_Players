@@ -27,7 +27,10 @@ class FactionListMod(models.Model):
     """
 
     def __str__(self):
-        return str(self.id)
+        return f"{self.id}, {self.mod_name}, {self.mod}"
+
+    def __repr__(self):
+        return f"{self.id}, {self.mod_name}, {self.mod}"
 
     id = models.AutoField(primary_key=True, null=False)
     faction_id = models.IntegerField(unique=True, null=False)

@@ -40,17 +40,17 @@ def experience(request, race_id=None):
         level_data = []
         prev_xp =  0
 
-        for i in range(1, 66): # levels 1 through 65 (non-inclusive of last value)
-            current_xp = get_exp_for_level(i, race_id)
+        for level in range(1, 66): # levels 1 through 65 (non-inclusive of last value)
+            current_xp = get_exp_for_level(level, race_id)
             difference = current_xp - prev_xp
-            consider_levels = get_consider_levels(i)
-            six_rule = rule_of_six(i)
+            consider_levels = get_consider_levels(level)
+            six_rule = rule_of_six(level)
             level_data.append({
-                'level': i,
+                'level': level,
                 'experience': current_xp,
                 'difference': difference,
-                'con_lvls': consider_levels,
-                'exp_mod': exp_mod[i-1][1],
+                'con_levels': consider_levels,
+                'exp_mod': exp_mod[level-1][1],
                 'six_rule': six_rule
             })
             prev_xp = current_xp
