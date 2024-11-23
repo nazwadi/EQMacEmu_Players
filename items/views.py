@@ -410,7 +410,6 @@ def view_item(request, item_id):
         forage[forage_tuple.z_short_name].append(forage_tuple)
 
     obj_path = f"/static/models/equip/{item.idfile.lower()}{'.glb'}"
-    print(item.no_drop)
     return render(request=request,
                   template_name="items/view_item.html",
                   context={
