@@ -2,6 +2,7 @@
 {% load data_utilities %}
 {% load static %}
 {% load humanize %}
+{% load expansion_filters %}
 {% block content %}
     <div class="container-fluid">
         <div class="row">
@@ -391,6 +392,7 @@
                                             <tr>
                                                 <th>Item</th>
                                                 <th>Chance</th>
+                                                <th>Min. Expansion</th>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -402,6 +404,7 @@
                                                         <a href="/items/view/{{ ld_entry.item_id.id }}">{{ ld_entry.item_id.Name }}</a>
                                                     </td>
                                                     <td>{{ ld_entry.chance }}%</td>
+                                                    <td class="expansion-tag {{ ld_entry.min_expansion|exp_filter }}"><span>{{ ld_entry.min_expansion|exp_filter|title }}</span></td>
                                                 </tr>
                                             {% endfor %}
                                             </tbody>

@@ -69,9 +69,14 @@ class LootDropEntries(models.Model):
     item_charges = models.SmallIntegerField(null=False, default=1)
     equip_item = models.SmallIntegerField(null=False, default=0)
     chance = models.FloatField(null=False, default=1)
+    disabled_chance = models.FloatField(null=False, default=0)
     min_level = models.SmallIntegerField(null=False, default=0, db_column='minlevel')
     max_level = models.SmallIntegerField(null=False, default=255, db_column='maxlevel')
     multiplier = models.SmallIntegerField(null=False, default=1)
+    min_expansion = models.SmallIntegerField(null=False, default=-1, db_column='min_expansion')
+    max_expansion = models.SmallIntegerField(null=False, default=-1, db_column='max_expansion')
+    content_flags = models.CharField(max_length=100, null=True, default=None)
+    content_flags_disabled = models.CharField(max_length=100, null=True, default=None)
 
     class Meta:
         db_table = 'lootdrop_entries'
