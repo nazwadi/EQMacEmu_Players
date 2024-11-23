@@ -24,7 +24,7 @@
                                     {% if item.magic %}MAGIC ITEM {% endif %}
                                     {% if item.no_rent == 0 %}NO RENT {% endif %}
                                     {% if item.lore|first in '*' %}LORE ITEM{% endif %}
-                                    {% if item.nodrop == 0 %}NODROP{% endif %}
+                                    {% if item.no_drop == 0 %}NODROP{% endif %}
                                     <br/>
                                 {% endif %}
                                 {# Slots is a bitfield #}
