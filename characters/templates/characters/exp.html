@@ -48,16 +48,16 @@
                                 <td>{{ entry.difference | intcomma }}</td>
                                 <td><strong>&divide;{{ entry.exp_mod }}</strong></td>
                                 <td>{{ entry.experience|intcomma }}</td>
-                                <td class="text-success">{{ entry.con_lvls.green.min }}
-                                    - {{ entry.con_lvls.green.max }}</td>
-                                <td class="text-info">{{ entry.con_lvls.lightblue.min }}
-                                    - {{ entry.con_lvls.lightblue.max }}</td>
-                                <td class="text-primary">{{ entry.con_lvls.blue.min }}
-                                    - {{ entry.con_lvls.blue.max }}</td>
-                                <td>{{ entry.con_lvls.white }}</td>
-                                <td class="text-warning">{{ entry.con_lvls.yellow.min }}
-                                    - {{ entry.con_lvls.yellow.max }}</td>
-                                <td class="text-danger">{{ entry.con_lvls.red.min }} - {{ entry.con_lvls.red.max }}</td>
+                                <td class="text-success">{{ entry.con_levels.green.min }}
+                                    - {{ entry.con_levels.green.max }}</td>
+                                <td class="text-info">{{ entry.con_levels.lightblue.min }}
+                                    - {{ entry.con_levels.lightblue.max }}</td>
+                                <td class="text-primary">{{ entry.con_levels.blue.min }}
+                                    - {{ entry.con_levels.blue.max }}</td>
+                                <td>{{ entry.con_levels.white }}</td>
+                                <td class="text-warning">{{ entry.con_levels.yellow.min }}
+                                    - {{ entry.con_levels.yellow.max }}</td>
+                                <td class="text-danger">{{ entry.con_levels.red.min }} - {{ entry.con_levels.red.max }}</td>
                                 <td>>= {{ entry.six_rule }}</td>
                             </tr>
                         {% endfor %}
