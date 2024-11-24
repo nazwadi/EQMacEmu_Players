@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let minY = 0;
     let maxX = 0;
     let maxY = 0;
-
+    
     const konvaContainer = document.getElementById('konva-container');
     const stage = new Konva.Stage({
         container: konvaContainer,
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Redraw the layer
         layer.draw();
     });
-
+    
     // Add event listener for show/hide points toggle
     const showPointsToggle = document.getElementById('showPoints');
     showPointsToggle.addEventListener('change', function () {
@@ -75,44 +75,42 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // path points
     // Plot creature paths
-    const pathLineColor = 'cyan';
-    const pathLineStrokeWidth = 2;
+    const pathLineColor = '#16E2F5';
+    const pathLineStrokeWidth = 4;
 
     // Ensure creaturePathPoints is defined
     if (typeof creaturePathPoints !== 'undefined') {
+        console.log("Test");
         Object.values(creaturePathPoints).forEach(creaturePath => {
             for (let i = 1; i < creaturePath.length; i++) {
                 const startPoint = creaturePath[i - 1];
                 const endPoint = creaturePath[i];
-
-                //console.log('Start Point:', startPoint);
-                //console.log('End Point:', endPoint);
-
-                const konvaLine = new Konva.Line({
+        
+                const konvaLine = new Konva.Arrow({
                     points: [startPoint.x, startPoint.y, endPoint.x, endPoint.y],
                     stroke: pathLineColor,
                     strokeWidth: pathLineStrokeWidth,
+                    pointerLength: 20,
+                    pointerWidth: 20,
                     lineCap: 'round',
                     lineJoin: 'round',
-                    dash: [5, 5],
+                    fill: 'black',
+                    fillAfterStrokeEnabled: 'True',
+                    dash: [29, 20, 0.001, 20],
                 });
-
+        
                 layer.add(konvaLine);
             }
         });
-
+        
         // Ensure that paths are drawn in the correct order
         layer.draw();
     }
+    else {
+        console.log("Creature Path Points were undefined.");
+    }
 
     stage.add(layer);
-
-    /* const mapBaseName = JSON.parse('{{ content[0].short_name|tojson }}'); */
-    //let minX = Infinity;
-    //let minY = Infinity;
-    //let maxX = -Infinity;
-    //let maxY = -Infinity;
-
 
     let lastPosX;
     let lastPosY;
@@ -219,6 +217,9 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         const [r, g, b] = parts;
+        /*if (r === '0' && g === '0' && b === '0') {
+            return 'rgb(255, 255, 255)';
+        }*/
         return `rgb(${r}, ${g}, ${b})`;
     }
 
@@ -271,7 +272,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
             }
         });
-
+        
         return { lines: lines, points: points };
     }
 
@@ -280,14 +281,14 @@ document.addEventListener('DOMContentLoaded', function () {
         // console.log("They callin me")
         const gridLineColor = 'rgba(0, 0, 0, 0.2)';
         const gridLineWidth = 1;
-
+    
         // Calculate the scaled grid size
         const scaledGridSize = gridSize * stage.scaleX();
-
+    
         // Calculate the starting point of the graticule
         const startXAt = minX + Math.abs(minX % scaledGridSize);
         const startYAt = minY + Math.abs(minY % scaledGridSize);
-
+    
         // Draw vertical lines
         let xMark = startXAt;
         while (xMark < maxX) {
@@ -297,10 +298,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 strokeWidth: gridLineWidth,
             });
             layer.add(konvaLine);
-
+    
             xMark += scaledGridSize;
         }
-
+    
         // Draw horizontal lines
         let yMark = startYAt;
         while (yMark < maxY) {
@@ -310,13 +311,50 @@ document.addEventListener('DOMContentLoaded', function () {
                 strokeWidth: gridLineWidth,
             });
             layer.add(konvaLine);
-
+    
             yMark += scaledGridSize;
         }
         layer.find('Line').forEach(line => {
             line.moveToBottom();
         });
     }
+
+    // Info banner
+    const infoDisplay = document.createElement('div');
+    infoDisplay.style.position = 'absolute';
+    infoDisplay.style.top = '0px';
+    infoDisplay.style.left = '0px';
+    infoDisplay.style.backgroundColor = 'var(--bs-tertiary-bg)';
+    infoDisplay.style.color = 'var(--bs-danger)';
+    infoDisplay.style.padding = '5px';
+    infoDisplay.setAttribute('id', 'info-display')
+    konvaContainer.appendChild(infoDisplay);
+
+    // Mouseover coordinates.  Left some stubs in for styling just in case
+    const coordDisplay = document.createElement('div');
+    coordDisplay.style.position = 'absolute';
+    coordDisplay.style.bottom = '0px';
+    coordDisplay.style.right = '0px';
+    coordDisplay.style.backgroundColor = 'gray';
+    coordDisplay.style.padding = '5px';
+    coordDisplay.style.borderRadius = '0px';
+    coordDisplay.style.fontFamily = 'Arial';
+    coordDisplay.style.fontSize = '12px';
+    konvaContainer.appendChild(coordDisplay);
+
+    // Add mousemove event listener to update coordinates
+    konvaContainer.addEventListener('mousemove', function (e) {
+        // Calculate stage coordinates based on mouse position relative to the container
+        const mouseX = e.clientX - konvaContainer.getBoundingClientRect().left;
+        const mouseY = e.clientY - konvaContainer.getBoundingClientRect().top;
+
+        // Convert stage coordinates to map coordinates (if needed)
+        const mapX = -(mouseX - stage.x()) / stage.scaleX();
+        const mapY = -(mouseY - stage.y()) / stage.scaleY();
+
+        // Update the content of the coordinate display
+        coordDisplay.textContent = `Y: ${mapY.toFixed(2)}, X: ${mapX.toFixed(2)}`;
+    });
 
     // Add event listener for zooming
     konvaContainer.addEventListener('wheel', function (e) {
@@ -382,8 +420,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 y: point.y,
                 innerRadius: 10,
                 outerRadius: 25,
-                fill: '#cedff2',
-                stroke: 'black',
+                fill: 'yellow',
+                stroke: 'red',
                 strokeWidth: 4,
             });
 
@@ -391,7 +429,6 @@ document.addEventListener('DOMContentLoaded', function () {
             konvaRing.isCreatureSpawnPoint = true;
 
             layer.add(konvaRing);
-
 
             var period = 4000;
 
@@ -401,10 +438,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 konvaRing.scale({ x: scale, y: scale });
 
             }, layer);
+            // Add event listener for start/stop animations toggle
+            const toggleAnim = document.getElementById('toggleAnim');
+            toggleAnim.addEventListener('change', function () {
+                const animate = toggleAnim.checked;
+                if (animate) {
+                    anim.start();
+                } else {
+                    anim.stop();
+                }
+            })
 
-            anim.start();
-
-            // Add label or other details if needed...
+            //anim.start();
         });
 
         // Move creature spawn points to the front
@@ -420,8 +465,42 @@ document.addEventListener('DOMContentLoaded', function () {
         // Redraw the layer after adding all points
         layer.draw();
     }
+    function loadCreatureRoamboxes(layer, roamboxes) {
+        //console.log(roamboxes)
+        roamboxes.forEach(box => {
+            const konvaRect = new Konva.Rect({
+                x: box.x,
+                y: box.y,
+                width: box.width,
+                height: box.height,
+                stroke: pathLineColor,
+                fill: 'rgba(22, 226, 245, 0.05)',
+                strokeWidth: 15,
+            });
 
+            // Set isRoambox property to true
+            konvaRect.isRoambox = true;
+
+            layer.add(konvaRect);
+        });
+
+        // Move creature roamboxes to the front
+        layer.find('.isRoambox').forEach(box => {
+            box.moveToTop();
+        });
+
+        // Set visibility to true for creature roamboxes
+        layer.find('.isRoambox').forEach(box => {
+            box.visible(true);
+        });
+
+        // Redraw the layer after adding all points
+        layer.draw();
+    }
     loadMap(mapBaseName);
+    if (typeof creatureRoamBoxes !== 'undefined') {
+        loadCreatureRoamboxes(layer, creatureRoamBoxes);
+    }
     if (typeof creatureSpawnPoints !== 'undefined') {
         loadCreatureSpawnPoints(layer, creatureSpawnPoints);
     }

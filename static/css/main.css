@@ -51,7 +51,7 @@ ul {
 }
 
 #konva-container {
-    background-image: url("/static/assets/maps/map-background.jpg");
+    background-image: url("/static/assets/maps/map-parchment.jpg");
     overflow: hidden;
 }
 

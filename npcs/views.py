@@ -210,7 +210,7 @@ def view_npc(request, npc_id):
                             AND z.min_status = 0;
     """, [npc_data.id])
     spawn_data = cursor.fetchall()
-    spawn_point_list = list()
+    spawn_point_list = []
     if spawn_data:
         for spawn in spawn_data:
             SpawnData = namedtuple("SpawnData", ["long_name", "short_name", "x", "y", "z",
@@ -228,7 +228,7 @@ def view_npc(request, npc_id):
         zone = ZoneTuple(None, None)
 
     spawn_entries_spawngroup_result = SpawnEntry.objects.filter(npcID=npc_data.id).order_by("-spawngroupID")
-    spawn_groups = dict()
+    spawn_groups = {}
     for spawn_entry in spawn_entries_spawngroup_result:
         spawn_entries_result = SpawnEntry.objects.filter(spawngroupID=spawn_entry.spawngroupID)
         spawn_points_result = Spawn2.objects.filter(spawngroupID=spawn_entry.spawngroupID)
@@ -245,8 +245,8 @@ def view_npc(request, npc_id):
                         nfe.npc_faction_id=%s;
                     """, [npc_data.npc_faction_id])
     npc_faction_entries = cursor.fetchall()
-    factions = list()
-    opposing_factions = list()
+    factions = []
+    opposing_factions = []
     for name, value, npc_value in npc_faction_entries:
         if value > 0:
             opposing_factions.append((name, value, npc_value))
@@ -256,7 +256,7 @@ def view_npc(request, npc_id):
     merchant_list_result = MerchantList.objects.filter(merchant_id=npc_data.merchant_id)
     MerchantListTuple = namedtuple('MerchantList', ['id', 'name', 'icon', 'platinum', 'gold',
                                                     'silver', 'copper', 'charges', 'quantity'])
-    merchant_list = list()
+    merchant_list = []
     for item in merchant_list_result:
         platinum, gold, silver, copper = calculate_item_price(item.item.price)
         merchant_list.append(MerchantListTuple(id=item.item.id,
@@ -275,7 +275,7 @@ def view_npc(request, npc_id):
         loottable = None
     if loottable:
         loottable_entries = LootTableEntries.objects.filter(loottable_id=loottable.id)
-        loot_tables = dict()
+        loot_tables = {}
         for lootdrop_table in loottable_entries:
             try:
                 ld_entries = LootDropEntries.objects.filter(lootdrop_id=lootdrop_table.lootdrop_id.id)
@@ -283,11 +283,50 @@ def view_npc(request, npc_id):
             except ObjectDoesNotExist:
                 continue
     else:
-        loot_tables = dict()
+        loot_tables = {}
+
+    paths_query = """SELECT 
+                        zone.zoneidnumber, 
+                        zone.long_name, 
+                        zone.short_name,
+                        spawn2.pathgrid,
+                        grid_entries.number,  
+                        grid_entries.x,
+                        grid_entries.y
+                    FROM 
+                        zone
+                    JOIN 
+                        spawn2 ON spawn2.zone = zone.short_name
+                    JOIN 
+                        spawnentry ON spawnentry.spawngroupID = spawn2.spawngroupID
+                    JOIN 
+                        spawngroup ON spawnentry.spawngroupID = spawngroup.id
+                    JOIN 
+                        grid_entries ON spawn2.pathgrid = grid_entries.gridid AND zone.zoneidnumber = grid_entries.zoneid
+                    WHERE 
+                        spawnentry.npcID = %s
+                    GROUP BY pathgrid, number, zoneidnumber, long_name, short_name
+                    ORDER BY 
+                        zone.zoneidnumber, zone.long_name, zone.short_name, spawn2.pathgrid, CAST(grid_entries.number AS SIGNED);
+                    """
+    cursor.execute(paths_query, [npc_data.id])
+    paths = cursor.fetchall()
+    creature_path_points = {}
+
+    for path in paths:
+        grid_id = path[3]  # pathgrid
+        x = float(path[5])  # x
+        y = float(path[6])  # y
+
+        if grid_id not in creature_path_points:
+            creature_path_points[grid_id] = []
+
+        creature_path_points[grid_id].append({'x': -x, 'y': -y})
 
     return render(request=request,
                   template_name="npcs/view_npc.html",
                   context={
+                      "creature_path_points": json.dumps(creature_path_points),
                       "expansion": expansion,
                       "factions": factions,
                       "loottable": loottable,

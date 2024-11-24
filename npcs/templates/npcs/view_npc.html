@@ -76,7 +76,9 @@
                         <td><span style="font-weight: bold;">Damage Per Hit:</span>&nbsp;{{ npc_data.min_dmg }}
                             - {{ npc_data.max_dmg }}</td>
                     </tr>
-                    <tr><td><span style="font-weight: bold;">ATK Delay:</span> {{ npc_data.attack_delay }}</td></tr>
+                    <tr>
+                        <td><span style="font-weight: bold;">ATK Delay:</span> {{ npc_data.attack_delay }}</td>
+                    </tr>
                     <tr>
                         <td><span
                                 style="font-weight: bold;">Special Abilities:</span>&nbsp;{{ npc_data.special_abilities|npc_special_ability }}
@@ -185,24 +187,31 @@
                     </li>
                 </ul>
                 <div class="tab-content" id="charViewTabContent">
-                    <div class="tab-pane fade show active" id="map-tab-pane" role="tabpanel"
-                         aria-labelledby="map-tab"
-                         tabindex="0">
+                    <div class="tab-pane fade show active" id="map-tab-pane" role="tabpanel" aria-labelledby="map-tab" tabindex="0">
                         <div class="row">
                             <div class="col py-2 px-3">
-                                <div id="controls" class="row">
-                                    <label for="lineWeight" class="px-2">Line Weight</label>
-                                    <input type="range" id="lineWeight" min="1" max="10" step="1" value="2">
-                                    <div class="custom-control custom-switch px-5">
-                                        <input type="checkbox" id="showPoints" class="custom-control-input">
-                                        <label for="showPoints" class="custom-control-label">Toggle Points</label>
-                                    </div>
+                                <div id="konva-container" class="s12 l9 row" style="min-width: 400px; min-height: 600px;position:relative"></div>
+                                <div id="controls" class="navbar">
+                                    <ul class="nav nav-fill">
+                                        <li class="nav-item">
+                                            <label for="lineWeight" class="px-2">Line Weight</label>
+                                            <input type="range" id="lineWeight" min="1" max="10" step="1" value="2">
+                                        </li>
+                                        <li class="nav-item">
+                                            <input type="checkbox" id="showPoints" class="custom-control-input">
+                                            <label for="showPoints" class="custom-control-label">Toggle Points</label>
+                                        </li>
+                                        <li class="nav-item">
+                                            <div class="ms-3">
+                                                <input type="checkbox" id="toggleAnim" class="custom-control-input">
+                                                <label for="toggleAnim" class="custom-control-label">Toggle
+                                                    Animation</label>
+                                            </div>
+                                        </li>
+                                    </ul>
                                 </div>
-                                <div id="konva-container" class="s12 l9 row"
-                                     style="min-width: 400px; min-height: 600px;"></div>
-                                <article class="absolute right surface no-elevate">Credit to <a href="https://www.pqdi.cc/">Talodar</a> for the
-                                    original map script. Credit for all maps goes to <a
-                                            class="link" href="https://www.eqmaps.info/">Brewall</a>.</article>
+                                <span class="navbar-text">Credit to <a href="https://www.pqdi.cc/">Talodar</a> for the original map script.</span>
+                                <span class="navbar-text">Credit for all maps goes to <a class="link" href="https://www.eqmaps.info/">Brewall</a>.</span>
                             </div>
                         </div>
                     </div>
@@ -261,7 +270,9 @@
                                     {% for item in merchant_list %}
                                         <tr>
                                             <td><img src="{% static "/images/items/" %}item_{{ item.icon }}.png"
-                                                     alt="{{ item.icon }}.png">&nbsp;<a href="/items/view/{{ item.id }}" target="_blank">{{ item.name }}</a></td>
+                                                     alt="{{ item.icon }}.png">&nbsp;<a href="/items/view/{{ item.id }}"
+                                                                                        target="_blank">{{ item.name }}</a>
+                                            </td>
                                             <td>{{ item.platinum.0 }}</td>
                                             <td>{{ item.gold.0 }}</td>
                                             <td>{{ item.silver.0 }}</td>
@@ -404,7 +415,8 @@
                                                         <a href="/items/view/{{ ld_entry.item_id.id }}">{{ ld_entry.item_id.Name }}</a>
                                                     </td>
                                                     <td>{{ ld_entry.chance }}%</td>
-                                                    <td class="expansion-tag {{ ld_entry.min_expansion|exp_filter }}"><span>{{ ld_entry.min_expansion|exp_filter|title }}</span></td>
+                                                    <td class="expansion-tag {{ ld_entry.min_expansion|exp_filter }}">
+                                                        <span>{{ ld_entry.min_expansion|exp_filter|title }}</span></td>
                                                 </tr>
                                             {% endfor %}
                                             </tbody>
@@ -453,7 +465,9 @@
                 {x: {{ sp.x|multiply:-1 }}, y: {{ sp.y|multiply:-1 }}},
             {% endfor %}
         ];
-        {#const creaturePathPoints = {{  }}#}
     </script>
     <script src="/static/konvamap.js"></script>
+    <script type="text/javascript">
+        const creaturePathPoints = {{ creature_path_points|safe }};
+    </script>
 {% endblock %}
