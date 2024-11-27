@@ -3,29 +3,34 @@ document.addEventListener('DOMContentLoaded', function () {
     let minY = 0;
     let maxX = 0;
     let maxY = 0;
-    
+
     const konvaContainer = document.getElementById('konva-container');
     const stage = new Konva.Stage({
         container: konvaContainer,
         width: konvaContainer.clientWidth,
         height: konvaContainer.clientHeight,
-        scale: { x: 0.5, y: 0.5 } // Set the initial zoom level
+        scale: {x: 0.5, y: 0.5} // Set the initial zoom level
     });
 
-    stage.position({
+    const initialPosition = {
         x: stage.width() / 2,
-        y: stage.height() / 2,
-    });
+        y: stage.height() / 2
+    };
+    stage.position(initialPosition);
 
-    if (typeof creatureSpawnPoints !== 'undefined') {
-        if (creatureSpawnPoints.length > 0) {
-            const firstSpawnPoint = creatureSpawnPoints[0];
-            stage.position({
-                x: stage.width() / 2 - firstSpawnPoint.x * stage.scaleX(),
-                y: stage.height() / 2 - firstSpawnPoint.y * stage.scaleY(),
-            });
+    function setPositionFirstSpawnPoint(creatureSpawnPoints, stage) {
+        if (typeof creatureSpawnPoints !== 'undefined') {
+            if (creatureSpawnPoints.length > 0) {
+                const firstSpawnPoint = creatureSpawnPoints[0];
+                stage.position({
+                    x: stage.width() / 2 - firstSpawnPoint.x * stage.scaleX(),
+                    y: stage.height() / 2 - firstSpawnPoint.y * stage.scaleY(),
+                });
+            }
         }
     }
+
+    setPositionFirstSpawnPoint(creatureSpawnPoints, stage);
 
     const layer = new Konva.Layer(); // Move the layer declaration here
     stage.add(layer);
@@ -43,7 +48,15 @@ document.addEventListener('DOMContentLoaded', function () {
         // Redraw the layer
         layer.draw();
     });
-    
+
+    const reCenterButton = document.getElementById('reCenter');
+    reCenterButton.addEventListener('click', function () {
+        stage.scale({x: 0.5, y: 0.5});
+        stage.position(initialPosition);
+        setPositionFirstSpawnPoint(creatureSpawnPoints, stage);
+        layer.draw();
+    });
+
     // Add event listener for show/hide points toggle
     const showPointsToggle = document.getElementById('showPoints');
     showPointsToggle.addEventListener('change', function () {
@@ -80,12 +93,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Ensure creaturePathPoints is defined
     if (typeof creaturePathPoints !== 'undefined') {
-        console.log("Test");
         Object.values(creaturePathPoints).forEach(creaturePath => {
             for (let i = 1; i < creaturePath.length; i++) {
                 const startPoint = creaturePath[i - 1];
                 const endPoint = creaturePath[i];
-        
+
                 const konvaLine = new Konva.Arrow({
                     points: [startPoint.x, startPoint.y, endPoint.x, endPoint.y],
                     stroke: pathLineColor,
@@ -98,15 +110,14 @@ document.addEventListener('DOMContentLoaded', function () {
                     fillAfterStrokeEnabled: 'True',
                     dash: [29, 20, 0.001, 20],
                 });
-        
+
                 layer.add(konvaLine);
             }
         });
-        
+
         // Ensure that paths are drawn in the correct order
         layer.draw();
-    }
-    else {
+    } else {
         console.log("Creature Path Points were undefined.");
     }
 
@@ -147,7 +158,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return fetch(fileName)
             .then(response => response.text())
             .then(content => {
-                const { lines, points } = createLinesAndPointsFromContent(content);
+                const {lines, points} = createLinesAndPointsFromContent(content);
 
                 // Draw lines on the Konva layer
                 lines.forEach(line => {
@@ -195,19 +206,6 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => {
                 console.error(`Error fetching or parsing file ${fileName}:`, error);
             });
-    }
-
-
-    function updateOverallBounds(lines, points) {
-        const allCoordinates = [
-            ...lines.flatMap(line => line.points),
-            ...points.flatMap(point => [point.x, point.y]),
-        ];
-
-        minX = Math.min(minX, ...allCoordinates.filter((_, index) => index % 2 === 0));
-        minY = Math.min(minY, ...allCoordinates.filter((_, index) => index % 2 !== 0));
-        maxX = Math.max(maxX, ...allCoordinates.filter((_, index) => index % 2 === 0));
-        maxY = Math.max(maxY, ...allCoordinates.filter((_, index) => index % 2 !== 0));
     }
 
     function convertColorToKonvaFormat(rgbColor) {
@@ -272,8 +270,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
             }
         });
-        
-        return { lines: lines, points: points };
+
+        return {lines: lines, points: points};
     }
 
     // Graticule function
@@ -281,14 +279,14 @@ document.addEventListener('DOMContentLoaded', function () {
         // console.log("They callin me")
         const gridLineColor = 'rgba(0, 0, 0, 0.2)';
         const gridLineWidth = 1;
-    
+
         // Calculate the scaled grid size
         const scaledGridSize = gridSize * stage.scaleX();
-    
+
         // Calculate the starting point of the graticule
         const startXAt = minX + Math.abs(minX % scaledGridSize);
         const startYAt = minY + Math.abs(minY % scaledGridSize);
-    
+
         // Draw vertical lines
         let xMark = startXAt;
         while (xMark < maxX) {
@@ -298,10 +296,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 strokeWidth: gridLineWidth,
             });
             layer.add(konvaLine);
-    
+
             xMark += scaledGridSize;
         }
-    
+
         // Draw horizontal lines
         let yMark = startYAt;
         while (yMark < maxY) {
@@ -311,7 +309,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 strokeWidth: gridLineWidth,
             });
             layer.add(konvaLine);
-    
+
             yMark += scaledGridSize;
         }
         layer.find('Line').forEach(line => {
@@ -374,7 +372,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const newY = mouseY - (mouseY - stage.y()) * scaleChange;
 
         // Set new scale and position for the stage
-        stage.scale({ x: newScaleX, y: newScaleY });
+        stage.scale({x: newScaleX, y: newScaleY});
         stage.position({
             x: newX,
             y: newY,
@@ -413,6 +411,7 @@ document.addEventListener('DOMContentLoaded', function () {
         lastPosX = undefined;
         lastPosY = undefined;
     });
+
     function loadCreatureSpawnPoints(layer, spawnPoints) {
         spawnPoints.forEach(point => {
             const konvaRing = new Konva.Ring({
@@ -430,12 +429,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
             layer.add(konvaRing);
 
-            var period = 4000;
+            let period = 4000;
 
-            var anim = new Konva.Animation(function (frame) {
-                var scale = Math.sin((frame.time * 2 * Math.PI) / period) + 0.001;
+            let anim = new Konva.Animation(function (frame) {
+                let scale = Math.sin((frame.time * 2 * Math.PI) / period) + 0.001;
                 // scale x and y
-                konvaRing.scale({ x: scale, y: scale });
+                konvaRing.scale({x: scale, y: scale});
 
             }, layer);
             // Add event listener for start/stop animations toggle
@@ -465,6 +464,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Redraw the layer after adding all points
         layer.draw();
     }
+
     function loadCreatureRoamboxes(layer, roamboxes) {
         //console.log(roamboxes)
         roamboxes.forEach(box => {
@@ -497,6 +497,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Redraw the layer after adding all points
         layer.draw();
     }
+
     loadMap(mapBaseName);
     if (typeof creatureRoamBoxes !== 'undefined') {
         loadCreatureRoamboxes(layer, creatureRoamBoxes);

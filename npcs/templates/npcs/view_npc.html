@@ -187,10 +187,12 @@
                     </li>
                 </ul>
                 <div class="tab-content" id="charViewTabContent">
-                    <div class="tab-pane fade show active" id="map-tab-pane" role="tabpanel" aria-labelledby="map-tab" tabindex="0">
+                    <div class="tab-pane fade show active" id="map-tab-pane" role="tabpanel" aria-labelledby="map-tab"
+                         tabindex="0">
                         <div class="row">
                             <div class="col py-2 px-3">
-                                <div id="konva-container" class="s12 l9 row" style="min-width: 400px; min-height: 600px;position:relative"></div>
+                                <div id="konva-container" class="s12 l9 row"
+                                     style="min-width: 400px; min-height: 600px;position:relative"></div>
                                 <div id="controls" class="navbar">
                                     <ul class="nav nav-fill">
                                         <li class="nav-item">
@@ -202,17 +204,31 @@
                                             <label for="showPoints" class="custom-control-label">Toggle Points</label>
                                         </li>
                                         <li class="nav-item">
-                                            <div class="ms-3">
-                                                <input type="checkbox" id="toggleAnim" class="custom-control-input">
-                                                <label for="toggleAnim" class="custom-control-label">Toggle
-                                                    Animation</label>
-                                            </div>
+                                            <input type="checkbox" id="toggleAnim" class="custom-control-input">
+                                            <label for="toggleAnim" class="custom-control-label">Toggle
+                                                Animation</label>
+                                        </li>
+                                        <li class="nav-item">
+                                            <button type="button" id="reCenter"
+                                                    class="btn btn-secondary custom-control-input">Reset Map
+                                            </button>
                                         </li>
                                     </ul>
                                 </div>
                                 <span class="navbar-text">Credit to <a href="https://www.pqdi.cc/">Talodar</a> for the original map script.</span>
-                                <span class="navbar-text">Credit for all maps goes to <a class="link" href="https://www.eqmaps.info/">Brewall</a>.</span>
+                                <span class="navbar-text">Credit for all maps goes to <a class="link"
+                                                                                         href="https://www.eqmaps.info/">Brewall</a>.</span>
                             </div>
+                            {% if spawn_groups|length > 0 %}
+                                {% if spawn_groups.0.0.0.wp_spawns == 1 and spawn_groups.0.0.0.pathgrid > 0 %}
+                                    <script>
+                                        $(document).ready(function () {
+                                            let s = document.getElementById('info-display');
+                                            s.textContent = "{{ npc_data.name|clean_name }} can spawn on any of their waypoints (noted by arrow heads).";
+                                        });
+                                    </script>
+                                {% endif %}
+                            {% endif %}
                         </div>
                     </div>
                     <div class="tab-pane fade" id="faction-tab-pane" role="tabpanel"
