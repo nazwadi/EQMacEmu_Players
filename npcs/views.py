@@ -10,7 +10,6 @@ from common.models.npcs import NPCTypes
 from common.models.npcs import MerchantList
 from common.models.spawns import SpawnEntry
 from common.models.spawns import Spawn2
-from common.models.spawns import SpawnGroup
 from common.utils import calculate_item_price
 from collections import namedtuple
 
