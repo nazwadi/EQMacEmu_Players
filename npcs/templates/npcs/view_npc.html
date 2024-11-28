@@ -1,4 +1,4 @@
-{% extends 'characters/header.html' %}
+{% extends 'npcs/header.html' %}
 {% load data_utilities %}
 {% load static %}
 {% load humanize %}
@@ -192,7 +192,8 @@
                         <div class="row">
                             <div class="col py-2 px-3">
                                 <div id="konva-container" class="s12 l9 row"
-                                     style="min-width: 400px; min-height: 600px;position:relative"></div>
+                                     style="min-width: 400px; min-height: 600px;position:relative">
+                                </div>
                                 <div id="controls" class="navbar">
                                     <ul class="nav nav-fill">
                                         <li class="nav-item">
@@ -219,16 +220,6 @@
                                 <span class="navbar-text">Credit for all maps goes to <a class="link"
                                                                                          href="https://www.eqmaps.info/">Brewall</a>.</span>
                             </div>
-                            {% if spawn_groups|length > 0 %}
-                                {% if spawn_groups.0.0.0.wp_spawns == 1 and spawn_groups.0.0.0.pathgrid > 0 %}
-                                    <script>
-                                        $(document).ready(function () {
-                                            let s = document.getElementById('info-display');
-                                            s.textContent = "{{ npc_data.name|clean_name }} can spawn on any of their waypoints (noted by arrow heads).";
-                                        });
-                                    </script>
-                                {% endif %}
-                            {% endif %}
                         </div>
                     </div>
                     <div class="tab-pane fade" id="faction-tab-pane" role="tabpanel"
@@ -486,4 +477,12 @@
     <script type="text/javascript">
         const creaturePathPoints = {{ creature_path_points|safe }};
     </script>
+    {% if enable_wp_spawn_notice %}
+        <script>
+            $(document).ready(function () {
+                let infoDisplay = document.getElementById('info-display');
+                infoDisplay.textContent = "{{ npc_data.name|clean_name }} can spawn on any of their waypoints (noted by arrow heads).";
+            });
+        </script>
+    {% endif %}
 {% endblock %}

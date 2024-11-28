@@ -10,6 +10,7 @@ from common.models.npcs import NPCTypes
 from common.models.npcs import MerchantList
 from common.models.spawns import SpawnEntry
 from common.models.spawns import Spawn2
+from common.models.spawns import SpawnGroup
 from common.utils import calculate_item_price
 from collections import namedtuple
 
@@ -119,7 +120,6 @@ def search(request):
             query += """ AND nt.class = %s"""
             query_list.append(npc_class)
         query += """ LIMIT %s"""
-        print(query)
         query_list.append(int(query_limit))
         cursor.execute(query, query_list)
         results = cursor.fetchall()
@@ -290,6 +290,7 @@ def view_npc(request, npc_id):
                         zone.long_name, 
                         zone.short_name,
                         spawn2.pathgrid,
+                        spawngroup.wp_spawns,
                         grid_entries.number,  
                         grid_entries.x,
                         grid_entries.y
@@ -305,7 +306,7 @@ def view_npc(request, npc_id):
                         grid_entries ON spawn2.pathgrid = grid_entries.gridid AND zone.zoneidnumber = grid_entries.zoneid
                     WHERE 
                         spawnentry.npcID = %s
-                    GROUP BY pathgrid, number, zoneidnumber, long_name, short_name
+                    GROUP BY pathgrid, number, zoneidnumber, long_name, short_name, wp_spawns
                     ORDER BY 
                         zone.zoneidnumber, zone.long_name, zone.short_name, spawn2.pathgrid, CAST(grid_entries.number AS SIGNED);
                     """
@@ -313,13 +314,17 @@ def view_npc(request, npc_id):
     paths = cursor.fetchall()
     creature_path_points = {}
 
+    enable_wp_spawn_notice = False
     for path in paths:
         grid_id = path[3]  # pathgrid
-        x = float(path[5])  # x
-        y = float(path[6])  # y
+        wp_spawns = path[4]
+        x = float(path[6])  # x
+        y = float(path[7])  # y
 
         if grid_id not in creature_path_points:
             creature_path_points[grid_id] = []
+        if wp_spawns == 1 and grid_id > 0:
+            enable_wp_spawn_notice = True
 
         creature_path_points[grid_id].append({'x': -x, 'y': -y})
 
@@ -327,6 +332,7 @@ def view_npc(request, npc_id):
                   template_name="npcs/view_npc.html",
                   context={
                       "creature_path_points": json.dumps(creature_path_points),
+                      "enable_wp_spawn_notice": enable_wp_spawn_notice,
                       "expansion": expansion,
                       "factions": factions,
                       "loottable": loottable,
