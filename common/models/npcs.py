@@ -67,6 +67,7 @@ class NPCTypes(models.Model):
     name = models.TextField(unique=True, null=False, default=None)
     lastname = models.CharField(max_length=32, null=True, default=None)
     race = models.SmallIntegerField(null=False, default=0)
+    bodytype = models.IntegerField(null=False, default=1)
     level = models.SmallIntegerField(null=False, default=0)
     max_level = models.SmallIntegerField(null=False, default=0, db_column='maxlevel')
     class_name = models.SmallIntegerField(null=False, default=0, db_column='class')

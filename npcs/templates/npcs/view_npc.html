@@ -1,5 +1,6 @@
 {% extends 'npcs/header.html' %}
 {% load data_utilities %}
+{% load npc_filters %}
 {% load static %}
 {% load humanize %}
 {% load expansion_filters %}
@@ -23,6 +24,9 @@
                     </tr>
                     <tr>
                         <td><span style="font-weight: bold;">Race:</span>&nbsp;{{ npc_data.race|npc_race }} </td>
+                    </tr>
+                    <tr>
+                        <td><span style="font-weight: bold;">Body Type:</span>&nbsp;{{ npc_data.bodytype|body_type }} </td>
                     </tr>
                     <tr>
                         <td><span style="font-weight: bold;">Class:</span>&nbsp;{{ npc_data.class_name|npc_class }}
