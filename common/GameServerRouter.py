@@ -26,6 +26,7 @@ from common.models.npcs import NPCTypes
 from common.models.tradeskill import TradeskillRecipe
 from common.models.tradeskill import TradeskillRecipeEntries
 from common.models.spawns import SpawnEntry
+from common.models.spawns import SpawnGroup
 from common.models.spawns import Spawn2
 from common.models.spells import SpellsNew
 from common.models.zones import Zone
@@ -62,6 +63,7 @@ class GameServerRouter:
                           TradeskillRecipe,
                           TradeskillRecipeEntries,
                           SpawnEntry,
+                          SpawnGroup,
                           Spawn2,
                           SpellsNew,
                           Items,

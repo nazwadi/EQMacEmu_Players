@@ -3,6 +3,35 @@ from django.db import models
 from common.models.npcs import NPCTypes
 
 
+class SpawnGroup(models.Model):
+    """
+    This model maps to the spawngroup table in the database.
+    """
+
+    def __str__(self):
+        return str(self.id)
+
+    id = models.IntegerField(primary_key=True, null=False, default=None)
+    name = models.CharField(max_length=50, null=False, unique=True)
+    spawn_limit = models.SmallIntegerField(null=False, default=0)
+    max_x = models.FloatField(null=False, default=0)
+    min_x = models.FloatField(null=False, default=0)
+    max_y = models.FloatField(null=False, default=0)
+    min_y = models.FloatField(null=False, default=0)
+    delay = models.IntegerField(null=False, default=45000)
+    min_delay = models.IntegerField(null=False, default=15000, db_column="mindelay")
+    despawn = models.SmallIntegerField(null=False, default=0)
+    despawn_timer = models.IntegerField(null=False, default=100)
+    rand_spawns = models.IntegerField(null=False, default=0)
+    rand_respawntime = models.IntegerField(null=False, default=1200)
+    rand_variance = models.IntegerField(null=False, default=0)
+    rand_condition = models.IntegerField(null=False, default=0, db_column="rand_condition_")
+    wp_spawns = models.SmallIntegerField(null=False, default=0)
+
+    class Meta:
+        db_table = "spawngroup"
+        managed = False
+
 class SpawnEntry(models.Model):
     """
     This model maps to the spawnentry table in the database.

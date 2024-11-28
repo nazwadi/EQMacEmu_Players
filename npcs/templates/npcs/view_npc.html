@@ -26,7 +26,8 @@
                         <td><span style="font-weight: bold;">Race:</span>&nbsp;{{ npc_data.race|npc_race }} </td>
                     </tr>
                     <tr>
-                        <td><span style="font-weight: bold;">Body Type:</span>&nbsp;{{ npc_data.bodytype|body_type }} </td>
+                        <td><span style="font-weight: bold;">Body Type:</span>&nbsp;{{ npc_data.bodytype|body_type }}
+                        </td>
                     </tr>
                     <tr>
                         <td><span style="font-weight: bold;">Class:</span>&nbsp;{{ npc_data.class_name|npc_class }}
@@ -481,11 +482,31 @@
     <script type="text/javascript">
         const creaturePathPoints = {{ creature_path_points|safe }};
     </script>
+    <script>
+        const creatureRoamBoxes = [
+            {% for roam_box in roam_boxes %}
+                {
+                    x: {{ roam_box.start_x|multiply:-1 }},
+                    y: {{ roam_box.start_y|multiply:-1 }},
+                    width: {{ roam_box.width|multiply:-1 }},
+                    height: {{ roam_box.height|multiply:-1 }}
+                },
+            {% endfor %}
+        ]
+    </script>
     {% if enable_wp_spawn_notice %}
         <script>
             $(document).ready(function () {
                 let infoDisplay = document.getElementById('info-display');
                 infoDisplay.textContent = "{{ npc_data.name|clean_name }} can spawn on any of their waypoints (noted by arrow heads).";
+            });
+        </script>
+    {% endif %}
+    {% if roam_boxes|length > 0 %}
+        <script>
+            $(document).ready(function () {
+                let info = document.getElementById('info-display');
+                info.textContent = "{{ npc_data.name|clean_name }} is a roam box spawn and can spawn anywhere in the blue box(es).";
             });
         </script>
     {% endif %}

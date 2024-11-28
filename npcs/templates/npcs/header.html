@@ -44,13 +44,5 @@
         });
     });
 </script>
-{% if enable_wp_spawn_notice %}
-    <script>
-        $(document).ready(function () {
-            let infoDisplay = document.getElementById('info-display');
-            infoDisplay.textContent = "{{ npc_data.name|clean_name }} can spawn on any of their waypoints (noted by arrow heads).";
-        });
-    </script>
-{% endif %}
 </body>
 </html>

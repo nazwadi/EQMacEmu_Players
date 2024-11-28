@@ -473,8 +473,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 y: box.y,
                 width: box.width,
                 height: box.height,
-                stroke: pathLineColor,
-                fill: 'rgba(22, 226, 245, 0.05)',
+                stroke: '#000000',
+                fill: 'rgba(22, 226, 245, 0.15)',
                 strokeWidth: 15,
             });
 

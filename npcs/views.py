@@ -10,6 +10,7 @@ from common.models.npcs import NPCTypes
 from common.models.npcs import MerchantList
 from common.models.spawns import SpawnEntry
 from common.models.spawns import Spawn2
+from common.models.spawns import SpawnGroup
 from common.utils import calculate_item_price
 from collections import namedtuple
 
@@ -327,11 +328,32 @@ def view_npc(request, npc_id):
 
         creature_path_points[grid_id].append({'x': -x, 'y': -y})
 
+    roam_boxes = []
+    spawn_entries = SpawnEntry.objects.filter(npcID=npc_data.id).order_by("-spawngroupID")
+    for spawn_entry in spawn_entries:
+        roam_box = SpawnGroup.objects.filter(id=spawn_entry.spawngroupID).first()
+        if roam_box.max_x != 0 and roam_box.max_y != 0:
+            max_x = roam_box.max_x
+            min_x = roam_box.min_x
+            max_y = roam_box.max_y
+            min_y = roam_box.min_y
+            width = max_x - min_x
+            height = max_y - min_y
+            roam_boxes.append({'start_x': min_x, 'start_y': min_y, 'width': width, 'height': height})
+    seen_rb = set()
+    unique_rb = []
+    for roam_box in roam_boxes:
+        items = tuple(roam_box.items())
+        if items not in seen_rb:
+            seen_rb.add(items)
+            unique_rb.append(roam_box)
+
     return render(request=request,
                   template_name="npcs/view_npc.html",
                   context={
                       "creature_path_points": json.dumps(creature_path_points),
                       "enable_wp_spawn_notice": enable_wp_spawn_notice,
+                      "roam_boxes": unique_rb,
                       "expansion": expansion,
                       "factions": factions,
                       "loottable": loottable,
