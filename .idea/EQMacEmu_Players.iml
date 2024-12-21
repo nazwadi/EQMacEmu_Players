@@ -42,6 +42,7 @@
         <option value="$MODULE_DIR$/factions/templates" />
         <option value="$MODULE_DIR$/spells/templates" />
         <option value="$MODULE_DIR$/pets/templates" />
+        <option value="$MODULE_DIR$/quests/templates" />
       </list>
     </option>
   </component>

@@ -1,0 +1,225 @@
+{% extends 'quests/header.html' %}
+{% load static %}
+{% load expansion_filters %}
+{% load data_utilities %}
+{% load markdown_extras %}
+{% load npc_filters %}
+{% block content %}
+    <div class="container py-4">
+        <div class="row">
+            {% if quest_exists %}
+                <h3>{{ quest.name }}</h3>
+                <hr/>
+                <div class="col-12 col-md-3">
+                    <table class="table questInfoBox"
+                           style="box-shadow: 5px 10px 20px rgba(0, 0, 0, 0.6); box-sizing: border-box;">
+                        <tr>
+                            <th colspan="2" class="msb_top">
+                                Quest Information
+                            </th>
+                        </tr>
+                        <tr>
+                            <th colspan="2" class="msb_sub"
+                                style="padding: 5px; text-align: left;">
+                                Where to Begin
+                            </th>
+                        </tr>
+                        <tr>
+                            <th scope="row">Start Zone:</th>
+                            {% if quest.starting_zone %}
+                                <td>
+                                    <a href="/zones/view/{{ quest.starting_zone }}">{{ quest.starting_zone|zone_short_to_long }}</a>
+                                </td>
+                            {% else %}
+                                <td>Unknown</td>
+                            {% endif %}
+                        </tr>
+                        <tr>
+                            <th scope="row">Quest Giver:</th>
+                            {% if starting_npc %}
+                                <td>
+                                    <a href="/npcs/view/{{ starting_npc.id }}">{{ starting_npc.name|clean_name }}</a>
+                                </td>
+                            {% else %}
+                                <td>Unknown</td>
+                            {% endif %}
+                        </tr>
+                        <tr>
+                            <th colspan="2" class="msb_sub"
+                                style="padding: 5px; text-align: left;">
+                                Availability
+                            </th>
+                        </tr>
+                        <tr>
+                            <th scope="row">Expansion:</th>
+                            <td><img src="{% static '/images/' %}{{ quest.expansion_introduced|expansion_icon }}"
+                                     alt="{{ quest.expansion_introduced|exp_filter|title }}"/></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Level:</th>
+                            {% if quest.minimum_level %}
+                                <td>{{ quest.minimum_level }}</td>
+                            {% else %}
+                                <td></td>
+                            {% endif %}
+                        </tr>
+                        <tr>
+                            <th scope="row">Max Level:</th>
+                            {% if quest.maximum_level == -1 %}
+                                <td>{{ default_max_level }}</td>
+                            {% else %}
+                                <td>{{ quest.maximum_level }}</td>
+                            {% endif %}
+                        </tr>
+                        <tr>
+                            <th scope="row">Class Restrictions:</th>
+                            {% if quest.class_restrictions == -1 %}
+                                <td>None</td>
+                            {% else %}
+                                <td>{{ quest.class_restrictions }}</td>
+                            {% endif %}
+                        </tr>
+                        <tr>
+                            <th scope="row">Race Restrictions:</th>
+                            {% if quest.race_restrictions == -1 %}
+                                <td>None</td>
+                            {% else %}
+                                <td>{{ quest.race_restrictions }}</td>
+                            {% endif %}
+                        </tr>
+                        <tr>
+                            <th scope="row">Deity Restrictions:</th>
+                            {% if quest.deity_restrictions == -1 %}
+                                <td>None</td>
+                            {% else %}
+                                <td>{{ quest.deity_restrictions }}</td>
+                            {% endif %}
+                        </tr>
+                        <tr>
+                            <th scope="row">Repeatable:</th>
+                            <td>{{ quest.is_repeatable|yesno }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Monster Mission:</th>
+                            <td>{{ quest.monster_mission|yesno }}</td>
+                        </tr>
+                        <tr>
+                            <th colspan="2" class="msb_sub" scope="row">Quest Items</th>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <ul>
+                                    {% for item in quest_items %}
+                                        <li><a href="/items/view/{{ item.id }}">{{ item.Name }}</a></li>
+                                    {% empty %}
+                                        <li>None</li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th colspan="2" class="msb_sub" scope="row">Related Zones</th>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <ul>
+                                    {% for zone in related_zones %}
+                                        <li><a href="/zones/view/{{ zone.short_name }}">{{ zone.long_name }}</a></li>
+                                    {% empty %}
+                                        <li>None</li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th colspan="2" class="msb_sub" scope="row">Related NPCs</th>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <ul>
+                                    {% for npc in related_npcs %}
+                                        <li><a href="/npcs/view/{{ npc.id }}">{{ npc.name|clean_name }}</a></li>
+                                    {% empty %}
+                                        <li>None</li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th colspan="2" class="msb_top" scope="row">Faction Information</th>
+                        </tr>
+                        <tr>
+                            <th colspan="2" class="msb_sub" scope="row">Factions Required</th>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <ul>
+                                    {% for faction in quest.factions_required.all %}
+                                        <li><a href="/factions/view/{{ faction.id }}">{{ faction.name|clean_name }}</a>
+                                        </li>
+                                    {% empty %}
+                                        <li>None</li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th colspan="2" class="msb_sub" scope="row">Factions Raised</th>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <ul>
+                                    {% for faction in quest.factions_raised.all %}
+                                        <li><a href="/factions/view/{{ faction.id }}">{{ faction.name|clean_name }}</a>
+                                        </li>
+                                    {% empty %}
+                                        <li>None</li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th colspan="2" class="msb_sub" scope="row">Factions Lowered</th>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <ul>
+                                    {% for faction in quest.factions_lowered.all %}
+                                        <li><a href="/factions/view/{{ faction.id }}">{{ faction.name|clean_name }}</a>
+                                        </li>
+                                    {% empty %}
+                                        <li>None</li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th colspan="2" class="msb_top" scope="row">Known Revisions (Patches)</th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <ul>
+                                    <li>None</li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-12 col-md-9">
+                    <div class="row-4"
+                         style="padding: 5px; margin-bottom: 25px; text-align: left; font-weight: bold; 
+                         background-color: #cedff2; border: solid #becfe2 1px; 
+                         box-shadow: 0 0 0 rgba(0, 0, 0, 0.6); box-sizing: border-box;">
+                        Description
+                    </div>
+                    <article style="margin-left:10px;">
+                        {{ quest.description|render_markdown|safe }}
+                    </article>
+                </div>
+            {% else %}
+                <h4>Invalid Quest ID</h4>
+                <p style="padding-bottom: 400px;">We could not find a quest with that ID. Sorry!</p>
+            {% endif %} {# End if quest exists #}
+        </div>
+    </div>
+{% endblock %}

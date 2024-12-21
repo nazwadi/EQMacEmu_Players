@@ -36,6 +36,26 @@ ul {
     background-color: #f3f8fd
 }
 
+/* Quest Page */
+.questInfoBox {
+    border: 1px solid #becfe2;
+    margin: 0 5px 5px 0;
+    float: left;
+    width: 300px;
+}
+
+.questInfoBox .msb_top {
+    background-color: #cedff2
+}
+
+.questInfoBox th {
+    background-color: #FFFFFF;
+}
+
+.questInfoBox .msb_sub {
+    background-color: #f3f8fd
+}
+
 .table-floating-header {
     position: sticky;
     top: 0;

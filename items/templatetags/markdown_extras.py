@@ -10,4 +10,4 @@ register = template.Library()
 @register.filter
 @stringfilter
 def render_markdown(value):
-    return mark_safe(md.markdown(value))
+    return mark_safe(md.markdown(value, extras=['task_list', 'footnotes', 'tables']))

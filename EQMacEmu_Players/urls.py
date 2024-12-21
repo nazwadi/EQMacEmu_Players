@@ -16,11 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from django.shortcuts import redirect
+from django.conf import settings
+from django.conf.urls.static import static
 
 admin.site.site_header = "EQMacEmu Accounts Administration"
 
 urlpatterns = [
-    path(r"", include("accounts.urls")),
+    path(r"", lambda request: redirect("/accounts/")),
     path("__debug__/", include("debug_toolbar.urls")),
     path("accounts/", include("accounts.urls")),
     path("admin/", admin.site.urls),
@@ -30,7 +33,10 @@ urlpatterns = [
     path("items/", include("items.urls")),
     path("npcs/", include("npcs.urls")),
     path("pets/", include("pets.urls")),
+    path("quests/", include("quests.urls")),
     path("recipes/", include("recipes.urls")),
     path("spells/", include("spells.urls")),
     path("zones/", include("zones.urls")),
-]
+
+    path("mdeditor/", include('mdeditor.urls'))
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
