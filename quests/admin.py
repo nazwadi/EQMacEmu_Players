@@ -23,7 +23,8 @@ class QuestItemAdmin(admin.ModelAdmin):
     pass
 
 class QuestsRelatedZoneAdmin(admin.ModelAdmin):
-    pass
+    list_display = ("zone_id", "long_name", "short_name")
+    search_fields = ["short_name", "long_name", "zone_id"]
 
 class QuestsRelatedNPCAdmin(admin.ModelAdmin):
     pass
