@@ -84,7 +84,7 @@
                             {% if quest.race_restrictions == -1 %}
                                 <td>None</td>
                             {% else %}
-                                <td>{{ quest.race_restrictions }}</td>
+                                <td>{{ quest.race_restrictions|player_race }}</td>
                             {% endif %}
                         </tr>
                         <tr>
@@ -92,7 +92,7 @@
                             {% if quest.deity_restrictions == -1 %}
                                 <td>None</td>
                             {% else %}
-                                <td>{{ quest.deity_restrictions }}</td>
+                                <td>{{ quest.deity_restrictions|player_deity }}</td>
                             {% endif %}
                         </tr>
                         <tr>
