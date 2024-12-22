@@ -116,13 +116,31 @@ class QuestFactionRequired(models.Model):
     id = models.IntegerField(primary_key=True, null=False)
     name = models.CharField(max_length=50, null=False)
 
+    def __str__(self):
+        return "".join([str(self.name), " (", str(self.id), ")"])
+
+    def __unicode__(self):
+        return "".join([str(self.name), " (", str(self.id), ")"])
+
 class QuestFactionRaised(models.Model):
     id = models.IntegerField(primary_key=True, null=False)
     name = models.CharField(max_length=50, null=False)
 
+    def __str__(self):
+        return "".join([str(self.name), " (", str(self.id), ")"])
+
+    def __unicode__(self):
+        return "".join([str(self.name), " (", str(self.id), ")"])
+
 class QuestFactionLowered(models.Model):
     id = models.IntegerField(primary_key=True, null=False)
     name = models.CharField(max_length=50, null=False)
+
+    def __str__(self):
+        return "".join([str(self.name), " (", str(self.id), ")"])
+
+    def __unicode__(self):
+        return "".join([str(self.name), " (", str(self.id), ")"])
 
 class QuestItem(models.Model):
     """
