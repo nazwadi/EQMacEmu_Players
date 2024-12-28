@@ -19,6 +19,7 @@ from django.urls import include, path
 from django.shortcuts import redirect
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 admin.site.site_header = "EQMacEmu Accounts Administration"
 
@@ -37,6 +38,9 @@ urlpatterns = [
     path("recipes/", include("recipes.urls")),
     path("spells/", include("spells.urls")),
     path("zones/", include("zones.urls")),
-
     path("mdeditor/", include('mdeditor.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += staticfiles_urlpatterns()

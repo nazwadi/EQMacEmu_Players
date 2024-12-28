@@ -1,0 +1,204 @@
+pre {
+    padding: 1em;
+    border: 1px dashed #2f6fab;
+    color: black;
+    background-color: #f9f9f9;
+    line-height: 1.1em;
+    font-family: monospace, Courier;
+}
+
+p {
+    max-width: 100em;
+    font-size: 16px;
+}
+
+ul {
+    font-size: 14px;
+}
+
+.navbar ul {
+    font-size: 16px;
+}
+
+/* NPC Page */
+.mobStatsBox {
+    border: 1px solid #becfe2;
+    margin: 0 5px 5px 0;
+    float: left;
+    width: 300px;
+}
+
+.mobStatsBox th {
+    background-color: #cedff2
+}
+
+.mobStatsBox .msb_sub {
+    background-color: #f3f8fd
+}
+
+/* Quest Page */
+.questInfoBox {
+    border: 1px solid #becfe2;
+    margin: 0 5px 5px 0;
+    float: left;
+    width: 300px;
+}
+
+.questInfoBox .msb_top {
+    background-color: #cedff2
+}
+
+.questInfoBox th {
+    background-color: #FFFFFF;
+}
+
+.questInfoBox .msb_sub {
+    background-color: #f3f8fd
+}
+
+.table-floating-header {
+    position: sticky;
+    top: 0;
+    border-collapse: separate;
+    z-index: 9999;
+    border-bottom: 1px solid #ffffff1c;
+
+    filter: drop-shadow(0px 3px 3px rgba(0, 0, 0, .2));
+}
+
+.table-floating-header th {
+    background: #cedff2;
+}
+
+#konva-container {
+    background-image: url("/static/assets/maps/map-parchment.jpg");
+    overflow: hidden;
+}
+
+.breadcrumb {
+    box-shadow: 1px 1px #d5d4d4;
+    background: #eeeded;
+    border: 1px solid #eeeded;
+    border-radius: 5px;
+    padding: 0 5px 0 10px !important;
+    font-size: 16px;
+    line-height: 2em;
+}
+
+
+.item_background {
+    width: 451px;
+    background-image: url("/static/images/Itemshot.gif") !important;
+    text-align: left;
+}
+
+.item_background * {
+    background-image: url("/static/images/Itemshot.gif") !important;
+}
+
+.item_top_background {
+    width: 451px;
+    height: 18px;
+    background-image: url("/static/images/Itemtop.gif") !important;
+}
+
+.item_top_background * {
+    background-image: url("/static/images/Itemtop.gif") !important;
+}
+
+.item_bottom_background {
+    width: 451px;
+    height: 10px;
+    background-image: url("/static/images/Itembot.gif") !important;
+}
+
+.item_bottom_background * {
+    background-image: url("/static/images/Itembot.gif") !important;
+}
+
+.item_title {
+    font-family: Arial, serif;
+    font-size: 12px;
+    color: #c0c0c0;
+    text-align: center;
+    width: 100%;
+    height: 15px;
+}
+
+.text-disabled {
+    color: #bbb;
+    list-style: none;
+}
+
+.item_data {
+    font-family: Arial, serif;
+    font-size: 12px;
+    color: #ffffff;
+    padding: 7px;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.item_icon {
+    margin: 0 25px;
+}
+
+.column-list {
+  -webkit-columns: 4 200px;
+  -moz-columns: 4 200px;
+  columns: 4 200px;
+  -webkit-column-gap: 4em;
+  -moz-column-gap: 4em;
+  column-gap: 4em;
+  -webkit-column-rule: 1px dotted;
+  -moz-column-rule: 1px dotted;
+  column-rule: 1px dotted;
+  padding: 5%;
+}
+#logo a {
+  background: url(/static/images/eqalogo.png) right no-repeat;
+  width: 331px;
+}
+.expansion-tag span {
+  border: 1px solid gray;
+  border-radius: 5px;
+  display: inline-block;
+  width: 60px;
+  text-align: center;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px #222222;
+  padding-left: 2px;
+  padding-right: 2px;
+  font-size: 12px;
+}
+.default span, h2 .default{
+  background: #666666;
+  color: #dddddd;
+}
+
+.kunark span, h2 .kunark {
+  /* background: #765F35;*/
+  background: #607643;
+  color: #D3AB5C;
+}
+
+.velious span, h2 .velious {
+  background: #D0C4BA;
+  color: #5D1715;
+}
+
+.luclin span, h2 .luclin {
+  background: #2E57BF;
+  color: #DDBE47;
+}
+
+.planes span, h2 .planes {
+  background: #8B3E18;
+  color: #CEB04A;
+}
+
+.script span {
+  background: #880000;
+  color: #dddddd;
+}
+

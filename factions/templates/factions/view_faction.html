@@ -5,7 +5,45 @@
 {% block content %}
     <div class="container py-5">
     <div class="eq-window row align-items-md-stretch">
-        <div class="col-12"><h2 class="eq-header text-center">{{ faction_name.1 }}</h2></div>
+        <div class="col-12">
+            <h2 class="eq-header text-center">{{ faction_name.1 }}</h2>
+        </div>
+        {% if request.user.is_authenticated %}
+            <div class="col-12 text-center">
+                <p>
+                    <button class="eq-button-fancy" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#character_faction_list" aria-expanded="false"
+                            aria-controls="character_faction_list">Character Factions
+                    </button>
+                </p>
+                <div class="collapse" id="character_faction_list">
+                    <table class="eq-table">
+                        <thead>
+                        <tr>
+                            <th>Character</th>
+                            {#                        <th>Modified Base</th>#}
+                            <th>Current Value</th>
+                            <th>Con Levels</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for character in character_faction_list %}
+                            <tr>
+                                <td>{{ character.0 }}</td>
+                                {#                            <td>{{ character.1.modified_base }}</td>#}
+                                <td>{{ character.1.current_value }}</td>
+                                <td>{{ character.1.current_value|faction_level }}</td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="3">No results</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% endif %}
         <div class="col-12 col-md-6 p-3 mb-4">
             <div class="p-3 mb-4">
                 <h6 class="eq-header text-center">Slaying these raises faction:</h6>

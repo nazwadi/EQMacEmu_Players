@@ -1,6 +1,10 @@
 from django.shortcuts import render, redirect
 from django.db import connections
 
+from collections import namedtuple
+from factions.utils import get_specific_faction_information
+from accounts.models import LoginServerAccounts
+
 
 def index_request(request):
     """
@@ -46,7 +50,7 @@ def search(request):
                   ORDER BY
                     faction_list.NAME 
                     LIMIT %s"""
-        cursor.execute(query, ["%"+faction_name+"%", query_limit])
+        cursor.execute(query, ["%" + faction_name + "%", query_limit])
         faction_results = cursor.fetchall()
         return render(request=request,
                       context={"faction_results": faction_results,
@@ -131,9 +135,37 @@ def view_faction(request, faction_id):
             if row[2] not in lower_faction_groups:
                 lower_faction_groups[row[2]] = list()
             lower_faction_groups[row[2]].append(row)
-        return render(request=request,
-                      context={"faction_name": faction_name,
-                               "raise_faction": raise_faction_groups,
-                               "lower_faction": lower_faction_groups},
-                      template_name="factions/view_faction.html")
+
+        if request.user.is_authenticated:
+            ls_accounts = LoginServerAccounts.objects.filter(ForumName=request.user.username)
+            ls_account_ids = [ls_account.LoginServerID for ls_account in ls_accounts]
+            cursor = connections['game_database'].cursor()
+            character_query = ("SELECT DISTINCT cd.id, cd.name, cd.race, cd.class, cd.deity "
+                               "FROM account ac JOIN character_data cd ON ac.id = cd.account_id "
+                               "WHERE ac.lsaccount_id IN %s")
+            cursor.execute(character_query, [tuple(ls_account_ids)])
+            result = cursor.fetchall()
+            character_faction_list = []
+            CharacterFaction = namedtuple("FactionTableRow", "id name modified_base min_cap max_cap current_value")
+            for cd_id, cd_name, cd_race, cd_class, cd_deity in result:
+                character_faction = get_specific_faction_information(cd_id, cd_race, cd_class, cd_deity,
+                                                                     faction_name[1])
+                if character_faction:
+                    cf = CharacterFaction(*character_faction)
+                    character_faction_list.append([cd_name,cf])
+
+            return render(request=request,
+                          context={
+                              "character_faction_list": character_faction_list,
+                              "faction_name": faction_name,
+                              "raise_faction": raise_faction_groups,
+                              "lower_faction": lower_faction_groups
+                          },
+                          template_name="factions/view_faction.html")
+        else:
+            return render(request=request,
+                          context={"faction_name": faction_name,
+                                   "raise_faction": raise_faction_groups,
+                                   "lower_faction": lower_faction_groups},
+                          template_name="factions/view_faction.html")
     redirect("/factions/search")
