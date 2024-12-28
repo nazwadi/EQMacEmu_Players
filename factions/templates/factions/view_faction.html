@@ -11,19 +11,19 @@
         {% if request.user.is_authenticated %}
             <div class="col-12 text-center">
                 <p>
-                    <button class="eq-button-fancy" type="button" data-bs-toggle="collapse"
+                    <button class="eq-button-fancy fs-6" type="button" data-bs-toggle="collapse"
                             data-bs-target="#character_faction_list" aria-expanded="false"
-                            aria-controls="character_faction_list">Character Factions
+                            aria-controls="character_faction_list">My Character's Faction
                     </button>
                 </p>
                 <div class="collapse" id="character_faction_list">
-                    <table class="eq-table">
+                    <table class="eq-table eq-highlight-rows">
                         <thead>
                         <tr>
                             <th>Character</th>
                             {#                        <th>Modified Base</th>#}
-                            <th>Current Value</th>
                             <th>Con Levels</th>
+                            <th>Current Value</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -31,8 +31,8 @@
                             <tr>
                                 <td>{{ character.0 }}</td>
                                 {#                            <td>{{ character.1.modified_base }}</td>#}
-                                <td>{{ character.1.current_value }}</td>
                                 <td>{{ character.1.current_value|faction_level }}</td>
+                                <td>{{ character.1.current_value }}</td>
                             </tr>
                         {% empty %}
                             <tr>
