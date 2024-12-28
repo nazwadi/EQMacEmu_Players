@@ -206,6 +206,14 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static/factions/images'),
+    os.path.join(BASE_DIR, 'static/factions/'),
+    os.path.join(BASE_DIR, 'static/factions/eq-ui/images'),
+    os.path.join(BASE_DIR, 'static/css/'),
+    os.path.join(BASE_DIR, 'static/js/'),
+    os.path.join(BASE_DIR, 'static/assets/fonts/'),
+    os.path.join(BASE_DIR, 'static/eq-ui/images/'),
+    os.path.join(BASE_DIR, 'static/images/')
 ]
 
 # Default primary key field type
