@@ -4,84 +4,165 @@
 {% load humanize %}
 {% block content %}
     <div class="container py-5">
-    <div class="eq-window row align-items-md-stretch">
-        <div class="col-12">
-            <h2 class="eq-header text-center">{{ faction_name.1 }}</h2>
-        </div>
-        {% if request.user.is_authenticated %}
-            <div class="col-12 text-center">
-                <p>
-                    <button class="eq-button-fancy fs-6" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#character_faction_list" aria-expanded="false"
-                            aria-controls="character_faction_list">My Character's Faction
-                    </button>
-                </p>
-                <div class="collapse" id="character_faction_list">
-                    <table class="eq-table eq-highlight-rows">
+        <div class="eq-window row align-items-md-stretch">
+            <div class="col-12">
+                <h2 class="eq-header text-center">{{ faction_info.1 }}</h2>
+                <div class="start-50 translate-middle-x eq-window-nested-tan col-12 col-md-6">
+                    <span class="text-center">Faction Info for {{ faction_info.1 }}</span>
+                    {% if request.user.is_authenticated %}
+                        <p style="float: right;">
+                            <button class="eq-button-fancy fs-6" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#character_faction_list" aria-expanded="false"
+                                    aria-controls="character_faction_list">Toggle My Characters' Faction
+                            </button>
+                        </p>
+                    {% endif %}
+                    <table class="eq-table">
                         <thead>
                         <tr>
-                            <th>Character</th>
-                            {#                        <th>Modified Base</th>#}
-                            <th>Con Levels</th>
-                            <th>Current Value</th>
+                            <th>ID</th>
+                            <th>Base</th>
+                            <th>See Illusion</th>
+                            <th>Min Cap</th>
+                            <th>Max Cap</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {% for character in character_faction_list %}
-                            <tr>
-                                <td>{{ character.0 }}</td>
-                                {#                            <td>{{ character.1.modified_base }}</td>#}
-                                <td>{{ character.1.current_value|faction_level }}</td>
-                                <td>{{ character.1.current_value }}</td>
-                            </tr>
-                        {% empty %}
-                            <tr>
-                                <td colspan="3">No results</td>
-                            </tr>
-                        {% endfor %}
+                        <tr>
+                            <td>{{ faction_info.0 }}</td>
+                            <td>{{ faction_info.2 }}</td>
+                            <td>{{ faction_info.3 | yesno }}</td>
+                            <td>{{ faction_info.4 }}</td>
+                            <td>{{ faction_info.5 }}</td>
+                        </tr>
                         </tbody>
                     </table>
+                    <details>
+                        <summary>View Faction Ranges</summary>
+                        <table class="eq-table eq-highlight-rows">
+                            <tbody>
+                            <tr>
+                                <td style="text-align: right;">1100 to 2000</td>
+                                <td>&nbsp;</td>
+                                <td style="text-align: left;">Ally</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right;">750 to 1099</td>
+                                <td>&nbsp;</td>
+                                <td style="text-align: left;">Warmly</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right;">500 to 749</td>
+                                <td>&nbsp;</td>
+                                <td style="text-align: left;">Kindly</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right;">100 to 499</td>
+                                <td>&nbsp;</td>
+                                <td style="text-align: left;">Amiably</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right;">0 to 99</td>
+                                <td>&nbsp;</td>
+                                <td style="text-align: left;">Indifferently</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right;">-100 to -1</td>
+                                <td>&nbsp;</td>
+                                <td style="text-align: left;">Apprehensively</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right;">-500 to -101</td>
+                                <td>&nbsp;</td>
+                                <td style="text-align: left;">Dubiously</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right;">-750 to -501</td>
+                                <td>&nbsp;</td>
+                                <td style="text-align: left;">Threateningly</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right;">-751 to -2000</td>
+                                <td>&nbsp;</td>
+                                <td style="text-align: left;">Ready to attack</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </details>
                 </div>
             </div>
-        {% endif %}
-        <div class="col-12 col-md-6 p-3 mb-4">
-            <div class="p-3 mb-4">
-                <h6 class="eq-header text-center">Slaying these raises faction:</h6>
-                {% for long_name, data in raise_faction.items %}
-                    <article class="eq-window-nested-blue p-3 mb-4">
-                        <h6 class="text-center">{{ long_name }}</h6>
-                        <section class="column-list">
-                            <dl>
-                                {% for id, name, long_name, short_name, value in data %}
-                                    <dd>
-                                        <a style="color:#00ba00;text-decoration:none;" href="/npcs/view/{{ id }}"
-                                           class="link">{{ name|clean_name }}</a><span> (+{{ value }})</span>
-                                    </dd>
+            {% if request.user.is_authenticated %}
+                <div class="col-12">
+                    <div class="collapse" id="character_faction_list">
+                        <div class="start-50 translate-middle-x eq-window-nested-tan col-12 col-md-6">
+                            <h6 class="">My Characters' Faction Levels</h6>
+                            <table class="eq-table eq-highlight-rows">
+                                <thead>
+                                <tr>
+                                    <th>Character</th>
+                                    {#                        <th>Modified Base</th>#}
+                                    <th>Con Levels</th>
+                                    <th>Current Value</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for character in character_faction_list %}
+                                    <tr>
+                                        <td>{{ character.0 }}</td>
+                                        {#                            <td>{{ character.1.modified_base }}</td>#}
+                                        <td>{{ character.1.current_value|faction_level }}</td>
+                                        <td>{{ character.1.current_value }}</td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="3">No results</td>
+                                    </tr>
                                 {% endfor %}
-                            </dl>
-                        </section>
-                    </article>
-                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            <div class="col-12 col-md-6 p-3 mb-4">
+                <div class="p-3 mb-4">
+                    <h6 class="eq-header text-center">Slaying these raises faction:</h6>
+                    {% for long_name, data in raise_faction.items %}
+                        <article class="eq-window-nested-blue p-3 mb-4">
+                            <h6 class="text-center">{{ long_name }}</h6>
+                            <section class="column-list">
+                                <dl>
+                                    {% for id, name, long_name, short_name, value in data %}
+                                        <dd>
+                                            <a style="color:#00ba00;text-decoration:none;" href="/npcs/view/{{ id }}"
+                                               class="link">{{ name|clean_name }}</a><span> (+{{ value }})</span>
+                                        </dd>
+                                    {% endfor %}
+                                </dl>
+                            </section>
+                        </article>
+                    {% endfor %}
+                </div>
             </div>
-        </div>
 
-        <div class="col-12 col-md-6 p-3 mb-4">
-            <div class="p-3 mb-4">
-                <h6 class="eq-header text-center">Slaying these lowers faction:</h6>
-                {% for long_name, data in lower_faction.items %}
-                    <article class="eq-window-nested-blue p-3 mb-4">
-                        <h6 class="text-center">{{ long_name }}</h6>
-                        <section class="column-list">
-                            <dl>
-                                {% for id, name, long_name, short_name, value in data %}
-                                    <dd><a style="color:#d71c1c;text-decoration:none;" href="/npcs/view/{{ id }}"
-                                           class="link">{{ name|clean_name }}</a><span> ({{ value }})</span>
-                                    </dd>
-                                {% endfor %}
-                            </dl>
-                        </section>
-                    </article>
-                {% endfor %}
+            <div class="col-12 col-md-6 p-3 mb-4">
+                <div class="p-3 mb-4">
+                    <h6 class="eq-header text-center">Slaying these lowers faction:</h6>
+                    {% for long_name, data in lower_faction.items %}
+                        <article class="eq-window-nested-blue p-3 mb-4">
+                            <h6 class="text-center">{{ long_name }}</h6>
+                            <section class="column-list">
+                                <dl>
+                                    {% for id, name, long_name, short_name, value in data %}
+                                        <dd><a style="color:#d71c1c;text-decoration:none;" href="/npcs/view/{{ id }}"
+                                               class="link">{{ name|clean_name }}</a><span> ({{ value }})</span>
+                                        </dd>
+                                    {% endfor %}
+                                </dl>
+                            </section>
+                        </article>
+                    {% endfor %}
+                </div>
             </div>
         </div>
     </div>

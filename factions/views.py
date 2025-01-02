@@ -69,14 +69,18 @@ def view_faction(request, faction_id):
     if request.method == "GET":
         faction_name_query = """SELECT
                                     faction_list.id,
-                                    faction_list.NAME 
+                                    faction_list.NAME,
+                                    faction_list.base,
+                                    faction_list.see_illusion,
+                                    faction_list.min_cap,
+                                    faction_list.max_cap 
                                 FROM
                                     faction_list
                                 WHERE
                                     faction_list.id = %s"""
         cursor = connections['game_database'].cursor()
         cursor.execute(faction_name_query, [faction_id])
-        faction_name = cursor.fetchone()
+        faction_info = cursor.fetchone()
 
         # Kill these NPCs to raise faction
         raise_faction_query = """SELECT DISTINCT
@@ -149,7 +153,7 @@ def view_faction(request, faction_id):
             CharacterFaction = namedtuple("FactionTableRow", "id name modified_base min_cap max_cap current_value")
             for cd_id, cd_name, cd_race, cd_class, cd_deity in result:
                 character_faction = get_specific_faction_information(cd_id, cd_race, cd_class, cd_deity,
-                                                                     faction_name[1])
+                                                                     faction_info[1]) # faction name
                 if character_faction:
                     cf = CharacterFaction(*character_faction)
                     character_faction_list.append([cd_name,cf])
@@ -157,14 +161,14 @@ def view_faction(request, faction_id):
             return render(request=request,
                           context={
                               "character_faction_list": character_faction_list,
-                              "faction_name": faction_name,
+                              "faction_info": faction_info,
                               "raise_faction": raise_faction_groups,
                               "lower_faction": lower_faction_groups
                           },
                           template_name="factions/view_faction.html")
         else:
             return render(request=request,
-                          context={"faction_name": faction_name,
+                          context={"faction_info": faction_info,
                                    "raise_faction": raise_faction_groups,
                                    "lower_faction": lower_faction_groups},
                           template_name="factions/view_faction.html")
