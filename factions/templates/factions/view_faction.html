@@ -100,18 +100,18 @@
                                 <thead>
                                 <tr>
                                     <th>Character</th>
-                                    {#                        <th>Modified Base</th>#}
-                                    <th>Con Levels</th>
-                                    <th>Current Value</th>
+                                    <th>Base Value + Modifiers</th>
+                                    <th>Final Value</th>
+                                    <th>Consider Level</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 {% for character in character_faction_list %}
                                     <tr>
                                         <td>{{ character.0 }}</td>
-                                        {#                            <td>{{ character.1.modified_base }}</td>#}
-                                        <td>{{ character.1.current_value|faction_level }}</td>
-                                        <td>{{ character.1.current_value }}</td>
+                                        <td>{{ character.1.current_value }} + {{ character.1.modified_base }}</td>
+                                        <td>{{ character.1.current_value|add:character.1.modified_base }}</td>
+                                        <td>{{ character.1.current_value|add:character.1.modified_base|faction_level }}</td>
                                     </tr>
                                 {% empty %}
                                     <tr>
