@@ -3,25 +3,82 @@
 {% load static %}
 {% load humanize %}
 {% block content %}
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas" aria-labelledby="offcanvasLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasLabel">Faction Documentation</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <h6>Character Base Value</h6>
+            <p>Your character's faction standing with any NPC in-game is influenced by several factors beyond their base
+                faction value that you control by killing mobs or completing quests. If you are logged in while viewing
+                this page, you'll see this value listed for each of your characters as the "Base Value" shown in the
+                second column of the "My Characters Faction Levels" table.</p>
+            <h6>Base Modifiers</h6>
+            <p>To begin, an NPC's relationship with a player is based on their <i>primary faction</i>. Every faction has
+                a <i>base modifier</i> that increases or decreases from zero (Indifferent) how they consider you by
+                default.</p>
+            <p>You can find this value in the Faction Info Table to the left.
+                For example, <i>{{ faction_info.1 }}</i> has a base modifier of <i>{{ faction_info.2 }}</i>.</p>
+            <h6>Character Modifiers</h6>
+            <p>Next, each character's race, class, and deity will have a positive or negative affect on their
+                initial standing with that NPC.</p>
+            <ul>
+                <li>Race</li>
+                <li>Class</li>
+                <li>Deity</li>
+            </ul>
+            <p>For example, many factions have a negative racial modifier against Iksar. They might also dislike
+                Necromancers. Further, they dislike anyone worshipping Cazic Thule.</p>
+            <p>If you are logged in while viewing this page, the <i>Modifiers</i> value shown for each of your
+                characters includes
+                race, class, deity, and that faction's base modifier all added together into one value.</p>
+            <h6>Other Modifiers</h6>
+            <p>Once all of these things are taken into account, faction can also be affected by magic items worn and
+                spells cast on either
+                the NPC or the player.</p>
+            <ul>
+                <li>Item Faction Bonuses</li>
+                <li>Spells</li>
+            </ul>
+            Some spells, like <a href="/spells/view/298">Alliance</a> will temporarily increase how a target NPC might
+            consider you. The server caps faction bonuses from Alliance type spells at 300.
+            <div class="alert alert-warning">If you are logged in while viewing this faction page, it will <i>not</i>
+                show your
+                characters' faction modifiers from spells and items.
+            </div>
+            <h6>Faction Formula</h6>
+            <p>Thus,<br/>
+                <math>faction = base_value + spell_effects + item_effects + base_modifier + class_modifier +
+                    race_modifier + deity_modifier.
+                </math>
+            </p>
+
+        </div>
+    </div>
     <div class="container py-5">
         <div class="eq-window row align-items-md-stretch">
             <div class="col-12">
                 <h2 class="eq-header text-center">{{ faction_info.1 }}</h2>
                 <div class="start-50 translate-middle-x eq-window-nested-tan col-12 col-md-6">
                     <span class="text-center">Faction Info for {{ faction_info.1 }}</span>
+                    <a style="color: #8aa3ff;" data-bs-toggle="offcanvas" href="#offcanvas" role="link"
+                            aria-controls="offcanvas">
+                        <span class="fa fa-question-circle"></span>
+                    </a>
                     {% if request.user.is_authenticated %}
-                        <p style="float: right;">
+                        <div style="float: right;">
                             <button class="eq-button-fancy fs-6" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#character_faction_list" aria-expanded="false"
                                     aria-controls="character_faction_list">Toggle My Characters' Faction
                             </button>
-                        </p>
+                        </div>
                     {% endif %}
                     <table class="eq-table">
                         <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Base</th>
+                            <th>Base Modifier</th>
                             <th>See Illusion</th>
                             <th>Min Cap</th>
                             <th>Max Cap</th>
