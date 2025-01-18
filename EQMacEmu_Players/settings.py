@@ -206,6 +206,10 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static/spells/'),
+    os.path.join(BASE_DIR, 'static/spells/class_icons'),
+    os.path.join(BASE_DIR, 'static/spells/eq-ui'),
+    os.path.join(BASE_DIR, 'static/spells/css'),
     os.path.join(BASE_DIR, 'static/factions/images'),
     os.path.join(BASE_DIR, 'static/factions/'),
     os.path.join(BASE_DIR, 'static/factions/eq-ui/images'),

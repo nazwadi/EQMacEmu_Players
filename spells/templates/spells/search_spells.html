@@ -15,8 +15,8 @@
                                        placeholder="Identify">
                             </div>
                             <div class="col-12 col-md-3">
-                                <div class="form-text text-wrap"><label for="class">Class</label></div>
-                                <select id="class" name="class" class="form-control">
+                                <div class="form-text text-wrap"><label for="class_name">Class</label></div>
+                                <select id="class_name" name="class_name" class="form-control">
                                     <option value="-1" selected>any</option>
                                     {% for index, class in classes.items %}
                                         <option value="{{ class }}">{{ class }}</option>
@@ -41,6 +41,50 @@
                     </form>
                 </div>
             </div>
+            {% if spell_results %}
+                <div class="row">
+                    <div class="col">
+                        <table id="search-results-table" class="table table-striped table-hover table-sm">
+                            <thead>
+                            <tr>
+                                <th class="text-start col-1">ID</th>
+                                <th class="text-start">Spell Name</th>
+                                <th class="text-start">Classes(Level)</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for spell_result in spell_results %}
+                                <tr>
+                                    <td class="text-start">{{ spell_result.id }}</td>
+                                    <td>
+                                        <img src="/static/images/icons/{{ spell_result.custom_icon }}.gif"
+                                             alt="{{ spell_result.custom_icon }}.gif">&nbsp;
+                                        <a href="/spells/view/{{ spell_result.id }}">{{ spell_result.name }}</a>
+                                    </td>
+                                    <td>
+                                        {% if spell_result.classes1 != 255 %} WAR({{ spell_result.classes1 }}) {% endif %}
+                                        {% if spell_result.classes2 != 255 %} CLR({{ spell_result.classes2 }}) {% endif %}
+                                        {% if spell_result.classes3 != 255 %} PAL({{ spell_result.classes3 }}) {% endif %}
+                                        {% if spell_result.classes4 != 255 %} RNG({{ spell_result.classes4 }}) {% endif %}
+                                        {% if spell_result.classes5 != 255 %} SHD({{ spell_result.classes5 }}) {% endif %}
+                                        {% if spell_result.classes6 != 255 %} DRU({{ spell_result.classes6 }}) {% endif %}
+                                        {% if spell_result.classes7 != 255 %} MNK({{ spell_result.classes7 }}) {% endif %}
+                                        {% if spell_result.classes8 != 255 %} BRD({{ spell_result.classes8 }}) {% endif %}
+                                        {% if spell_result.classes9 != 255 %} ROG({{ spell_result.classes9 }}) {% endif %}
+                                        {% if spell_result.classes10 != 255 %} SHM({{ spell_result.classes10 }}) {% endif %}
+                                        {% if spell_result.classes11 != 255 %} NEC({{ spell_result.classes11 }}) {% endif %}
+                                        {% if spell_result.classes12 != 255 %} WIZ({{ spell_result.classes12 }}) {% endif %}
+                                        {% if spell_result.classes13 != 255 %} MAG({{ spell_result.classes13 }}) {% endif %}
+                                        {% if spell_result.classes14 != 255 %} ENC({{ spell_result.classes14 }}) {% endif %}
+                                        {% if spell_result.classes15 != 255 %} BST({{ spell_result.classes15 }}) {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            {% endif %}
         </div>
     </main>
 {% endblock %}

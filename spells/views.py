@@ -13,6 +13,8 @@ def index(request):
     """
     Defines view for https://url.tld/spells/
 
+    This index allows selecting spell quick list and vendor lists by class
+
     :param request: Http request
     :return: an Http Response object
     """
@@ -25,7 +27,7 @@ def index(request):
 
 def search(request):
     """
-    Search for a spell by name
+    Search for a spell by name at https://url.tld/spells/search
 
     :param request: Http request
     :return: Http response
@@ -56,9 +58,47 @@ def search(request):
         spell_name = request.POST.get("spell_name")
         class_name = request.POST.get("class_name")
         level = request.POST.get("level")
+        if class_name == "Warrior":
+            spell_results = SpellsNew.objects.filter(name__icontains=spell_name).filter(~Q(classes1__lte=255))
+        elif class_name == "Cleric":
+            spell_results = SpellsNew.objects.filter(name__icontains=spell_name).filter(~Q(classes2=255))
+        elif class_name == "Paladin":
+            spell_results = SpellsNew.objects.filter(name__icontains=spell_name).filter(~Q(classes3__lte=255))
+        elif class_name == "Ranger":
+            spell_results = SpellsNew.objects.filter(name__icontains=spell_name).filter(~Q(classes4__lte=255))
+        elif class_name == "Shadowknight":
+            spell_results = SpellsNew.objects.filter(name__icontains=spell_name).filter(~Q(classes5__lte=255))
+        elif class_name == "Druid":
+            spell_results = SpellsNew.objects.filter(name__icontains=spell_name).filter(~Q(classes6__lte=255))
+        elif class_name == "Monk":
+            spell_results = SpellsNew.objects.filter(name__icontains=spell_name).filter(~Q(classes7__lte=255))
+        elif class_name == "Bard":
+            spell_results = SpellsNew.objects.filter(name__icontains=spell_name).filter(~Q(classes8__lte=255))
+        elif class_name == "Rogue":
+            spell_results = SpellsNew.objects.filter(name__icontains=spell_name).filter(~Q(classes9__lte=255))
+        elif class_name == "Shaman":
+            spell_results = SpellsNew.objects.filter(name__icontains=spell_name).filter(~Q(classes10__lte=255))
+        elif class_name == "Necromancer":
+            spell_results = SpellsNew.objects.filter(name__icontains=spell_name).filter(~Q(classes11__lte=255))
+        elif class_name == "Wizard":
+            spell_results = SpellsNew.objects.filter(name__icontains=spell_name).filter(~Q(classes12__lte=255))
+        elif class_name == "Magician":
+            spell_results = SpellsNew.objects.filter(name__icontains=spell_name).filter(~Q(classes13__lte=255))
+        elif class_name == "Enchanter":
+            spell_results = SpellsNew.objects.filter(name__icontains=spell_name).filter(~Q(classes14__lte=255))
+        elif class_name == "Beastlord":
+            spell_results = SpellsNew.objects.filter(name__icontains=spell_name).filter(~Q(classes15__lte=255))
+        elif class_name == "Berserker":
+            spell_results = SpellsNew.objects.filter(name__icontains=spell_name).filter(~Q(classes16__lte=255))
+        else:
+            spell_results = SpellsNew.objects.filter(name__icontains=spell_name)
+
         return render(request=request,
                       template_name="spells/search_spells.html",
-                      context={"classes": classes},
+                      context={
+                          "classes": classes,
+                          "spell_results": spell_results,
+                      },
                       )
 
 
