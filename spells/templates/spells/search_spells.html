@@ -23,15 +23,6 @@
                                     {% endfor %}
                                 </select>
                             </div>
-                            <div class="col-12 col-md-3">
-                                <div class="form-text text-wrap"><label for="level">Level</label></div>
-                                <select id="level" name="level" class="form-control">
-                                    <option value="-1" selected>any</option>
-                                    {% for level in 66|django_range %}
-                                        <option value="{{ level }}">{{ level }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
                         </div>
                         <div class="col-12 col-md-12">
                             <div class="d-grid gap-2 py-4">
