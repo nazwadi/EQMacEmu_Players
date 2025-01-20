@@ -1,5 +1,6 @@
 {% extends 'spells/header.html' %}
 {% load data_utilities %}
+{% load static %}
 {% block content %}
     <main class="flex-shrink-0">
         <div class="container py-4">
@@ -25,7 +26,7 @@
                                         <span>Top</span>
                                         <svg class="bi my-1 theme-icon-active" fill="currentColor" width="1em"
                                              height="1em">
-                                            <use href="/static/bootstrap-images/icons.svg#chevron-up"></use>
+                                            <use href="{% static 'spells/bootstrap-icons.svg' %}#chevron-up"></use>
                                         </svg>
                                     </a></li>
                                     <li class="nav-item"><h3>Level {{ level }}</h3></li>
@@ -33,7 +34,7 @@
                                         <span>Top</span>
                                         <svg class="bi my-1 theme-icon-active" fill="currentColor" width="1em"
                                              height="1em">
-                                            <use href="/static/bootstrap-images/icons.svg#chevron-up"></use>
+                                            <use href="{% static 'spells/bootstrap-icons.svg' %}#chevron-up"></use>
                                         </svg>
                                     </a></li>
                                 </ul>
