@@ -33,6 +33,7 @@ urlpatterns = [
     path("factions/", include("factions.urls")),
     path("items/", include("items.urls")),
     path("npcs/", include("npcs.urls")),
+    path("patch/", include("patch.urls")),
     path("pets/", include("pets.urls")),
     path("quests/", include("quests.urls")),
     path("recipes/", include("recipes.urls")),
