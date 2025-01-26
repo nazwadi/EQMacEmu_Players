@@ -76,7 +76,6 @@ INSTALLED_APPS = [
     'pets.apps.PetsConfig',
     'quests.apps.QuestsConfig',
     'recipes.apps.RecipesConfig',
-    'django_gravatar',
     'spells.apps.SpellsConfig',
     'zones.apps.ZonesConfig',
 ]

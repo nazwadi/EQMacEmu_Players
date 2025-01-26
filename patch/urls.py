@@ -2,9 +2,8 @@ from django.urls import path
 
 from . import views
 
-app_name = "factions"
+app_name = "patch"
 urlpatterns = [
-    path("", views.index_request, name="index"),
-    path("search", views.search, name="search"),
-    path("view/<int:faction_id>", views.view_faction, name="view"),
+    path("", views.index, name="index"),
+    path("view/<slug:slug>", views.view_patch_message, name="view"),
 ]
