@@ -9,7 +9,6 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
 from django.contrib.messages import constants as messages
 import os
 from pathlib import Path
@@ -72,9 +71,11 @@ INSTALLED_APPS = [
     'items.apps.ItemConfig',
     'mdeditor',
     'npcs.apps.NpcsConfig',
+    'patch.apps.PatchConfig',
     'pets.apps.PetsConfig',
     'quests.apps.QuestsConfig',
     'recipes.apps.RecipesConfig',
+    'django_gravatar',
     'spells.apps.SpellsConfig',
     'zones.apps.ZonesConfig',
 ]
@@ -213,6 +214,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static/factions/images'),
     os.path.join(BASE_DIR, 'static/factions/'),
     os.path.join(BASE_DIR, 'static/factions/eq-ui/images'),
+    os.path.join(BASE_DIR, 'patch/static/patch/comments.css'),
     os.path.join(BASE_DIR, 'static/css/'),
     os.path.join(BASE_DIR, 'static/js/'),
     os.path.join(BASE_DIR, 'static/assets/fonts/'),
@@ -265,8 +267,8 @@ MDEDITOR_CONFIGS = {
         'search_replace': True,  # Whether to open the search for replacement
         'emoji': True,  # whether to open the expression function
         'tex': True,  # whether to open the tex chart function
-        'flow_chart': True,  # whether to open the flow chart function
-        'sequence': True,  # Whether to open the sequence diagram function
+        'flow_chart': False,  # whether to open the flow chart function
+        'sequence': False,  # Whether to open the sequence diagram function
         'watch': True,  # Live preview
         'lineWrapping': True,  # lineWrapping
         'lineNumbers': True,  # lineNumbers

@@ -43,6 +43,7 @@
         <option value="$MODULE_DIR$/spells/templates" />
         <option value="$MODULE_DIR$/pets/templates" />
         <option value="$MODULE_DIR$/quests/templates" />
+        <option value="$MODULE_DIR$/patch/templates" />
       </list>
     </option>
   </component>
