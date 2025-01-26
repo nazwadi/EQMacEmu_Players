@@ -5,16 +5,70 @@
 {% block content %}
     <div class="container py-5">
         <div class="row">
-            <div class="col-12">
+            <div class="col-md-10 col-sm-10">
                 <div class="card p-3 mb-4 shadow bg-body-tertiary">
-                    <h5 class="text-center">{{ patch_message.patch_date|date:"F d, Y" }}</h5>
-                    <div class="row mt-4">
-                        <div class="col">
-                            <article>
-                                {{ patch_message.body_markdown|render_markdown|safe }}
-                            </article>
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="markdown-tab" data-bs-toggle="tab"
+                                    data-bs-target="#markdown-tab-pane"
+                                    type="button" role="tab" aria-controls="markdown-tab-pane" aria-selected="true"
+                                    aria-current="page" href="#">Patch Message
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" id="plaintext-tab" data-bs-toggle="tab"
+                                    data-bs-target="#plaintext-tab-pane"
+                                    type="button" role="tab" aria-controls="plaintext-tab-pane" aria-selected="true"
+                                    aria-current="page" href="#">View Plain Text Version
+                            </button>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="patchViewTabContent">
+                        <div class="tab-pane fade show active" id="markdown-tab-pane" role="tabpanel"
+                             aria-labelledby="data-tab"
+                             tabindex="0">
+
+                            <h5 class="text-center mt-4">{{ patch_message.patch_date|date:"F d, Y" }}</h5>
+                            <div class="row mt-4">
+                                <div class="col-md-12">
+                                    <article class="mb-4">
+                                        {{ patch_message.body_markdown|render_markdown|safe }}
+                                    </article>
+                                    <hr/>
+                                    <p>Go back to <a href="{% url 'patch:index' %}">Patch Index</a></p>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="tab-pane fade" id="plaintext-tab-pane" role="tabpanel"
+                             aria-labelledby="plaintext-tab"
+                             tabindex="1">
+
+                            <h5 class="text-center mt-4">{{ patch_message.patch_date|date:"F d, Y" }}</h5>
+                            <div class="row mt-4">
+                                <div class="col-md-12">
+                                    <article class="mb-4">
+                                        <pre>
+                                            {{ patch_message.body_plaintext|linebreaks }}
+                                        </pre>
+                                    </article>
+                                    <hr/>
+                                    <p>Go back to <a href="{% url 'patch:index' %}">Patch Index</a></p>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
+                </div>
+            </div>
+            <div class="col-md-2 col-sm-2 mw-200">
+                <div class="card p-3 mb-4 shadow bg-body-tertiary">
+                    <h6>1999</h6>
+                    <ul>
+                        {% for patch in patches_this_year %}
+                            <li><a href="{% url 'patch:view' slug=patch.slug %}">{{ patch.title }}</a></li>
+                        {% endfor %}
+                    </ul>
                 </div>
             </div>
         </div>
