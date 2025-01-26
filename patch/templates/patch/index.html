@@ -1,10 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
+{% extends 'patch/header.html' %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-12">
+                <div class="card p-3 mb-4 shadow bg-body-tertiary">
+                    <h5 class="text-center">EQ Live Patch History</h5>
+                    <div class="row mt-4">
+                        <div class="col-md-4 col-sm-2">
+                            <h6>1999</h6>
+                            <ul style="list-style-type: square">
+                                {% for patch_message in patch_messages %}
+                                    <li class="my-1">
+                                        <a href="{% url 'patch:view' slug=patch_message.slug %}">{{ patch_message.title }}</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="col-md-4 col-sm-2">
+                            <h6>2000</h6>
+                        </div>
+                        <div class="col-md-4 col-sm-2">
+                            <h6>2001</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

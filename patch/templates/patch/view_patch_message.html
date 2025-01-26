@@ -1,10 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
+{% extends 'patch/header.html' %}
+{% load static %}
+{% load humanize %}
+{% load markdown_extras %}
+{% block content %}
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-12">
+                <div class="card p-3 mb-4 shadow bg-body-tertiary">
+                    <h5 class="text-center">{{ patch_message.patch_date|date:"F d, Y" }}</h5>
+                    <div class="row mt-4">
+                        <div class="col">
+                            <article>
+                                {{ patch_message.body_markdown|render_markdown|safe }}
+                            </article>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
