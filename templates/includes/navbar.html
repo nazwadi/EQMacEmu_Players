@@ -1,3 +1,4 @@
+{% load gravatar %}
 <nav class="navbar navbar-expand-lg navbar-light bg-light border">
     <div id="logo" class="d-flex flex-grow-1">
             <span class="w-100 d-lg-none d-block">
@@ -65,16 +66,17 @@
                 {% if user.is_authenticated %}
                     <button class="btn btn-secondary dropdown-toggle" href="#" type="button" data-bs-toggle="dropdown"
                             aria-expanded="false" id="navbarDropdownMenuLink">
-                        <i class="fas fa-user"></i> {{ user.username }}
+{#                        <i class="fas fa-user"></i> {{ user.username }}#}
+                        <img class="img-fluid img-responsive rounded-circle me-2" src="{% gravatar_url user.email 150 %}" width="38"> {{ user.username }}
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <li><a class="dropdown-item" href="/accounts/list">Accounts</a></li>
-                        <li><a class="dropdown-item" href="/character_transfer">Character Transfer</a></li>
-                        <li><a class="dropdown-item" href="/accounts/inventory_search">Inventory Search</a></li>
-                        <li><a class="dropdown-item" href="/accounts/logout">Log Out</a></li>
+                        <li><a class="dropdown-item" href="{% url 'accounts:list_accounts' %}">Accounts</a></li>
+                        <li><a class="dropdown-item" href="{% url 'character_transfer:index' %}">Character Transfer</a></li>
+                        <li><a class="dropdown-item" href="{% url 'accounts:inventory_search' %}">Inventory Search</a></li>
+                        <li><a class="dropdown-item" href="{% url 'accounts:logout' %}">Log Out</a></li>
                     </ul>
                 {% else %}
-                    <a class="btn btn-secondary" href="/accounts/login" role="button"
+                    <a class="btn btn-secondary" href="{% url 'accounts:login' %}" role="button"
                        id="navbarDropdownMenuLink">Login</a>
                 {% endif %}
             </div>
