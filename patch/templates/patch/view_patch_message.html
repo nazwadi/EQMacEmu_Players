@@ -45,24 +45,19 @@
                     </ul>
                     <div class="tab-content" id="patchViewTabContent">
                         <div class="tab-pane fade show active" id="markdown-tab-pane" role="tabpanel"
-                             aria-labelledby="data-tab"
+                             aria-labelledby="markdown-tab"
                              tabindex="0">
-
                             <div class="row mt-4">
                                 <div class="col-md-12">
                                     <article class="mb-4">
                                         {{ patch_message.body_markdown|render_markdown|safe }}
                                     </article>
-                                    <hr/>
-                                    <p>Go back to <a href="{% url 'patch:index' %}">Patch Index</a></p>
                                 </div>
                             </div>
-
                         </div>
                         <div class="tab-pane fade" id="plaintext-tab-pane" role="tabpanel"
                              aria-labelledby="plaintext-tab"
                              tabindex="1">
-
                             <h5 class="text-center mt-4">{{ patch_message.patch_date|date:"F d, Y" }}</h5>
                             <div class="row mt-4">
                                 <div class="col-md-12">
@@ -71,11 +66,31 @@
                                             {{ patch_message.body_plaintext|linebreaks }}
                                         </pre>
                                     </article>
-                                    <hr/>
-                                    <p>Go back to <a href="{% url 'patch:index' %}">Patch Index</a></p>
                                 </div>
                             </div>
-
+                        </div>
+                    </div>
+                    <hr/>
+                    <div class="row">
+                        <div class="col-12 d-flex justify-content-center align-items-center">
+                            <ul class="list-group list-group-horizontal">
+                                {% if prev_patch %}
+                                    <li class="list-group-item"><a
+                                            href="{% url 'patch:view' slug=prev_patch.slug %}">Previous
+                                        Patch</a></li>
+                                {% else %}
+                                    <li class="list-group-item text-disabled">Previous Patch</li>
+                                {% endif %}
+                                <li class="list-group-item"><a href="{% url 'patch:index' %}">Patch Index</a>
+                                </li>
+                                {% if next_patch %}
+                                    <li class="list-group-item"><a
+                                            href="{% url 'patch:view' slug=next_patch.slug %}">Next
+                                        Patch</a></li>
+                                {% else %}
+                                    <li class="list-group-item text-disabled">Next Patch</li>
+                                {% endif %}
+                            </ul>
                         </div>
                     </div>
                 </div>
