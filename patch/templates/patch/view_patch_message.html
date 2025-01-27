@@ -63,7 +63,7 @@
             </div>
             <div class="col-md-2 col-sm-2 mw-200">
                 <div class="card p-3 mb-4 shadow bg-body-tertiary">
-                    <h6>1999</h6>
+                    <h6>{{ patch_message.patch_year }}</h6>
                     <ul>
                         {% for patch in patches_this_year %}
                             <li><a href="{% url 'patch:view' slug=patch.slug %}">{{ patch.title }}</a></li>
