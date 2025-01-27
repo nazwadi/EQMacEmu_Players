@@ -4,7 +4,7 @@ from .models import PatchMessage
 from .models import Comment
 
 class PatchMessageAdmin(admin.ModelAdmin):
-    list_display = ("title", "body_plaintext",)
+    list_display = ("title", "short_description",)
     prepopulated_fields = {"slug": ("title", "patch_number_this_date")}
 
 class CommentAdmin(admin.ModelAdmin):

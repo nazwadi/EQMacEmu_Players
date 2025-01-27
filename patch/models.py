@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db import models
 from django.urls import reverse
 from mdeditor.fields import MDTextField
+from django.template.defaultfilters import truncatewords
 
 from django.contrib.auth.models import User
 
@@ -14,6 +15,10 @@ class PatchMessage(models.Model):
     patch_year = models.IntegerField(null=False, default=1999)
     source_notes = models.TextField(blank=True, null=True)
     slug = models.SlugField(max_length=255, null=False, unique=True)
+
+    @property
+    def short_description(self):
+        return truncatewords(self.body_plaintext, 20)
 
     def __str__(self):
         return self.title

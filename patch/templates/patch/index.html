@@ -12,17 +12,37 @@
                             <h6>1999</h6>
                             <ul style="list-style-type: square">
                                 {% for patch_message in patch_messages %}
-                                    <li class="my-1">
-                                        <a href="{% url 'patch:view' slug=patch_message.slug %}">{{ patch_message.title }}</a>
-                                    </li>
+                                    {% if patch_message.patch_year == 1999 %}
+                                        <li class="my-1">
+                                            <a href="{% url 'patch:view' slug=patch_message.slug %}">{{ patch_message.title }}</a>
+                                        </li>
+                                    {% endif %}
                                 {% endfor %}
                             </ul>
                         </div>
                         <div class="col-md-4 col-sm-2">
                             <h6>2000</h6>
+                            <ul style="list-style-type: square">
+                                {% for patch_message in patch_messages %}
+                                    {% if patch_message.patch_year == 2000 %}
+                                        <li class="my-1">
+                                            <a href="{% url 'patch:view' slug=patch_message.slug %}">{{ patch_message.title }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
                         </div>
                         <div class="col-md-4 col-sm-2">
                             <h6>2001</h6>
+                            <ul style="list-style-type: square">
+                                {% for patch_message in patch_messages %}
+                                    {% if patch_message.patch_year == 2001 %}
+                                        <li class="my-1">
+                                            <a href="{% url 'patch:view' slug=patch_message.slug %}">{{ patch_message.title }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
                         </div>
                     </div>
                 </div>
