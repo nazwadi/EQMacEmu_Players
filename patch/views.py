@@ -34,6 +34,8 @@ def view_patch_message(request, slug: str):
     :return: HttpResponse
     """
     patch_message = PatchMessage.objects.get(slug=slug)
+    next_patch = PatchMessage.objects.filter(patch_date__gt=patch_message.patch_date).order_by("patch_date").first()
+    prev_patch = PatchMessage.objects.filter(patch_date__lt=patch_message.patch_date).order_by("-patch_date").first()
     patches_this_year = PatchMessage.objects.filter(patch_year=patch_message.patch_year)
     comments = Comment.objects.filter(patch_message=patch_message).filter(active=True)
 
@@ -59,6 +61,8 @@ def view_patch_message(request, slug: str):
     return render(request=request,
                   context={
                       "patch_message": patch_message,
+                      "next_patch": next_patch,
+                      "prev_patch": prev_patch,
                       "patches_this_year": patches_this_year,
                       "comments": comments,
                       "new_comment": new_comment,

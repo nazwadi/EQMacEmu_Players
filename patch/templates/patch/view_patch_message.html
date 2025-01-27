@@ -7,6 +7,26 @@
         <div class="row">
             <div class="col-md-10 col-sm-10">
                 <div class="card p-3 mb-4 shadow bg-body-tertiary">
+                    <div class="row">
+                        <div class="col-12 d-flex justify-content-center align-items-center">
+                            <ul class="list-group list-group-horizontal">
+                                {% if prev_patch %}
+                                    <li class="list-group-item"><a href="{% url 'patch:view' slug=prev_patch.slug %}">Previous
+                                        Patch</a></li>
+                                {% else %}
+                                    <li class="list-group-item text-disabled">Previous Patch</li>
+                                {% endif %}
+                                <li class="list-group-item"><a href="{% url 'patch:index' %}">Patch Index</a></li>
+                                {% if next_patch %}
+                                    <li class="list-group-item"><a href="{% url 'patch:view' slug=next_patch.slug %}">Next
+                                        Patch</a></li>
+                                {% else %}
+                                    <li class="list-group-item text-disabled">Next Patch</li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                    <h4 class="text-center mt-4">Patch Message on {{ patch_message.patch_date }}</h4>
                     <ul class="nav nav-tabs">
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active" id="markdown-tab" data-bs-toggle="tab"
@@ -28,7 +48,6 @@
                              aria-labelledby="data-tab"
                              tabindex="0">
 
-                            <h5 class="text-center mt-4">{{ patch_message.patch_date|date:"F d, Y" }}</h5>
                             <div class="row mt-4">
                                 <div class="col-md-12">
                                     <article class="mb-4">
