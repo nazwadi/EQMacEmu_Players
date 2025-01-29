@@ -92,58 +92,50 @@
                     <div class="card p-3 shadow bg-body-tertiary">
                         <div class="card-body">
                             <h5 class="card-title text-center mb-4">EQ Live Patch History</h5>
-                            <div class="row mt-4">
-                                <div class="col-md-4">
-                                    <div class="year-section">
-                                        <h6 class="border-bottom pb-2 mb-3">1999</h6>
-                                        <ul class="list-unstyled">
-                                            {% for patch_message in patch_messages %}
-                                                {% if patch_message.patch_year == 1999 %}
-                                                    <li class="mb-2">
-                                                        <a href="{% url 'patch:view' slug=patch_message.slug %}"
-                                                           class="text-decoration-none">
-                                                            {{ patch_message.title }}
-                                                        </a>
-                                                    </li>
-                                                {% endif %}
-                                            {% endfor %}
-                                        </ul>
+
+                            <!-- Year Navigation -->
+                            <div class="d-flex flex-wrap gap-2 mb-4 justify-content-center">
+                                {% for year in years_data %}
+                                    <a href="#year-{{ year.patch_year }}"
+                                       class="btn btn-outline-primary btn-sm"
+                                       data-bs-toggle="tooltip"
+                                       title="{{ year.count }} patches">
+                                        {{ year.patch_year }}
+                                    </a>
+                                {% endfor %}
+                            </div>
+
+                            <!-- Patches by Year -->
+                            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                                {% regroup patches_by_year by patch_year as year_list %}
+                                {% for year in year_list %}
+                                    <div class="col">
+                                        <div class="year-section h-100" id="year-{{ year.grouper }}">
+                                            <div class="card h-100 border-0 bg-light">
+                                                <div class="card-header bg-transparent border-0">
+                                                    <h6 class="mb-0 d-flex justify-content-between align-items-center">
+                                                        <span>{{ year.grouper }}</span>
+                                                        <span class="badge bg-primary rounded-pill">
+                                        {{ year.list|length }}
+                                    </span>
+                                                    </h6>
+                                                </div>
+                                                <div class="card-body">
+                                                    <ul class="list-unstyled mb-0">
+                                                        {% for patch in year.list %}
+                                                            <li class="mb-2">
+                                                                <a href="{% url 'patch:view' slug=patch.slug %}"
+                                                                   class="text-decoration-none d-block p-2 rounded hover-bg">
+                                                                    {{ patch.title }}
+                                                                </a>
+                                                            </li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="year-section">
-                                        <h6 class="border-bottom pb-2 mb-3">2000</h6>
-                                        <ul class="list-unstyled">
-                                            {% for patch_message in patch_messages %}
-                                                {% if patch_message.patch_year == 2000 %}
-                                                    <li class="mb-2">
-                                                        <a href="{% url 'patch:view' slug=patch_message.slug %}"
-                                                           class="text-decoration-none">
-                                                            {{ patch_message.title }}
-                                                        </a>
-                                                    </li>
-                                                {% endif %}
-                                            {% endfor %}
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="year-section">
-                                        <h6 class="border-bottom pb-2 mb-3">2001</h6>
-                                        <ul class="list-unstyled">
-                                            {% for patch_message in patch_messages %}
-                                                {% if patch_message.patch_year == 2001 %}
-                                                    <li class="mb-2">
-                                                        <a href="{% url 'patch:view' slug=patch_message.slug %}"
-                                                           class="text-decoration-none">
-                                                            {{ patch_message.title }}
-                                                        </a>
-                                                    </li>
-                                                {% endif %}
-                                            {% endfor %}
-                                        </ul>
-                                    </div>
-                                </div>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>

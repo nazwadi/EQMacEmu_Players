@@ -225,3 +225,14 @@ ul {
     background-color: #f8f9fa;
 }
 
+.hover-bg:hover {
+    background-color: rgba(var(--bs-primary-rgb), 0.1);
+    transition: background-color 0.2s ease-in-out;
+}
+
+@media (max-width: 768px) {
+    .year-section {
+        margin-bottom: 1rem;
+    }
+}
+

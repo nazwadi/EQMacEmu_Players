@@ -3,6 +3,8 @@ from django.db import connection
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
 import re
+from itertools import groupby
+from django.db.models import Count
 from django.contrib import messages
 from django.db.models.functions import TruncMonth
 
@@ -95,6 +97,7 @@ def process_search_results(results, search_query):
 
     return processed_results
 
+
 # Create your views here.
 def index(request):
     """
@@ -110,75 +113,91 @@ def index(request):
     end_date = request.GET.get('end_date', '')
     patch_messages = []
 
-    # Convert dates to proper format if provided
-    date_filter = ""
-    date_params = []
-    if start_date:
-        try:
-            start_date = datetime.strptime(start_date, '%Y-%m-%d')
-            date_filter += " AND patch_date >= %s"
-            date_params.append(start_date)
-        except ValueError:
-            start_date = ''
-
-    if end_date:
-        try:
-            end_date = datetime.strptime(end_date, '%Y-%m-%d')
-            date_filter += " AND patch_date <= %s"
-            date_params.append(end_date)
-        except ValueError:
-            end_date = ''
-
     if search_query or start_date or end_date:
+        # Handle search case
+        date_filter = ""
+        date_params = []
+
+        # Process start date
+        if start_date:
+            try:
+                start_date = datetime.strptime(start_date, '%Y-%m-%d')
+                date_filter += " AND patch_date >= %s"
+                date_params.append(start_date)
+            except ValueError:
+                start_date = ''
+
+        if end_date:
+            try:
+                end_date = datetime.strptime(end_date, '%Y-%m-%d')
+                date_filter += " AND patch_date <= %s"
+                date_params.append(end_date)
+            except ValueError:
+                end_date = ''
+
         with connection.cursor() as cursor:
-            with connection.cursor() as cursor:
-                base_query = """
+            base_query = """
                     SELECT id, title, body_plaintext, patch_date, patch_year, 
                            patch_number_this_date, slug
                 """
 
-                if search_query:
-                    base_query += """,
+            if search_query:
+                base_query += """,
                         MATCH(title, body_plaintext) AGAINST(%s IN NATURAL LANGUAGE MODE) AS relevance
                     FROM patch_patchmessage
                     WHERE MATCH(title, body_plaintext) AGAINST(%s IN NATURAL LANGUAGE MODE)
                     """
-                    params = [search_query, search_query] + date_params
-                else:
-                    base_query += """
+                params = [search_query, search_query] + date_params
+            else:
+                base_query += """
                     FROM patch_patchmessage
                     WHERE 1=1
                     """
-                    params = date_params
+                params = date_params
 
-                final_query = base_query + date_filter + """
+            final_query = base_query + date_filter + """
                     ORDER BY patch_year DESC, patch_date DESC, patch_number_this_date ASC
                 """
 
-                cursor.execute(final_query, params)
+            cursor.execute(final_query, params)
 
-                columns = [col[0] for col in cursor.description]
+            columns = [col[0] for col in cursor.description]
+            results = [dict(zip(columns, row)) for row in cursor.fetchall()]
 
-                results = [dict(zip(columns, row)) for row in cursor.fetchall()]
-
-                # Process and highlight search results
-                if search_query:
-                    patch_messages = process_search_results(results, search_query)
-                else:
-                    patch_messages = results
+            # Process and highlight search results if there's a search query
+            if search_query:
+                patch_messages = process_search_results(results, search_query)
+            else:
+                patch_messages = results
+        return render(request, 'patch/index.html', {
+            'patch_messages': patch_messages,
+            'search_query': search_query,
+            'start_date': start_date.strftime('%Y-%m-%d') if isinstance(start_date, datetime) else '',
+            'end_date': end_date.strftime('%Y-%m-%d') if isinstance(end_date, datetime) else '',
+            'is_search': True
+        })
     else:
-        patch_messages = PatchMessage.objects.all().order_by(
-            'patch_year', 'patch_date', 'patch_number_this_date'
+        # Get patches grouped by year
+        patches_by_year = (
+            PatchMessage.objects
+            .order_by('-patch_year', '-patch_date', '-patch_number_this_date')
+            .values('patch_year', 'title', 'slug')
         )
 
-    return render(request=request,
-                  context={
-                      "patch_messages": patch_messages,
-                      'search_query': search_query,
-                      'start_date': start_date.strftime('%Y-%m-%d') if isinstance(start_date, datetime) else '',
-                      'end_date': end_date.strftime('%Y-%m-%d') if isinstance(end_date, datetime) else ''
-                  },
-                  template_name="patch/index.html")
+        # Group patches by year and count patches per year
+        years_data = (
+            PatchMessage.objects
+            .values('patch_year')
+            .annotate(count=Count('id'))
+            .order_by('-patch_year')
+        )
+
+        # Return browse template
+        return render(request, 'patch/index.html', {
+            'patches_by_year': patches_by_year,
+            'years_data': years_data,
+            'is_search': False
+        })
 
 
 def view_patch_message(request, slug: str):
