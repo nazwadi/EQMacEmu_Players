@@ -2,134 +2,204 @@
 {% load static %}
 {% load humanize %}
 {% load markdown_extras %}
+
 {% block content %}
-    <div class="container py-5">
-        <div class="row">
-            <div class="col-md-10 col-sm-10">
-                <div class="card p-3 mb-4 shadow bg-body-tertiary">
-                    <div class="row">
-                        <div class="col-12 d-flex justify-content-center align-items-center">
-                            <ul class="list-group list-group-horizontal">
-                                {% if prev_patch %}
-                                    <li class="list-group-item"><a href="{% url 'patch:view' slug=prev_patch.slug %}">Previous
-                                        Patch</a></li>
-                                {% else %}
-                                    <li class="list-group-item text-disabled">Previous Patch</li>
-                                {% endif %}
-                                <li class="list-group-item"><a href="{% url 'patch:index' %}">Patch Index</a></li>
-                                {% if next_patch %}
-                                    <li class="list-group-item"><a href="{% url 'patch:view' slug=next_patch.slug %}">Next
-                                        Patch</a></li>
-                                {% else %}
-                                    <li class="list-group-item text-disabled">Next Patch</li>
-                                {% endif %}
-                            </ul>
-                        </div>
+    <div class="container-fluid py-4">
+        <div class="row justify-content-center">
+            <!-- Main Content Column -->
+            <div class="col-xl-8 col-lg-9 col-md-12 mb-4">
+                <div class="card shadow-sm">
+                    <!-- Navigation Bar -->
+                    <div class="card-header bg-transparent border-0 py-3">
+                        <nav class="nav nav-pills nav-fill">
+                        <span class="nav-item">
+                            {% if prev_patch %}
+                                <a href="{% url 'patch:view' slug=prev_patch.slug %}"
+                                   class="nav-link text-primary">
+                                    <i class="bi bi-chevron-left"></i> Previous
+                                </a>
+                            {% else %}
+                                <span class="nav-link disabled">Previous</span>
+                            {% endif %}
+                        </span>
+                            <span class="nav-item">
+                            <a href="{% url 'patch:index' %}" class="nav-link text-primary">
+                                <i class="bi bi-house"></i> Index
+                            </a>
+                        </span>
+                            <span class="nav-item">
+                            {% if next_patch %}
+                                <a href="{% url 'patch:view' slug=next_patch.slug %}"
+                                   class="nav-link text-primary">
+                                    Next <i class="bi bi-chevron-right"></i>
+                                </a>
+                            {% else %}
+                                <span class="nav-link disabled">Next</span>
+                            {% endif %}
+                        </span>
+                        </nav>
                     </div>
-                    <h4 class="text-center mt-4">Patch Message on {{ patch_message.patch_date }}</h4>
-                    <ul class="nav nav-tabs">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="markdown-tab" data-bs-toggle="tab"
-                                    data-bs-target="#markdown-tab-pane"
-                                    type="button" role="tab" aria-controls="markdown-tab-pane" aria-selected="true"
-                                    aria-current="page" href="#">Patch Message
-                            </button>
-                        </li>
-                        <li class="nav-item">
-                            <button class="nav-link" id="plaintext-tab" data-bs-toggle="tab"
-                                    data-bs-target="#plaintext-tab-pane"
-                                    type="button" role="tab" aria-controls="plaintext-tab-pane" aria-selected="true"
-                                    aria-current="page" href="#">View Plain Text Version
-                            </button>
-                        </li>
-                    </ul>
-                    <div class="tab-content" id="patchViewTabContent">
-                        <div class="tab-pane fade show active" id="markdown-tab-pane" role="tabpanel"
-                             aria-labelledby="markdown-tab"
-                             tabindex="0">
-                            <div class="row mt-4">
-                                <div class="col-md-12">
-                                    <article class="mb-4">
-                                        {{ patch_message.body_markdown|render_markdown|safe }}
-                                    </article>
-                                </div>
+
+                    <div class="card-body">
+                        <!-- Patch Title -->
+                        <header class="text-center mb-4">
+                            <h1 class="h4 mb-2">{{ patch_message.title }}</h1>
+                            <time datetime="{{ patch_message.patch_date|date:'Y-m-d' }}"
+                                  class="text-muted small">
+                                {{ patch_message.patch_date|date:"F d, Y" }}
+                            </time>
+                        </header>
+
+                        <!-- Content Tabs -->
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="markdown-tab"
+                                        data-bs-toggle="tab" data-bs-target="#markdown-tab-pane"
+                                        type="button" role="tab" aria-selected="true">
+                                    Formatted
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="plaintext-tab"
+                                        data-bs-toggle="tab" data-bs-target="#plaintext-tab-pane"
+                                        type="button" role="tab">
+                                    Plain Text
+                                </button>
+                            </li>
+                        </ul>
+
+                        <!-- Tab Content -->
+                        <div class="tab-content mt-4" id="patchViewTabContent">
+                            <!-- Markdown Version -->
+                            <div class="tab-pane fade show active" id="markdown-tab-pane"
+                                 role="tabpanel" aria-labelledby="markdown-tab">
+                                <article class="patch-content">
+                                    {{ patch_message.body_markdown|render_markdown|safe }}
+                                </article>
                             </div>
-                        </div>
-                        <div class="tab-pane fade" id="plaintext-tab-pane" role="tabpanel"
-                             aria-labelledby="plaintext-tab"
-                             tabindex="1">
-                            <h5 class="text-center mt-4">{{ patch_message.patch_date|date:"F d, Y" }}</h5>
-                            <div class="row mt-4">
-                                <div class="col-md-12">
-                                    <article class="mb-4">
-                                        <pre>
-                                            {{ patch_message.body_plaintext|linebreaks }}
-                                        </pre>
-                                    </article>
-                                </div>
+
+                            <!-- Plain Text Version -->
+                            <div class="tab-pane fade" id="plaintext-tab-pane"
+                                 role="tabpanel" aria-labelledby="plaintext-tab">
+                                <pre class="patch-plaintext p-3 bg-light rounded">{{ patch_message.body_plaintext|linebreaks }}</pre>
                             </div>
-                        </div>
-                    </div>
-                    <hr/>
-                    <div class="row">
-                        <div class="col-12 d-flex justify-content-center align-items-center">
-                            <ul class="list-group list-group-horizontal">
-                                {% if prev_patch %}
-                                    <li class="list-group-item"><a
-                                            href="{% url 'patch:view' slug=prev_patch.slug %}">Previous
-                                        Patch</a></li>
-                                {% else %}
-                                    <li class="list-group-item text-disabled">Previous Patch</li>
-                                {% endif %}
-                                <li class="list-group-item"><a href="{% url 'patch:index' %}">Patch Index</a>
-                                </li>
-                                {% if next_patch %}
-                                    <li class="list-group-item"><a
-                                            href="{% url 'patch:view' slug=next_patch.slug %}">Next
-                                        Patch</a></li>
-                                {% else %}
-                                    <li class="list-group-item text-disabled">Next Patch</li>
-                                {% endif %}
-                            </ul>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-2 col-sm-2 mw-200">
-                <h5>Patches in {{ patch_message.patch_year }}</h5>
-                <hr/>
-                <div class="accordion shadow" id="patchMessageAccordion">
-                    {% for month, patches in patches_by_month.items %}
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="heading{{ month }}">
-                                <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}"
-                                        type="button"
-                                        data-bs-toggle="collapse"
-                                        data-bs-target="#collapse{{ month }}"
-                                        aria-expanded="{% if forloop.first %}'true'{% else %} 'false' {% endif %}"
-                                        aria-controls="collapse{{ month }}">
-                                    {{ month }}
-                                </button>
-                            </h2>
-                            <div id="collapse{{ month }}"
-                                 class="accordion-collapse collapse {% if forloop.first %}show{% endif %}"
-                                 aria-labelledby="heading{{ month }}"
-                                 data-bs-parent="#patchMessageAccordion">
-                                <div class="accordion-body">
-                                    <ul class="list-group">
-                                        {% for patch in patches %}
-                                            <li class="list-group-item px-2"><a
-                                                    href="{{ patch.slug }}">{{ patch.patch_date|date:"M d Y H:i" }}</a>
-                                            </li>
-                                        {% endfor %}
-                                    </ul>
+
+            <!-- Sidebar -->
+            <div class="col-xl-3 col-lg-3 col-md-12">
+                <div class="sticky-top" style="top: 1rem;">
+                    <h5 class="mb-3">Patches in {{ patch_message.patch_year }}</h5>
+                    <div class="accordion accordion-flush shadow-sm" id="patchMessageAccordion">
+                        {% for month, patches in patches_by_month.items %}
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="heading{{ month }}">
+                                    <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}"
+                                            type="button" data-bs-toggle="collapse"
+                                            data-bs-target="#collapse{{ month }}"
+                                            aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}">
+                                        {{ month }}
+                                    </button>
+                                </h2>
+                                <div id="collapse{{ month }}"
+                                     class="accordion-collapse collapse {% if forloop.first %}show{% endif %}"
+                                     data-bs-parent="#patchMessageAccordion">
+                                    <div class="accordion-body p-0">
+                                        <div class="list-group list-group-flush">
+                                            {% for patch in patches %}
+                                                <a href="{{ patch.slug }}"
+                                                   class="list-group-item list-group-item-action {% if patch.slug == patch_message.slug %}active{% endif %}">
+                                                    <time datetime="{{ patch.patch_date|date:'Y-m-d H:i' }}"
+                                                          class="small">
+                                                        {{ patch.patch_date|date:"M d Y H:i" }}
+                                                    </time>
+                                                </a>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    {% endfor %}
+                        {% endfor %}
+                    </div>
                 </div>
-
             </div>
         </div>
     </div>
+
+    <style>
+        /* Typography Optimizations */
+        .patch-content {
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #000000;
+        }
+
+        .patch-content p {
+            margin-bottom: 1.5rem;
+        }
+
+        .patch-content h1, .patch-content h2, .patch-content h3,
+        .patch-content h4, .patch-content h5, .patch-content h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .patch-plaintext {
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        /* Mobile Optimizations */
+        @media (max-width: 768px) {
+            .patch-content {
+                font-size: 1rem;
+                line-height: 1.5;
+            }
+
+            .container-fluid {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+        }
+
+        /* Navigation improvements */
+        .nav-pills .nav-link {
+            color: #2f6fab; /* Match your existing link color theme */
+            transition: background-color 0.2s ease;
+        }
+
+        .nav-pills .nav-link:hover {
+            background-color: #f3f8fd; /* Using your existing color scheme */
+        }
+
+        .nav-pills .nav-link.disabled {
+            color: #bbb; /* Matching your text-disabled class */
+        }
+
+        /* Tab styling to match your theme */
+        .nav-tabs .nav-link.active {
+            border-color: #becfe2; /* Matching your existing border colors */
+            background-color: #f3f8fd; /* Using your existing color scheme */
+        }
+
+        /* Accordion styling to match your theme */
+        .accordion-button:not(.collapsed) {
+            background-color: #cedff2; /* Using your existing color scheme */
+            color: inherit;
+        }
+
+        .accordion-button:focus {
+            border-color: #becfe2;
+            box-shadow: 0 0 0 0.25rem rgba(206, 223, 242, 0.25);
+        }
+
+    </style>
 {% endblock %}
