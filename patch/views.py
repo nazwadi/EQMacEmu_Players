@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.contrib import messages
+from django.db.models.functions import TruncMonth
 
 from patch.models import PatchMessage
 from patch.models import Comment
@@ -36,8 +37,16 @@ def view_patch_message(request, slug: str):
     patch_message = PatchMessage.objects.get(slug=slug)
     next_patch = PatchMessage.objects.filter(patch_date__gt=patch_message.patch_date).order_by("patch_date").first()
     prev_patch = PatchMessage.objects.filter(patch_date__lt=patch_message.patch_date).order_by("-patch_date").first()
-    patches_this_year = PatchMessage.objects.filter(patch_year=patch_message.patch_year)
     comments = Comment.objects.filter(patch_message=patch_message).filter(active=True)
+
+    patches_this_year = PatchMessage.objects.filter(patch_year=patch_message.patch_year)
+    patches_by_month = patches_this_year.annotate(month=TruncMonth('patch_date')).order_by("month")
+    patches_by_month_dict = {}
+    for patch in patches_by_month:
+        month_key = patch.month.strftime('%B')  # For example, 'January 2025'
+        if month_key not in patches_by_month_dict:
+            patches_by_month_dict[month_key] = []
+        patches_by_month_dict[month_key].append(patch)
 
     new_comment = None  # Comment posted
     if request.method == 'POST':
@@ -63,7 +72,7 @@ def view_patch_message(request, slug: str):
                       "patch_message": patch_message,
                       "next_patch": next_patch,
                       "prev_patch": prev_patch,
-                      "patches_this_year": patches_this_year,
+                      "patches_by_month": patches_by_month_dict,
                       "comments": comments,
                       "new_comment": new_comment,
                       "comment_form": comment_form,

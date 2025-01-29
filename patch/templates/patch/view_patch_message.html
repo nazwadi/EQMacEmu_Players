@@ -96,14 +96,39 @@
                 </div>
             </div>
             <div class="col-md-2 col-sm-2 mw-200">
-                <div class="card p-3 mb-4 shadow bg-body-tertiary">
-                    <h6>{{ patch_message.patch_year }}</h6>
-                    <ul>
-                        {% for patch in patches_this_year %}
-                            <li><a href="{% url 'patch:view' slug=patch.slug %}">{{ patch.title }}</a></li>
-                        {% endfor %}
-                    </ul>
+                <h5>Patches in {{ patch_message.patch_year }}</h5>
+                <hr/>
+                <div class="accordion shadow" id="patchMessageAccordion">
+                    {% for month, patches in patches_by_month.items %}
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading{{ month }}">
+                                <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}"
+                                        type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#collapse{{ month }}"
+                                        aria-expanded="{% if forloop.first %}'true'{% else %} 'false' {% endif %}"
+                                        aria-controls="collapse{{ month }}">
+                                    {{ month }}
+                                </button>
+                            </h2>
+                            <div id="collapse{{ month }}"
+                                 class="accordion-collapse collapse {% if forloop.first %}show{% endif %}"
+                                 aria-labelledby="heading{{ month }}"
+                                 data-bs-parent="#patchMessageAccordion">
+                                <div class="accordion-body">
+                                    <ul class="list-group">
+                                        {% for patch in patches %}
+                                            <li class="list-group-item px-2"><a
+                                                    href="{{ patch.slug }}">{{ patch.patch_date|date:"M d Y H:i" }}</a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
                 </div>
+
             </div>
         </div>
     </div>
