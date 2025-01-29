@@ -1,10 +1,12 @@
 from django.shortcuts import render
+from django.db import connection
 from django.contrib import messages
 from django.db.models.functions import TruncMonth
 
 from patch.models import PatchMessage
 from patch.models import Comment
 from .forms import CommentForm
+
 
 # Create your views here.
 def index(request):
@@ -16,13 +18,37 @@ def index(request):
     :param request:
     :return: HttpResponse
     """
-    patch_messages = PatchMessage.objects.all()
+    search_query = request.GET.get('q', '')
+    patch_messages = []
+
+    if search_query:
+        with connection.cursor() as cursor:
+            cursor.execute("""
+                SELECT id, title, body_plaintext, patch_date, patch_year, 
+                       patch_number_this_date, slug,
+                       MATCH(title, body_plaintext) AGAINST(%s IN NATURAL LANGUAGE MODE) AS relevance
+                FROM patch_patchmessage
+                WHERE MATCH(title, body_plaintext) AGAINST(%s IN NATURAL LANGUAGE MODE)
+                ORDER BY patch_year DESC, patch_date DESC, patch_number_this_date ASC
+            """, [search_query, search_query])
+
+            columns = [col[0] for col in cursor.description]
+            patch_messages = [
+                dict(zip(columns, row))
+                for row in cursor.fetchall()
+            ]
+    else:
+        patch_messages = PatchMessage.objects.all().order_by(
+            'patch_year', 'patch_date', 'patch_number_this_date'
+        )
 
     return render(request=request,
                   context={
                       "patch_messages": patch_messages,
+                      'search_query': search_query
                   },
                   template_name="patch/index.html")
+
 
 def view_patch_message(request, slug: str):
     """

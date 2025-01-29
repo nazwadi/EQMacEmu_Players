@@ -7,44 +7,90 @@
             <div class="col-12">
                 <div class="card p-3 mb-4 shadow bg-body-tertiary">
                     <h5 class="text-center">EQ Live Patch History</h5>
-                    <div class="row mt-4">
-                        <div class="col-md-4 col-sm-2">
-                            <h6>1999</h6>
-                            <ul style="list-style-type: square">
-                                {% for patch_message in patch_messages %}
-                                    {% if patch_message.patch_year == 1999 %}
-                                        <li class="my-1">
-                                            <a href="{% url 'patch:view' slug=patch_message.slug %}">{{ patch_message.title }}</a>
-                                        </li>
-                                    {% endif %}
-                                {% endfor %}
-                            </ul>
-                        </div>
-                        <div class="col-md-4 col-sm-2">
-                            <h6>2000</h6>
-                            <ul style="list-style-type: square">
-                                {% for patch_message in patch_messages %}
-                                    {% if patch_message.patch_year == 2000 %}
-                                        <li class="my-1">
-                                            <a href="{% url 'patch:view' slug=patch_message.slug %}">{{ patch_message.title }}</a>
-                                        </li>
-                                    {% endif %}
-                                {% endfor %}
-                            </ul>
-                        </div>
-                        <div class="col-md-4 col-sm-2">
-                            <h6>2001</h6>
-                            <ul style="list-style-type: square">
-                                {% for patch_message in patch_messages %}
-                                    {% if patch_message.patch_year == 2001 %}
-                                        <li class="my-1">
-                                            <a href="{% url 'patch:view' slug=patch_message.slug %}">{{ patch_message.title }}</a>
-                                        </li>
-                                    {% endif %}
-                                {% endfor %}
-                            </ul>
+
+                    <!-- Search Form -->
+                    <div class="row justify-content-center mb-4">
+                        <div class="col-md-6">
+                            <form method="GET" action="{% url 'patch:index' %}" class="d-flex">
+                                <input type="text" name="q" class="form-control me-2"
+                                       placeholder="Search patches..."
+                                       value="{{ search_query|default:'' }}">
+                                <button type="submit" class="btn btn-primary">Search</button>
+                            </form>
                         </div>
                     </div>
+
+                    {% if search_query %}
+                        <!-- Search Results -->
+                        <div class="mb-4">
+                            <h6>Search Results for "{{ search_query }}"</h6>
+                            <ul style="list-style-type: square">
+                                {% for patch_message in patch_messages %}
+                                    <li class="my-2">
+                                        <a href="{% url 'patch:view' slug=patch_message.slug %}">
+                                            {{ patch_message.title }}
+                                        </a>
+                                        <small class="text-muted">
+                                            ({{ patch_message.patch_date|date:"F j, Y" }})
+                                        </small>
+                                        {% if patch_message.body_plaintext %}
+                                            <div class="text-muted small mt-1">
+                                                {{ patch_message.body_plaintext|truncatewords:30 }}
+                                            </div>
+                                        {% endif %}
+                                    </li>
+                                {% empty %}
+                                    <li>No patches found matching your search.</li>
+                                {% endfor %}
+                            </ul>
+                            <div class="text-center mt-3">
+                                <a href="{% url 'patch:index' %}" class="btn btn-outline-secondary btn-sm">
+                                    Clear Search
+                                </a>
+                            </div>
+                        </div>
+                    {% else %}
+
+
+                        <div class="row mt-4">
+                            <div class="col-md-4 col-sm-2">
+                                <h6>1999</h6>
+                                <ul style="list-style-type: square">
+                                    {% for patch_message in patch_messages %}
+                                        {% if patch_message.patch_year == 1999 %}
+                                            <li class="my-1">
+                                                <a href="{% url 'patch:view' slug=patch_message.slug %}">{{ patch_message.title }}</a>
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <div class="col-md-4 col-sm-2">
+                                <h6>2000</h6>
+                                <ul style="list-style-type: square">
+                                    {% for patch_message in patch_messages %}
+                                        {% if patch_message.patch_year == 2000 %}
+                                            <li class="my-1">
+                                                <a href="{% url 'patch:view' slug=patch_message.slug %}">{{ patch_message.title }}</a>
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <div class="col-md-4 col-sm-2">
+                                <h6>2001</h6>
+                                <ul style="list-style-type: square">
+                                    {% for patch_message in patch_messages %}
+                                        {% if patch_message.patch_year == 2001 %}
+                                            <li class="my-1">
+                                                <a href="{% url 'patch:view' slug=patch_message.slug %}">{{ patch_message.title }}</a>
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

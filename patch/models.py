@@ -16,6 +16,13 @@ class PatchMessage(models.Model):
     source_notes = models.TextField(blank=True, null=True)
     slug = models.SlugField(max_length=255, null=False, unique=True)
 
+    indexes = [
+        models.Index(fields=['title']),
+        models.Index(fields=['body_plaintext']),
+        models.Index(fields=['patch_year']),
+        models.Index(fields=['patch_date']),
+    ]
+
     @property
     def short_description(self):
         return truncatewords(self.body_plaintext, 20)
