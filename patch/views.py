@@ -3,8 +3,9 @@ from django.db import connection
 from django.contrib import messages
 from django.db.models.functions import TruncMonth
 
-from patch.models import PatchMessage
-from patch.models import Comment
+from .models import PatchMessage
+from .models import Comment
+from datetime import datetime
 from .forms import CommentForm
 
 
@@ -19,24 +20,62 @@ def index(request):
     :return: HttpResponse
     """
     search_query = request.GET.get('q', '')
+    start_date = request.GET.get('start_date', '')
+    end_date = request.GET.get('end_date', '')
     patch_messages = []
 
-    if search_query:
-        with connection.cursor() as cursor:
-            cursor.execute("""
-                SELECT id, title, body_plaintext, patch_date, patch_year, 
-                       patch_number_this_date, slug,
-                       MATCH(title, body_plaintext) AGAINST(%s IN NATURAL LANGUAGE MODE) AS relevance
-                FROM patch_patchmessage
-                WHERE MATCH(title, body_plaintext) AGAINST(%s IN NATURAL LANGUAGE MODE)
-                ORDER BY patch_year DESC, patch_date DESC, patch_number_this_date ASC
-            """, [search_query, search_query])
+    # Convert dates to proper format if provided
+    date_filter = ""
+    date_params = []
+    if start_date:
+        try:
+            start_date = datetime.strptime(start_date, '%Y-%m-%d')
+            date_filter += " AND patch_date >= %s"
+            date_params.append(start_date)
+        except ValueError:
+            start_date = ''
 
-            columns = [col[0] for col in cursor.description]
-            patch_messages = [
-                dict(zip(columns, row))
-                for row in cursor.fetchall()
-            ]
+    if end_date:
+        try:
+            end_date = datetime.strptime(end_date, '%Y-%m-%d')
+            date_filter += " AND patch_date <= %s"
+            date_params.append(end_date)
+        except ValueError:
+            end_date = ''
+
+    if search_query or start_date or end_date:
+        with connection.cursor() as cursor:
+            with connection.cursor() as cursor:
+                base_query = """
+                    SELECT id, title, body_plaintext, patch_date, patch_year, 
+                           patch_number_this_date, slug
+                """
+
+                if search_query:
+                    base_query += """,
+                        MATCH(title, body_plaintext) AGAINST(%s IN NATURAL LANGUAGE MODE) AS relevance
+                    FROM patch_patchmessage
+                    WHERE MATCH(title, body_plaintext) AGAINST(%s IN NATURAL LANGUAGE MODE)
+                    """
+                    params = [search_query, search_query] + date_params
+                else:
+                    base_query += """
+                    FROM patch_patchmessage
+                    WHERE 1=1
+                    """
+                    params = date_params
+
+                final_query = base_query + date_filter + """
+                    ORDER BY patch_year DESC, patch_date DESC, patch_number_this_date ASC
+                """
+
+                cursor.execute(final_query, params)
+
+                columns = [col[0] for col in cursor.description]
+                patch_messages = [
+                    dict(zip(columns, row))
+                    for row in cursor.fetchall()
+                ]
     else:
         patch_messages = PatchMessage.objects.all().order_by(
             'patch_year', 'patch_date', 'patch_number_this_date'
@@ -45,7 +84,9 @@ def index(request):
     return render(request=request,
                   context={
                       "patch_messages": patch_messages,
-                      'search_query': search_query
+                      'search_query': search_query,
+                      'start_date': start_date.strftime('%Y-%m-%d') if isinstance(start_date, datetime) else '',
+                      'end_date': end_date.strftime('%Y-%m-%d') if isinstance(end_date, datetime) else ''
                   },
                   template_name="patch/index.html")
 
