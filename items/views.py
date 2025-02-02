@@ -431,9 +431,20 @@ def view_item(request, item_id):
 @require_http_methods(["GET"])
 def item_detail_api(request, item_id):
     item = Items.objects.get(id=item_id)
+    effect_name = None
+    if item.click_effect > 0:
+        effect = SpellsNew.objects.filter(id=item.click_effect).first()
+        effect_name = effect.name
+    elif item.worn_effect > 0:
+        effect = SpellsNew.objects.filter(id=item.worn_effect).first()
+        effect_name = effect.name
+    elif item.proc_effect > 0:
+        effect = SpellsNew.objects.filter(id=item.proc_effect).first()
+        effect_name = effect.name
     return render(request=request,
                   template_name="items/item_stats_template.html",
                   context={
+                      "effect_name": effect_name,
                       "item": item,
                   })
 
