@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.db import connections
+from django.views.decorators.http import require_http_methods
 
 from items.utils import get_class_bitmask
 from items.utils import get_race_bitmask
@@ -27,6 +28,7 @@ def search(request):
     if request.method == "GET":
         return render(request=request,
                       context={
+                          "IS_SEARCH": True,
                           "EQUIPMENT_SLOTS": EQUIPMENT_SLOTS,
                           "PLAYER_CLASSES": PLAYER_CLASSES,
                           "PLAYER_RACES": PLAYER_RACES,
@@ -223,7 +225,9 @@ def search(request):
 
         return render(request=request,
                       template_name="items/search_item.html",
-                      context={"search_results": search_results,
+                      context={
+                               "IS_SEARCH": True,
+                               "search_results": search_results,
                                "EQUIPMENT_SLOTS": EQUIPMENT_SLOTS,
                                "ITEM_TYPES": ITEM_TYPES,
                                "CONTAINER_TYPES": CONTAINER_TYPES,
@@ -424,6 +428,14 @@ def view_item(request, item_id):
                       "ground_spawns": ground_spawns,
                   })
 
+@require_http_methods(["GET"])
+def item_detail_api(request, item_id):
+    item = Items.objects.get(id=item_id)
+    return render(request=request,
+                  template_name="items/item_stats_template.html",
+                  context={
+                      "item": item,
+                  })
 
 def best_in_slot(request, class_id: int = None):
     """

@@ -424,11 +424,12 @@
                                                     <td>
                                                         <img src="/static/images/items/item_{{ ld_entry.item_id.icon }}.png"
                                                              alt="item_{{ ld_entry.item_id.icon }}.png">
-                                                        <a href="/items/view/{{ ld_entry.item_id.id }}">{{ ld_entry.item_id.Name }}</a>
+                                                        <a class="tooltip-link link" data-url="{{ ld_entry.item_id.id }}" href="/items/view/{{ ld_entry.item_id.id }}">{{ ld_entry.item_id.Name }}</a>
                                                     </td>
                                                     <td>{{ ld_entry.chance }}%</td>
                                                     <td class="expansion-tag {{ ld_entry.min_expansion|exp_filter }}">
-                                                        <span>{{ ld_entry.min_expansion|exp_filter|title }}</span></td>
+                                                        <span>{{ ld_entry.min_expansion|exp_filter|title }}</span>
+                                                    </td>
                                                 </tr>
                                             {% endfor %}
                                             </tbody>
