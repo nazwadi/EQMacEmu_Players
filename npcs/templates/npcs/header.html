@@ -100,16 +100,32 @@
         });
     {% endif %}
     document.addEventListener('DOMContentLoaded', function () {
+        const contentCache = new Map();
         tippy('.tooltip-link', {
             content: 'Loading...',
             allowHTML: true,
             interactive: true,
             placement: 'right',
+            touch: true,              // Enable on touch devices
+            appendTo: document.body,
             onShow(instance) {
+                instance.setContent('Loading...');
+
                 const url = instance.reference.dataset.url;
+                if (!url) {
+                    instance.setContent('Error: No URL provided');
+                    return;
+                }
+                // Check cache first
+                if (contentCache.has(url)) {
+                    instance.setContent(contentCache.get(url));
+                    return;
+                }
+
                 fetch(`/items/api/${encodeURIComponent(url)}`)
                     .then(response => response.text())
                     .then(content => {
+                        contentCache.set(url, content);
                         instance.setContent(content);
                     })
                     .catch(error => {
