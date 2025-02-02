@@ -247,7 +247,7 @@
                                 <td>
                                     <img src="{% static "/images/items/" %}item_{{ result.icon }}.png"
                                          alt="item_{{ result.icon }}.png">
-                                    <a href="/items/view/{{ result.id }}">{{ result.Name }}</a>
+                                    <a class="tooltip-link link" data-url="{{ result.id }}" href="/items/view/{{ result.id }}">{{ result.Name }}</a>
                                 </td>
                             </tr>
                         {% endfor %}
