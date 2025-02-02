@@ -35,6 +35,46 @@
     {% else %}
         <title>EQ Archives</title>
     {% endif %}
+ <style>
+        /* Only the minimal necessary styles */
+        .tooltip-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tippy-box {
+            position: relative;
+            pointer-events: none;
+            padding: 0;
+            border-radius: 4px;
+            background: transparent;
+        }
+
+        .tippy-box img {
+            max-width: 200px;
+            height: auto;
+            display: block;
+            border-radius: 4px;
+        }
+
+        .hover-link:hover + .tooltip, .tooltip:hover {
+            display: block;
+        }
+
+        .tooltip {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 1px solid #ccc;
+            padding: 8px;
+            display: none;
+            min-width: 200px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 50000;
+        }
+
+    </style>
 </head>
 <body>
 
@@ -50,13 +90,14 @@
 <script src="https://code.jquery.com/jquery-3.7.1.js"
         integrity="sha384-wsqsSADZR1YRBEZ4/kKHNSmU+aX8ojbnKUMN4RyD3jDkxw5mHtoe2z/T/n4l56U/"
         crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
-        integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
         crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
 <script src="https://cdn.datatables.net/v/bs5/dt-2.0.2/datatables.min.js"></script>
+<script src="https://unpkg.com/tippy.js@6"></script>
 <script>
     $(document).ready(function () {
         $("#search-results-table").DataTable({
@@ -66,6 +107,25 @@
         $("#recent-discoveries-table").DataTable({
             order: [[3, 'desc']],
             pageLength: 50
+        });
+    });
+    document.addEventListener('DOMContentLoaded', function () {
+        tippy('.tooltip-link', {
+            content: 'Loading...',
+            allowHTML: true,
+            interactive: true,
+            placement: 'right',
+            onShow(instance) {
+                const url = instance.reference.dataset.url;
+                fetch(`/items/api/${encodeURIComponent(url)}`)
+                    .then(response => response.text())
+                    .then(content => {
+                        instance.setContent(content);
+                    })
+                    .catch(error => {
+                        instance.setContent(`Failed to load data: ${error}`);
+                    });
+            }
         });
     });
 </script>
