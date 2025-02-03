@@ -12,10 +12,10 @@
                     {{ npc_data.lastname|clean_name }} {% endif %}</h1>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-3">
+        <div class="row g-4">
+            <div class="col-12 col-lg-3">
                 <table class="table mobStatsBox"
-                       style="box-shadow: 5px 10px 20px rgba(0, 0, 0, 0.6); box-sizing: border-box;">
+                       style="float: none; box-shadow: 5px 10px 20px rgba(0, 0, 0, 0.6); box-sizing: border-box;">
                     <tr>
                         <th> Mob Information</th>
                     </tr>
@@ -87,8 +87,8 @@
                     <tr>
                         <td>
                             <span style="font-weight: bold;">Special Abilities:</span>
-                            <div class="list-group">
-                                {{ npc_data.special_abilities|npc_special_ability|safe}}
+                            <div class="list-group d-grid gap-2" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr))">
+                                {{ npc_data.special_abilities|npc_special_ability|safe }}
                             </div>
                         </td>
                     </tr>
@@ -136,7 +136,7 @@
                     </tr>
                 </table>
             </div>
-            <div class="col-lg">
+            <div class="col-12 col-lg-6">
                 <div style="margin-bottom: 10px;">
                     <h5>Description</h5>
                     {% if npc_page_text.description %}
@@ -413,30 +413,35 @@
                                             <b>Drop Limit:</b> {{ loot_data.0.drop_limit }}
                                             <b>Multiplier:</b> {{ loot_data.0.multiplier }},
                                         </li>
-                                        <table class="table table-striped">
-                                            <thead class="table-floating-header">
-                                            <tr>
-                                                <th>Item</th>
-                                                <th>Chance</th>
-                                                <th>Min. Expansion</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            {% for ld_entry in loot_data.1 %}
+                                        <div class="table-responsive">
+
+                                            <table class="table table-striped">
+                                                <thead class="table-floating-header">
                                                 <tr>
-                                                    <td>
-                                                        <img src="/static/images/items/item_{{ ld_entry.item_id.icon }}.png"
-                                                             alt="item_{{ ld_entry.item_id.icon }}.png">
-                                                        <a class="tooltip-link link" data-url="{{ ld_entry.item_id.id }}" href="/items/view/{{ ld_entry.item_id.id }}">{{ ld_entry.item_id.Name }}</a>
-                                                    </td>
-                                                    <td>{{ ld_entry.chance }}%</td>
-                                                    <td class="expansion-tag {{ ld_entry.min_expansion|exp_filter }}">
-                                                        <span>{{ ld_entry.min_expansion|exp_filter|title }}</span>
-                                                    </td>
+                                                    <th>Item</th>
+                                                    <th>Chance</th>
+                                                    <th>Min. Expansion</th>
                                                 </tr>
-                                            {% endfor %}
-                                            </tbody>
-                                        </table>
+                                                </thead>
+                                                <tbody>
+                                                {% for ld_entry in loot_data.1 %}
+                                                    <tr>
+                                                        <td>
+                                                            <img src="/static/images/items/item_{{ ld_entry.item_id.icon }}.png"
+                                                                 alt="item_{{ ld_entry.item_id.icon }}.png">
+                                                            <a class="tooltip-link link"
+                                                               data-url="{{ ld_entry.item_id.id }}"
+                                                               href="/items/view/{{ ld_entry.item_id.id }}">{{ ld_entry.item_id.Name }}</a>
+                                                        </td>
+                                                        <td>{{ ld_entry.chance }}%</td>
+                                                        <td class="expansion-tag {{ ld_entry.min_expansion|exp_filter }}">
+                                                            <span>{{ ld_entry.min_expansion|exp_filter|title }}</span>
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     {% endfor %}
                                 </ul>
                             </div>
@@ -459,7 +464,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg">
+            <div class="col-12 col-lg-3 d-flex justify-content-center">
                 {% if npc_page_text.portrait %}
                     {{ npc_page_text.portrait }}
                 {% else %}

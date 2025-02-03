@@ -38,6 +38,7 @@
             border-radius: 4px;
             background: transparent;
         }
+
         .tippy-box[data-theme~="ability"] {
             position: relative;
             pointer-events: none;
@@ -119,10 +120,28 @@
             content: 'Loading...',
             allowHTML: true,
             interactive: true,
-            placement: 'right',
+            placement: 'auto',
             theme: 'item',
-            touch: true,              // Enable on touch devices
-            appendTo: document.body,
+            touch: 'hold',
+            maxWidth: '90vw', // Ensure tooltip doesn't exceed screen width
+            popperOptions: {
+                strategy: 'fixed',
+                modifiers: [{
+                    name: 'preventOverflow',
+                    options: {
+                        boundary: document.body,
+                        padding: 8
+                    }
+                },
+                    {
+                        name: 'flip',
+                        options: {
+                            padding: 8,
+                            fallbackPlacements: ['bottom', 'top', 'left', 'right']
+                        }
+                    }
+                ]
+            },
             onShow(instance) {
                 instance.setContent('Loading...');
 
@@ -155,10 +174,29 @@
             content: 'Loading...',
             allowHTML: true,
             interactive: true,
-            placement: 'right',
+            placement: 'auto',
             theme: 'ability',
-            touch: true,              // Enable on touch devices
-            appendTo: document.body,
+            touch: 'hold',
+            maxWidth: '90vw', // Ensure tooltip doesn't exceed screen width
+            popperOptions: {
+                strategy: 'fixed',
+                modifiers: [
+                    {
+                        name: 'preventOverflow',
+                        options: {
+                            boundary: document.body,
+                            padding: 8
+                        }
+                    },
+                    {
+                        name: 'flip',
+                        options: {
+                            padding: 8,
+                            fallbackPlacements: ['bottom', 'top', 'left', 'right']
+                        }
+                    }
+                ]
+            },
             onShow(instance) {
                 instance.setContent('Loading...');
 
