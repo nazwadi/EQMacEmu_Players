@@ -284,3 +284,52 @@ ul {
         margin-top: 0 !important;
     }
 }
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    /* Improve spacing on mobile */
+    .container.py-4 {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+
+    /* Make table text smaller on mobile */
+    #search-results-table {
+        font-size: 14px;
+    }
+
+    /* Ensure consistent form element heights on mobile */
+    .form-control, .form-select, .btn {
+        height: 38px;
+    }
+
+    /* Improve table header readability */
+    #search-results-table th {
+        white-space: nowrap;
+        min-width: 70px;  /* Minimum width for columns */
+    }
+}
+
+/* Ensure consistent spacing between form groups */
+.form-label {
+    margin-bottom: 0.25rem;
+}
+
+/* Improve table layout */
+#search-results-table {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+#search-results-table td,
+#search-results-table th {
+    padding: 0.75rem;
+    vertical-align: middle;
+}
+
+/* Make expansion icons consistent size */
+#search-results-table img {
+    width: 24px;
+    height: 24px;
+    vertical-align: middle;
+}

@@ -7,16 +7,17 @@
         <div class="row">
             <div class="col">
                 <h1 class="text-center mb-4">NPC Search</h1>
-                <form class="p-3 mb-4 bg-body-tertiary border" action="/npcs/search" method="post">
+                <form class="p-3 mb-4 bg-body-tertiary border rounded" action="/npcs/search" method="post">
                     {% csrf_token %}
-                    <div class="row">
+                    <!-- First row: Name, Expansion, Query Limit -->
+                    <div class="row g-3 mb-3">
                         <div class="col-12 col-md-6">
-                            <div class="form-text text-wrap"><label for="npc_name">NPC Name</label></div>
+                            <label for="npc_name" class="form-label">NPC Name</label>
                             <input type="text" class="form-control" id="npc_name" name="npc_name"
                                    placeholder="a decaying skeleton">
                         </div>
-                        <div class="col-12 col-md-4">
-                            <div class="form-text text-wrap"><label for="select_expansion">Expansion</label></div>
+                        <div class="col-12 col-sm-8 col-md-4">
+                            <label for="select_expansion" class="form-label">Expansion</label>
                             <select class="form-select" id="select_expansion" name="select_expansion">
                                 <option value="-1">any</option>
                                 {% for expansion in expansions %}
@@ -24,16 +25,17 @@
                                 {% endfor %}
                             </select>
                         </div>
-                        <div class="col-12 col-md-2">
-                            <div class="form-text text-wrap"><label for="query_limit">Query Limit (Max: 200)</label>
-                            </div>
+                        <div class="col-12 col-sm-4 col-md-2">
+                            <label for="query_limit" class="form-label">Query Limit (Max: 200)</label>
                             <input class="form-control" id="query_limit" name="query_limit" type="number" min="0"
                                    max="200" value="50">
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-12 col-md-3">
-                            <div class="form-text text-wrap"><label for="select_npc_body_type">Body Type</label></div>
+
+                    <!-- Second row: Body Type, Race, Class, Level Range -->
+                    <div class="row g-3 mb-3">
+                        <div class="col-12 col-sm-6 col-md-3">
+                            <label for="select_npc_body_type" class="form-label">Body Type</label>
                             <select class="form-select" id="select_npc_body_type" name="select_npc_body_type">
                                 <option value="-1">any</option>
                                 {% for body_type in npc_body_types %}
@@ -41,8 +43,8 @@
                                 {% endfor %}
                             </select>
                         </div>
-                        <div class="col-12 col-md-3">
-                            <div class="form-text text-wrap"><label for="select_npc_race">Race</label></div>
+                        <div class="col-12 col-sm-6 col-md-3">
+                            <label for="select_npc_race" class="form-label">Race</label>
                             <select class="form-select" id="select_npc_race" name="select_npc_race">
                                 <option value="-1">any</option>
                                 {% for race in npc_races %}
@@ -50,8 +52,8 @@
                                 {% endfor %}
                             </select>
                         </div>
-                        <div class="col-12 col-md-3">
-                            <div class="form-text text-wrap"><label for="select_npc_class">Class</label></div>
+                        <div class="col-12 col-sm-6 col-md-3">
+                            <label for="select_npc_class" class="form-label">Class</label>
                             <select class="form-select" id="select_npc_class" name="select_npc_class">
                                 <option value="-1">any</option>
                                 {% for class in npc_classes %}
@@ -59,37 +61,45 @@
                                 {% endfor %}
                             </select>
                         </div>
-                        <div class="col-12 col-md-1">
-                            <div class="form-text text-wrap"><label for="min_level">Min Level</label></div>
+                        <div class="col-6 col-sm-3 col-md-1">
+                            <label for="min_level" class="form-label">Min Level</label>
                             <input class="form-control" id="min_level" name="min_level" type="number" value="0">
                         </div>
-                        <div class="col-12 col-md-1">
-                            <div class="form-text text-wrap"><label for="max_level">Max Level</label></div>
+                        <div class="col-6 col-sm-3 col-md-1">
+                            <label for="max_level"  class="form-label">Max Level</label>
                             <input class="form-control" id="max_level" name="max_level" type="number" value="99">
                         </div>
-                        {% if zones %}
-                            <div class="form-group col-md-4">
-                                <label for="zone">Zone</label>
-                                <select id="zone" class="form-control">
+                    </div>
+
+                    <!-- Zone selector (if present) -->
+                    {% if zones %}
+                        <div class="row g-3 mb-3">
+                            <div class="col-12 col-md-4">
+                                <label for="zone" class="form-label">Zone</label>
+                                <select id="zone" class="form-select">
                                     <option selected>any</option>
                                     {% for zone in zones %}
                                         <option value="{{ zone.short_name }}">{{ zone.long_name }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
-                        {% endif %}
-                    </div>
-                    <div class="row">
-                        <div class="col-12 col-md-3">
-                            <div class="form-check text-wrap"></div>
+                        </div>
+                    {% endif %}
+
+                    <!-- Checkbox row -->
+                    <div class="row g-3 mb-3">
+                        <div class="col-12">
+                            <div class="form-check"></div>
                             <input class="form-check-input" type="checkbox" value="" id="exclude_merchants"
                                    name="exclude_merchants">
-                            <label for="exclude_merchants">Exclude Merchants</label>
+                            <label class="form-check-label" for="exclude_merchants">Exclude Merchants</label>
                         </div>
                     </div>
-                    <div class="col-12 col-md-12">
-                        <div class="d-grid gap-2 py-4">
-                            <button type="submit" class="btn btn-outline-primary">Search</button>
+
+                    <!-- Search button -->
+                    <div class="row">
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-outline-primary w-100">Search</button>
                         </div>
                     </div>
                 </form>
@@ -98,48 +108,50 @@
         {% if search_results %}
             <div class="row py-5">
                 <div class="col">
-                    <h1 class="text-center">Search Results</h1>
-                    <table id="search-results-table" class="display table table-striped">
-                        <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Expansion</th>
-                            <th>Zone</th>
-                            <th>Level(s)</th>
-                            <th>Race</th>
-                            <th>Class</th>
-                            <th>Gender</th>
-                            <th>Hit Points</th>
-                            <th>MR</th>
-                            <th>CR</th>
-                            <th>FR</th>
-                            <th>DR</th>
-                            <th>PR</th>
-                        </tr>
-                        </thead>
-                        {% for result in search_results %}
+                    <h1 class="text-center mb-4">Search Results</h1>
+                    <div class="table-responsive">
+                        <table id="search-results-table" class="display table table-striped">
+                            <thead>
                             <tr>
-                                <td><a href="/npcs/view/{{ result.id }}">{{ result.name|clean_name }}</a></td>
-                                <td><img src="{% static "/images/" %}{{ result.min_expansion|expansion_icon }}"
-                                         alt="{{ result.min_expansion|expansion_icon }}"></td>
-                                <td><a href="/zones/view/{{ result.short_name }}">{{ result.long_name }}</a></td>
-                                {% if result.maxlevel %}
-                                    <td>{{ result.level }} - {{ result.maxlevel }}</td>
-                                {% else %}
-                                    <td>{{ result.level }}</td>
-                                {% endif %}
-                                <td>{{ result.race|npc_race }}</td>
-                                <td>{{ result.class_name|npc_class }}</td>
-                                <td>{{ result.gender|gender }}</td>
-                                <td>{{ result.hp|intcomma }}</td>
-                                <td>{{ result.MR }}</td>
-                                <td>{{ result.CR }}</td>
-                                <td>{{ result.FR }}</td>
-                                <td>{{ result.DR }}</td>
-                                <td>{{ result.PR }}</td>
+                                <th>Name</th>
+                                <th>Expansion</th>
+                                <th>Zone</th>
+                                <th>Level(s)</th>
+                                <th>Race</th>
+                                <th>Class</th>
+                                <th>Gender</th>
+                                <th>Hit Points</th>
+                                <th>MR</th>
+                                <th>CR</th>
+                                <th>FR</th>
+                                <th>DR</th>
+                                <th>PR</th>
                             </tr>
-                        {% endfor %}
-                    </table>
+                            </thead>
+                            {% for result in search_results %}
+                                <tr>
+                                    <td><a href="/npcs/view/{{ result.id }}">{{ result.name|clean_name }}</a></td>
+                                    <td><img src="{% static "/images/" %}{{ result.min_expansion|expansion_icon }}"
+                                             alt="{{ result.min_expansion|expansion_icon }}"></td>
+                                    <td><a href="/zones/view/{{ result.short_name }}">{{ result.long_name }}</a></td>
+                                    {% if result.maxlevel %}
+                                        <td>{{ result.level }} - {{ result.maxlevel }}</td>
+                                    {% else %}
+                                        <td>{{ result.level }}</td>
+                                    {% endif %}
+                                    <td>{{ result.race|npc_race }}</td>
+                                    <td>{{ result.class_name|npc_class }}</td>
+                                    <td>{{ result.gender|gender }}</td>
+                                    <td>{{ result.hp|intcomma }}</td>
+                                    <td>{{ result.MR }}</td>
+                                    <td>{{ result.CR }}</td>
+                                    <td>{{ result.FR }}</td>
+                                    <td>{{ result.DR }}</td>
+                                    <td>{{ result.PR }}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
                 </div>
             </div>
         {% endif %}
