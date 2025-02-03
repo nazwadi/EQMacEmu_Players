@@ -1,87 +1,96 @@
 {% load gravatar %}
 <nav class="navbar navbar-expand-lg navbar-light bg-light border">
-    <div id="logo" class="d-flex flex-grow-1">
+    <div class="container-fluid">
+        <div id="logo" class="d-flex flex-grow-1">
             <span class="w-100 d-lg-none d-block">
-            <!-- hidden spacer to center brand on mobile --></span>
-        <a class="navbar-brand d-none d-lg-inline-block px-5 py-3" href="/accounts">&nbsp;</a>
-        <div class="w-100 text-right">
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
-                    aria-controls="navbarText" aria-expanded="False" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            <!-- hidden spacer to center brand on mobile -->
+            </span>
+            <a class="navbar-brand d-none d-lg-inline-block px-5 py-3" href="/accounts">&nbsp;</a>
+            <div class="w-100 text-end">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
+                        aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
         </div>
-    </div>
-    <div class="collapse navbar-collapse flex-grow-1" id="navbarText">
-        <ul class="navbar-nav me-auto flex-wrap col-12 col-md-auto mb-2 justify-content-center mb-md-0 nav-pills">
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'factions:search' %}">Factions</a>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarItemsMenuLink" role="button"
-                   data-bs-toggle="dropdown" aria-expanded="false">
-                    Items
-                </a>
-                <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarItemsMenuLink">
-                    <li><a class="dropdown-item" href="{% url 'items:search' %}">Items Search</a></li>
-                    <li><a class="dropdown-item" href="{% url 'items:discovered' %}">Discovered Items</a></li>
-                    <li><a class="dropdown-item" href="{% url 'items:bis' class_id=0 %}">Best in Slot</a></li>
-                </ul>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarMiscMenuLink" role="button"
-                   data-bs-toggle="dropdown" aria-expanded="false">
-                    Misc
-                </a>
-                <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarMiscMenuLink">
-                    <li><a class="dropdown-item" href="{% url 'characters:exp' %}">Experience per Level</a></li>
-                </ul>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'npcs:search' %}">Npcs</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'patch:index' %}">Patch</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'pets:list' %}">Pets</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'recipes:search' %}">Recipes</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'accounts:server_list' %}">Server List</a>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="{% url 'spells:search' %}" id="navbarSpellMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Spells
-                </a>
-                <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarSpellMenuLink">
-                    <li><a class="dropdown-item" href="{% url 'spells:search' %}">Search</a></li>
-                    <li><a class="dropdown-item" href="{% url 'spells:index' %}">List By Class</a></li>
-                </ul>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'zones:index' %}">Zones</a>
-            </li>
-        </ul>
-        <div class="d-flex px-5 text-right">
-            <div class="dropdown">
-                {% if user.is_authenticated %}
-                    <button class="btn btn-secondary dropdown-toggle" href="#" type="button" data-bs-toggle="dropdown"
-                            aria-expanded="false" id="navbarDropdownMenuLink">
-{#                        <i class="fas fa-user"></i> {{ user.username }}#}
-                        <img class="img-fluid img-responsive rounded-circle me-2" src="{% gravatar_url user.email 150 %}" width="38" alt=""> {{ user.username }}
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <li><a class="dropdown-item" href="{% url 'accounts:list_accounts' %}">Accounts</a></li>
-                        <li><a class="dropdown-item" href="{% url 'character_transfer:index' %}">Character Transfer</a></li>
-                        <li><a class="dropdown-item" href="{% url 'accounts:inventory_search' %}">Inventory Search</a></li>
-                        <li><a class="dropdown-item" href="{% url 'accounts:logout' %}">Log Out</a></li>
+
+        <div class="collapse navbar-collapse flex-grow-1" id="navbarText">
+            <ul class="navbar-nav me-auto flex-wrap col-12 col-md-auto mb-2 justify-content-center mb-md-0 nav-pills">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'factions:search' %}">Factions</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarItemsMenuLink" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        Items
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-light py-1" aria-labelledby="navbarItemsMenuLink">
+                        <li><a class="dropdown-item py-2" href="{% url 'items:search' %}">Items Search</a></li>
+                        <li><a class="dropdown-item py-2" href="{% url 'items:discovered' %}">Discovered Items</a></li>
+                        <li><a class="dropdown-item py-2" href="{% url 'items:bis' class_id=0 %}">Best in Slot</a></li>
                     </ul>
-                {% else %}
-                    <a class="btn btn-secondary" href="{% url 'accounts:login' %}" role="button"
-                       id="navbarDropdownMenuLink">Login</a>
-                {% endif %}
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarMiscMenuLink" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        Misc
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-light py-1" aria-labelledby="navbarMiscMenuLink">
+                        <li><a class="dropdown-item py-2" href="{% url 'characters:exp' %}">Experience per Level</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'npcs:search' %}">Npcs</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'patch:index' %}">Patch</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'pets:list' %}">Pets</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'recipes:search' %}">Recipes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'accounts:server_list' %}">Server List</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="{% url 'spells:search' %}" id="navbarSpellMenuLink"
+                       role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Spells
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-light py-1" aria-labelledby="navbarSpellMenuLink">
+                        <li><a class="dropdown-item py-2" href="{% url 'spells:search' %}">Search</a></li>
+                        <li><a class="dropdown-item py-2" href="{% url 'spells:index' %}">List By Class</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'zones:index' %}">Zones</a>
+                </li>
+            </ul>
+            <div class="d-flex px-5 text-end">
+                <div class="dropdown">
+                    {% if user.is_authenticated %}
+                        <button class="btn btn-secondary dropdown-toggle d-flex align-items-center" href="#" type="button"
+                                data-bs-toggle="dropdown" aria-expanded="false" id="navbarDropdownMenuLink">
+                            {#                        <i class="fas fa-user"></i> {{ user.username }}#}
+                            <img class="img-fluid img-responsive rounded-circle me-2"
+                                 src="{% gravatar_url user.email 150 %}" width="38" height="38" alt="User gravatar">
+                            <span class="d-none d-sm-inline">{{ user.username }}</span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <li><a class="dropdown-item" href="{% url 'accounts:list_accounts' %}">Accounts</a></li>
+                            <li><a class="dropdown-item" href="{% url 'character_transfer:index' %}">Character
+                                Transfer</a></li>
+                            <li><a class="dropdown-item" href="{% url 'accounts:inventory_search' %}">Inventory
+                                Search</a></li>
+                            <li><a class="dropdown-item" href="{% url 'accounts:logout' %}">Log Out</a></li>
+                        </ul>
+                    {% else %}
+                        <a class="btn btn-secondary" href="{% url 'accounts:login' %}" role="button"
+                           id="navbarDropdownMenuLink">Login</a>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>
