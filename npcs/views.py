@@ -2,6 +2,10 @@ import json
 from django.shortcuts import render, redirect
 from django.db import connections
 from django.core.exceptions import ObjectDoesNotExist
+from django.http import JsonResponse
+from dataclasses import asdict
+from collections import namedtuple
+from django.views.decorators.http import require_http_methods
 
 from npcs.models import NpcPage
 from common.models.loot import LootTable, LootDropEntries
@@ -12,7 +16,7 @@ from common.models.spawns import SpawnEntry
 from common.models.spawns import Spawn2
 from common.models.spawns import SpawnGroup
 from common.utils import calculate_item_price
-from collections import namedtuple
+from .abilities.special_abilities import get_ability_by_name, get_ability_by_id
 
 
 def index_request(request):
@@ -368,3 +372,16 @@ def view_npc(request, npc_id):
                       "spawn_groups": spawn_groups,
                       "zone": zone,
                   })
+
+
+
+@require_http_methods(["GET"])
+def npc_special_abilities_api(request, ability_name:str):
+    if not ability_name:
+        return JsonResponse({'error': 'Ability name is required'}, status=400)
+
+    ability = get_ability_by_name(ability_name)
+    if ability:
+        return JsonResponse(asdict(ability))
+
+    return JsonResponse({'error': f'Ability "{ability_name}" not found'}, status=404)

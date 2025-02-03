@@ -764,11 +764,17 @@ def npc_special_ability(values):
         codes = ability.split(',')
         try:
             ability_code = codes[0].strip()
-            result.append(npc_special_abilities[int(ability_code)])
+            ability = npc_special_abilities[int(ability_code)]
+            html = (f'<button class="ability-button npc_special_ability list-group-item list-group-item-action d-inline-flex align-items-center gap-2" '
+                    f'data-url="{ability}" type="button">'
+                    f'{ability}'
+                    f'<i class="fa-solid fa-circle-info text-secondary ms-auto"></i>'
+                    f'</button>')
+            result.append(html)
         except (IndexError, ValueError) as e:
             print(e, ability)
             continue
-    return ', '.join(result)
+    return ''.join(result)
 
 
 @register.filter(name="multiply")

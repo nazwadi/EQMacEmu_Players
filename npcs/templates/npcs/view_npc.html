@@ -85,8 +85,11 @@
                         <td><span style="font-weight: bold;">ATK Delay:</span> {{ npc_data.attack_delay }}</td>
                     </tr>
                     <tr>
-                        <td><span
-                                style="font-weight: bold;">Special Abilities:</span>&nbsp;{{ npc_data.special_abilities|npc_special_ability }}
+                        <td>
+                            <span style="font-weight: bold;">Special Abilities:</span>
+                            <div class="list-group">
+                                {{ npc_data.special_abilities|npc_special_ability|safe}}
+                            </div>
                         </td>
                     </tr>
                     <tr>

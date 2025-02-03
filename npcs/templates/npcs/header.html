@@ -31,12 +31,19 @@
             display: inline-block;
         }
 
-        .tippy-box {
+        .tippy-box[data-theme~="item"] {
             position: relative;
             pointer-events: none;
             padding: 0;
             border-radius: 4px;
             background: transparent;
+        }
+        .tippy-box[data-theme~="ability"] {
+            position: relative;
+            pointer-events: none;
+            padding: 0;
+            border-radius: 4px;
+            background: black;
         }
 
         .tippy-box img {
@@ -63,6 +70,13 @@
             z-index: 50000;
         }
 
+        .ability-button {
+            cursor: help;
+        }
+
+        .ability-button:hover i {
+            color: var(--bs-primary) !important;
+        }
     </style>
 </head>
 <body>
@@ -106,6 +120,7 @@
             allowHTML: true,
             interactive: true,
             placement: 'right',
+            theme: 'item',
             touch: true,              // Enable on touch devices
             appendTo: document.body,
             onShow(instance) {
@@ -130,6 +145,60 @@
                     })
                     .catch(error => {
                         instance.setContent(`Failed to load data: ${error}`);
+                    });
+            }
+        });
+    });
+    document.addEventListener('DOMContentLoaded', function () {
+        const contentCache = new Map();
+        tippy('.npc_special_ability', {
+            content: 'Loading...',
+            allowHTML: true,
+            interactive: true,
+            placement: 'right',
+            theme: 'ability',
+            touch: true,              // Enable on touch devices
+            appendTo: document.body,
+            onShow(instance) {
+                instance.setContent('Loading...');
+
+                const url = instance.reference.dataset.url;
+                if (!url) {
+                    instance.setContent('Error: No URL provided');
+                    return;
+                }
+                // Check cache first
+                if (contentCache.has(url)) {
+                    instance.setContent(contentCache.get(url));
+                    return;
+                }
+
+                fetch(`/npcs/api/special-ability/${encodeURIComponent(url)}`)
+                    .then(response => {
+                        // Check if response is ok
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.text();  // Get text instead of json first
+                    })
+                    .then(text => {
+                        const data = JSON.parse(text);
+                        if (data.error) {
+                            throw new Error(data.error);
+                        }
+                        // Create formatted content from the description
+                        const content = `
+                        <div class="tooltip-content">
+                            <strong>${data.name}</strong><br>
+                            ${data.description}
+                        </div>
+                    `;
+                        contentCache.set(url, content);
+                        instance.setContent(content);
+                    })
+                    .catch(error => {
+                        console.error('Fetch error:', error);
+                        instance.setContent(`Failed to load data: ${error.message}`);
                     });
             }
         });
