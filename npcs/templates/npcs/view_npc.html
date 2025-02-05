@@ -43,9 +43,18 @@
                                 href="/zones/view/{{ zone.short_name }}">{{ zone.long_name }}</a></td>
                     </tr>
                     <tr>
-                        <td><span style="font-weight: bold;">Expansion:</span>&nbsp;<img
-                                src="/static/images/{{ expansion|expansion_icon }}"
-                                alt="{{ expansion|expansion_icon }}"/> (Expansion tagging in progress)
+                        <td>
+                            <span style="font-weight: bold;">Expansion:</span>
+                            {% if expansion == -1 %}
+                                <div class="expansion-tag {{ expansion }}">
+                                    <span class="">{{ expansion|expansion_icon|title }}</span> (Expansion
+                                    tagging in progress)
+                                </div>
+                            {% else %}
+                                <span style="font-weight: bold;">Expansion:</span>&nbsp;<img
+                                    src="/static/images/{{ expansion|expansion_icon }}"
+                                    alt="{{ expansion|expansion_icon }}"/>
+                            {% endif %}
                         </td>
                     </tr>
                     <tr>
@@ -241,7 +250,7 @@
                                     <h5>Factions</h5>
                                     <ul>
                                         {% for fid, name, value, npc_value in factions %}
-                                            <li><a href="/factions/view/{{ fid }}">{{ name|clean_name|title }}</a> 
+                                            <li><a href="/factions/view/{{ fid }}">{{ name|clean_name|title }}</a>
                                                 <span style="color:#770000">({{ value }})</span>
                                             </li>
                                         {% empty %}
@@ -329,13 +338,13 @@
                                             </td>
                                             {% if sp.min_expansion == -1 %}
                                                 <td class="expansion-tag {{ sp.min_expansion|exp_filter }}">
-                                               <span>{{ sp.min_expansion|exp_filter|title }}</span> 
+                                                    <span>{{ sp.min_expansion|exp_filter|title }}</span>
                                                 </td>
                                             {% else %}
-                                            <td>
-                                                    <img src="{% static "/images/" %}{{ sp.min_expansion|expansion_icon }}"
-                                                         alt="{{ sp.min_expansion|expansion_icon }}">
-                                                {% endif %}
+                                                <td>
+                                                <img src="{% static "/images/" %}{{ sp.min_expansion|expansion_icon }}"
+                                                     alt="{{ sp.min_expansion|expansion_icon }}">
+                                            {% endif %}
                                             </td>
                                         </tr>
                                     {% endfor %}
