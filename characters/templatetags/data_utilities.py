@@ -660,7 +660,7 @@ def guild_rank_filter(value):
 @register.filter(name="expansion_icon")
 def expansion_icon(value):
     expansion_icons = {
-        -1: "Any",
+        -1: "default",
         0: "Original.gif",
         1: "Kunarkicon.gif",
         2: "Veliousicon.gif",

@@ -88,7 +88,8 @@
                     <tr>
                         <td>
                             <span style="font-weight: bold;">Special Abilities:</span>
-                            <div class="list-group d-grid gap-2" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr))">
+                            <div class="list-group d-grid gap-2"
+                                 style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr))">
                                 {{ npc_data.special_abilities|npc_special_ability|safe }}
                             </div>
                         </td>
@@ -239,9 +240,9 @@
                                 <div class="py-2">
                                     <h5>Factions</h5>
                                     <ul>
-                                        {% for name, value, npc_value in factions %}
-                                            <li>{{ name|clean_name|title }} <span
-                                                    style="color:#770000">({{ value }})</span>
+                                        {% for fid, name, value, npc_value in factions %}
+                                            <li><a href="/factions/view/{{ fid }}">{{ name|clean_name|title }}</a> 
+                                                <span style="color:#770000">({{ value }})</span>
                                             </li>
                                         {% empty %}
                                             <li>None</li>
@@ -326,8 +327,16 @@
                                             </td>
                                             <td>{{ sp.respawntime|datetime_delta }}<br/>({{ sp.variance|datetime_delta }})
                                             </td>
-                                            <td><img src="{% static "/images/" %}{{ sp.min_expansion|expansion_icon }}"
-                                                     alt="{{ sp.min_expansion|expansion_icon }}"></td>
+                                            {% if sp.min_expansion == -1 %}
+                                                <td class="expansion-tag {{ sp.min_expansion|exp_filter }}">
+                                               <span>{{ sp.min_expansion|exp_filter|title }}</span> 
+                                                </td>
+                                            {% else %}
+                                            <td>
+                                                    <img src="{% static "/images/" %}{{ sp.min_expansion|expansion_icon }}"
+                                                         alt="{{ sp.min_expansion|expansion_icon }}">
+                                                {% endif %}
+                                            </td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>
