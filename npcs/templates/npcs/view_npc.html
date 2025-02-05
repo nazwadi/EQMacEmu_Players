@@ -259,9 +259,9 @@
                                     </ul>
                                     <h5>Opposing Factions</h5>
                                     <ul>
-                                        {% for name, value, npc_value in opposing_factions %}
+                                        {% for fid, name, value, npc_value in opposing_factions %}
                                             {% if value != 0 %}
-                                                <li>{{ name|clean_name|title }} <span
+                                                <li><a href="/factions/view/{{ fid }}">{{ name|clean_name|title }}</a><span
                                                         style="color:#007700">({{ value }})</span>
                                                 </li>
                                             {% endif %}
