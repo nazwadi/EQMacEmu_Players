@@ -29,6 +29,9 @@ def view_quest(request, quest_id):
                   context={
                       "quest_exists": True,
                       "quest": quest,
+                      'factions_required': quest.factions_required.all() or [],
+                      'factions_raised': quest.factions_raised.all() or [],
+                      'factions_lowered': quest.factions_lowered.all() or [],
                       "default_max_level": SERVER_MAX_LEVEL,
                       "quest_items": quest_items,
                       "starting_npc": starting_npc,

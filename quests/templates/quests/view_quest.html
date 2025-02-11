@@ -154,7 +154,7 @@
                         <tr>
                             <td colspan="2">
                                 <ul>
-                                    {% for faction in quest.factions_required.all %}
+                                    {% for faction in factions_required %}
                                         <li><a href="/factions/view/{{ faction.id }}">{{ faction.name|clean_name }}</a>
                                         </li>
                                     {% empty %}
@@ -169,7 +169,7 @@
                         <tr>
                             <td colspan="2">
                                 <ul>
-                                    {% for faction in quest.factions_raised.all %}
+                                    {% for faction in factions_raised %}
                                         <li><a href="/factions/view/{{ faction.id }}">{{ faction.name|clean_name }}</a>
                                         </li>
                                     {% empty %}
@@ -184,7 +184,7 @@
                         <tr>
                             <td colspan="2">
                                 <ul>
-                                    {% for faction in quest.factions_lowered.all %}
+                                    {% for faction in factions_lowered %}
                                         <li><a href="/factions/view/{{ faction.id }}">{{ faction.name|clean_name }}</a>
                                         </li>
                                     {% empty %}
