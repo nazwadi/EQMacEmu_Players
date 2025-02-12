@@ -7,6 +7,7 @@ from common.models.npcs import NPCTypes
 from common.models.zones import Zone
 from common.models.items import Items
 
+
 def view_quest(request, quest_id):
     """
     Defines view for https://url.tld/quests/view/<int:pk>
@@ -18,13 +19,26 @@ def view_quest(request, quest_id):
     quest = Quests.objects.filter(id=quest_id).first()
     if quest:
         starting_npc = NPCTypes.objects.filter(id=quest.starting_npc_id).first()
-        related_npcs = [NPCTypes.objects.get(id=npc.npc_id) for npc in quest.related_npcs.all() if quest.related_npcs]
-        related_zones = [Zone.objects.get(zone_id_number=zone.zone_id) for zone in quest.related_zones.all() if quest.related_zones]
-        quest_items = [Items.objects.get(id=quest_item.item_id) for quest_item in quest.quest_items.all() if quest.quest_items]
+
+        related_npcs = []
+        if quest.related_npcs.exists():
+            related_npcs = [NPCTypes.objects.filter(id=npc.npc_id).first() for npc in quest.related_npcs.all()]
+            related_npcs = [npc for npc in related_npcs if npc]  # Remove None values
+
+        related_zones = []
+        if quest.related_zones.exists():
+            related_zones = [Zone.objects.filter(zone_id_number=zone.zone_id).first() for zone in quest.related_zones.all()]
+            related_zones = [zone for zone in related_zones if zone]  # Remove None values
+
+        quest_items = []
+        if quest.quest_items.exists():
+            quest_items = [Items.objects.filter(id=quest_item.item_id).first() for quest_item in quest.quest_items.all()]
+            quest_items = [item for item in quest_items if item]  # Remove None values
     else:
         return render(request=request,
-                      context={"quest_exists": False },
+                      context={"quest_exists": False},
                       template_name="quests/view_quest.html")
+
     return render(request=request,
                   context={
                       "quest_exists": True,
