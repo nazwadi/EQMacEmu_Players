@@ -249,21 +249,17 @@
                                 <div class="py-2">
                                     <h5>Factions</h5>
                                     <ul>
-                                        {% for fid, name, value, npc_value in factions %}
-                                            <li><a href="/factions/view/{{ fid }}">{{ name|clean_name|title }}</a>
-                                                <span style="color:#770000">({{ value }})</span>
-                                            </li>
+                                        {% for name, value, npc_value in factions %}
+                                            <li>{{ name|clean_name|title }}<span style="color:#770000">({{ value }})</span></li>
                                         {% empty %}
                                             <li>None</li>
                                         {% endfor %}
                                     </ul>
                                     <h5>Opposing Factions</h5>
                                     <ul>
-                                        {% for fid, name, value, npc_value in opposing_factions %}
+                                        {% for name, value, npc_value in opposing_factions %}
                                             {% if value != 0 %}
-                                                <li><a href="/factions/view/{{ fid }}">{{ name|clean_name|title }}</a><span
-                                                        style="color:#007700">({{ value }})</span>
-                                                </li>
+                                                <li>{{ name|clean_name|title }}<span style="color:#007700">({{ value }})</span></li>
                                             {% endif %}
                                         {% empty %}
                                             <li>None</li>

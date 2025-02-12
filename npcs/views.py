@@ -252,11 +252,11 @@ def view_npc(request, npc_id):
     npc_faction_entries = cursor.fetchall()
     factions = []
     opposing_factions = []
-    for fl_id, name, value, npc_value in npc_faction_entries:
+    for fid, name, value, npc_value in npc_faction_entries:
         if value > 0:
-            opposing_factions.append((fl_id, name, value, npc_value))
+            opposing_factions.append((name, value, npc_value))
         else:
-            factions.append((fl_id, name, value, npc_value))
+            factions.append((name, value, npc_value))
 
     merchant_list_result = MerchantList.objects.filter(merchant_id=npc_data.merchant_id)
     MerchantListTuple = namedtuple('MerchantList', ['id', 'name', 'icon', 'platinum', 'gold',
