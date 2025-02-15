@@ -32,6 +32,7 @@ urlpatterns = [
     path("character_transfer/", include("character_transfer.urls")),
     path("factions/", include("factions.urls")),
     path("items/", include("items.urls")),
+    path("magelo/", include("magelo.urls")),
     path("npcs/", include("npcs.urls")),
     path("patch/", include("patch.urls")),
     path("pets/", include("pets.urls")),
