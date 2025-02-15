@@ -37,6 +37,11 @@ class ItemStats:
         self.mr_cap = 300
         self.dr_cap = 300
         self.pr_cap = 300
+        self.regen_cap = 0
+        self.ft_cap = 0
+        self.atk_cap = 0
+        self.ds = 0
+        self.haste = 0
 
     def add_item(self, item):
         """Add item and accumulate its stats"""

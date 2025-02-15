@@ -94,7 +94,7 @@
                                 {% endfor %}
                             </td>
 
-                            <td class="inventory-container" style="width:460px;text-align:center">
+                            <td class="inventory-container" style="width:460px;text-align:left">
                                 <div class="InventoryOuter{% if magelo %} GM{% endif %}">
                                     <div class="ItemTitle">
                                         <div class="InventoryTitleLeft"></div>
@@ -144,7 +144,7 @@
                                                     <td colspan="2">
                                                         <span class="player-level">{{ character.level }}</span>
                                                         <span class="player-class">{{ character.class_name|player_class }}</span><br>
-                                                        <span class="player-deity">{{ character.deity }}</span>
+                                                        <span class="player-deity">{{ character.deity|player_deity }}</span>
                                                     </td>
                                                 </tr>
                                                 <tr>
