@@ -1,0 +1,451 @@
+{% extends 'magelo/header.html' %}
+{% load static %}
+{% load data_utilities %}
+{% block content %}
+    <div class="container">
+        <div class="row mt-5">
+            <div class="col">
+
+                {#                <script>#}
+                {#                    function display(type, id, prefix) {#}
+                {#                        const target = document.getElementById(prefix + id);#}
+                {#                        if (!target) return;#}
+                {##}
+                {#                        if (type) {#}
+                {#                            target.style.display = target.style.display === 'none' ? 'block' : 'none';#}
+                {#                        } else {#}
+                {#                            for (let i = 0; i <= 2270; i++) {#}
+                {#                                const hideme = document.getElementById(prefix + i);#}
+                {#                                if (hideme) hideme.style.display = 'none';#}
+                {#                            }#}
+                {#                            for (let i = 9999; i < 10000; i++) {#}
+                {#                                const hideme = document.getElementById(prefix + i);#}
+                {#                                if (hideme) hideme.style.display = 'none';#}
+                {#                            }#}
+                {#                            target.style.display = 'block';#}
+                {#                        }#}
+                {#                    }#}
+                {#                </script>#}
+
+                <nav class="NavOuter">
+                    <div class="NavInner">
+                        <button class="FreeButton" disabled style="color:#606060;margin:3px">Inventory</button>
+                        {#                        <button class="FreeButton" onclick="window.location='{% url 'magelo:aas' character.name %}'"#}
+                        {#                                style="margin:3px">AAs#}
+                        {#                        </button>#}
+                        {#                        <button class="FreeButton"#}
+                        {#                                onclick="window.location='{% url 'magelo:keys' character.name %}'"#}
+                        {#                                style="margin:3px">Keys#}
+                        {#                        </button>#}
+                        {#                        <button class="FreeButton"#}
+                        {#                                onclick="window.location='{% url 'magelo:flags' character.name %}'"#}
+                        {#                                style="margin:3px">Flags#}
+                        {#                        </button>#}
+                        {#                        <button class="FreeButton"#}
+                        {#                                onclick="window.location='{% url 'magelo:skills' character.name %}'"#}
+                        {#                                style="margin:3px">Skills#}
+                        {#                        </button>#}
+                        {#                        <button class="FreeButton"#}
+                        {#                                onclick="window.location='{% url 'magelo:corpse' character.name %}'"#}
+                        {#                                style="margin:3px">Corpse#}
+                        {#                        </button>#}
+                        {#                        <button class="FreeButton"#}
+                        {#                                onclick="window.location='{% url 'magelo:factions' character.name %}'"#}
+                        {#                                style="margin:3px">Faction#}
+                        {#                        </button>#}
+                        {#                        <button class="FreeButton"#}
+                        {#                                onclick="window.location='{% url 'magelo:charmove' character.name %}'"#}
+                        {#                                style="margin:3px">Move#}
+                        {#                        </button>#}
+                        {#                        <button class="FreeButton" onclick="window.external.AddFavorite(location.href, document.title);"#}
+                        {#                                style="margin:3px">Bookmark#}
+                        {#                        </button>#}
+                    </div>
+                </nav>
+
+                <main>
+                    <table>
+                        <tr>
+                            <td class="bags-container" style="width:200px;text-align:right">
+                                {% for bag in inventory_items.bags %}
+                                    <div class="BagOuter bagrow{{ bag.rows }}" id="bag{{ bag.slot }}">
+                                        <div class="BagTitle">
+                                            <div class="BagTitleLeft"></div>
+                                            <div class="BagTitleMid">Container</div>
+                                            <div class="BagTitleRight"></div>
+                                        </div>
+
+                                        {% for slot in bag.slots %}
+                                            <div class="Slot bagslotloc{{ slot.number }} slotimage"></div>
+                                        {% endfor %}
+
+                                        {% for item in bag.items %}
+                                            <div onclick="display(0, {{ item.slot }}, 'slot');"
+                                                 class="Slot bagslotloc{{ item.relative_slot }}"
+                                                 style="background-image: url({% static 'magelo/images/items/item_'|add:item.icon|add:'.png' %});">
+                                            </div>
+                                        {% endfor %}
+
+                                        <button class="Button bagbuttonrow{{ bag.rows }}"
+                                                onclick="document.getElementById('bag{{ bag.slot }}').style.display='none';">
+                                            Done
+                                        </button>
+                                    </div>
+                                {% endfor %}
+                            </td>
+
+                            <td class="inventory-container" style="width:460px;text-align:center">
+                                <div class="InventoryOuter{% if magelo %} GM{% endif %}">
+                                    <div class="ItemTitle">
+                                        <div class="InventoryTitleLeft"></div>
+                                        <div class="InventoryTitleMid">Inventory</div>
+                                        <div class="InventoryTitleRight"></div>
+                                    </div>
+
+                                    <div class="InventoryInner">
+                                        <div class="InventoryStats2">
+                                            <table class="StatTable">
+                                                <tr>
+                                                    <td>
+                                                        Regen<br>
+                                                        FT<br>
+                                                        ATK<br>
+                                                        DS<br>
+                                                        Haste
+                                                    </td>
+                                                    <td>
+                                                        {{ item_stats.regen }} / {{ item_stats.regen_cap }}<br>
+                                                        {{ item_stats.ft }} / {{ item_stats.ft_cap }}<br>
+                                                        {{ item_stats.atk }} / {{ item_stats.atk_cap }}<br>
+                                                        {{ item_stats.ds }}<br>
+                                                        {{ item_stats.haste }}%
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+
+                                        <div class="InventoryStats">
+                                            <table class="StatTable">
+                                                <tr>
+                                                    <td colspan="2"
+                                                        class="player-name">{{ character.name }} {{ character.last_name }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2" style="height:3px"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2"
+                                                        class="player-race">{{ character.race_name|player_race }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2" style="height:3px"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2">
+                                                        <span class="player-level">{{ character.level }}</span>
+                                                        <span class="player-class">{{ character.class_name|player_class }}</span><br>
+                                                        <span class="player-deity">{{ character.deity }}</span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2" style="height:3px"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>HP<br>MANA<br>AC<br>ATK</td>
+                                                    <td>
+                                                        <span class="player-hp">{{ character.cur_hp }}</span><br>
+                                                        <span class="player-mana">{{ character.mana }}</span><br>
+                                                        <span class="player-ac">{{ item_stats.ac }}</span><br>
+                                                        <span class="player-atk">{{ item_stats.atk }}</span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="Divider" colspan="2"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>STR<br>STA<br>AGI<br>DEX</td>
+                                                    <td>
+                                                        <span class="player-str"><font
+                                                                color='#00FF00'>{{ character.total_stats.str }}</font></span>
+                                                        / {{ item_stats.str_cap }}<br>
+                                                        <span class="player-sta"><font
+                                                                color='#00FF00'>{{ character.total_stats.sta }}</font></span>
+                                                        / {{ item_stats.sta_cap }}<br>
+                                                        <span class="player-agi"><font
+                                                                color='#00FF00'>{{ character.total_stats.agi }}</font></span>
+                                                        / {{ item_stats.agi_cap }}<br>
+                                                        <span class="player-dex"><font
+                                                                color='#00FF00'>{{ character.total_stats.dex }}</font></span>
+                                                        / {{ item_stats.dex_cap }}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="Divider" colspan="2"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>WIS<br>INT<br>CHA</td>
+                                                    <td>
+                                                        <span class="player-wis"><font
+                                                                color='#00FF00'>{{ character.total_stats.wis }}</font></span>
+                                                        / {{ item_stats.wis_cap }}<br>
+                                                        <span class="player-int"><font
+                                                                color='#00FF00'>{{ character.total_stats.int }}</font></span>
+                                                        / {{ item_stats.int_cap }}<br>
+                                                        <span class="player-cha"><font
+                                                                color='#00FF00'>{{ character.total_stats.cha }}</font></span>
+                                                        / {{ item_stats.cha_cap }}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="Divider" colspan="2"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>POISON<br>MAGIC<br>DISEASE<br>FIRE<br>COLD</td>
+                                                    <td>
+                                                        <span class="player-pr"
+                                                              style="color: #00FF00;">{{ character.total_stats.pr }}</span>
+                                                        / {{ item_stats.pr_cap }}<br>
+                                                        <span class="player-mr"><font
+                                                                color='#00FF00'>{{ character.total_stats.mr }}</font></span>
+                                                        / {{ item_stats.mr_cap }}<br>
+                                                        <span class="player-dr"><font
+                                                                color='#00FF00'>{{ character.total_stats.dr }}</font></span>
+                                                        / {{ item_stats.dr_cap }}<br>
+                                                        <span class="player-fr"><font
+                                                                color='#00FF00'>{{ character.total_stats.fr }}</font></span>
+                                                        / {{ item_stats.fr_cap }}<br>
+                                                        <span class="player-cr"><font
+                                                                color='#00FF00'>{{ character.total_stats.cr }}</font></span>
+                                                        / {{ item_stats.cr_cap }}
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+
+                                        <div class="InventoryMonogram">
+                                            <img src="{% static 'magelo/monograms/' %}{{ character.class_name }}.gif"
+                                                 alt="Class Icon">
+                                        </div>
+
+                                        {#                                        {% if not permissions.coininventory %}#}
+                                        <div class="Coin" style="top:116px;left:317px;">
+                                            <table class="StatTable">
+                                                <tr>
+                                                    <td><img src="{% static 'magelo/pp.gif' %}"
+                                                             alt="PP"></td>
+                                                    <td style="text-align:center;width:100%">{{ currency.platinum }}</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="Coin" style="top:144px;left:317px;">
+                                            <table class="StatTable">
+                                                <tr>
+                                                    <td><img src="{% static 'magelo/gp.gif' %}"
+                                                             alt="GP"></td>
+                                                    <td style="text-align:center;width:100%">{{ currency.gold }}</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="Coin" style="top:172px;left:317px;">
+                                            <table class="StatTable">
+                                                <tr>
+                                                    <td><img src="{% static 'magelo/sp.gif' %}"
+                                                             alt="GP"></td>
+                                                    <td style="text-align:center;width:100%">{{ currency.silver }}</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="Coin" style="top:200px;left:317px;">
+                                            <table class="StatTable">
+                                                <tr>
+                                                    <td><img src="{% static 'magelo/cp.gif' %}"
+                                                             alt="GP"></td>
+                                                    <td style="text-align:center;width:100%">{{ currency.copper }}</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        {#                                        {% endif %}#}
+
+                                        <div class='Slot slotloc0 slotimage0'></div>
+                                        <div class='Slot slotloc1 slotimage1'></div>
+                                        <div class='Slot slotloc2 slotimage2'></div>
+                                        <div class='Slot slotloc3 slotimage3'></div>
+                                        <div class='Slot slotloc4 slotimage4'></div>
+                                        <div class='Slot slotloc5 slotimage5'></div>
+                                        <div class='Slot slotloc6 slotimage6'></div>
+                                        <div class='Slot slotloc7 slotimage7'></div>
+                                        <div class='Slot slotloc8 slotimage8'></div>
+                                        <div class='Slot slotloc9 slotimage9'></div>
+                                        <div class='Slot slotloc10 slotimage10'></div>
+                                        <div class='Slot slotloc11 slotimage11'></div>
+                                        <div class='Slot slotloc12 slotimage12'></div>
+                                        <div class='Slot slotloc13 slotimage13'></div>
+                                        <div class='Slot slotloc14 slotimage14'></div>
+                                        <div class='Slot slotloc15 slotimage15'></div>
+                                        <div class='Slot slotloc16 slotimage16'></div>
+                                        <div class='Slot slotloc17 slotimage17'></div>
+                                        <div class='Slot slotloc18 slotimage18'></div>
+                                        <div class='Slot slotloc19 slotimage19'></div>
+                                        <div class='Slot slotloc20 slotimage20'></div>
+                                        <div class='Slot slotloc21 slotimage21'></div>
+                                        <div class='Slot slotloc22 slotimage'></div>
+                                        <div class='Slot slotloc23 slotimage'></div>
+                                        <div class='Slot slotloc24 slotimage'></div>
+                                        <div class='Slot slotloc25 slotimage'></div>
+                                        <div class='Slot slotloc26 slotimage'></div>
+                                        <div class='Slot slotloc27 slotimage'></div>
+                                        <div class='Slot slotloc28 slotimage'></div>
+                                        <div class='Slot slotloc29 slotimage'></div>
+                                        <div class='Slot slotloc9999 slotimage9999'></div>
+
+                                        {#                                        {% if not permissions.inventory %}#}
+                                        {% for key, item in inventory_items.items %}
+                                            {% if item.slot <= 29 %}
+                                                <a class="tooltip-link link"
+                                                   data-url="{{ item.id }}"
+                                                   href="/items/view/{{ item.id }}">{{ item.item_id }}
+                                                    <div class="Slot slotloc{{ item.slot }}" style="background-image: url('{{ item.icon_url }}')"></div>
+{#                                                    <div onmouseover="display(0, {{ item.slot }}, 'slot');{% if item.is_bag %}display(0, {{ item.slot }}, 'bag');{% endif %}"#}
+{#                                                         class="Slot slotloc{{ item.slot }}"#}
+{#                                                         style="background-image: url('{{ item.icon_url }}');">#}
+{#                                                    </div>#}
+                                                </a>
+                                            {% endif %}
+                                        {% endfor %}
+                                        {#                                        {% endif %}#}
+                                    </div>
+                                </div>
+                            </td>
+
+                            <!-- Bank section -->
+                            <td style="width:300px;text-align:left">
+                                <div class="BankOuter" style="min-width: 193px; min-height: 375px;">
+                                    <div class="BankTitle">
+                                        <div class="BankTitleLeft"></div>
+                                        <div class="BankTitleMid">Bank</div>
+                                        <div class="BankTitleRight"></div>
+                                    </div>
+
+                                    <div class='Slot slotloc2000 slotimage'></div>
+                                    <div class='Slot slotloc2001 slotimage'></div>
+                                    <div class='Slot slotloc2002 slotimage'></div>
+                                    <div class='Slot slotloc2003 slotimage'></div>
+                                    <div class='Slot slotloc2004 slotimage'></div>
+                                    <div class='Slot slotloc2005 slotimage'></div>
+                                    <div class='Slot slotloc2006 slotimage'></div>
+                                    <div class='Slot slotloc2007 slotimage'></div>
+                                    <div class='Slot slotloc2008 slotimage'></div>
+                                    <div class='Slot slotloc2009 slotimage'></div>
+                                    <div class='Slot slotloc2010 slotimage'></div>
+                                    <div class='Slot slotloc2011 slotimage'></div>
+                                    <div class='Slot slotloc2012 slotimage'></div>
+                                    <div class='Slot slotloc2013 slotimage'></div>
+                                    <div class='Slot slotloc2014 slotimage'></div>
+                                    <div class='Slot slotloc2015 slotimage'></div>
+                                    <div class='Slot slotloc2016 slotimage'></div>
+                                    <div class='Slot slotloc2017 slotimage'></div>
+                                    <div class='Slot slotloc2018 slotimage'></div>
+                                    <div class='Slot slotloc2019 slotimage'></div>
+                                    <div class='Slot slotloc2020 slotimage'></div>
+                                    <div class='Slot slotloc2021 slotimage'></div>
+                                    <div class='Slot slotloc2022 slotimage'></div>
+                                    <div class='Slot slotloc2023 slotimage'></div>
+
+                                    {#                                    {% if not permissions.bank %}#}
+                                    {% for key, item in inventory_items.items %}
+                                        {% if item.slot <= 2023 %}
+                                            <div onclick="display(0, {{ item.slot }}, 'slot');{% if item.is_bag %}display(0, {{ item.slot }}, 'bag');{% endif %}"
+                                                 class="Slot slotloc{{ item.slot }}"
+                                                 style="background-image: url({{ item.icon_url }});">
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                    {#                                    {% endif %}#}
+
+                                    <div class="Coin" style="top:200px;left:6px;">
+                                        <table class="StatTable">
+                                            <tbody>
+                                            <tr>
+                                                <td><img src="{% static 'magelo/pp.gif' %}"
+                                                         alt="Bank PP"></td>
+                                                <td style="text-align:center;width:100%">{{ currency.platinum_bank }}</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="Coin" style="top:228px;left:6px;">
+                                        <table class="StatTable">
+                                            <tr>
+                                                <td><img src="{% static 'magelo/gp.gif' %}"
+                                                         alt="Bank PP"></td>
+                                                <td style="text-align:center;width:100%">{{ currency.gold_bank }}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="Coin" style="top:256px;left:6px;">
+                                        <table class="StatTable">
+                                            <tr>
+                                                <td><img src="{% static 'magelo/sp.gif' %}"
+                                                         alt="Bank PP"></td>
+                                                <td style="text-align:center;width:100%">{{ currency.silver_bank }}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="Coin" style="top:284px;left:6px;">
+                                        <table class="StatTable">
+                                            <tr>
+                                                <td><img src="{% static 'magelo/cp.gif' %}"
+                                                         alt="Bank PP"></td>
+                                                <td style="text-align:center;width:100%">{{ currency.copper_bank }}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- Item tooltips -->
+                        <tr>
+                            <td colspan="3" style="text-align:center">
+                                <br><br><br>
+                                {% for key, item in inventory_items.items %}
+                                    <div class="ItemOuter" id="slot{{ item.slot }}" style="display:none;">
+                                        <div class="ItemTitle">
+                                            <div class="ItemTitleLeft"></div>
+                                            <div class="ItemTitleMid">
+                                                {#                                                <a href="{% url 'magelo:item_detail' item.id %}"#}
+                                                {#                                                   target="_blank">{{ item.name }}</a>#}
+                                            </div>
+                                            <div class="ItemTitleRight"></div>
+                                        </div>
+                                        <div class="ItemInner" style="text-align:left;">
+                                            test
+                                            {{ item.html|safe }}
+                                            {% if item.augments %}
+                                                {% for aug in item.augments %}
+                                                    <div class="augment-container">
+                                                        <table class="AugTable">
+                                                            <tr>
+                                                                <td style="text-align:center">
+                                                                    <a href="{% url 'magelo:item_detail' aug.id %}"
+                                                                       target="_blank">{{ aug.name }}</a>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="text-align:left">{{ aug.html|safe }}</td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                {% endfor %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </td>
+                        </tr>
+                    </table>
+                </main>
+            </div>
+        </div>
+    </div>
+{% endblock %}
