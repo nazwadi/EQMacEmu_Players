@@ -25,6 +25,18 @@ class ItemStats:
             'int': 0, 'wis': 0, 'cha': 0,
             'fr': 0, 'cr': 0, 'mr': 0, 'dr': 0, 'pr': 0
         }
+        self.str_cap = 255
+        self.sta_cap = 255
+        self.agi_cap = 255
+        self.dex_cap = 255
+        self.int_cap = 255
+        self.wis_cap = 255
+        self.cha_cap = 255
+        self.fr_cap = 300
+        self.cr_cap = 300
+        self.mr_cap = 300
+        self.dr_cap = 300
+        self.pr_cap = 300
 
     def add_item(self, item):
         """Add item and accumulate its stats"""
