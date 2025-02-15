@@ -10,6 +10,7 @@ from common.models.characters import CharacterCurrency
 from common.models.guilds import GuildMembers
 from common.models.items import Items
 
+
 class ItemStats:
     """Helper class to track item statistics and bonuses"""
 
@@ -181,4 +182,4 @@ def character_profile(request, character_name):
         'item_stats': item_stats,
     }
 
-    return render(request, 'magelo/character_profile.html', context)
+    return render(request=request, template_name='magelo/character_profile.html', context=context)
