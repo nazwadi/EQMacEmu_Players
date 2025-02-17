@@ -122,6 +122,22 @@ def get_permissions(user, character_name, gm_level, anon_level):
         return base_permissions
 
 
+@require_http_methods(["GET", "POST"])
+def search(request):
+    if request.method == "GET":
+        return render(request=request,
+                      context={
+                      },
+                      template_name="magelo/search.html")
+    if request.method == "POST":
+        character_name = request.POST.get("character_name")
+        search_results = Characters.objects.filter(name__icontains=character_name)[:50]
+        return render(request=request,
+                      context={
+                          "search_results": search_results
+                      },
+                      template_name="magelo/search.html")
+
 def character_profile(request, character_name):
     character = Characters.objects.filter(name=character_name).first()
     if character is None:
@@ -320,5 +336,5 @@ def update_permission(request):
         logger.error(f"Error in update_permission: {str(e)}", exc_info=True)
         return JsonResponse({
             'success': False,
-            'error': 'An error occurred processing your request'
+            'error': f'{str(e)} An error occurred processing your request'
         }, status=500)

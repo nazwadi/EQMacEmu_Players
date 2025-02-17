@@ -2,7 +2,14 @@
 {% load static %}
 {% load data_utilities %}
 {% block content %}
-    <div class="container">
+    <div class="container-fluid container-lg py-4">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'accounts:index' %}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'magelo:search' %}">Character Browser</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">{{ character.name }}</li>
+                </ol>
+            </nav>
 
         <div class="row mt-2">
             <div class="col">
@@ -530,6 +537,7 @@
 
                                                 <div class="InventoryMonogram">
                                                     <img src="
+                                                            
                                                             {% static 'magelo/monograms/' %}{{ character.class_name }}.gif"
                                                          alt="Class Icon">
                                                 </div>
