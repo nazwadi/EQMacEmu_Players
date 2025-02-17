@@ -1,4 +1,3 @@
-from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http import Http404
@@ -6,6 +5,8 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from .models import CharacterPermissions
 from .validators import PermissionValidator
+from django.core.exceptions import PermissionDenied
+from django.core.cache import cache
 
 import json
 
@@ -239,13 +240,27 @@ def character_profile(request, character_name):
     return render(request=request, template_name='magelo/character_profile.html', context=context)
 
 
+def rate_limit_by_user(user_id, key_prefix, max_requests=5, time_window=60):
+    cache_key = f"rate_limit:{key_prefix}:{user_id}"
+    requests = cache.get(cache_key, 0)
+    if requests >= max_requests:
+        raise PermissionDenied("Too many requests. Please try again later.")
+    cache.set(cache_key, requests + 1, time_window)
+
 @login_required
 @require_http_methods(["POST"])
 def update_permission(request):
     try:
-        # print("Received permission update request")  # Debug log
-        data = json.loads(request.body)
-        # print("Request data:", data)  # Debug log
+        rate_limit_by_user(request.user.id, "update_permission")
+
+        content_length = int(request.headers.get('Content-Length', 0))
+        if content_length > 1024:  # 1KB limit
+            raise PermissionDenied("Request too large")
+
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'error': 'Invalid JSON'}, status=400)
 
         try:
             validated_data = PermissionValidator.validate_permission_data(data)
@@ -259,31 +274,51 @@ def update_permission(request):
                     status=400
                 )
 
-            # print("Validated data:", validated_data)  # Debug log
         except ValueError as e:
-            print("Validation error:", e)  # Debug log
-            return JsonResponse(
-                {'success': False, 'error': str(e)},
-                status=400
-            )
+            return JsonResponse({'success': False, 'error': str(e)}, status=400)
+
+        # Verify character ownership
+        character = Characters.objects.filter(name=character_name).first()
+        if not character:
+            return JsonResponse({'success': False, 'error': 'Character not found'}, status=404)
+
+        if not valid_game_account_owner(request.user.username, str(character.account_id)):
+            raise PermissionDenied("You don't have permission to modify this character")
 
         # Get or create character permissions
         character_permissions = CharacterPermissions.get_or_create_permissions(character_name)
-        # print("Character permissions object:", character_permissions)  # Debug log
 
-        # Update the permission
-        setattr(character_permissions, permission, value)
-        character_permissions.save()
-        # print(f"Updated {permission} to {value} for character {character_name}")  # Debug log
+        # Add audit logging
+        from django.contrib.admin.models import LogEntry, CHANGE
+        from django.contrib.contenttypes.models import ContentType
+        LogEntry.objects.create(
+            user_id=request.user.id,
+            content_type_id=ContentType.objects.get_for_model(CharacterPermissions).id,
+            object_id=character_permissions.id,
+            object_repr=character_name,
+            action_flag=CHANGE,
+            change_message=f"Changed {permission} to {value}"
+        )
+
+        # Update the permission with transaction
+        from django.db import transaction
+        with transaction.atomic():
+            setattr(character_permissions, permission, value)
+            character_permissions.save()
 
         return JsonResponse({
             'success': True,
             'message': f'{permission.replace("_", " ").title()} {"enabled" if value else "disabled"} for {character_name}'
         })
 
+    except PermissionDenied as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=403)
     except Exception as e:
-        print("Error in update_permission:", str(e))  # Debug log
+        # Log the error but don't expose details to client
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.error(f"Error in update_permission: {str(e)}", exc_info=True)
         return JsonResponse({
             'success': False,
-            'error': str(e)
-        }, status=400)
+            'error': 'An error occurred processing your request'
+        }, status=500)
