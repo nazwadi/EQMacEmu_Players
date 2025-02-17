@@ -43,6 +43,8 @@ class Items(models.Model):
     click_type = models.IntegerField(null=False, default=0, db_column='clicktype')
     worn_effect = models.IntegerField(null=False, default=0, db_column='worneffect')
     worn_type = models.IntegerField(null=False, default=0, db_column='worntype')
+    worn_level = models.IntegerField(null=False, default=0, db_column='wornlevel')
+    worn_level2 = models.IntegerField(null=False, default=0, db_column='wornlevel2')
     proc_type = models.IntegerField(null=False, default=0, db_column='proctype')
     proc_level = models.IntegerField(null=False, default=0, db_column='proclevel')
     proc_effect = models.IntegerField(null=False, default=0, db_column='proceffect')

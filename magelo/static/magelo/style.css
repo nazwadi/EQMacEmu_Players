@@ -11,67 +11,6 @@ body {
     font-family: Arial, sans-serif;
 }
 
-/* Database Performance Classes */
-.db_dump {
-    padding: 50px;
-}
-
-.db_query {
-    background-color: #444;
-    border-radius: 10px;
-    padding: 15px;
-    margin: 15px auto;
-}
-
-.db_sql,
-.db_time,
-.db_explain {
-    margin: 20px;
-}
-
-.db_explain {
-    border-collapse: collapse;
-}
-
-.db_explain td {
-    border-top: 1px #777 solid;
-    padding: 5px;
-}
-
-.db_explain th {
-    padding: 5px;
-}
-
-.db_sql p,
-.db_time p,
-.db_explain td {
-    color: #aaa;
-    font-family: "Courier New", monospace;
-    font-size: 10pt;
-}
-
-.db_explain thead th:nth-child(even),
-.db_explain tbody td:nth-child(even) {
-    background-color: #666;
-}
-
-.db_explain th {
-    color: #bbb;
-    font-family: "Courier New", monospace;
-    font-size: 10pt;
-    font-weight: bold;
-}
-
-.db_sql h1,
-.db_time h1,
-.db_explain caption {
-    color: #cca;
-    font-family: "Courier New", monospace;
-    font-weight: bold;
-    font-size: 12pt;
-    text-align: left;
-}
-
 /* Search Bar and Header */
 .searchbar {
     padding: 0;
@@ -108,9 +47,10 @@ body {
     border: 0;
     line-height: 21px;
     text-align: center;
-    padding: 0;
+    padding: 0 10px;
     background-image: url(button.gif);
     margin: 0;
+    white-space: nowrap; /* Prevent text wrapping */
 }
 
 .Button {
@@ -122,23 +62,6 @@ body {
 }
 
 /* Utility Classes */
-.Footer {
-    font-family: Georgia, serif;
-    font-size: 9pt;
-    color: #555555;
-}
-
-.ColumnHead {
-    font-family: Arial, sans-serif;
-    font-size: 9pt;
-    font-weight: bold;
-    color: #8aa3ff;
-    vertical-align: top;
-    margin: 0;
-    padding: 0;
-    border-collapse: collapse;
-}
-
 /* Checkboxes */
 .check0,
 .check1 {
@@ -201,6 +124,7 @@ body {
     margin: 0;
     padding: 0;
     position: absolute;
+    z-index: 3;
 }
 
 .Slot:hover {
@@ -220,12 +144,13 @@ body {
 
 /* Navigation */
 .NavOuter {
-    position: absolute;
+    position: sticky;
+    top: 20px;
+    height: fit-content;
+    margin-bottom: 0;
+    min-width: 100px;
     background-image: url(light.gif);
-    width: 80px;
-    max-width: 66px;
-    top: 180px;
-    left: -8px;
+    width: auto;
     padding: 11px 5px 9px;
     border: 2px #7b714a solid;
     font-family: Arial, sans-serif;
@@ -240,19 +165,41 @@ body {
     font-family: Arial, sans-serif;
     font-size: 9pt;
     color: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px
+}
+
+.NavInner .FreeButton {
+    width: auto;
+        padding: 0 20px;  /* Increase horizontal padding */
+    /*margin: 0 !important; !* Override existing margins *!*/
+}
+
+.character-main {
+    flex: 1;
+    min-width: 0; /* Prevent flex item from overflowing */
 }
 
 /* Item Window */
 .ItemOuter {
     position: relative;
-    background-image: url(light.gif);
+    display: none;
+    margin: 0 auto;
+    pointer-events: auto;
     width: 364px;
     max-width: 350px;
     padding: 11px 5px 9px;
-    border: 2px #7b714a solid;
     font-family: Arial, sans-serif;
     font-size: 9pt;
     color: #FFFFFF;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.ItemOuter.visible {
+    opacity: 1;
 }
 
 .ItemInner {
@@ -301,7 +248,7 @@ body {
 }
 
 /* Inventory Window */
-.IventoryOuterGM {
+.InventoryOuterGM {
     position: relative;
     background-image: url(lightgm.jpg);
     width: 430px;
@@ -315,6 +262,13 @@ body {
     color: #FFFFFF;
 }
 
+.inventory-container {
+    position: relative;
+    width: 460px;
+    text-align: left;
+    z-index: 2;
+}
+
 .InventoryOuter {
     position: relative;
     background-image: url(light.gif);
@@ -324,6 +278,7 @@ body {
     max-height: 431px;
     padding: 0;
     border: 2px #7b714a solid;
+    z-index: 2;
 }
 
 .InventoryInner {
@@ -417,6 +372,11 @@ body {
     padding: 20px 0 0;
 }
 
+.bank-container {
+    width: 300px;
+    text-align: left;
+}
+
 /* Bank Window */
 .BankOuter {
     position: relative;
@@ -430,6 +390,7 @@ body {
     font-family: arial, serif;
     font-size: 9pt;
     color: #FFFFFF;
+    margin-left: -2px; /* Adjust this value to make it perfectly flush */
 }
 
 .BankTitle {
@@ -489,20 +450,6 @@ body {
     max-width: 86px;
     padding: 11px 5px 9px;
     border: 2px #7b714a solid;
-}
-
-/* Links */
-a {
-    text-decoration: none;
-    color: #7b714a;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
-a:visited {
-    color: #6b614a;
 }
 
 /* Slot Images - Keeping original paths */
@@ -999,4 +946,117 @@ div.Slot.slotloc0.slotimage0,
 font[color="Gold"],
 div.Slot.slotloc9999.slotimage9999 {
     display: none;
+}
+ .tooltip-container {
+     position: absolute;
+     left: 0;
+     width: 100%;
+     top: calc(100% - 325px); /* Adjust based on your needs */
+     z-index: 1000;
+     pointer-events: none;
+ }
+
+.tooltip-spacer {
+    height: 220px;
+    width: 100%;
+    visibility: hidden;
+    /* Prevent interaction with spacer */
+    pointer-events: none;
+    /* Ensure it doesn't affect layout */
+    position: relative;
+    z-index: 1;
+}
+
+.permission-card {
+    transition: all 0.3s ease;
+}
+
+.permission-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-check-input:checked {
+    background-color: #198754;
+    border-color: #198754;
+}
+
+.character-layout {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    min-height: calc(100vh - 100px); /* Adjust based on your header height */
+}
+
+.character-windows-container {
+    display: flex;
+    align-items: flex-start;
+    flex: 1;
+}
+
+.bags-container {
+    width: 200px;
+    text-align: right;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+    .character-layout {
+        flex-direction: column;
+    }
+
+    .NavOuter {
+        position: relative;
+        top: 0;
+        width: 100%;
+    }
+
+    .NavInner {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .inventory-container {
+        margin-top: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .character-layout {
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .tooltip-container {
+        position: fixed;
+        bottom: 0;
+        top: auto;
+        max-height: 40vh;
+        overflow-y: auto;
+        background: rgba(0, 0, 0, 0.9);
+    }
+
+    .ItemOuter {
+        max-width: 90vw;
+        width: auto;
+        margin: 10px auto;
+    }
+}
+
+@media (max-width: 1200px) {
+    .character-windows-container {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .BankOuter {
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .character-layout {
+        flex-direction: column;
+    }
 }

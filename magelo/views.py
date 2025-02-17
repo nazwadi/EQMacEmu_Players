@@ -2,8 +2,15 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http import Http404
+from django.http import JsonResponse
+from django.views.decorators.http import require_http_methods
+from .models import CharacterPermissions
+from .validators import PermissionValidator
 
-# Create your views here.
+import json
+
+from common.utils import valid_game_account_owner
+
 from common.models.characters import Characters
 from common.models.characters import CharacterInventory
 from common.models.characters import CharacterCurrency
@@ -37,11 +44,15 @@ class ItemStats:
         self.mr_cap = 300
         self.dr_cap = 300
         self.pr_cap = 300
-        self.regen_cap = 0
-        self.ft_cap = 0
-        self.atk_cap = 0
+        self.regen_cap = 30
+        self.ft_cap = 15
+        self.atk_cap = 250
         self.ds = 0
         self.haste = 0
+        self.haste_cap = 100
+        self.regen = 0
+        self.ft = 0
+        self.atk = 0
 
     def add_item(self, item):
         """Add item and accumulate its stats"""
@@ -50,7 +61,8 @@ class ItemStats:
         self.total_ac += item.ac
         self.total_hp += item.hp
         self.total_mana += item.mana
-
+        if item.worn_effect == 998:
+            self.haste += item.worn_level + 1
         # Add stat bonuses
         self.stat_bonuses['str'] += item.astr
         self.stat_bonuses['sta'] += item.asta
@@ -66,40 +78,64 @@ class ItemStats:
         self.stat_bonuses['pr'] += item.pr
 
 
-def get_permissions(gm_level, anon_level):
-    """Calculate viewing permissions based on GM and anonymity levels"""
-    permissions = {
+def get_permissions(user, character_name, gm_level, anon_level):
+    """
+    Calculate viewing permissions based on stored user permissions, GM level, and anonymity level
+
+    Args:
+        user: The Django user object
+        character_name: The name of the character
+        gm_level: Integer representing GM level
+        anon_level: Integer representing anonymity level
+
+    Returns:
+        dict: Permission states for various features
+    """
+    # Start with default false permissions
+    base_permissions = {
         'inventory': False,
         'bags': False,
         'bank': False,
-        'coininventory': False,
-        'coinbank': False
+        'coin_inventory': False,
+        'coin_bank': False
     }
 
-    # Only show inventory if character isn't anonymous and isn't a GM
-    if anon_level == 0 and gm_level == 0:
-        permissions['inventory'] = True
-        permissions['bags'] = True
-        permissions['bank'] = True
-        permissions['coininventory'] = True
-        permissions['coinbank'] = True
+    try:
+        # Get user's stored permissions
+        character_permissions = CharacterPermissions.get_or_create_permissions(character_name)
 
-    return permissions
+        # Update base permissions with stored permissions
+        for permission in base_permissions.keys():
+            base_permissions[permission] = getattr(character_permissions, permission, False)
+
+        # If user is GM or anonymous, override permissions
+        if gm_level > 0 or anon_level > 0:
+            return base_permissions
+
+        # For normal users (non-GM, non-anonymous), use their stored permissions
+        return base_permissions
+
+    except Exception as e:
+        # Log the error and return base permissions if something goes wrong
+        print(f"Error getting permissions for user {user}: {str(e)}")
+        return base_permissions
 
 
-@staff_member_required
-@login_required
 def character_profile(request, character_name):
-    # Get character or 404
     character = Characters.objects.filter(name=character_name).first()
-    character_currency = CharacterCurrency.objects.filter(id=character.id).first()
+    if character is None:
+        raise Http404
+
+    is_character_owner = valid_game_account_owner(request.user.username, str(character.account_id))
 
     # Get permissions
-    permissions = get_permissions(character.gm, character.anon)
+    permissions = get_permissions(request.user, character_name, character.gm, character.anon)
 
     # Block view if user doesn't have permission
-    if not permissions['inventory'] and not request.user.is_staff:
-        raise Http404("You don't have permission to view this inventory")
+    # if not permissions['inventory'] and not request.user.is_staff:
+    #     raise Http404("You don't have permission to view this inventory")
+
+    character_currency = CharacterCurrency.objects.filter(id=character.id).first()
 
     # Get guild info using proper model relationships
     try:
@@ -142,7 +178,7 @@ def character_profile(request, character_name):
                 'no_drop': item.no_drop,
                 'no_rent': item.no_rent,
                 'magic': item.magic,
-                'stackable': item.stackable
+                'stackable': item.stackable,
             }
 
             # Add to all_items dictionary
@@ -170,6 +206,7 @@ def character_profile(request, character_name):
 
     # Build context
     context = {
+        'is_character_owner': is_character_owner,
         'character': {
             'name': character.name,
             'last_name': character.last_name,
@@ -200,3 +237,53 @@ def character_profile(request, character_name):
     }
 
     return render(request=request, template_name='magelo/character_profile.html', context=context)
+
+
+@login_required
+@require_http_methods(["POST"])
+def update_permission(request):
+    try:
+        # print("Received permission update request")  # Debug log
+        data = json.loads(request.body)
+        # print("Request data:", data)  # Debug log
+
+        try:
+            validated_data = PermissionValidator.validate_permission_data(data)
+            permission = validated_data['permission']
+            value = validated_data['value']
+            character_name = data.get('character_name')
+
+            if not character_name:
+                return JsonResponse(
+                    {'success': False, 'error': 'character_name is required'},
+                    status=400
+                )
+
+            # print("Validated data:", validated_data)  # Debug log
+        except ValueError as e:
+            print("Validation error:", e)  # Debug log
+            return JsonResponse(
+                {'success': False, 'error': str(e)},
+                status=400
+            )
+
+        # Get or create character permissions
+        character_permissions = CharacterPermissions.get_or_create_permissions(character_name)
+        # print("Character permissions object:", character_permissions)  # Debug log
+
+        # Update the permission
+        setattr(character_permissions, permission, value)
+        character_permissions.save()
+        # print(f"Updated {permission} to {value} for character {character_name}")  # Debug log
+
+        return JsonResponse({
+            'success': True,
+            'message': f'{permission.replace("_", " ").title()} {"enabled" if value else "disabled"} for {character_name}'
+        })
+
+    except Exception as e:
+        print("Error in update_permission:", str(e))  # Debug log
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        }, status=400)

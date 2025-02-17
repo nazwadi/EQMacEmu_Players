@@ -3,449 +3,775 @@
 {% load data_utilities %}
 {% block content %}
     <div class="container">
-        <div class="row mt-5">
+
+        <div class="row mt-2">
             <div class="col">
-
-                {#                <script>#}
-                {#                    function display(type, id, prefix) {#}
-                {#                        const target = document.getElementById(prefix + id);#}
-                {#                        if (!target) return;#}
-                {##}
-                {#                        if (type) {#}
-                {#                            target.style.display = target.style.display === 'none' ? 'block' : 'none';#}
-                {#                        } else {#}
-                {#                            for (let i = 0; i <= 2270; i++) {#}
-                {#                                const hideme = document.getElementById(prefix + i);#}
-                {#                                if (hideme) hideme.style.display = 'none';#}
-                {#                            }#}
-                {#                            for (let i = 9999; i < 10000; i++) {#}
-                {#                                const hideme = document.getElementById(prefix + i);#}
-                {#                                if (hideme) hideme.style.display = 'none';#}
-                {#                            }#}
-                {#                            target.style.display = 'block';#}
-                {#                        }#}
-                {#                    }#}
-                {#                </script>#}
-
-                <nav class="NavOuter">
-                    <div class="NavInner">
-                        <button class="FreeButton" disabled style="color:#606060;margin:3px">Inventory</button>
-                        {#                        <button class="FreeButton" onclick="window.location='{% url 'magelo:aas' character.name %}'"#}
-                        {#                                style="margin:3px">AAs#}
-                        {#                        </button>#}
-                        {#                        <button class="FreeButton"#}
-                        {#                                onclick="window.location='{% url 'magelo:keys' character.name %}'"#}
-                        {#                                style="margin:3px">Keys#}
-                        {#                        </button>#}
-                        {#                        <button class="FreeButton"#}
-                        {#                                onclick="window.location='{% url 'magelo:flags' character.name %}'"#}
-                        {#                                style="margin:3px">Flags#}
-                        {#                        </button>#}
-                        {#                        <button class="FreeButton"#}
-                        {#                                onclick="window.location='{% url 'magelo:skills' character.name %}'"#}
-                        {#                                style="margin:3px">Skills#}
-                        {#                        </button>#}
-                        {#                        <button class="FreeButton"#}
-                        {#                                onclick="window.location='{% url 'magelo:corpse' character.name %}'"#}
-                        {#                                style="margin:3px">Corpse#}
-                        {#                        </button>#}
-                        {#                        <button class="FreeButton"#}
-                        {#                                onclick="window.location='{% url 'magelo:factions' character.name %}'"#}
-                        {#                                style="margin:3px">Faction#}
-                        {#                        </button>#}
-                        {#                        <button class="FreeButton"#}
-                        {#                                onclick="window.location='{% url 'magelo:charmove' character.name %}'"#}
-                        {#                                style="margin:3px">Move#}
-                        {#                        </button>#}
-                        {#                        <button class="FreeButton" onclick="window.external.AddFavorite(location.href, document.title);"#}
-                        {#                                style="margin:3px">Bookmark#}
-                        {#                        </button>#}
+                {% if is_character_owner %}
+                    <!-- Settings Panel -->
+                    <div class="collapse mb-4" id="settingsPanel">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3">Profile Permission Settings for {{ character.name }}</h5>
+                                <div class="row g-3">
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="card permission-card">
+                                            <div class="card-body">
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox" id="inventoryToggle"
+                                                           {% if permissions.inventory %}checked{% endif %}
+                                                           onchange="updatePermission('inventory', this.checked, '{{ character.name }}')">
+                                                    <label class="form-check-label" for="inventoryToggle">
+                                                        Gear is Publicly Visible
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="card permission-card">
+                                            <div class="card-body">
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox" id="bagsToggle"
+                                                           {% if permissions.bags %}checked{% endif %}
+                                                           onchange="updatePermission('bags', this.checked, '{{ character.name }}')">
+                                                    <label class="form-check-label" for="bagsToggle">
+                                                        Bags are Publicly Visible
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="card permission-card">
+                                            <div class="card-body">
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox" id="bankToggle"
+                                                           {% if permissions.bank %}checked{% endif %}
+                                                           onchange="updatePermission('bank', this.checked, '{{ character.name }}')">
+                                                    <label class="form-check-label" for="bankToggle">
+                                                        Bank is Publicly Visible
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="card permission-card">
+                                            <div class="card-body">
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox"
+                                                           id="coinInventoryToggle"
+                                                           {% if permissions.coin_inventory %}checked{% endif %}
+                                                           onchange="updatePermission('coin_inventory', this.checked, '{{ character.name }}')">
+                                                    <label class="form-check-label" for="coinInventoryToggle">
+                                                        Coin in Inventory is Publicly Visible
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="card permission-card">
+                                            <div class="card-body">
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox" id="coinBankToggle"
+                                                           {% if permissions.coin_bank %}checked{% endif %}
+                                                           onchange="updatePermission('coin_bank', this.checked, '{{ character.name }}')">
+                                                    <label class="form-check-label" for="coinBankToggle">
+                                                        Coin in Bank is Publicly Visible
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </nav>
+                {% endif %}
 
-                <main>
-                    <table>
-                        <tr>
-                            <td class="bags-container" style="width:200px;text-align:right">
-                                {% for bag in inventory_items.bags %}
-                                    <div class="BagOuter bagrow{{ bag.rows }}" id="bag{{ bag.slot }}">
-                                        <div class="BagTitle">
-                                            <div class="BagTitleLeft"></div>
-                                            <div class="BagTitleMid">Container</div>
-                                            <div class="BagTitleRight"></div>
-                                        </div>
+                <div class="row mt-2">
+                    <div class="col">
+                        <script>
+                            const tooltipCache = new Map();
+                            let currentlyLoadingId = null;
 
-                                        {% for slot in bag.slots %}
-                                            <div class="Slot bagslotloc{{ slot.number }} slotimage"></div>
-                                        {% endfor %}
+                            /**
+                             * Manages the display of item tooltips
+                             * @param {boolean} type - Toggle type (true for toggle, false for show/hide others)
+                             * @param {number} id - The slot ID
+                             * @param {string} prefix - Prefix for the element ID (e.g., 'slot' or 'bag')
+                             */
+                            function display(type, id, prefix) {
+                                const target = document.getElementById(prefix + id);
+                                if (!target) {
+                                    console.warn(`Target element ${prefix}${id} not found`);
+                                    return;
+                                }
 
-                                        {% for item in bag.items %}
-                                            <div onclick="display(0, {{ item.slot }}, 'slot');"
-                                                 class="Slot bagslotloc{{ item.relative_slot }}"
-                                                 style="background-image: url({% static 'magelo/images/items/item_'|add:item.icon|add:'.png' %});">
-                                            </div>
-                                        {% endfor %}
+                                try {
+                                    if (type) {
+                                        // Simple toggle for the target element
+                                        target.style.display = target.style.display === 'none' ? 'block' : 'none';
+                                    } else {
+                                        // Hide all other tooltips first
+                                        hideAllTooltips();
 
-                                        <button class="Button bagbuttonrow{{ bag.rows }}"
-                                                onclick="document.getElementById('bag{{ bag.slot }}').style.display='none';">
-                                            Done
-                                        </button>
-                                    </div>
-                                {% endfor %}
-                            </td>
+                                        // Show and position the target tooltip
+                                        showTooltip(target);
 
-                            <td class="inventory-container" style="width:460px;text-align:left">
-                                <div class="InventoryOuter{% if magelo %} GM{% endif %}">
+                                        // Handle item data loading if needed
+                                        const itemId = target.getAttribute('data-item-id');
+                                        if (itemId) {
+                                            loadItemData(target, itemId);
+                                        }
+                                    }
+                                } catch (error) {
+                                    console.error('Error in display function:', error);
+                                }
+                            }
+
+                            /**
+                             * Hides all tooltips in the inventory
+                             */
+                            function hideAllTooltips() {
+                                // Hide regular slot tooltips
+                                for (let i = 0; i <= 2270; i++) {
+                                    const element = document.getElementById('slot' + i);
+                                    if (element) {
+                                        element.style.display = 'none';
+                                        element.classList.remove('visible');
+                                    }
+                                }
+
+                                // Hide special slot tooltips (if any)
+                                for (let i = 9999; i < 10000; i++) {
+                                    const element = document.getElementById('slot' + i);
+                                    if (element) {
+                                        element.style.display = 'none';
+                                        element.classList.remove('visible');
+                                    }
+                                }
+                            }
+
+                            /**
+                             * Shows and positions a tooltip
+                             * @param {HTMLElement} tooltip - The tooltip element to show
+                             */
+                            function showTooltip(tooltip) {
+                                tooltip.setAttribute('role', 'tooltip');
+                                tooltip.setAttribute('aria-hidden', 'false');
+                                // Show the tooltip
+                                tooltip.style.display = 'block';
+
+                                // Use RAF to ensure smooth transition
+                                requestAnimationFrame(() => {
+                                    tooltip.classList.add('visible');
+                                });
+
+                                // Check if tooltip is in viewport
+                                const rect = tooltip.getBoundingClientRect();
+                                const viewportHeight = window.innerHeight;
+
+                                if (rect.bottom > viewportHeight) {
+                                    // Scroll tooltip into view if needed
+                                    window.scrollBy({
+                                        top: rect.bottom - viewportHeight + 20,
+                                        behavior: 'smooth'
+                                    });
+                                }
+                            }
+
+                            /**
+                             * Loads item data for a tooltip
+                             * @param {HTMLElement} target - The tooltip element
+                             * @param {string} itemId - The item ID to load
+                             */
+                            async function loadItemData(target, itemId) {
+                                // If we already have the data cached, use it
+                                if (tooltipCache.has(itemId)) {
+                                    if (target.style.display === 'block') {
+                                        target.innerHTML = tooltipCache.get(itemId);
+                                    }
+                                    return;
+                                }
+
+                                // Show loading state
+                                target.innerHTML = `
                                     <div class="ItemTitle">
-                                        <div class="InventoryTitleLeft"></div>
-                                        <div class="InventoryTitleMid">Inventory</div>
-                                        <div class="InventoryTitleRight"></div>
+                                        <div class="ItemTitleLeft"></div>
+                                        <div class="ItemTitleMid">Loading...</div>
+                                        <div class="ItemTitleRight"></div>
                                     </div>
+                                `;
 
-                                    <div class="InventoryInner">
-                                        <div class="InventoryStats2">
-                                            <table class="StatTable">
-                                                <tr>
-                                                    <td>
-                                                        Regen<br>
-                                                        FT<br>
-                                                        ATK<br>
-                                                        DS<br>
-                                                        Haste
-                                                    </td>
-                                                    <td>
-                                                        {{ item_stats.regen }} / {{ item_stats.regen_cap }}<br>
-                                                        {{ item_stats.ft }} / {{ item_stats.ft_cap }}<br>
-                                                        {{ item_stats.atk }} / {{ item_stats.atk_cap }}<br>
-                                                        {{ item_stats.ds }}<br>
-                                                        {{ item_stats.haste }}%
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </div>
+                                // Set this as the currently loading item
+                                currentlyLoadingId = itemId;
 
-                                        <div class="InventoryStats">
-                                            <table class="StatTable">
-                                                <tr>
-                                                    <td colspan="2"
-                                                        class="player-name">{{ character.name }} {{ character.last_name }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="2" style="height:3px"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="2"
-                                                        class="player-race">{{ character.race_name|player_race }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="2" style="height:3px"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="2">
-                                                        <span class="player-level">{{ character.level }}</span>
-                                                        <span class="player-class">{{ character.class_name|player_class }}</span><br>
-                                                        <span class="player-deity">{{ character.deity|player_deity }}</span>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="2" style="height:3px"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>HP<br>MANA<br>AC<br>ATK</td>
-                                                    <td>
-                                                        <span class="player-hp">{{ character.cur_hp }}</span><br>
-                                                        <span class="player-mana">{{ character.mana }}</span><br>
-                                                        <span class="player-ac">{{ item_stats.total_ac }}</span><br>
-                                                        <span class="player-atk">{{ item_stats.total_atk }}</span><br>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="Divider" colspan="2"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>STR<br>STA<br>AGI<br>DEX</td>
-                                                    <td>
-                                                        <span class="player-str"><font
-                                                                color='#00FF00'>{{ character.total_stats.str }}</font></span>
-                                                        / {{ item_stats.str_cap }}<br>
-                                                        <span class="player-sta"><font
-                                                                color='#00FF00'>{{ character.total_stats.sta }}</font></span>
-                                                        / {{ item_stats.sta_cap }}<br>
-                                                        <span class="player-agi"><font
-                                                                color='#00FF00'>{{ character.total_stats.agi }}</font></span>
-                                                        / {{ item_stats.agi_cap }}<br>
-                                                        <span class="player-dex"><font
-                                                                color='#00FF00'>{{ character.total_stats.dex }}</font></span>
-                                                        / {{ item_stats.dex_cap }}
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="Divider" colspan="2"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>WIS<br>INT<br>CHA</td>
-                                                    <td>
-                                                        <span class="player-wis"><font
-                                                                color='#00FF00'>{{ character.total_stats.wis }}</font></span>
-                                                        / {{ item_stats.wis_cap }}<br>
-                                                        <span class="player-int"><font
-                                                                color='#00FF00'>{{ character.total_stats.int }}</font></span>
-                                                        / {{ item_stats.int_cap }}<br>
-                                                        <span class="player-cha"><font
-                                                                color='#00FF00'>{{ character.total_stats.cha }}</font></span>
-                                                        / {{ item_stats.cha_cap }}
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="Divider" colspan="2"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>POISON<br>MAGIC<br>DISEASE<br>FIRE<br>COLD</td>
-                                                    <td>
-                                                        <span class="player-pr"
-                                                              style="color: #00FF00;">{{ character.total_stats.pr }}</span>
-                                                        / {{ item_stats.pr_cap }}<br>
-                                                        <span class="player-mr"><font
-                                                                color='#00FF00'>{{ character.total_stats.mr }}</font></span>
-                                                        / {{ item_stats.mr_cap }}<br>
-                                                        <span class="player-dr"><font
-                                                                color='#00FF00'>{{ character.total_stats.dr }}</font></span>
-                                                        / {{ item_stats.dr_cap }}<br>
-                                                        <span class="player-fr"><font
-                                                                color='#00FF00'>{{ character.total_stats.fr }}</font></span>
-                                                        / {{ item_stats.fr_cap }}<br>
-                                                        <span class="player-cr"><font
-                                                                color='#00FF00'>{{ character.total_stats.cr }}</font></span>
-                                                        / {{ item_stats.cr_cap }}
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </div>
+                                try {
+                                    const response = await fetch(`/items/api/${itemId}`);
+                                    if (!response.ok) {
+                                        throw new Error('Network response was not ok');
+                                    }
 
-                                        <div class="InventoryMonogram">
-                                            <img src="{% static 'magelo/monograms/' %}{{ character.class_name }}.gif"
-                                                 alt="Class Icon">
-                                        </div>
+                                    const html = await response.text();
 
-                                        {#                                        {% if not permissions.coininventory %}#}
-                                        <div class="Coin" style="top:116px;left:317px;">
-                                            <table class="StatTable">
-                                                <tr>
-                                                    <td><img src="{% static 'magelo/pp.gif' %}"
-                                                             alt="PP"></td>
-                                                    <td style="text-align:center;width:100%">{{ currency.platinum }}</td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                        <div class="Coin" style="top:144px;left:317px;">
-                                            <table class="StatTable">
-                                                <tr>
-                                                    <td><img src="{% static 'magelo/gp.gif' %}"
-                                                             alt="GP"></td>
-                                                    <td style="text-align:center;width:100%">{{ currency.gold }}</td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                        <div class="Coin" style="top:172px;left:317px;">
-                                            <table class="StatTable">
-                                                <tr>
-                                                    <td><img src="{% static 'magelo/sp.gif' %}"
-                                                             alt="GP"></td>
-                                                    <td style="text-align:center;width:100%">{{ currency.silver }}</td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                        <div class="Coin" style="top:200px;left:317px;">
-                                            <table class="StatTable">
-                                                <tr>
-                                                    <td><img src="{% static 'magelo/cp.gif' %}"
-                                                             alt="GP"></td>
-                                                    <td style="text-align:center;width:100%">{{ currency.copper }}</td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                        {#                                        {% endif %}#}
+                                    // Only update if this is still the current item being viewed
+                                    if (currentlyLoadingId === itemId) {
+                                        tooltipCache.set(itemId, html);
 
-                                        <div class='Slot slotloc0 slotimage0'></div>
-                                        <div class='Slot slotloc1 slotimage1'></div>
-                                        <div class='Slot slotloc2 slotimage2'></div>
-                                        <div class='Slot slotloc3 slotimage3'></div>
-                                        <div class='Slot slotloc4 slotimage4'></div>
-                                        <div class='Slot slotloc5 slotimage5'></div>
-                                        <div class='Slot slotloc6 slotimage6'></div>
-                                        <div class='Slot slotloc7 slotimage7'></div>
-                                        <div class='Slot slotloc8 slotimage8'></div>
-                                        <div class='Slot slotloc9 slotimage9'></div>
-                                        <div class='Slot slotloc10 slotimage10'></div>
-                                        <div class='Slot slotloc11 slotimage11'></div>
-                                        <div class='Slot slotloc12 slotimage12'></div>
-                                        <div class='Slot slotloc13 slotimage13'></div>
-                                        <div class='Slot slotloc14 slotimage14'></div>
-                                        <div class='Slot slotloc15 slotimage15'></div>
-                                        <div class='Slot slotloc16 slotimage16'></div>
-                                        <div class='Slot slotloc17 slotimage17'></div>
-                                        <div class='Slot slotloc18 slotimage18'></div>
-                                        <div class='Slot slotloc19 slotimage19'></div>
-                                        <div class='Slot slotloc20 slotimage20'></div>
-                                        <div class='Slot slotloc21 slotimage21'></div>
-                                        <div class='Slot slotloc22 slotimage'></div>
-                                        <div class='Slot slotloc23 slotimage'></div>
-                                        <div class='Slot slotloc24 slotimage'></div>
-                                        <div class='Slot slotloc25 slotimage'></div>
-                                        <div class='Slot slotloc26 slotimage'></div>
-                                        <div class='Slot slotloc27 slotimage'></div>
-                                        <div class='Slot slotloc28 slotimage'></div>
-                                        <div class='Slot slotloc29 slotimage'></div>
-                                        <div class='Slot slotloc9999 slotimage9999'></div>
+                                        // Double check the tooltip is still supposed to be visible
+                                        if (target.style.display === 'block') {
+                                            target.innerHTML = html;
+                                        }
+                                    }
+                                } catch (error) {
+                                    console.error('Error loading item tooltip:', error);
 
-                                        {#                                        {% if not permissions.inventory %}#}
-                                        {% for key, item in inventory_items.items %}
-                                            {% if item.slot <= 29 %}
-                                                <a class="tooltip-link link"
-                                                   data-url="{{ item.id }}"
-                                                   href="/items/view/{{ item.id }}">{{ item.item_id }}
-                                                    <div class="Slot slotloc{{ item.slot }}" style="background-image: url('{{ item.icon_url }}')"></div>
-{#                                                    <div onmouseover="display(0, {{ item.slot }}, 'slot');{% if item.is_bag %}display(0, {{ item.slot }}, 'bag');{% endif %}"#}
-{#                                                         class="Slot slotloc{{ item.slot }}"#}
-{#                                                         style="background-image: url('{{ item.icon_url }}');">#}
-{#                                                    </div>#}
-                                                </a>
-                                            {% endif %}
-                                        {% endfor %}
-                                        {#                                        {% endif %}#}
-                                    </div>
-                                </div>
-                            </td>
-
-                            <!-- Bank section -->
-                            <td style="width:300px;text-align:left">
-                                <div class="BankOuter" style="min-width: 193px; min-height: 375px;">
-                                    <div class="BankTitle">
-                                        <div class="BankTitleLeft"></div>
-                                        <div class="BankTitleMid">Bank</div>
-                                        <div class="BankTitleRight"></div>
-                                    </div>
-
-                                    <div class='Slot slotloc2000 slotimage'></div>
-                                    <div class='Slot slotloc2001 slotimage'></div>
-                                    <div class='Slot slotloc2002 slotimage'></div>
-                                    <div class='Slot slotloc2003 slotimage'></div>
-                                    <div class='Slot slotloc2004 slotimage'></div>
-                                    <div class='Slot slotloc2005 slotimage'></div>
-                                    <div class='Slot slotloc2006 slotimage'></div>
-                                    <div class='Slot slotloc2007 slotimage'></div>
-                                    <div class='Slot slotloc2008 slotimage'></div>
-                                    <div class='Slot slotloc2009 slotimage'></div>
-                                    <div class='Slot slotloc2010 slotimage'></div>
-                                    <div class='Slot slotloc2011 slotimage'></div>
-                                    <div class='Slot slotloc2012 slotimage'></div>
-                                    <div class='Slot slotloc2013 slotimage'></div>
-                                    <div class='Slot slotloc2014 slotimage'></div>
-                                    <div class='Slot slotloc2015 slotimage'></div>
-                                    <div class='Slot slotloc2016 slotimage'></div>
-                                    <div class='Slot slotloc2017 slotimage'></div>
-                                    <div class='Slot slotloc2018 slotimage'></div>
-                                    <div class='Slot slotloc2019 slotimage'></div>
-                                    <div class='Slot slotloc2020 slotimage'></div>
-                                    <div class='Slot slotloc2021 slotimage'></div>
-                                    <div class='Slot slotloc2022 slotimage'></div>
-                                    <div class='Slot slotloc2023 slotimage'></div>
-
-                                    {#                                    {% if not permissions.bank %}#}
-                                    {% for key, item in inventory_items.items %}
-                                        {% if item.slot <= 2023 %}
-                                            <div onclick="display(0, {{ item.slot }}, 'slot');{% if item.is_bag %}display(0, {{ item.slot }}, 'bag');{% endif %}"
-                                                 class="Slot slotloc{{ item.slot }}"
-                                                 style="background-image: url({{ item.icon_url }});">
+                                    if (currentlyLoadingId === itemId && target.style.display === 'block') {
+                                        target.innerHTML = `
+                                            <div class="ItemTitle">
+                                                <div class="ItemTitleLeft"></div>
+                                                <div class="ItemTitleMid">Error loading item</div>
+                                                <div class="ItemTitleRight"></div>
                                             </div>
-                                        {% endif %}
-                                    {% endfor %}
-                                    {#                                    {% endif %}#}
+                                        `;
 
-                                    <div class="Coin" style="top:200px;left:6px;">
-                                        <table class="StatTable">
-                                            <tbody>
-                                            <tr>
-                                                <td><img src="{% static 'magelo/pp.gif' %}"
-                                                         alt="Bank PP"></td>
-                                                <td style="text-align:center;width:100%">{{ currency.platinum_bank }}</td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="Coin" style="top:228px;left:6px;">
-                                        <table class="StatTable">
-                                            <tr>
-                                                <td><img src="{% static 'magelo/gp.gif' %}"
-                                                         alt="Bank PP"></td>
-                                                <td style="text-align:center;width:100%">{{ currency.gold_bank }}</td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                    <div class="Coin" style="top:256px;left:6px;">
-                                        <table class="StatTable">
-                                            <tr>
-                                                <td><img src="{% static 'magelo/sp.gif' %}"
-                                                         alt="Bank PP"></td>
-                                                <td style="text-align:center;width:100%">{{ currency.silver_bank }}</td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                    <div class="Coin" style="top:284px;left:6px;">
-                                        <table class="StatTable">
-                                            <tr>
-                                                <td><img src="{% static 'magelo/cp.gif' %}"
-                                                         alt="Bank PP"></td>
-                                                <td style="text-align:center;width:100%">{{ currency.copper_bank }}</td>
-                                            </tr>
-                                        </table>
-                                    </div>
+                                        // Retry loading after a brief delay
+                                        setTimeout(() => {
+                                            if (target.style.display === 'block') {
+                                                tooltipCache.delete(itemId); // Clear failed cache
+                                                loadItemData(target, itemId); // Retry loading
+                                            }
+                                        }, 1000);
+                                    }
+                                }
+                            }
+
+                            async function updatePermission(permission, value, characterName) {
+                                try {
+                                    // Get CSRF token
+                                    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+                                    console.log('Sending request:', {permission, value}); // Debug log
+
+                                    const response = await fetch('/magelo/update_permission/', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'X-CSRFToken': csrftoken
+                                        },
+                                        body: JSON.stringify({
+                                            permission: permission,
+                                            value: value,
+                                            character_name: characterName
+                                        })
+                                    });
+
+                                    console.log('Response status:', response.status); // Debug log
+
+                                    const result = await response.json();
+                                    console.log('Response data:', result); // Debug log
+
+                                    if (!response.ok) {
+                                        throw new Error(result.error || 'Failed to update permission');
+                                    }
+
+                                    if (result.success) {
+                                        showToast(`${permission.replace('_', ' ')} ${value ? 'enabled' : 'disabled'} for ${characterName}`);
+                                        // Reload page to reflect changes
+                                        setTimeout(() => window.location.reload(), 1000);
+                                    } else {
+                                        showToast(result.error || 'Failed to update permission', 'danger');
+                                        document.getElementById(`${permission}Toggle`).checked = !value;
+                                    }
+                                } catch (error) {
+                                    console.error('Error updating permission:', error);
+                                    showToast(error.message || 'Error updating permission', 'danger');
+                                    document.getElementById(`${permission}Toggle`).checked = !value;
+                                }
+                            }
+
+                            // Add toast notification function
+                            function showToast(message, type = 'success') {
+                                const toastContainer = document.createElement('div');
+                                toastContainer.style.position = 'fixed';
+                                toastContainer.style.top = '20px';
+                                toastContainer.style.right = '20px';
+                                toastContainer.style.zIndex = '1050';
+
+                                const toast = document.createElement('div');
+                                toast.className = `toast align-items-center text-white bg-${type} border-0`;
+                                toast.setAttribute('role', 'alert');
+                                toast.setAttribute('aria-live', 'assertive');
+                                toast.setAttribute('aria-atomic', 'true');
+
+                                toast.innerHTML = `
+                            <div class="d-flex">
+                                <div class="toast-body">
+                                    ${message}
                                 </div>
-                            </td>
-                        </tr>
+                                <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                                    data-bs-dismiss="toast" aria-label="Close"></button>
+                            </div>
+                        `;
 
-                        <!-- Item tooltips -->
-                        <tr>
-                            <td colspan="3" style="text-align:center">
-                                <br><br><br>
-                                {% for key, item in inventory_items.items %}
-                                    <div class="ItemOuter" id="slot{{ item.slot }}" style="display:none;">
-                                        <div class="ItemTitle">
-                                            <div class="ItemTitleLeft"></div>
-                                            <div class="ItemTitleMid">
-                                                {#                                                <a href="{% url 'magelo:item_detail' item.id %}"#}
-                                                {#                                                   target="_blank">{{ item.name }}</a>#}
-                                            </div>
-                                            <div class="ItemTitleRight"></div>
-                                        </div>
-                                        <div class="ItemInner" style="text-align:left;">
-                                            test
-                                            {{ item.html|safe }}
-                                            {% if item.augments %}
-                                                {% for aug in item.augments %}
-                                                    <div class="augment-container">
-                                                        <table class="AugTable">
-                                                            <tr>
-                                                                <td style="text-align:center">
-                                                                    <a href="{% url 'magelo:item_detail' aug.id %}"
-                                                                       target="_blank">{{ aug.name }}</a>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td style="text-align:left">{{ aug.html|safe }}</td>
-                                                            </tr>
-                                                        </table>
+                                toastContainer.appendChild(toast);
+                                document.body.appendChild(toastContainer);
+
+                                const bsToast = new bootstrap.Toast(toast, {
+                                    autohide: true,
+                                    delay: 3000
+                                });
+
+                                bsToast.show();
+
+                                toast.addEventListener('hidden.bs.toast', () => {
+                                    toastContainer.remove();
+                                });
+                            }
+                        </script>
+
+                        <div class="character-layout">
+                            <nav class="NavOuter">
+                                <div class="NavInner">
+                                    <button class="FreeButton" disabled style="color:#606060;">Profile</button>
+                                    {% if is_character_owner %}
+                                        <button class="FreeButton" type="button" data-bs-toggle="collapse"
+                                                data-bs-target="#settingsPanel" aria-expanded="false"
+                                                aria-controls="settingsPanel" style="color:#606060;">
+                                            Settings
+                                        </button>
+                                    {% endif %}
+                                    {#                        <button class="FreeButton" onclick="window.location='{% url 'magelo:aas' character.name %}'"#}
+                                    {#                                style="margin:3px">AAs#}
+                                    {#                        </button>#}
+                                    {#                        <button class="FreeButton"#}
+                                    {#                                onclick="window.location='{% url 'magelo:keys' character.name %}'"#}
+                                    {#                                style="margin:3px">Keys#}
+                                    {#                        </button>#}
+                                    {#                        <button class="FreeButton"#}
+                                    {#                                onclick="window.location='{% url 'magelo:flags' character.name %}'"#}
+                                    {#                                style="margin:3px">Flags#}
+                                    {#                        </button>#}
+                                    {#                        <button class="FreeButton"#}
+                                    {#                                onclick="window.location='{% url 'magelo:skills' character.name %}'"#}
+                                    {#                                style="margin:3px">Skills#}
+                                    {#                        </button>#}
+                                    {#                        <button class="FreeButton"#}
+                                    {#                                onclick="window.location='{% url 'magelo:corpse' character.name %}'"#}
+                                    {#                                style="margin:3px">Corpse#}
+                                    {#                        </button>#}
+                                </div>
+                            </nav>
+
+                            <main class="character-main">
+                                <div class="character-windows-container">
+                                    <div class="bags-container" style="width:200px;text-align:right">
+                                        {% for bag in inventory_items.bags %}
+                                            <div class="BagOuter bagrow{{ bag.rows }}" id="bag{{ bag.slot }}">
+                                                <div class="BagTitle">
+                                                    <div class="BagTitleLeft"></div>
+                                                    <div class="BagTitleMid">Container</div>
+                                                    <div class="BagTitleRight"></div>
+                                                </div>
+
+                                                {% for slot in bag.slots %}
+                                                    <div class="Slot bagslotloc{{ slot.number }} slotimage"></div>
+                                                {% endfor %}
+
+                                                {% for item in bag.items %}
+                                                    <div onclick="display(0, {{ item.slot }}, 'slot');"
+                                                         class="Slot bagslotloc{{ item.relative_slot }}"
+                                                         style="background-image: url({% static '/images/items/item_'|add:item.icon|add:'.png' %});">
                                                     </div>
                                                 {% endfor %}
-                                            {% endif %}
+
+                                                <button class="Button bagbuttonrow{{ bag.rows }}"
+                                                        onclick="document.getElementById('bag{{ bag.slot }}').style.display='none';">
+                                                    Done
+                                                </button>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+
+                                    <div class="inventory-container" style="width:460px;text-align:left">
+                                        <div class="InventoryOuter{% if magelo %} GM{% endif %}">
+                                            <div class="ItemTitle">
+                                                <div class="InventoryTitleLeft"></div>
+                                                <div class="InventoryTitleMid">Inventory</div>
+                                                <div class="InventoryTitleRight"></div>
+                                            </div>
+
+                                            <div class="InventoryInner">
+                                                <div class="InventoryStats2">
+                                                    <table class="StatTable">
+                                                        <tr>
+                                                            <td>
+                                                                Regen<br>
+                                                                FT<br>
+                                                                ATK<br>
+                                                                DS<br>
+                                                                Haste
+                                                            </td>
+                                                            <td>
+                                                                {{ item_stats.regen }}
+                                                                / {{ item_stats.regen_cap }}<br>
+                                                                {{ item_stats.ft }} / {{ item_stats.ft_cap }}<br>
+                                                                {{ item_stats.atk }} / {{ item_stats.atk_cap }}<br>
+                                                                {{ item_stats.ds }}<br>
+                                                                {% if item_stats.haste > item_stats.haste_cap %}
+                                                                    {{ item_stats.haste_cap }}%
+                                                                {% else %}
+                                                                    {{ item_stats.haste }}%
+                                                                {% endif %}
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+
+                                                <div class="InventoryStats">
+                                                    <table class="StatTable">
+                                                        <tr>
+                                                            <td colspan="2"
+                                                                class="player-name">{{ character.name }} {{ character.last_name }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="2" style="height:3px"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="2"
+                                                                class="player-race">{{ character.race_name|player_race }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="2" style="height:3px"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="2">
+                                                                <span class="player-level">{{ character.level }}</span>
+                                                                <span class="player-class">{{ character.class_name|player_class }}</span><br>
+                                                                <span class="player-deity">{{ character.deity|player_deity }}</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="2" style="height:3px"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>HP<br>MANA<br>AC<br>ATK</td>
+                                                            <td>
+                                                                <span class="player-hp">{{ character.cur_hp }}</span><br>
+                                                                <span class="player-mana">{{ character.mana }}</span><br>
+                                                                <span class="player-ac">{{ item_stats.total_ac }}</span><br>
+                                                                <span class="player-atk">{{ item_stats.total_atk }}</span><br>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="Divider" colspan="2"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>STR<br>STA<br>AGI<br>DEX</td>
+                                                            <td>
+                                                        <span class="player-str"><font
+                                                                color='#00FF00'>{{ character.total_stats.str }}</font></span>
+                                                                / {{ item_stats.str_cap }}<br>
+                                                                <span class="player-sta"><font
+                                                                        color='#00FF00'>{{ character.total_stats.sta }}</font></span>
+                                                                / {{ item_stats.sta_cap }}<br>
+                                                                <span class="player-agi"><font
+                                                                        color='#00FF00'>{{ character.total_stats.agi }}</font></span>
+                                                                / {{ item_stats.agi_cap }}<br>
+                                                                <span class="player-dex"><font
+                                                                        color='#00FF00'>{{ character.total_stats.dex }}</font></span>
+                                                                / {{ item_stats.dex_cap }}
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="Divider" colspan="2"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>WIS<br>INT<br>CHA</td>
+                                                            <td>
+                                                        <span class="player-wis"><font
+                                                                color='#00FF00'>{{ character.total_stats.wis }}</font></span>
+                                                                / {{ item_stats.wis_cap }}<br>
+                                                                <span class="player-int"><font
+                                                                        color='#00FF00'>{{ character.total_stats.int }}</font></span>
+                                                                / {{ item_stats.int_cap }}<br>
+                                                                <span class="player-cha"><font
+                                                                        color='#00FF00'>{{ character.total_stats.cha }}</font></span>
+                                                                / {{ item_stats.cha_cap }}
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="Divider" colspan="2"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>POISON<br>MAGIC<br>DISEASE<br>FIRE<br>COLD</td>
+                                                            <td>
+                                                        <span class="player-pr"
+                                                              style="color: #00FF00;">{{ character.total_stats.pr }}</span>
+                                                                / {{ item_stats.pr_cap }}<br/>
+                                                                <span class="player-mr"
+                                                                      style="color: #00FF00;">{{ character.total_stats.mr }}</span>
+                                                                / {{ item_stats.mr_cap }}<br/>
+                                                                <span class="player-dr"
+                                                                      style="color: #00FF00;">{{ character.total_stats.dr }}</span>
+                                                                / {{ item_stats.dr_cap }}<br/>
+                                                                <span class="player-fr" style="color: #00FF00;">
+                                                                {{ character.total_stats.fr }}</span>
+                                                                / {{ item_stats.fr_cap }}<br/>
+                                                                <span class="player-cr" style="color: #00FF00;">
+                                                                {{ character.total_stats.cr }}</span>
+                                                                / {{ item_stats.cr_cap }}
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+
+                                                <div class="InventoryMonogram">
+                                                    <img src="
+                                                            {% static 'magelo/monograms/' %}{{ character.class_name }}.gif"
+                                                         alt="Class Icon">
+                                                </div>
+
+                                                <div class="Coin" style="top:116px;left:317px;">
+                                                    <table class="StatTable">
+                                                        <tr>
+                                                            <td><img src="{% static 'magelo/pp.gif' %}"
+                                                                     alt="PP"></td>
+                                                            <td style="text-align:center;width:100%">
+                                                                {% if permissions.coin_inventory %}
+                                                                    {{ currency.platinum }}
+                                                                {% else %}
+                                                                    Disabled
+                                                                {% endif %}
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                                <div class="Coin" style="top:144px;left:317px;">
+                                                    <table class="StatTable">
+                                                        <tr>
+                                                            <td><img src="{% static 'magelo/gp.gif' %}"
+                                                                     alt="GP"></td>
+                                                            <td style="text-align:center;width:100%">
+                                                                {% if permissions.coin_inventory %}
+                                                                    {{ currency.gold }}
+                                                                {% else %}
+                                                                    Disabled
+                                                                {% endif %}
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                                <div class="Coin" style="top:172px;left:317px;">
+                                                    <table class="StatTable">
+                                                        <tr>
+                                                            <td><img src="{% static 'magelo/sp.gif' %}"
+                                                                     alt="GP"></td>
+                                                            <td style="text-align:center;width:100%">
+                                                                {% if permissions.coin_inventory %}
+                                                                    {{ currency.silver }}
+                                                                {% else %}
+                                                                    Disabled
+                                                                {% endif %}
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                                <div class="Coin" style="top:200px;left:317px;">
+                                                    <table class="StatTable">
+                                                        <tr>
+                                                            <td><img src="{% static 'magelo/cp.gif' %}"
+                                                                     alt="GP"></td>
+                                                            <td style="text-align:center;width:100%">
+                                                                {% if permissions.coin_inventory %}
+                                                                    {{ currency.copper }}
+                                                                {% else %}
+                                                                    Disabled
+                                                                {% endif %}
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+
+                                                <div class='Slot slotloc0 slotimage0'></div>
+                                                <div class='Slot slotloc1 slotimage1'></div>
+                                                <div class='Slot slotloc2 slotimage2'></div>
+                                                <div class='Slot slotloc3 slotimage3'></div>
+                                                <div class='Slot slotloc4 slotimage4'></div>
+                                                <div class='Slot slotloc5 slotimage5'></div>
+                                                <div class='Slot slotloc6 slotimage6'></div>
+                                                <div class='Slot slotloc7 slotimage7'></div>
+                                                <div class='Slot slotloc8 slotimage8'></div>
+                                                <div class='Slot slotloc9 slotimage9'></div>
+                                                <div class='Slot slotloc10 slotimage10'></div>
+                                                <div class='Slot slotloc11 slotimage11'></div>
+                                                <div class='Slot slotloc12 slotimage12'></div>
+                                                <div class='Slot slotloc13 slotimage13'></div>
+                                                <div class='Slot slotloc14 slotimage14'></div>
+                                                <div class='Slot slotloc15 slotimage15'></div>
+                                                <div class='Slot slotloc16 slotimage16'></div>
+                                                <div class='Slot slotloc17 slotimage17'></div>
+                                                <div class='Slot slotloc18 slotimage18'></div>
+                                                <div class='Slot slotloc19 slotimage19'></div>
+                                                <div class='Slot slotloc20 slotimage20'></div>
+                                                <div class='Slot slotloc21 slotimage21'></div>
+                                                <div class='Slot slotloc22 slotimage'></div>
+                                                <div class='Slot slotloc23 slotimage'></div>
+                                                <div class='Slot slotloc24 slotimage'></div>
+                                                <div class='Slot slotloc25 slotimage'></div>
+                                                <div class='Slot slotloc26 slotimage'></div>
+                                                <div class='Slot slotloc27 slotimage'></div>
+                                                <div class='Slot slotloc28 slotimage'></div>
+                                                <div class='Slot slotloc29 slotimage'></div>
+                                                <div class='Slot slotloc9999 slotimage9999'></div>
+
+                                                {% for key, item in inventory_items.items %}
+                                                    {% if item.slot <= 21 and permissions.inventory %}
+                                                        <div onmouseover="display(0, {{ item.slot }}, 'slot');{% if item.is_bag %}display(0, {{ item.slot }}, 'bag');{% endif %}"
+                                                             class="Slot slotloc{{ item.slot }}"
+                                                             style="background-image: url('{{ item.icon_url }}');">
+                                                        </div>
+                                                    {% endif %}
+                                                    {% if item.slot > 21 and item.slot <= 29 and permissions.bags %}
+                                                        <div onmouseover="display(0, {{ item.slot }}, 'slot');{% if item.is_bag %}display(0, {{ item.slot }}, 'bag');{% endif %}"
+                                                             class="Slot slotloc{{ item.slot }}"
+                                                             style="background-image: url('{{ item.icon_url }}');">
+                                                        </div>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
                                         </div>
                                     </div>
-                                {% endfor %}
-                            </td>
-                        </tr>
-                    </table>
-                </main>
+
+                                    <!-- Bank section -->
+                                    <div style="text-align:left" class="bank-container">
+                                        <div class="BankOuter" style="min-width: 193px; min-height: 375px;">
+                                            <div class="BankTitle">
+                                                <div class="BankTitleLeft"></div>
+                                                <div class="BankTitleMid">Bank</div>
+                                                <div class="BankTitleRight"></div>
+                                            </div>
+
+                                            <div class='Slot slotloc2000 slotimage'></div>
+                                            <div class='Slot slotloc2001 slotimage'></div>
+                                            <div class='Slot slotloc2002 slotimage'></div>
+                                            <div class='Slot slotloc2003 slotimage'></div>
+                                            <div class='Slot slotloc2004 slotimage'></div>
+                                            <div class='Slot slotloc2005 slotimage'></div>
+                                            <div class='Slot slotloc2006 slotimage'></div>
+                                            <div class='Slot slotloc2007 slotimage'></div>
+                                            <div class='Slot slotloc2008 slotimage'></div>
+                                            <div class='Slot slotloc2009 slotimage'></div>
+                                            <div class='Slot slotloc2010 slotimage'></div>
+                                            <div class='Slot slotloc2011 slotimage'></div>
+                                            <div class='Slot slotloc2012 slotimage'></div>
+                                            <div class='Slot slotloc2013 slotimage'></div>
+                                            <div class='Slot slotloc2014 slotimage'></div>
+                                            <div class='Slot slotloc2015 slotimage'></div>
+                                            <div class='Slot slotloc2016 slotimage'></div>
+                                            <div class='Slot slotloc2017 slotimage'></div>
+                                            <div class='Slot slotloc2018 slotimage'></div>
+                                            <div class='Slot slotloc2019 slotimage'></div>
+                                            <div class='Slot slotloc2020 slotimage'></div>
+                                            <div class='Slot slotloc2021 slotimage'></div>
+                                            <div class='Slot slotloc2022 slotimage'></div>
+                                            <div class='Slot slotloc2023 slotimage'></div>
+
+                                            {% if permissions.bank %}
+                                                {% for key, item in inventory_items.items %}
+                                                    {% if item.slot >= 2000 and item.slot <= 2009 %}
+                                                        {# TODO: Bag contents 29 to 2023 #}
+                                                        <div onclick="display(0, {{ item.slot }}, 'slot');{% if item.is_bag %}display(0, {{ item.slot }}, 'bag');{% endif %}"
+                                                             class="Slot slotloc{{ item.slot }}"
+                                                             style="background-image: url({{ item.icon_url }});">
+                                                        </div>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% endif %}
+
+                                            <div class="Coin" style="top:200px;left:6px;">
+                                                <table class="StatTable">
+                                                    <tbody>
+                                                    <tr>
+                                                        <td><img src="{% static 'magelo/pp.gif' %}"
+                                                                 alt="Bank PP"></td>
+                                                        <td style="text-align:center;width:100%">
+                                                            {% if permissions.coin_bank %}
+                                                                {{ currency.platinum_bank }}
+                                                            {% else %}
+                                                                Disabled
+                                                            {% endif %}
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="Coin" style="top:228px;left:6px;">
+                                                <table class="StatTable">
+                                                    <tr>
+                                                        <td><img src="{% static 'magelo/gp.gif' %}"
+                                                                 alt="Bank PP"></td>
+                                                        <td style="text-align:center;width:100%">
+                                                            {% if permissions.coin_bank %}
+                                                                {{ currency.gold_bank }}
+                                                            {% else %}
+                                                                Disabled
+                                                            {% endif %}
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <div class="Coin" style="top:256px;left:6px;">
+                                                <table class="StatTable">
+                                                    <tr>
+                                                        <td><img src="{% static 'magelo/sp.gif' %}"
+                                                                 alt="Bank PP"></td>
+                                                        <td style="text-align:center;width:100%">
+                                                            {% if permissions.coin_bank %}
+                                                                {{ currency.silver_bank }}
+                                                            {% else %}
+                                                                Disabled
+                                                            {% endif %}
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <div class="Coin" style="top:284px;left:6px;">
+                                                <table class="StatTable">
+                                                    <tr>
+                                                        <td><img src="{% static 'magelo/cp.gif' %}"
+                                                                 alt="Bank PP"></td>
+                                                        <td style="text-align:center;width:100%">
+                                                            {% if permissions.coin_bank %}
+                                                                {{ currency.copper_bank }}
+                                                            {% else %}
+                                                                Disabled
+                                                            {% endif %}
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Add spacer to maintain consistent height -->
+                                    <div class="tooltip-spacer"></div>
+
+                                    <!-- Tooltip container -->
+                                    <div class="tooltip-container">
+                                        {% for key, item in inventory_items.items %}
+                                            <div class="ItemOuter" id="slot{{ item.slot }}"
+                                                 data-item-id="{{ item.id }}"
+                                                 style="display:none;">
+                                                <!-- Content will be loaded dynamically -->
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </main>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
 {% endblock %}
