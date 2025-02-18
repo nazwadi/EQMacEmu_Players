@@ -3,10 +3,12 @@ from django.shortcuts import render
 from django.http import Http404
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
-from .models import CharacterPermissions
-from .validators import PermissionValidator
 from django.core.exceptions import PermissionDenied
 from django.core.cache import cache
+from .models import CharacterPermissions
+from .validators import PermissionValidator
+from .utils import level_regen
+from .utils import calc_hp_regen_cap
 
 import json
 
@@ -80,7 +82,6 @@ class ItemStats:
         self.mr_cap = 300
         self.dr_cap = 300
         self.pr_cap = 300
-        self.regen_cap = 30
         self.ft_cap = 15
         self.atk_cap = 250
         self.ds = 0
@@ -260,6 +261,16 @@ def character_profile(request, character_name):
         'dr': item_stats.stat_bonuses['dr'],
         'pr': item_stats.stat_bonuses['pr'],
     }
+    troll = 9
+    iksar = 128
+    has_racial_regen_bonus = True if character.race in [troll, iksar] else False
+    hp_regen = level_regen(level=character.level,
+                            is_sitting=False,
+                            is_resting=False,
+                            is_feigned=False,
+                            is_famished=False,
+                            has_racial_regen_bonus=has_racial_regen_bonus)
+    hp_regen_cap = calc_hp_regen_cap(character.level)
 
     # Build context
     context = {
@@ -284,6 +295,8 @@ def character_profile(request, character_name):
             'total_stats': total_stats,
             'cur_hp': character.cur_hp,
             'mana': character.mana,
+            'hp_regen_cap': hp_regen_cap,
+            'hp_regen': hp_regen,
         },
         'magelo': True,
         'guild': guild_info,

@@ -422,8 +422,7 @@
                                                                 Haste
                                                             </td>
                                                             <td>
-                                                                {{ item_stats.regen }}
-                                                                / {{ item_stats.regen_cap }}<br>
+                                                                {{ character.hp_regen }} / {{ character.hp_regen_cap }}<br>
                                                                 {{ item_stats.ft }} / {{ item_stats.ft_cap }}<br>
                                                                 {{ item_stats.atk }} / {{ item_stats.atk_cap }}<br>
                                                                 {{ item_stats.ds }}<br>
@@ -537,7 +536,7 @@
 
                                                 <div class="InventoryMonogram">
                                                     <img src="
-                                                            
+
                                                             {% static 'magelo/monograms/' %}{{ character.class_name }}.gif"
                                                          alt="Class Icon">
                                                 </div>
