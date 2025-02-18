@@ -18,6 +18,41 @@ from common.models.characters import CharacterCurrency
 from common.models.guilds import GuildMembers
 from common.models.items import Items
 
+from enum import Enum
+
+class FlowingThoughtEffects(Enum):
+    """Spell IDs for all known item-based Flowing Thought Spell Effects"""
+    FLOWING_THOUGHT_I = 1298
+    FLOWING_THOUGHT_II = 1299
+    FLOWING_THOUGHT_III = 1300
+    FLOWING_THOUGHT_IV = 1301
+    FLOWING_THOUGHT_V = 1302
+    FLOWING_THOUGHT_VI = 1303
+    FLOWING_THOUGHT_VII = 1304
+    FLOWING_THOUGHT_VIII = 1305
+    FLOWING_THOUGHT_IX = 1306
+    FLOWING_THOUGHT_X = 1307
+
+    @classmethod
+    def has_value(cls, value):
+        return value in [e.value for e in cls]
+
+    @classmethod
+    def get_tier(cls, spell_id):
+        """Convert spell ID to its tier (1-9)"""
+        return {
+            cls.FLOWING_THOUGHT_I.value: 1,
+            cls.FLOWING_THOUGHT_II.value: 2,
+            cls.FLOWING_THOUGHT_III.value: 3,
+            cls.FLOWING_THOUGHT_IV.value: 4,
+            cls.FLOWING_THOUGHT_V.value: 5,
+            cls.FLOWING_THOUGHT_VI.value: 6,
+            cls.FLOWING_THOUGHT_VII.value: 7,
+            cls.FLOWING_THOUGHT_VIII.value: 8,
+            cls.FLOWING_THOUGHT_IX.value: 9,
+            cls.FLOWING_THOUGHT_X.value: 10,
+        }.get(spell_id)
+
 
 class ItemStats:
     """Helper class to track item statistics and bonuses"""
@@ -62,8 +97,13 @@ class ItemStats:
         self.total_ac += item.ac
         self.total_hp += item.hp
         self.total_mana += item.mana
-        if item.worn_effect == 998:
+
+        if item.worn_effect == 998: # Haste
             self.haste += item.worn_level + 1
+
+        if FlowingThoughtEffects.has_value(item.worn_effect):
+            self.ft += FlowingThoughtEffects.get_tier(item.worn_effect)
+
         # Add stat bonuses
         self.stat_bonuses['str'] += item.astr
         self.stat_bonuses['sta'] += item.asta
