@@ -193,23 +193,19 @@
                 </div>
                 <div class="row py-2">
                     <div class="col">
-                        {% if related_quests|length > 3 %}
+                        {% if related_quests %}
                             <h5>Related Quests</h5>
                             <hr/>
-                            <p>Information currently unavailable.</p>
+                            <ul>
+                                {% for quest in related_quests %}
+                                    <li><a href="{% url 'quests:view' quest.id %}">{{ quest }}</a></li>
+                                {% endfor %}
+                            </ul>
                         {% else %}
                             <div class="text-disabled">
                                 <h5>Related Quests</h5>
                                 <hr/>
-                                {% if related_quests %}
-                                    <ul>
-                                        {% for quest in related_quests %}
-                                            <li><a href="{% url 'quests:view' quest.id %}">{{ quest }}</a></li>
-                                        {% endfor %}
-                                    </ul>
-                                {% else %}
-                                    <p>Information currently unavailable.</p>
-                                {% endif %}
+                                <p>Information currently unavailable.</p>
                             </div>
                         {% endif %}
                     </div>
