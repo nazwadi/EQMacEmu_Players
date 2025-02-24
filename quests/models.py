@@ -169,7 +169,7 @@ class QuestsRelatedNPC(models.Model):
     This model stores npcs related to a given quest
     """
     npc_id = models.IntegerField(null=False, default=0)  # TODO: OneToOne with NPCTypes (different database)
-    name = models.TextField(null=False, default=None)
+    name = models.CharField(max_length=64, default='', unique=True, null=False, blank=True)
 
     def __str__(self):
         return "".join([str(self.name), " (", str(self.npc_id), ")"])
