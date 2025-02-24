@@ -1,6 +1,7 @@
 import json
 from django.shortcuts import render, redirect
 from django.db import connections
+from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 from dataclasses import asdict
@@ -354,7 +355,10 @@ def view_npc(request, npc_id):
             seen_rb.add(items)
             unique_rb.append(roam_box)
 
-    related_quests = Quests.objects.filter(related_npcs__npc_id=npc_data.id)
+    related_quests = Quests.objects.filter(
+        Q(related_npcs__npc_id=npc_data.id) |
+        Q(starting_npc_id=npc_data.id)
+    ).distinct()
 
     return render(request=request,
                   template_name="npcs/view_npc.html",
