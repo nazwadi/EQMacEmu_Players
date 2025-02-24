@@ -201,7 +201,15 @@
                             <div class="text-disabled">
                                 <h5>Related Quests</h5>
                                 <hr/>
-                                <p>Information currently unavailable.</p>
+                                {% if related_quests %}
+                                    <ul>
+                                        {% for quest in related_quests %}
+                                            <li><a href="{% url 'quests:view' quest.id %}">{{ quest }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                {% else %}
+                                    <p>Information currently unavailable.</p>
+                                {% endif %}
                             </div>
                         {% endif %}
                     </div>

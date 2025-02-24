@@ -15,6 +15,7 @@ from common.constants import CONTAINER_TYPES
 from common.models.items import DiscoveredItems
 from common.models.items import Items
 from common.models.spells import SpellsNew
+from quests.models import Quests
 from collections import namedtuple
 
 
@@ -414,6 +415,9 @@ def view_item(request, item_id):
         forage[forage_tuple.z_short_name].append(forage_tuple)
 
     obj_path = f"/static/models/equip/{item.idfile.lower()}{'.glb'}"
+
+    related_quests = Quests.objects.filter(quest_items__item_id=item_id)
+
     return render(request=request,
                   template_name="items/view_item.html",
                   context={
@@ -426,6 +430,7 @@ def view_item(request, item_id):
                       "sold_by": sold_by,
                       "forage": forage,
                       "ground_spawns": ground_spawns,
+                      "related_quests": related_quests,
                   })
 
 @require_http_methods(["GET"])
