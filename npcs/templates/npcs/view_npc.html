@@ -468,8 +468,12 @@
                             <div class="col py-2 px-3">
                                 <div class="py-2">
                                     <h5>Related Quests</h5>
-                                    {% if npc_page_text.related_quests %}
-                                        {{ npc_page_text.related_quests|safe }}
+                                    {% if related_quests %}
+                                        <ul>
+                                        {% for quest in related_quests %}
+                                            <li><a href="{% url 'quests:view' quest.id %}">{{ quest }}</a></li>
+                                        {% endfor %}
+                                        </ul>
                                     {% else %}
                                         <p>No quest information available.</p>
                                     {% endif %}

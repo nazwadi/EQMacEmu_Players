@@ -16,6 +16,7 @@ from common.models.spawns import SpawnEntry
 from common.models.spawns import Spawn2
 from common.models.spawns import SpawnGroup
 from common.utils import calculate_item_price
+from quests.models import Quests
 from .abilities.special_abilities import get_ability_by_name, get_ability_by_id
 
 
@@ -353,6 +354,8 @@ def view_npc(request, npc_id):
             seen_rb.add(items)
             unique_rb.append(roam_box)
 
+    related_quests = Quests.objects.filter(related_npcs__npc_id=npc_data.id)
+
     return render(request=request,
                   template_name="npcs/view_npc.html",
                   context={
@@ -369,6 +372,7 @@ def view_npc(request, npc_id):
                       "npc_spells_entries": npc_spells_entries,
                       "npc_spell_proc_data": npc_spell_proc_data,
                       "opposing_factions": opposing_factions,
+                      "related_quests": related_quests,
                       "spawn_point_list": spawn_point_list,
                       "spawn_groups": spawn_groups,
                       "zone": zone,
