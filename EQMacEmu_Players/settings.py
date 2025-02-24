@@ -65,11 +65,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_gravatar',
+    'django_jsonform',
     'django_tables2',
     'crispy_forms',
     'crispy_bootstrap5',
     'factions.apps.FactionConfig',
     'items.apps.ItemConfig',
+    'magelo.apps.MageloConfig',
     'mdeditor',
     'npcs.apps.NpcsConfig',
     'patch.apps.PatchConfig',
@@ -106,6 +108,13 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',
+    }
+}
 
 ROOT_URLCONF = 'EQMacEmu_Players.urls'
 
@@ -207,19 +216,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static/spells/'),
-    os.path.join(BASE_DIR, 'static/spells/class_icons'),
-    os.path.join(BASE_DIR, 'static/spells/eq-ui'),
-    os.path.join(BASE_DIR, 'static/spells/css'),
-    os.path.join(BASE_DIR, 'static/factions/images'),
-    os.path.join(BASE_DIR, 'static/factions/'),
-    os.path.join(BASE_DIR, 'static/factions/eq-ui/images'),
-    os.path.join(BASE_DIR, 'patch/static/patch/comments.css'),
-    os.path.join(BASE_DIR, 'static/css/'),
-    os.path.join(BASE_DIR, 'static/js/'),
-    os.path.join(BASE_DIR, 'static/assets/fonts/'),
-    os.path.join(BASE_DIR, 'static/eq-ui/images/'),
-    os.path.join(BASE_DIR, 'static/images/')
+    # BASE_DIR / 'static',
 ]
 
 # Default primary key field type

@@ -46,6 +46,7 @@
         <option value="$MODULE_DIR$/pets/templates" />
         <option value="$MODULE_DIR$/quests/templates" />
         <option value="$MODULE_DIR$/patch/templates" />
+        <option value="$MODULE_DIR$/magelo/templates" />
       </list>
     </option>
   </component>

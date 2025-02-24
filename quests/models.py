@@ -80,10 +80,12 @@ PLAYER_DEITY_RESTRICTIONS = {
     216: "Veeshan",
 }
 
+
 class Quests(models.Model):
     """
     This model stores quest data that should correlate to quest scripts in the database
     """
+
     def __str__(self):
         return str(self.name)
 
@@ -103,6 +105,8 @@ class Quests(models.Model):
     related_npcs = models.ManyToManyField("QuestsRelatedNPC", blank=True)
     related_zones = models.ManyToManyField("QuestsRelatedZone", blank=True)
     quest_items = models.ManyToManyField("QuestItem", blank=True)
+    quest_reward = models.JSONField(default=dict, blank=True,
+                                    help_text="Reward data like {'item_id': 123, 'faction': 'Guardians', 'exp': 500, 'flag': 'completed_zone'}")
     factions_required = models.ManyToManyField("QuestFactionRequired", blank=True)
     factions_raised = models.ManyToManyField("QuestFactionRaised", blank=True)
     factions_lowered = models.ManyToManyField("QuestFactionLowered", blank=True)
@@ -111,6 +115,7 @@ class Quests(models.Model):
         managed = True
         db_table = 'quests'
         verbose_name_plural = 'Quests'
+
 
 class QuestFactionRequired(models.Model):
     id = models.IntegerField(primary_key=True, null=False)
@@ -122,6 +127,7 @@ class QuestFactionRequired(models.Model):
     def __unicode__(self):
         return "".join([str(self.name), " (", str(self.id), ")"])
 
+
 class QuestFactionRaised(models.Model):
     id = models.IntegerField(primary_key=True, null=False)
     name = models.CharField(max_length=50, null=False)
@@ -132,6 +138,7 @@ class QuestFactionRaised(models.Model):
     def __unicode__(self):
         return "".join([str(self.name), " (", str(self.id), ")"])
 
+
 class QuestFactionLowered(models.Model):
     id = models.IntegerField(primary_key=True, null=False)
     name = models.CharField(max_length=50, null=False)
@@ -141,6 +148,7 @@ class QuestFactionLowered(models.Model):
 
     def __unicode__(self):
         return "".join([str(self.name), " (", str(self.id), ")"])
+
 
 class QuestItem(models.Model):
     """
@@ -155,11 +163,12 @@ class QuestItem(models.Model):
     def __unicode__(self):
         return "".join([str(self.Name), " (", str(self.item_id), ")"])
 
+
 class QuestsRelatedNPC(models.Model):
     """
     This model stores npcs related to a given quest
     """
-    npc_id = models.IntegerField(null=False, default=0) # TODO: OneToOne with NPCTypes (different database)
+    npc_id = models.IntegerField(null=False, default=0)  # TODO: OneToOne with NPCTypes (different database)
     name = models.TextField(null=False, default=None)
 
     def __str__(self):
@@ -171,6 +180,7 @@ class QuestsRelatedNPC(models.Model):
     class Meta:
         managed = True
         db_table = 'quests_related_npc'
+
 
 class QuestsRelatedZone(models.Model):
     """

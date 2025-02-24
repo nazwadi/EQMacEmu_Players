@@ -1,0 +1,359 @@
+    /* Accessibility Improvements */
+:root {
+    --font-primary: "Roboto", Arial, sans-serif;
+    --font-heading: "Cinzel", serif;
+    --font-mono: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+    --size-h1: 28px;
+    --size-body: 16px;
+    --color-primary: #2f6fab; /* Links and buttons */
+    --color-primary-dark: #1a4c73;
+    --color-header: #cedff2; /* Headers background */
+    --color-border: #becfe2; /* Border colors */
+    --color-subheader: #f3f8fd; /* Sub-header background */
+    --color-text: #333333; /* Main text color */
+    --color-muted: #6c757d; /* Muted text */
+    --color-background: #f5f5f5; /* Main background */
+    --color-tooltip: #333; /* Tooltip background */
+    --color-error: #dc3545; /* Error States */
+    --color-success: #28a745; /* Success States */
+    --color-secondary: #6c757d; /* secondary colors */
+    --shadow-standard: 5px 10px 20px rgba(0, 0, 0, 0.6);
+}
+
+body {
+    font-family: var(--font-primary), sans-serif;
+    color: var(--color-text);
+    background-color: var(--color-background);
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+h1 {
+    font-family: var(--font-heading), sans-serif;
+    font-size: var(--size-h1);
+}
+
+h3 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+a {
+    color: var(--color-primary);
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: var(--color-primary-dark);
+    text-decoration: none;
+}
+
+a:focus,
+button:focus {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.breadcrumb {
+    background: var(--color-subheader);
+    border: 1px solid var(--color-border);
+}
+
+.list-group-item {
+    border-color: var(--color-border);
+}
+
+/* Improve color contrast */
+.msb_top {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: var(--color-header);
+    color: white;
+}
+
+/* Add skip link for keyboard navigation */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--color-primary);
+    color: white;
+    padding: 8px;
+    z-index: 100;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+.questInfoBox {
+    border: 1px solid var(--color-border);
+    background: white;
+    box-shadow: var(--shadow-standard);
+    box-sizing: border-box;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: box-shadow 0.2s ease;
+    font-size: 0.9375rem; /* 15px */
+    margin: 0 5px 5px 0;
+    width: 100%;
+}
+
+.questInfoBox .msb_top {
+    font-family: var(--font-heading), sans-serif;
+    background-color: var(--color-header);
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text);
+    padding: 0.5rem 1rem;
+}
+
+.questInfoBox .msb_sub {
+    font-family: var(--font-heading), sans-serif;
+    background-color: var(--color-subheader);
+    border-bottom: 1px solid var(--color-border);
+    margin: 0;
+}
+
+.questInfoBox th {
+    background-color: #FFFFFF;
+    font-weight: 600;
+    padding: 0.5rem;
+}
+
+/* Table styles */
+.questInfoBox .table {
+    margin-bottom: 0;
+}
+
+.questInfoBox .table td {
+    padding: 0.5rem;
+}
+
+/* List styles */
+.questInfoBox ul {
+    margin: 0.5rem 0;
+    padding-left: 0.5rem;
+}
+
+.questInfoBox ul li {
+    margin-bottom: 0.25rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .questInfoBox {
+        margin-right: 0;
+    }
+
+    .quest-description {
+        padding: 0.5rem;
+    }
+
+    .questInfoBox .table th,
+    .questInfoBox .table td {
+        padding: 0.5rem 0.25rem;
+    }
+}
+
+.btn-primary {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+/* Add loading skeleton */
+.quest-loading {
+    background: linear-gradient(90deg, #f0f0f0 25%, #f8f8f8 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Typography Improvements */
+.quest-description {
+    font-size: clamp(0.875rem, 2.5vw, 1rem);
+    line-height: 1.6;
+    width: 100%;
+}
+
+.quest-description pre {
+    margin: 1rem 0;
+    padding: 1rem;
+    background-color: var(--color-background); /* #f3f8fd to align with .msb_sub */
+    color: var(--color-text);
+    border: 1px dashed var(--color-primary);
+    border-radius: 4px;
+    font-family: var(--font-mono), monospace; /* Uses your defined monospace stack */
+    line-height: 1.4; /* Slightly increased for better readability */
+    text-wrap: wrap;
+    overflow-x: auto; /* Ensures long code lines are scrollable */
+}
+
+.quest-description img {
+    max-width: 100%;
+    height: auto;
+}
+
+.quest-description-header {
+    padding: 0.75rem;
+    text-align: left;
+    font-weight: bold;
+    background-color: var(--color-header);
+    color: var(--color-text);
+    border-bottom: 1px solid var(--color-border);
+    font-family: var(--font-heading), sans-serif;
+    border-radius: 4px;
+    margin: 0;
+}
+
+.quest-description-content {
+    background: white;
+    border: 1px solid var(--color-border);
+    padding: 1rem 0.5rem;
+}
+
+.msb_top, .msb_sub {
+    transition: background-color 0.2s ease;
+}
+
+.msb_top {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.msb_sub {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+/* Responsive Improvements */
+@media (max-width: 768px) {
+    .questInfoBox {
+        width: 100%;
+        box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3);
+        margin: 0 0 1rem 0;
+    }
+
+    .quest-description {
+        font-size: 0.9rem;
+        line-height: 1.6;
+    }
+
+    /* Improve table readability on mobile */
+    .questInfoBox td,
+    .questInfoBox th {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    /* Make lists more compact on mobile */
+    .questInfoBox ul {
+        padding-left: 1.25rem;
+    }
+}
+
+/* Summary Box */
+.quest-summary {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.quest-summary i {
+    margin-right: 5px;
+}
+
+/* Tooltip */
+.tooltip-custom {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip-custom:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+.tooltip-text {
+    visibility: hidden;
+    width: 200px;
+    background-color: var(--color-tooltip);
+    color: white;
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -100px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+/* Back to Top */
+.back-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: none;
+    background-color: var(--color-accent);
+    color: #fff;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.back-to-top:hover {
+    background-color: #2a6dbf;
+    color: #fff;
+}
+
+@media (max-width: 768px) {
+    .back-to-top {
+        display: block;
+    }
+}
+
+/* Add print styles */
+@media print {
+    .back-to-top,
+    .navbar {
+        display: none;
+    }
+
+    .questInfoBox {
+        box-shadow: none;
+        border: 1px solid #000;
+    }
+}
+
+/* Add keyboard focus styles for interactive elements */
+.list-group-item:focus-within {
+    outline: 2px solid var(--color-primary);
+    outline-offset: -2px;
+}
+
+.list-group-item:hover {
+    background-color: var(--color-subheader);
+}
+
+/* Container padding for notched devices */
+@supports (padding: max(0px)) {
+    .container {
+        padding-left: max(0.75rem, env(safe-area-inset-left));
+        padding-right: max(0.75rem, env(safe-area-inset-right));
+    }
+}

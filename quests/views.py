@@ -36,7 +36,10 @@ def view_quest(request, quest_id):
             quest_items = [item for item in quest_items if item]  # Remove None values
     else:
         return render(request=request,
-                      context={"quest_exists": False},
+                      context={
+                          "quest_exists": False,
+                          "quest_id": quest_id,
+                      },
                       template_name="quests/view_quest.html")
 
     return render(request=request,

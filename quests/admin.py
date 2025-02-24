@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django import forms
+from django_jsonform.forms.fields import JSONFormField
 from common.templatetags.expansion_filters import exp_filter
 
 from quests.models import Quests
@@ -29,7 +31,26 @@ class QuestsRelatedZoneAdmin(admin.ModelAdmin):
 class QuestsRelatedNPCAdmin(admin.ModelAdmin):
     pass
 
+class QuestAdminForm(forms.ModelForm):
+    quest_reward = JSONFormField(schema={
+        'type': 'object',
+        'properties': {
+            'item_id': {'type': 'integer'},
+            'item_name': {'type': 'string'},
+            'exp': {'type': 'integer'},
+            'faction': {'type': 'string'},
+            'flag': {'type': 'string'},
+        }
+    },
+        help_text=Quests._meta.get_field('quest_reward').help_text
+    )
+
+    class Meta:
+        model = Quests
+        fields = '__all__'
+
 class QuestsAdmin(admin.ModelAdmin):
+    form = QuestAdminForm
     search_fields = ["id", "name"]
     list_display = ("name", "id", "get_expansion_introduced", "starting_zone")
     list_filter = ["name"]
@@ -37,7 +58,7 @@ class QuestsAdmin(admin.ModelAdmin):
     readonly_fields = ("id",)
     fieldsets = (
         ("Where to Begin", {
-            "fields": ("id", "name", "starting_npc_id", "starting_zone")
+            "fields": ("id", "name", "starting_npc_id", "starting_zone", "quest_reward")
         }),
         ("Availability", {
             "classes": ("collapse",),
