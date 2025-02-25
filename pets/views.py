@@ -1,8 +1,12 @@
+import logging
+
 from common.constants import PET_CLASSES
 from common.models.npcs import NPCTypes
 from common.models.spells import SpellsNew
 from django.shortcuts import render
 from django.db import connections
+from django.contrib import messages
+from django.http import Http404
 from collections import namedtuple
 
 
@@ -45,8 +49,13 @@ def view_pet(request, pet_name: str = None):
     pet = NPCTypes.objects.filter(name=pet_name).first()
     pet_spells_query = """SELECT * FROM npc_spells WHERE id = %s"""
     cursor = connections['game_database'].cursor()
-    cursor.execute(pet_spells_query, [pet.npc_spells_id])
-    pet_spells = cursor.fetchall()
+    try:
+        cursor.execute(pet_spells_query, [pet.npc_spells_id])
+        pet_spells = cursor.fetchall()
+    except AttributeError as e:
+        logging.error(f"Error while searching for spells that summon {pet_name}. Error: {e}")
+        messages.error(request, f"Error while searching for spells that summon '{pet_name}'. Spell not found.")
+        pet_spells = []
     if pet_spells:
         spells_query = """SELECT npc_spells_entries.spellid
                           FROM npc_spells_entries
@@ -67,5 +76,5 @@ def view_pet(request, pet_name: str = None):
                       context={"pet": pet,
                                "spell_list": spell_list})
     return render(request=request,
-                  template_name="pets/view_pet.html",
+                  template_name="404.html",
                   context={"pet": pet,})
