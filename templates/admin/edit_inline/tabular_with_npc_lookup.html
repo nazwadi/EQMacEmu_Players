@@ -1,0 +1,43 @@
+{% extends "admin/edit_inline/tabular.html" %}
+
+{% block field_sets %}
+{{ block.super }}
+<script type="text/javascript">
+    (function($) {
+        $(document).ready(function() {
+            // Add lookup buttons next to each NPC ID field in the inline
+            $('.field-npc_id input').each(function() {
+                var $input = $(this);
+                var inputId = $input.attr('id');
+                
+                // Create lookup button
+                var $lookupBtn = $('<a href="#" class="related-lookup add-related-npc" ' +
+                                 'data-target="' + inputId + '" ' +
+                                 'data-url="{% url "admin:npcdata_npctypes_changelist" %}" ' +
+                                 'style="margin-left: 5px; padding: 2px 6px; border: 1px solid #ccc; ' +
+                                 'background-color: #f8f8f8; text-decoration: none;">Look up NPC</a>');
+                
+                // Add button after the input
+                $input.after($lookupBtn);
+                
+                // Add display span for the NPC name
+                var currentValue = $input.val();
+                if (currentValue) {
+                    // Create placeholder for NPC name (would need AJAX to get actual name)
+                    var $nameDisplay = $('<span id="name_' + inputId + '" ' +
+                                       'style="margin-left: 10px; font-style: italic;">Loading...</span>');
+                    $lookupBtn.after($nameDisplay);
+                    
+                    // You would typically use AJAX here to fetch the NPC name based on the ID
+                    // For example:
+                    $.get('/api/npc/' + currentValue + '/', function(data) {
+                        $nameDisplay.text(data.name + ' (' + currentValue + ')');
+                    }).fail(function() {
+                        $nameDisplay.text('NPC not found').css('color', 'red');
+                    });
+                }
+            });
+        });
+    })(django.jQuery);
+</script>
+{% endblock %}

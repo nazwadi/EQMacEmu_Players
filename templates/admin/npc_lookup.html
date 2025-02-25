@@ -1,0 +1,134 @@
+{% extends "admin/base_site.html" %}
+
+{% block title %}NPC Lookup{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    <h1>NPC Lookup</h1>
+    
+    <form method="get" id="npc-search-form">
+        <div class="search-box">
+            <input type="text" name="q" value="{{ search_term }}" id="search-box" placeholder="Search by name or ID">
+            <input type="hidden" name="target_id" value="{{ target_id }}">
+            <input type="submit" value="Search">
+        </div>
+    </form>
+    
+    <table class="result-list">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Level</th>
+                <th>Race</th>
+                <th>Class</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for npc in object_list %}
+            <tr>
+                <td>{{ npc.id }}</td>
+                <td>{{ npc.name }}</td>
+                <td>{{ npc.level }}</td>
+                <td>{{ npc.race }}</td>
+                <td>{{ npc.class_name }}</td>
+                <td>
+                    <a href="#" onclick="selectNPC('{{ npc.id }}', '{{ npc.name|escapejs }}'); return false;">
+                        Select
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6">No NPCs found matching your search criteria.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    {% if is_paginated %}
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?q={{ search_term }}&target_id={{ target_id }}&page=1">&laquo; first</a>
+                <a href="?q={{ search_term }}&target_id={{ target_id }}&page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?q={{ search_term }}&target_id={{ target_id }}&page={{ page_obj.next_page_number }}">next</a>
+                <a href="?q={{ search_term }}&target_id={{ target_id }}&page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+    {% endif %}
+</div>
+
+<script type="text/javascript">
+    function selectNPC(id, name) {
+        // Get the target field ID from the URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const targetId = urlParams.get('target_id');
+        
+        // Set the value in the parent window's field
+        if (window.opener && !window.opener.closed) {
+            // Set the ID value in the target field
+            const targetField = window.opener.document.getElementById(targetId);
+            if (targetField) {
+                targetField.value = id;
+                
+                // Update or add a display span for the NPC name
+                let displaySpan = window.opener.document.getElementById('name_display_' + targetId);
+                if (!displaySpan) {
+                    displaySpan = window.opener.document.createElement('span');
+                    displaySpan.id = 'name_display_' + targetId;
+                    displaySpan.style = 'margin-left: 10px; font-style: italic;';
+                    targetField.parentNode.appendChild(displaySpan);
+                }
+                displaySpan.textContent = name + ' (' + id + ')';
+                
+                // If the field is part of a form, trigger a change event
+                if (targetField.form) {
+                    const event = new Event('change', { bubbles: true });
+                    targetField.dispatchEvent(event);
+                }
+            }
+        }
+        
+        // Close the popup window
+        window.close();
+    }
+</script>
+
+<style>
+    .search-box {
+        margin-bottom: 20px;
+    }
+    #search-box {
+        padding: 5px;
+        width: 300px;
+    }
+    .result-list {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .result-list th, .result-list td {
+        padding: 8px;
+        border: 1px solid #ddd;
+    }
+    .result-list th {
+        background-color: #f2f2f2;
+        text-align: left;
+    }
+    .result-list tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+    .result-list tr:hover {
+        background-color: #e9e9e9;
+    }
+</style>
+{% endblock %}

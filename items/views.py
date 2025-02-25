@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.db import connections
 from django.views.decorators.http import require_http_methods
+from django.http import Http404
 
 from items.utils import get_class_bitmask
 from items.utils import get_race_bitmask
@@ -298,6 +299,9 @@ def view_item(request, item_id):
     :return: Http response
     """
     item = Items.objects.filter(id=item_id).first()
+    if item is None:
+        raise Http404(f"The Item you requested, {item_id}, does not exist.")
+
     effect_name = None
     if item.click_effect > 0:
         effect = SpellsNew.objects.filter(id=item.click_effect).first()
