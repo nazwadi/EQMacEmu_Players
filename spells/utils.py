@@ -832,7 +832,7 @@ def build_effect_descriptions(spell_data: object, effects: list, spell_duration:
                                f"{getattr(spell_data, 'effect_base_value3')}) in")
                 if getattr(spell_data, 'teleport_zone') != "same":
                     zone_short_name = getattr(spell_data, 'teleport_zone')
-                    zone_long_name = ZONE_SHORT_TO_LONG[zone_short_name]
+                    zone_long_name = ZONE_SHORT_TO_LONG.get(zone_short_name, zone_short_name)
                     description += f" <a class='link' href=/zones/view/{zone_short_name}>{zone_long_name}</a>"
                 else:
                     description += " : same zone"
