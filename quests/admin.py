@@ -16,17 +16,22 @@ from quests.models import QuestsRelatedZone
 from quests.models import QuestItem
 from quests.models import SERVER_MAX_LEVEL
 
+
 class QuestFactionRequiredAdmin(admin.ModelAdmin):
     pass
+
 
 class QuestFactionRaisedAdmin(admin.ModelAdmin):
     pass
 
+
 class QuestFactionLoweredAdmin(admin.ModelAdmin):
     pass
 
+
 class QuestItemAdmin(admin.ModelAdmin):
     pass
+
 
 class QuestsRelatedZoneAdmin(admin.ModelAdmin):
     list_display = ("zone_id", "long_name", "short_name")
@@ -48,8 +53,9 @@ class NPCLookupWidget(forms.TextInput):
 
         # Create the lookup button with updated CSS classes
         output += format_html(
-            '<a href="{}" class="related-lookup" id="{}" '
-            'onclick="event.stopPropagation(); window.open(this.href, \'npcPopup\', \'width=800,height=600\'); return false;">Look up NPC</a>',
+            '<a href="{}" class="related-lookup lookup-btn" id="lookup_id_{}" '
+            'onclick="event.stopPropagation(); window.open(this.href, \'npcPopup\', \'width=800,height=600\'); return false;" '
+            'title="Look Up NPC">&nbsp;</a>',
             lookup_url, name
         )
 
@@ -69,6 +75,7 @@ class NPCLookupWidget(forms.TextInput):
 
         return output
 
+
 class RelatedNPCAdminForm(forms.ModelForm):
     class Meta:
         model = QuestsRelatedNPC
@@ -76,6 +83,7 @@ class RelatedNPCAdminForm(forms.ModelForm):
         widgets = {
             'npc_id': NPCLookupWidget(),
         }
+
 
 class QuestsRelatedNPCAdmin(admin.ModelAdmin):
     list_display = ("name", "npc_id")
@@ -90,6 +98,7 @@ class QuestsRelatedNPCAdmin(admin.ModelAdmin):
 
     lookup_npc.short_description = "Look up NPC details"
     actions = ['lookup_npc']
+
 
 class RelatedNPCInline(admin.TabularInline):
     model = Quests.related_npcs.through
@@ -129,6 +138,7 @@ class QuestAdminForm(forms.ModelForm):
             if 'related_npcs' in self.fields:
                 self.fields['related_npcs'].help_text = "Search for NPCs by name or ID"
 
+
 class RelatedNPCInline(admin.TabularInline):
     model = Quests.related_npcs.through
     extra = 1
@@ -138,12 +148,14 @@ class RelatedNPCInline(admin.TabularInline):
     # Custom template for the inline to include a lookup button
     template = 'admin/edit_inline/tabular_with_npc_lookup.html'
 
+
 class QuestsAdmin(admin.ModelAdmin):
     form = QuestAdminForm
     search_fields = ["id", "name"]
     list_display = ("name", "id", "get_expansion_introduced", "starting_zone")
     list_filter = ["name"]
-    filter_horizontal = ("quest_items", "related_npcs", "related_zones", "factions_required", "factions_raised", "factions_lowered")
+    filter_horizontal = (
+    "quest_items", "related_npcs", "related_zones", "factions_required", "factions_raised", "factions_lowered")
     readonly_fields = ("id",)
 
     # Use the inline for related NPCs
@@ -184,6 +196,7 @@ class QuestsAdmin(admin.ModelAdmin):
 
     def get_starting_npc(self, obj):
         return obj.starting_npc_id
+
     get_starting_npc.short_description = "Quest Giver"
 
     def get_starting_npc_name(self, obj):
@@ -192,14 +205,17 @@ class QuestsAdmin(admin.ModelAdmin):
             return f"{npc.name} ({obj.starting_npc_id})"
         except NPCTypes.DoesNotExist:
             return f"Unknown ({obj.starting_npc_id})"
+
     get_starting_npc_name.short_description = "Quest Giver"
 
     def get_expansion_introduced(self, obj):
         return exp_filter(obj.expansion_introduced)
+
     get_expansion_introduced.short_description = "Expansion Introduced"
 
     class Media:
         js = ('admin/js/npc_lookup.js',)
+
 
 admin.site.register(Quests, QuestsAdmin)
 admin.site.register(QuestFactionRequired, QuestFactionRequiredAdmin)
