@@ -20,6 +20,7 @@ from django.shortcuts import redirect
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from quests.views import NPCLookupView
 
 admin.site.site_header = "EQMacEmu Accounts Administration"
 
@@ -28,6 +29,7 @@ urlpatterns = [
     path("__debug__/", include("debug_toolbar.urls")),
     path("accounts/", include("accounts.urls")),
     path("admin/", admin.site.urls),
+    path('npc-lookup/', NPCLookupView.as_view(), name='npc_lookup'),
     path("characters/", include("characters.urls")),
     path("character_transfer/", include("character_transfer.urls")),
     path("factions/", include("factions.urls")),
