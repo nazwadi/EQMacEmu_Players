@@ -707,6 +707,10 @@ def faction_level(value):
 
 @register.filter(name="npc_special_ability")
 def npc_special_ability(values):
+    """Convert NPC special ability codes into HTML for human consumption"""
+    if values is None:
+        return ''
+
     npc_special_abilities = {
         0: 'None',
         1: 'Summon',
