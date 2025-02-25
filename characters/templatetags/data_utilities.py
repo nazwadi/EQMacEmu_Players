@@ -1,4 +1,6 @@
 import datetime
+import logging
+
 from django import template
 from common.constants import PLAYER_CLASSES
 from common.constants import PLAYER_DEITIES
@@ -9,6 +11,7 @@ from common.constants import ZONE_SHORT_TO_LONG
 
 register = template.Library()
 
+logger = logging.getLogger(__name__)
 
 @register.filter(name='clean_name')
 def clean_name(value):
@@ -771,8 +774,8 @@ def npc_special_ability(values):
                     f'<i class="fa-solid fa-circle-info text-secondary ms-auto"></i>'
                     f'</button>')
             result.append(html)
-        except (IndexError, ValueError) as e:
-            print(e, ability)
+        except (IndexError, ValueError, KeyError) as e:
+            logger.warning(f"Error processing NPC ability '{ability}': {e}")
             continue
     return ''.join(result)
 

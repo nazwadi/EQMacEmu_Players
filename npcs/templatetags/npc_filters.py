@@ -5,4 +5,4 @@ register = template.Library()
 
 @register.filter(name='body_type')
 def body_type(value: int) -> str:
-    return BODY_TYPES[value]
+    return BODY_TYPES.get(value, 'Unknown')

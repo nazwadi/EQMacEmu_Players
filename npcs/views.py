@@ -1,4 +1,6 @@
 import json
+import logging
+
 from django.shortcuts import render, redirect
 from django.db import connections
 from django.db.models import Q
@@ -19,6 +21,8 @@ from common.models.spawns import SpawnGroup
 from common.utils import calculate_item_price
 from quests.models import Quests
 from .abilities.special_abilities import get_ability_by_name, get_ability_by_id
+
+logger = logging.getLogger(__name__)
 
 
 def index_request(request):
@@ -82,53 +86,58 @@ def search(request):
             query_limit = 0
         elif query_limit > 200:  # yes, this is an arbitrary limit on search results
             query_limit = 200
-        cursor = connections['game_database'].cursor()
-        query = """SELECT DISTINCT
-                            nt.id,
-                            nt.NAME,
-                            s.min_expansion,
-                            z.long_name,
-                            z.short_name,
-                            nt.LEVEL,
-                            nt.maxlevel,
-                            nt.race,
-                            nt.class,
-                            nt.gender,
-                            nt.hp,
-                            nt.MR,
-                            nt.CR,
-                            nt.FR, 
-                            nt.DR,
-                            nt.PR
-                         FROM
-                            npc_types AS nt
-                            LEFT JOIN spawnentry AS se ON nt.id = se.npcID
-                            LEFT JOIN spawn2 AS s ON se.spawngroupID = s.spawngroupID
-                            LEFT JOIN zone AS z ON s.zone = z.short_name 
-                        WHERE
-                            nt.NAME LIKE %s
-                            AND nt.LEVEL >= %s
-                            AND nt.maxlevel <= %s
-        """
-        if exclude_merchants is not None:
-            query += " AND nt.merchant_id = 0"
-        query_list = ['%' + npc_name + '%', min_level, max_level]
-        if expansion != "-1":  # any
-            query += """ AND s.min_expansion = %s"""
-            query_list.append(expansion)
-        if body_type != "-1":  # any
-            query += """ AND nt.bodytype = %s"""
-            query_list.append(body_type)
-        if npc_race != "-1":  # any
-            query += """ AND nt.race = %s"""
-            query_list.append(npc_race)
-        if npc_class != "-1":  # any
-            query += """ AND nt.class = %s"""
-            query_list.append(npc_class)
-        query += """ LIMIT %s"""
-        query_list.append(int(query_limit))
-        cursor.execute(query, query_list)
-        results = cursor.fetchall()
+        try:
+            cursor = connections['game_database'].cursor()
+            query = """SELECT DISTINCT
+                                nt.id,
+                                nt.NAME,
+                                s.min_expansion,
+                                z.long_name,
+                                z.short_name,
+                                nt.LEVEL,
+                                nt.maxlevel,
+                                nt.race,
+                                nt.class,
+                                nt.gender,
+                                nt.hp,
+                                nt.MR,
+                                nt.CR,
+                                nt.FR, 
+                                nt.DR,
+                                nt.PR
+                             FROM
+                                npc_types AS nt
+                                LEFT JOIN spawnentry AS se ON nt.id = se.npcID
+                                LEFT JOIN spawn2 AS s ON se.spawngroupID = s.spawngroupID
+                                LEFT JOIN zone AS z ON s.zone = z.short_name 
+                            WHERE
+                                nt.NAME LIKE %s
+                                AND nt.LEVEL >= %s
+                                AND nt.maxlevel <= %s
+            """
+            if exclude_merchants is not None:
+                query += " AND nt.merchant_id = 0"
+            query_list = ['%' + npc_name + '%', min_level, max_level]
+            if expansion != "-1":  # any
+                query += """ AND s.min_expansion = %s"""
+                query_list.append(expansion)
+            if body_type != "-1":  # any
+                query += """ AND nt.bodytype = %s"""
+                query_list.append(body_type)
+            if npc_race != "-1":  # any
+                query += """ AND nt.race = %s"""
+                query_list.append(npc_race)
+            if npc_class != "-1":  # any
+                query += """ AND nt.class = %s"""
+                query_list.append(npc_class)
+            query += """ LIMIT %s"""
+            query_list.append(int(query_limit))
+            cursor.execute(query, query_list)
+            results = cursor.fetchall()
+        except Exception as e:
+            logger.error(f"Error executing NPC search query: {e}", exc_info=True)
+            results = []
+
         search_results = list()
         if results:
             for result in results:
@@ -163,59 +172,73 @@ def view_npc(request, npc_id):
         return redirect("accounts:index")
     cursor = connections['game_database'].cursor()
 
-    cursor.execute("""SELECT DISTINCT
-                        sn.custom_icon,
-                        sn.name,
-                        sn.id
-                      FROM
-                        npc_spells_entries nse
-                        JOIN npc_types nt ON nse.npc_spells_id = nt.npc_spells_id
-                        JOIN spells_new sn ON nse.spellid = sn.id 
-                      WHERE
-                        nse.npc_spells_id=%s;
-    """, [npc_data.npc_spells_id])
-    npc_spells_entries = cursor.fetchall()
+    try:
+        cursor.execute("""SELECT DISTINCT
+                            sn.custom_icon,
+                            sn.name,
+                            sn.id
+                          FROM
+                            npc_spells_entries nse
+                            JOIN npc_types nt ON nse.npc_spells_id = nt.npc_spells_id
+                            JOIN spells_new sn ON nse.spellid = sn.id 
+                          WHERE
+                            nse.npc_spells_id=%s;
+        """, [npc_data.npc_spells_id])
+        npc_spells_entries = cursor.fetchall()
+    except Exception as e:
+        logger.error(f"Error fetching spell entries for NPC {npc_id}: {e}", exc_info=True)
+        npc_spells_entries = []
 
-    cursor.execute("""SELECT DISTINCT
-                        sn.NAME,
-                        sn.custom_icon,
-                        ns.attack_proc,
-                        ns.proc_chance 
-                      FROM
-                        spells_new sn
-                        JOIN npc_spells ns ON ns.attack_proc = sn.id 
-                      WHERE
-                        ns.id=%s;
-    """, [npc_data.npc_spells_id])
-    npc_spell_proc_data = cursor.fetchone()
+    try:
+        cursor.execute("""SELECT DISTINCT
+                            sn.NAME,
+                            sn.custom_icon,
+                            ns.attack_proc,
+                            ns.proc_chance 
+                          FROM
+                            spells_new sn
+                            JOIN npc_spells ns ON ns.attack_proc = sn.id 
+                          WHERE
+                            ns.id=%s;
+        """, [npc_data.npc_spells_id])
+        npc_spell_proc_data = cursor.fetchone()
+    except Exception as e:
+        logger.error(f"Error fetching spell proc data for NPC {npc_id}: {e}", exc_info=True)
+        npc_spell_proc_data = []
+
     if npc_spell_proc_data:
         ProcData = namedtuple('ProcData', ['spell_name', 'custom_icon', 'proc', 'proc_chance'])
         npc_spell_proc_data = ProcData(*npc_spell_proc_data)
     else:
         npc_spell_proc_data = None
 
-    cursor.execute("""SELECT 
-                            z.long_name,
-                            z.short_name,
-                            s.x,
-                            s.y,
-                            s.z,
-                            s.respawntime,
-                            s.variance,
-                            s.min_expansion,
-                            s.max_expansion
-                        FROM
-                            npc_types AS n
-                            JOIN spawnentry AS se ON n.id = se.npcID
-                            JOIN spawn2 AS s ON se.spawngroupID = s.spawngroupID
-                            JOIN zone AS z ON s.zone = z.short_name 
-                        WHERE
-                            n.id=%s
-                            AND race != '127' 
-                            AND race != '240' 
-                            AND z.min_status = 0;
-    """, [npc_data.id])
-    spawn_data = cursor.fetchall()
+    try:
+        cursor.execute("""SELECT 
+                                z.long_name,
+                                z.short_name,
+                                s.x,
+                                s.y,
+                                s.z,
+                                s.respawntime,
+                                s.variance,
+                                s.min_expansion,
+                                s.max_expansion
+                            FROM
+                                npc_types AS n
+                                JOIN spawnentry AS se ON n.id = se.npcID
+                                JOIN spawn2 AS s ON se.spawngroupID = s.spawngroupID
+                                JOIN zone AS z ON s.zone = z.short_name 
+                            WHERE
+                                n.id=%s
+                                AND race != '127' 
+                                AND race != '240' 
+                                AND z.min_status = 0;
+        """, [npc_data.id])
+        spawn_data = cursor.fetchall()
+    except Exception as e:
+        logger.error(f"Error fetching spawn data for NPC {npc_id}: {e}", exc_info=True)
+        spawn_data = []
+
     spawn_point_list = []
     if spawn_data:
         for spawn in spawn_data:
@@ -240,18 +263,23 @@ def view_npc(request, npc_id):
         spawn_points_result = Spawn2.objects.filter(spawngroupID=spawn_entry.spawngroupID)
         spawn_groups[spawn_entry.spawngroupID] = spawn_entries_result, spawn_points_result
 
-    cursor.execute("""SELECT
-                        fl.id,
-                        fl.NAME,
-                        nfe.value,
-                        nfe.npc_value
-                    FROM
-                        npc_faction_entries nfe
-                        JOIN faction_list fl ON nfe.faction_id = fl.id 
-                    WHERE
-                        nfe.npc_faction_id=%s;
-                    """, [npc_data.npc_faction_id])
-    npc_faction_entries = cursor.fetchall()
+    try:
+        cursor.execute("""SELECT
+                            fl.id,
+                            fl.NAME,
+                            nfe.value,
+                            nfe.npc_value
+                        FROM
+                            npc_faction_entries nfe
+                            JOIN faction_list fl ON nfe.faction_id = fl.id 
+                        WHERE
+                            nfe.npc_faction_id=%s;
+                        """, [npc_data.npc_faction_id])
+        npc_faction_entries = cursor.fetchall()
+    except Exception as e:
+        logger.error(f"Error fetching npc faction entries for NPC {npc_id}: {e}", exc_info=True)
+        npc_faction_entries = []
+
     factions = []
     opposing_factions = []
     for fid, name, value, npc_value in npc_faction_entries:
@@ -317,8 +345,13 @@ def view_npc(request, npc_id):
                     ORDER BY 
                         zone.zoneidnumber, zone.long_name, zone.short_name, spawn2.pathgrid, CAST(grid_entries.number AS SIGNED);
                     """
-    cursor.execute(paths_query, [npc_data.id])
-    paths = cursor.fetchall()
+    try:
+        cursor.execute(paths_query, [npc_data.id])
+        paths = cursor.fetchall()
+    except Exception as e:
+        logger.error(f"Error fetching path data for NPC {npc_id}: {e}", exc_info=True)
+        paths = []
+
     creature_path_points = {}
 
     enable_wp_spawn_notice = False
