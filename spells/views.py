@@ -1,4 +1,5 @@
 import json
+from django.http import Http404
 from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import F
@@ -179,7 +180,11 @@ def buy_spells(request, class_id):
         filename = f'static/spell_data/spell_buy.json'
         with open(filename, 'r') as json_file:
             spell_list = json.load(json_file)
-        spells = spell_list[clsid]
+        try:
+            spells = spell_list[clsid]
+        except KeyError:
+            raise Http404("Sorry, that class id doesn't exist, or the class doesn't cast spells.")
+
         for spell in spells:
             if spell['purchase_location_info'] != "None":
                 grouped_locations = {}
