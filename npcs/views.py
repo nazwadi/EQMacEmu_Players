@@ -372,14 +372,18 @@ def view_npc(request, npc_id):
     spawn_entries = SpawnEntry.objects.filter(npcID=npc_data.id).order_by("-spawngroupID")
     for spawn_entry in spawn_entries:
         roam_box = SpawnGroup.objects.filter(id=spawn_entry.spawngroupID).first()
-        if roam_box.max_x != 0 and roam_box.max_y != 0:
-            max_x = roam_box.max_x
-            min_x = roam_box.min_x
-            max_y = roam_box.max_y
-            min_y = roam_box.min_y
-            width = max_x - min_x
-            height = max_y - min_y
-            roam_boxes.append({'start_x': min_x, 'start_y': min_y, 'width': width, 'height': height})
+        try:
+            if roam_box.max_x != 0 and roam_box.max_y != 0:
+                max_x = roam_box.max_x
+                min_x = roam_box.min_x
+                max_y = roam_box.max_y
+                min_y = roam_box.min_y
+                width = max_x - min_x
+                height = max_y - min_y
+                roam_boxes.append({'start_x': min_x, 'start_y': min_y, 'width': width, 'height': height})
+        except AttributeError:  # 'NoneType' object has no attribute 'max_x'
+            continue
+
     seen_rb = set()
     unique_rb = []
     for roam_box in roam_boxes:
