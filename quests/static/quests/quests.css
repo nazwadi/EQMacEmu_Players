@@ -357,3 +357,84 @@ button:focus {
         padding-right: max(0.75rem, env(safe-area-inset-right));
     }
 }
+
+/*
+ * GitHub-style Task List Styles
+ */
+.quest-description-content ul li input[type="checkbox"] {
+    margin-right: 0.5em;
+}
+
+/* Remove bullets from task list items */
+.quest-description-content ul li:has(input[type="checkbox"]) {
+    list-style-type: none;
+    padding-left: 0;
+    margin-left: -1.25em; /* Adjust based on your list padding */
+}
+
+/* For browsers that don't support :has() selector */
+.quest-description-content ul.task-list li {
+    list-style-type: none;
+    padding-left: 0;
+    margin-left: -1.25em;
+}
+
+/* Style the checkboxes */
+.quest-description-content input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 1px solid var(--color-border, #becfe2);
+    border-radius: 3px;
+    background-color: #fff;
+    vertical-align: middle;
+    position: relative;
+    cursor: pointer;
+}
+
+/* Style checked state */
+.quest-description-content input[type="checkbox"]:checked {
+    background-color: var(--color-primary, #2f6fab);
+    border-color: var(--color-primary, #2f6fab);
+}
+
+/* Add checkmark */
+.quest-description-content input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 2px;
+    width: 5px;
+    height: 9px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+/* Focus states for accessibility */
+.quest-description-content input[type="checkbox"]:focus {
+    outline: 2px solid var(--color-primary, #2f6fab);
+    outline-offset: 1px;
+}
+
+/* Hover state */
+.quest-description-content input[type="checkbox"]:hover {
+    border-color: var(--color-primary-dark, #1a4c73);
+}
+
+/* Add spacing between task list items */
+.quest-description-content ul li:has(input[type="checkbox"]) {
+    margin-bottom: 0.5em;
+}
+
+/* Strike-through text for completed items */
+.quest-description-content input[type="checkbox"]:checked + span {
+    text-decoration: line-through;
+    color: var(--color-muted, #6c757d);
+}
+
+/*
+ * End GitHub-style Task List Styles
+ */
