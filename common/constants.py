@@ -1057,6 +1057,7 @@ ZONE_SHORT_TO_LONG = {
     "mischiefplane": "Plane of Mischief",
     "growthplane": "Plane of Growth",
     "frozenshadow": "Tower of Frozen Shadow",
+    "acrylia": "Acrylia Caverns"
 }
 
 SPELL_TARGETS = {
