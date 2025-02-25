@@ -93,7 +93,7 @@ class Quests(models.Model):
     name = models.CharField(max_length=100, null=False, unique=True)
     description = MDTextField(null=True, blank=True, default="")
     starting_npc_id = models.IntegerField(default=0, null=False)
-    starting_zone = models.CharField(max_length=100, null=False, unique=True, choices=sorted(ZONE_SHORT_TO_LONG.items()))
+    starting_zone = models.CharField(max_length=100, null=False, unique=False, choices=sorted(ZONE_SHORT_TO_LONG.items()))
     expansion_introduced = models.SmallIntegerField(null=True, default=0, choices=EXPANSION_INTRODUCED_CHOICES)
     minimum_level = models.SmallIntegerField(null=True, default=1)
     maximum_level = models.SmallIntegerField(null=True, default=-1)
