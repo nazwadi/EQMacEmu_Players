@@ -1,12 +1,48 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.db import connections
 from quests.models import Quests
 from quests.models import SERVER_MAX_LEVEL
-from common.models.npcs import NPCTypes
 from common.models.zones import Zone
 from common.models.items import Items
+from django.views.generic import ListView
+from django.contrib.admin.views.decorators import staff_member_required
+from django.utils.decorators import method_decorator
+from common.models.npcs import NPCTypes
 
+
+@method_decorator(staff_member_required, name='dispatch')
+class NPCLookupView(ListView):
+    """
+    Used by the admin interface when adding related NPCs
+    """
+    model = NPCTypes
+    template_name = 'admin/npc_lookup.html'
+    paginate_by = 20
+
+    def get_queryset(self):
+        queryset = NPCTypes.objects.all().order_by('name')
+        search_term = self.request.GET.get('q', '')
+
+        if search_term:
+            # Try to match by ID or name
+            try:
+                npc_id = int(search_term)
+                id_matches = NPCTypes.objects.filter(id=npc_id)
+                if id_matches.exists():
+                    return id_matches
+            except ValueError:
+                pass
+
+            # Search by name
+            return queryset.filter(name__icontains=search_term)
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search_term'] = self.request.GET.get('q', '')
+        context['target_id'] = self.request.GET.get('target_id', '')
+        return context
 
 def view_quest(request, quest_id):
     """

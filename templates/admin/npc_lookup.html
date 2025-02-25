@@ -1,21 +1,23 @@
 {% extends "admin/base_site.html" %}
+{% load data_utilities %}
 
 {% block title %}NPC Lookup{% endblock %}
 
 {% block content %}
-<div id="content-main">
-    <h1>NPC Lookup</h1>
-    
-    <form method="get" id="npc-search-form">
-        <div class="search-box">
-            <input type="text" name="q" value="{{ search_term }}" id="search-box" placeholder="Search by name or ID">
-            <input type="hidden" name="target_id" value="{{ target_id }}">
-            <input type="submit" value="Search">
-        </div>
-    </form>
-    
-    <table class="result-list">
-        <thead>
+    <div id="content-main">
+        <h1>NPC Lookup</h1>
+
+        <form method="get" id="npc-search-form">
+            <div class="search-box">
+                <input type="text" name="q" value="{{ search_term }}" id="search-box"
+                       placeholder="Search by name or ID">
+                <input type="hidden" name="target_id" value="{{ target_id }}">
+                <input type="submit" value="Search" class="button">
+            </div>
+        </form>
+
+        <table class="result-list">
+            <thead>
             <tr>
                 <th>ID</th>
                 <th>Name</th>
@@ -24,31 +26,32 @@
                 <th>Class</th>
                 <th>Action</th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             {% for npc in object_list %}
-            <tr>
-                <td>{{ npc.id }}</td>
-                <td>{{ npc.name }}</td>
-                <td>{{ npc.level }}</td>
-                <td>{{ npc.race }}</td>
-                <td>{{ npc.class_name }}</td>
-                <td>
-                    <a href="#" onclick="selectNPC('{{ npc.id }}', '{{ npc.name|escapejs }}'); return false;">
-                        Select
-                    </a>
-                </td>
-            </tr>
+                <tr>
+                    <td>{{ npc.id }}</td>
+                    <td>{{ npc.name }}</td>
+                    <td>{{ npc.level }}</td>
+                    <td>{{ npc.race|npc_race }}</td>
+                    <td>{{ npc.class_name|npc_class }}</td>
+                    <td>
+                        <a href="#" class="select-button"
+                           onclick="selectNPC('{{ npc.id }}', '{{ npc.name|escapejs }}'); return false;">
+                            Select
+                        </a>
+                    </td>
+                </tr>
             {% empty %}
-            <tr>
-                <td colspan="6">No NPCs found matching your search criteria.</td>
-            </tr>
+                <tr>
+                    <td colspan="6">No NPCs found matching your search criteria.</td>
+                </tr>
             {% endfor %}
-        </tbody>
-    </table>
-    
-    {% if is_paginated %}
-    <div class="pagination">
+            </tbody>
+        </table>
+
+        {% if is_paginated %}
+            <div class="pagination">
         <span class="step-links">
             {% if page_obj.has_previous %}
                 <a href="?q={{ search_term }}&target_id={{ target_id }}&page=1">&laquo; first</a>
@@ -64,71 +67,173 @@
                 <a href="?q={{ search_term }}&target_id={{ target_id }}&page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
             {% endif %}
         </span>
+            </div>
+        {% endif %}
     </div>
-    {% endif %}
-</div>
 
-<script type="text/javascript">
-    function selectNPC(id, name) {
-        // Get the target field ID from the URL parameters
-        const urlParams = new URLSearchParams(window.location.search);
-        const targetId = urlParams.get('target_id');
-        
-        // Set the value in the parent window's field
-        if (window.opener && !window.opener.closed) {
-            // Set the ID value in the target field
-            const targetField = window.opener.document.getElementById(targetId);
-            if (targetField) {
-                targetField.value = id;
-                
-                // Update or add a display span for the NPC name
-                let displaySpan = window.opener.document.getElementById('name_display_' + targetId);
-                if (!displaySpan) {
-                    displaySpan = window.opener.document.createElement('span');
-                    displaySpan.id = 'name_display_' + targetId;
-                    displaySpan.style = 'margin-left: 10px; font-style: italic;';
-                    targetField.parentNode.appendChild(displaySpan);
-                }
-                displaySpan.textContent = name + ' (' + id + ')';
-                
-                // If the field is part of a form, trigger a change event
-                if (targetField.form) {
-                    const event = new Event('change', { bubbles: true });
-                    targetField.dispatchEvent(event);
+    <script type="text/javascript">
+        function selectNPC(id, name) {
+            // Get the target field ID from the URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const targetId = urlParams.get('target_id');
+
+            // Set the value in the parent window's field
+            if (window.opener && !window.opener.closed) {
+                // Set the ID value in the target field
+                const targetField = window.opener.document.getElementById(targetId);
+                if (targetField) {
+                    targetField.value = id;
+
+                    // Update or add a display span for the NPC name
+                    let displaySpan = window.opener.document.getElementById('name_display_' + targetId);
+                    if (!displaySpan) {
+                        displaySpan = window.opener.document.createElement('span');
+                        displaySpan.id = 'name_display_' + targetId;
+                        displaySpan.style = 'margin-left: 10px; font-style: italic;';
+                        targetField.parentNode.appendChild(displaySpan);
+                    }
+                    displaySpan.textContent = name + ' (' + id + ')';
+
+                    // If the field is part of a form, trigger a change event
+                    if (targetField.form) {
+                        const event = new Event('change', {bubbles: true});
+                        targetField.dispatchEvent(event);
+                    }
                 }
             }
-        }
-        
-        // Close the popup window
-        window.close();
-    }
-</script>
 
-<style>
-    .search-box {
-        margin-bottom: 20px;
-    }
-    #search-box {
-        padding: 5px;
-        width: 300px;
-    }
-    .result-list {
-        width: 100%;
-        border-collapse: collapse;
-    }
-    .result-list th, .result-list td {
-        padding: 8px;
-        border: 1px solid #ddd;
-    }
-    .result-list th {
-        background-color: #f2f2f2;
-        text-align: left;
-    }
-    .result-list tr:nth-child(even) {
-        background-color: #f9f9f9;
-    }
-    .result-list tr:hover {
-        background-color: #e9e9e9;
-    }
-</style>
+            // Close the popup window
+            window.close();
+        }
+    </script>
+    <style>
+        /* Base styles using Django admin's CSS variables */
+        .search-box {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: var(--border-radius-sm, 4px);
+            background-color: var(--module-bg, inherit); /* Fallback for older Django versions */
+        }
+
+        #search-box {
+            padding: 8px;
+            width: 300px;
+            border-radius: var(--border-radius-sm, 4px);
+            border: 1px solid var(--border, #ddd);
+            background-color: var(--body-quiet-bg, #fff);
+            color: var(--body-fg, #333);
+        }
+
+        .button {
+            padding: 8px 15px;
+            border-radius: var(--border-radius-sm, 4px);
+            cursor: pointer;
+            margin-left: 5px;
+            background-color: var(--primary, #79aec8);
+            color: var(--button-fg, #fff);
+            border: none;
+            transition: background-color 0.2s ease;
+        }
+
+        .button:hover {
+            background-color: var(--primary-hover, #609ab6);
+        }
+
+        .result-list {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: var(--border-radius-sm, 4px);
+            overflow: hidden;
+            background-color: var(--module-bg, #fff);
+        }
+
+        .result-list th,
+        .result-list td {
+            padding: 10px;
+            border: 1px solid var(--hairline-color, #ddd);
+        }
+
+        .result-list th {
+            background-color: var(--primary, #79aec8);
+            color: var(--button-fg, #fff);
+            text-align: left;
+        }
+
+        .result-list tr:nth-child(even) {
+            background-color: var(--darkened-bg, #f9f9f9);
+        }
+
+        .result-list tr:hover {
+            background-color: var(--row-hover-bg, #e8f5fe);
+        }
+
+        .select-button {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: var(--primary, #79aec8);
+            color: var(--button-fg, #fff);
+            text-decoration: none;
+            border-radius: var(--border-radius-sm, 4px);
+            font-weight: bold;
+            transition: background-color 0.2s ease;
+        }
+
+        .select-button:hover {
+            background-color: var(--primary-hover, #609ab6);
+        }
+
+        .pagination {
+            margin-top: 20px;
+            padding: 10px;
+            text-align: center;
+            color: var(--body-fg, #333);
+        }
+
+        .pagination a {
+            padding: 5px 10px;
+            margin: 0 5px;
+            border-radius: var(--border-radius-sm, 4px);
+            text-decoration: none;
+            background-color: var(--body-quiet-bg, #fff);
+            color: var(--link-fg, #447e9b);
+            border: 1px solid var(--hairline-color, #ddd);
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .pagination a:hover {
+            background-color: var(--link-hover-bg, #79aec8);
+            color: var(--link-hover-fg, #fff);
+        }
+
+        .current {
+            padding: 0 10px;
+        }
+
+        /* Ensure body matches admin's background and text color */
+        body {
+            background-color: var(--body-bg, #fff);
+            color: var(--body-fg, #333);
+        }
+
+        a {
+            color: var(--link-fg, #447e9b);
+        }
+
+        /* Optional: Adjust custom elements for dark mode compatibility */
+        @media (prefers-color-scheme: dark) {
+            /* Only apply if user preference is dark and Django doesn't override */
+            :root:not([data-theme="light"]) {
+                --primary: #264b5d;
+                --primary-hover: #1d3745;
+                --body-bg: #121212;
+                --body-fg: #e0e0e0;
+                --link-fg: #81d4fa;
+                --hairline-color: #374151;
+                --darkened-bg: #1e1e1e;
+                --row-hover-bg: #1e3a5f;
+                --body-quiet-bg: #1e1e1e;
+                --button-fg: #f5f5f5;
+            }
+        }
+    </style>
 {% endblock %}
