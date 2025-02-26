@@ -1,3 +1,4 @@
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.db import connections
@@ -7,6 +8,7 @@ from django.http import Http404
 from items.utils import get_class_bitmask
 from items.utils import get_race_bitmask
 from items.utils import build_stat_query
+from items.utils import get_item_effect
 from common.constants import PLAYER_CLASSES
 from common.constants import PLAYER_RACES
 from common.constants import EQUIPMENT_SLOTS
@@ -15,7 +17,6 @@ from common.constants import ITEM_STATS
 from common.constants import CONTAINER_TYPES
 from common.models.items import DiscoveredItems
 from common.models.items import Items
-from common.models.spells import SpellsNew
 from quests.models import Quests
 from collections import namedtuple
 
@@ -228,15 +229,15 @@ def search(request):
         return render(request=request,
                       template_name="items/search_item.html",
                       context={
-                               "IS_SEARCH": True,
-                               "search_results": search_results,
-                               "EQUIPMENT_SLOTS": EQUIPMENT_SLOTS,
-                               "ITEM_TYPES": ITEM_TYPES,
-                               "CONTAINER_TYPES": CONTAINER_TYPES,
-                               "ITEM_STATS": ITEM_STATS,
-                               "PLAYER_CLASSES": PLAYER_CLASSES,
-                               "PLAYER_RACES": PLAYER_RACES,
-                               "level_range": range(100)})
+                          "IS_SEARCH": True,
+                          "search_results": search_results,
+                          "EQUIPMENT_SLOTS": EQUIPMENT_SLOTS,
+                          "ITEM_TYPES": ITEM_TYPES,
+                          "CONTAINER_TYPES": CONTAINER_TYPES,
+                          "ITEM_STATS": ITEM_STATS,
+                          "PLAYER_CLASSES": PLAYER_CLASSES,
+                          "PLAYER_RACES": PLAYER_RACES,
+                          "level_range": range(100)})
 
 
 def discovered_items(request):
@@ -295,23 +296,15 @@ def view_item(request, item_id):
     Defines view for https://url.tld/items/view/<int:pk>
 
     :param request: Http request
-    :param item_id: a NPCTypes id field unique identifier
+    :param item_id: an Item id field unique identifier
     :return: Http response
     """
     item = Items.objects.filter(id=item_id).first()
     if item is None:
         raise Http404(f"The Item you requested, {item_id}, does not exist.")
 
-    effect_name = None
-    if item.click_effect > 0:
-        effect = SpellsNew.objects.filter(id=item.click_effect).first()
-        effect_name = effect.name
-    elif item.worn_effect > 0:
-        effect = SpellsNew.objects.filter(id=item.worn_effect).first()
-        effect_name = effect.name
-    elif item.proc_effect > 0:
-        effect = SpellsNew.objects.filter(id=item.proc_effect).first()
-        effect_name = effect.name
+    effect_name, effect_id = get_item_effect(item)
+
     cursor = connections['game_database'].cursor()
     cursor.execute("""SELECT tradeskill_recipe.id, tradeskill_recipe.name, tradeskill_recipe.tradeskill, 
                              tradeskill_recipe.trivial, tradeskill_recipe_entries.successcount
@@ -437,33 +430,35 @@ def view_item(request, item_id):
                       "related_quests": related_quests,
                   })
 
-@require_http_methods(["GET"])
-def item_detail_api(request, item_id):
-    item = Items.objects.get(id=item_id)
-    effect_name = None
-    if item.click_effect > 0:
-        effect = SpellsNew.objects.filter(id=item.click_effect).first()
-        effect_name = effect.name
-    elif item.worn_effect > 0:
-        effect = SpellsNew.objects.filter(id=item.worn_effect).first()
-        effect_name = effect.name
-    elif item.proc_effect > 0:
-        effect = SpellsNew.objects.filter(id=item.proc_effect).first()
-        effect_name = effect.name
-    return render(request=request,
-                  template_name="items/item_stats_template.html",
-                  context={
-                      "effect_name": effect_name,
-                      "item": item,
-                  })
 
-def best_in_slot(request, class_id: int = None):
+@require_http_methods(["GET"])
+def item_detail_api(request: HttpRequest, item_id: int) -> HttpResponse:
+    """
+    Useful for grabbing item stats when users hover their mouse over an item link
+
+    :param request: The HTTP request object.
+    :param item_id: An Item ID field unique identifier.
+    :return: An HTTP response rendering the item stats template.
+    """
+    item = Items.objects.get(id=item_id)
+    effect_name, effect_id = get_item_effect(item)
+    return render(
+        request=request,
+        template_name="items/item_stats_template.html",
+        context={
+             "effect_name": effect_name,
+             "item": item,
+        }
+    )
+
+
+def best_in_slot(request: HttpRequest, class_id: int = None) -> HttpResponse:
     """
     Defines view for https://url.tld/items/bis/<int:class_id>
 
-    :param request: Http request
-    :param class_id:
-    :return:
+    :param request: The HTTP request object.
+    :param class_id: a unique identifier for a playable class, usually between 1 - 16
+    :return: an HTTP response rendering the best in slot template
     """
     if class_id is None or not 0 < class_id < 15:
         return render(request=request,

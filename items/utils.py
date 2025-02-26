@@ -1,4 +1,7 @@
 from common.constants import ITEM_STATS
+from typing import Optional, Tuple
+from common.models.items import Items
+from common.models.spells import SpellsNew
 
 def get_class_bitmask(class_id):
     """
@@ -134,7 +137,6 @@ def build_stat_query(clause: str,
     """
     error_messages = []
 
-
     if stat not in ITEM_STATS.keys():
         error_messages.append("Invalid item stat submitted")
 
@@ -146,3 +148,30 @@ def build_stat_query(clause: str,
     partial_query = f" {clause} items.{stat} {operator} %s"
 
     return partial_query, error_messages
+
+
+def get_item_effect(item: Items) -> Tuple[Optional[str], Optional[int]]:
+    """
+    Retrieve the name and ID of an item's effect, checking click, worn, and proc effects in order.
+
+    :param item: An Items instance containing effect IDs.
+    :return: A tuple of (effect_name, effect_id), where effect_name is the spell name or None,
+             and effect_id is the corresponding effect ID or None if no valid effect is found.
+    """
+    effect_types = [
+        ('click_effect', item.click_effect),
+        ('worn_effect', item.worn_effect),
+        ('proc_effect', item.proc_effect),
+    ]
+
+    for _, effect_id in effect_types:
+        if not effect_id or effect_id <= 0:
+            continue
+
+        effect = SpellsNew.objects.filter(id=effect_id).first()
+        if effect:
+            if effect.name is not None and effect.name != '':
+                return effect.name, effect_id
+
+    # No valid effect with a non-null, non-empty name found
+    return None, None
