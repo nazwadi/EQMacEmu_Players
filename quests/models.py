@@ -86,14 +86,11 @@ class Quests(models.Model):
     This model stores quest data that should correlate to quest scripts in the database
     """
 
-    def __str__(self):
-        return str(self.name)
-
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100, null=False, unique=True)
     description = MDTextField(null=True, blank=True, default="")
     starting_npc_id = models.IntegerField(default=0, null=False)
-    starting_zone = models.CharField(max_length=100, null=False, unique=False, choices=sorted(ZONE_SHORT_TO_LONG.items()))
+    starting_zone = models.CharField(max_length=100, null=False, choices=sorted(ZONE_SHORT_TO_LONG.items()))
     expansion_introduced = models.SmallIntegerField(null=True, default=0, choices=EXPANSION_INTRODUCED_CHOICES)
     minimum_level = models.SmallIntegerField(null=True, default=1)
     maximum_level = models.SmallIntegerField(null=True, default=-1)
@@ -102,19 +99,43 @@ class Quests(models.Model):
     deity_restrictions = models.IntegerField(null=False, default=0, choices=PLAYER_DEITY_RESTRICTIONS)
     is_repeatable = models.BooleanField(default=True)
     monster_mission = models.BooleanField(default=False)
-    related_npcs = models.ManyToManyField("QuestsRelatedNPC", blank=True)
-    related_zones = models.ManyToManyField("QuestsRelatedZone", blank=True)
-    quest_items = models.ManyToManyField("QuestItem", blank=True)
+    related_npcs = models.ManyToManyField("QuestsRelatedNPC", blank=True, related_name="quests")
+    related_zones = models.ManyToManyField("QuestsRelatedZone", blank=True, related_name="quests")
+    quest_items = models.ManyToManyField("QuestItem", blank=True, related_name="quests")
     quest_reward = models.JSONField(default=dict, blank=True,
                                     help_text="Reward data like {'item_id': 123, 'faction': 'Guardians', 'exp': 500, 'flag': 'completed_zone'}")
-    factions_required = models.ManyToManyField("QuestFactionRequired", blank=True)
-    factions_raised = models.ManyToManyField("QuestFactionRaised", blank=True)
-    factions_lowered = models.ManyToManyField("QuestFactionLowered", blank=True)
+    factions_required = models.ManyToManyField("QuestFactionRequired", blank=True, related_name="required_for_quests")
+    factions_raised = models.ManyToManyField("QuestFactionRaised", blank=True, related_name="raised_for_quests")
+    factions_lowered = models.ManyToManyField("QuestFactionLowered", blank=True, related_name="lowered_for_quests")
+
+    def __str__(self):
+        return str(self.name)
+
+    # Helper method to find reward items
+    def get_reward_items(self):
+        """Return a list of item_ids from the quest_reward JSON field"""
+        if not self.quest_reward or 'item_id' not in self.quest_reward:
+            return []
+
+        if isinstance(self.quest_reward['item_id'], list):
+            return self.quest_reward['item_id']
+        return [self.quest_reward['item_id']]
 
     class Meta:
         managed = True
         db_table = 'quests'
+        verbose_name = 'Quest'
         verbose_name_plural = 'Quests'
+        indexes = [
+            models.Index(fields=['name'], name='quest_name_idx'),
+            models.Index(fields=['starting_zone'], name='starting_zone_idx'),
+            models.Index(fields=['starting_npc_id'], name='starting_npc_idx'),
+            models.Index(fields=['expansion_introduced'], name='expansion_idx'),
+            models.Index(fields=['minimum_level', 'maximum_level'], name='level_range_idx'),
+            models.Index(fields=['class_restrictions'], name='class_idx'),
+            models.Index(fields=['race_restrictions'], name='race_idx'),
+        ]
+        ordering = ['name']
 
 
 class QuestFactionRequired(models.Model):
@@ -122,10 +143,15 @@ class QuestFactionRequired(models.Model):
     name = models.CharField(max_length=50, null=False)
 
     def __str__(self):
-        return "".join([str(self.name), " (", str(self.id), ")"])
+        return f"{self.name} ({self.id})"
 
     def __unicode__(self):
-        return "".join([str(self.name), " (", str(self.id), ")"])
+        return f"{self.name} ({self.id})"
+
+    class Meta:
+        verbose_name = 'Required Faction'
+        verbose_name_plural = 'Required Factions'
+        ordering = ['name']
 
 
 class QuestFactionRaised(models.Model):
@@ -133,10 +159,15 @@ class QuestFactionRaised(models.Model):
     name = models.CharField(max_length=50, null=False)
 
     def __str__(self):
-        return "".join([str(self.name), " (", str(self.id), ")"])
+        return f"{self.name} ({self.id})"
 
     def __unicode__(self):
-        return "".join([str(self.name), " (", str(self.id), ")"])
+        return f"{self.name} ({self.id})"
+
+    class Meta:
+        verbose_name = 'Raised Faction'
+        verbose_name_plural = 'Raised Factions'
+        ordering = ['name']
 
 
 class QuestFactionLowered(models.Model):
@@ -144,10 +175,15 @@ class QuestFactionLowered(models.Model):
     name = models.CharField(max_length=50, null=False)
 
     def __str__(self):
-        return "".join([str(self.name), " (", str(self.id), ")"])
+        return f"{self.name} ({self.id})"
 
     def __unicode__(self):
-        return "".join([str(self.name), " (", str(self.id), ")"])
+        return f"{self.name} ({self.id})"
+
+    class Meta:
+        verbose_name = 'Lowered Faction'
+        verbose_name_plural = 'Lowered Factions'
+        ordering = ['name']
 
 
 class QuestItem(models.Model):
@@ -158,10 +194,20 @@ class QuestItem(models.Model):
     Name = models.CharField(max_length=64, null=False, default=0)
 
     def __str__(self):
-        return "".join([str(self.Name), " (", str(self.item_id), ")"])
+        return f"{self.Name} ({self.item_id})"
 
     def __unicode__(self):
-        return "".join([str(self.Name), " (", str(self.item_id), ")"])
+        return f"{self.Name} ({self.item_id})"
+
+    class Meta:
+        verbose_name = 'Quest Item'
+        verbose_name_plural = 'Quest Items'
+        indexes = [
+            models.Index(fields=['item_id'], name='item_id_idx'),
+            models.Index(fields=['Name'], name='item_name_idx'),
+        ]
+        ordering = ['Name']
+        unique_together = ['item_id', 'Name']  # Ensure no duplicate entries for the same item
 
 
 class QuestsRelatedNPC(models.Model):
@@ -172,14 +218,21 @@ class QuestsRelatedNPC(models.Model):
     name = models.CharField(max_length=64, default='', unique=False, null=False, blank=True)
 
     def __str__(self):
-        return "".join([str(self.name), " (", str(self.npc_id), ")"])
+        return f"{self.name} ({self.npc_id})"
 
     def __unicode__(self):
-        return "".join([str(self.name), " (", str(self.npc_id), ")"])
+        return f"{self.name} ({self.npc_id})"
 
     class Meta:
         managed = True
         db_table = 'quests_related_npc'
+        verbose_name = 'Quest Related NPC'
+        verbose_name_plural = 'Quest Related NPCs'
+        indexes = [
+            models.Index(fields=['npc_id'], name='npc_id_idx'),
+            models.Index(fields=['name'], name='npc_name_idx'),
+        ]
+        ordering = ['name']
 
 
 class QuestsRelatedZone(models.Model):
@@ -199,3 +252,10 @@ class QuestsRelatedZone(models.Model):
     class Meta:
         managed = True
         db_table = 'quests_related_zone'
+        verbose_name = 'Quest Related Zone'
+        verbose_name_plural = 'Quest Related Zones'
+        indexes = [
+            models.Index(fields=['short_name'], name='short_name_idx'),
+            models.Index(fields=['zone_id'], name='zone_id_idx'),
+        ]
+        ordering = ['short_name']
