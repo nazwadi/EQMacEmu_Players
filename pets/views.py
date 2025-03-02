@@ -1,47 +1,59 @@
 import logging
+from collections import namedtuple
+
+from django.contrib import messages
+from django.db import connections
+from django.shortcuts import render
 
 from common.constants import PET_CLASSES
 from common.models.npcs import NPCTypes
 from common.models.spells import SpellsNew
-from django.shortcuts import render
-from django.db import connections
-from django.contrib import messages
-from django.http import Http404
-from collections import namedtuple
 
 
 def list_pets(request, pet_class_id: int = None):
     """
+    List pets filtered by class id if provided
 
     :param request:  Http request
     :param pet_class_id: id of the pet class
     :return: Http response
     """
-    if pet_class_id is not None:
-        pets_query = (f"SELECT spells_new.NAME, spells_new.id, spells_new.new_icon, spells_new.teleport_zone,"
-                      f"{'spells_new.classes' + str(pet_class_id)} AS plevel, npc_types.race, npc_types.`level`,npc_types.class, npc_types.hp, npc_types.mana,"
-                      f"npc_types.AC, npc_types.mindmg,npc_types.maxdmg FROM spells_new INNER JOIN pets ON pets.`type` = spells_new.teleport_zone"
-                      f" INNER JOIN npc_types ON npc_types.NAME = spells_new.teleport_zone "
-                      f"WHERE {'spells_new.classes' + str(pet_class_id)} > 0 AND {'spells_new.classes' + str(pet_class_id)} < 70 "
-                      f"ORDER BY {'spells_new.classes' + str(pet_class_id)}")
-        cursor = connections['game_database'].cursor()
-        cursor.execute(pets_query)
-        results = cursor.fetchall()
+    context = {
+        "pet_id": pet_class_id,
+        "pet_classes": PET_CLASSES
+    }
+
+    if pet_class_id is not None and 1 <= pet_class_id <= 15:
+
+        class_field = f'classes{pet_class_id}'
+
+        query = (
+            f"SELECT sn.NAME, sn.id, sn.new_icon, sn.teleport_zone,"
+            f"sn.{class_field} AS plevel, nt.race, nt.level, nt.class, "
+            f"nt.hp, nt.mana, nt.AC, nt.mindmg, nt.maxdmg "
+            f"FROM spells_new sn "
+            f"INNER JOIN pets p ON p.type = sn.teleport_zone "
+            f"INNER JOIN npc_types nt ON nt.NAME = sn.teleport_zone "
+            f"WHERE sn.{class_field} > %s AND sn.{class_field} < %s "
+            f"ORDER BY sn.{class_field}"
+        )
+
+        with connections['game_database'].cursor() as cursor:
+            cursor.execute(query, [0, 70])
+            results = cursor.fetchall()
+
         PetData = namedtuple("PetData", ["name", "id", "new_icon", "teleport_zone", "plevel",
-                                         "npc_race", "level", "npc_class", "hp", "mana", "AC", "mindmg",
-                                         "maxdmg"])
-        pets = list()
+                                         "npc_race", "level", "npc_class", "hp", "mana", "AC", "mindmg", "maxdmg"])
+
+        pets = []
         for result in results:
             pets.append(PetData(*result))
-        return render(request=request,
-                      template_name="pets/list_pets.html",
-                      context={"pet_id": pet_class_id,
-                               "pet_classes": PET_CLASSES,
-                               "pets": pets})
-    return render(request=request,
-                  template_name="pets/list_pets.html",
-                  context={"pet_id": pet_class_id,
-                           "pet_classes": PET_CLASSES})
+
+        context["pets"] = pets
+    else:
+        messages.error(request, f"Invalid pet class ID. Please specify a value between 1 and 15.")
+
+    return render(request=request, template_name="pets/list_pets.html", context=context)
 
 
 def view_pet(request, pet_name: str = None):
