@@ -69,6 +69,7 @@ def view_pet(request, pet_name: str = None):
         messages.error(request, "No pet name provided.")
         return render(request, "404.html", {})
 
+    # Get pet info
     pet = NPCTypes.objects.filter(name=pet_name).first()
     if not pet:
         messages.error(request, f"Pet '{pet_name}' not found.")
@@ -76,11 +77,13 @@ def view_pet(request, pet_name: str = None):
 
     context = {"pet": pet}
 
+    # Get pet spells if the pet has a spells ID
     if not pet.npc_spells_id:
         messages.info(request, f"Pet '{pet_name}' doesn't have any spells.")
         return render(request, "pets/view_pet.html", context)
 
     try:
+        # Query for npc_spells
         with connections['game_database'].cursor() as cursor:
             cursor.execute(
                 "SELECT id FROM npc_spells WHERE id = %s",
@@ -92,6 +95,7 @@ def view_pet(request, pet_name: str = None):
                 messages.warning(request, f"Spell set {pet.npc_spells_id} not found for '{pet_name}'.")
                 return render(request, "pets/view_pet.html", context)
 
+            # Query for spell IDs appropriate for pet's level
             cursor.execute(
                 """SELECT spellid
                    FROM npc_spells_entries
@@ -108,6 +112,7 @@ def view_pet(request, pet_name: str = None):
         messages.error(request, f"An error occurred while retrieving pet spell information.")
         return render(request, "pets/view_pet.html", context)
 
+    # Use Django's ORM to efficiently get all spells at once
     if spell_ids:
         spell_list = list(SpellsNew.objects.filter(id__in=spell_ids))
         # Preserve original order from the priority-sorted query
