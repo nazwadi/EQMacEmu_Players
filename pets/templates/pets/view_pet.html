@@ -85,15 +85,15 @@
                             <td><b>Poison Resist : </b></td>
                             <td>{{ pet.PR }}</td>
                         </tr>
-                        {% if pet.special_abilities != '' %}
+                        {% if pet.special_abilities %}
                             <tr>
                                 <td class="min"><b>Special Abilities : </b></td>
-                                    <td>{{ pet.special_abilities|npc_special_ability }}</td>
+                                    <td>{{ pet.special_abilities|npc_special_ability|safe }}</td>
                             </tr>{% endif %}
                     </table>
                 </article>
             </div>
-            {% if spells != '' %}
+            {% if spells_list %}
                 <div class="col-6 col-md-6">
                     <article class="eq-window-simple border p-3">
                         <h6 class="text-center">This pet casts the following spells : </h6>
