@@ -52,7 +52,9 @@ def list_pets(request, pet_class_id: int = None):
 
         context["pets"] = pets
     else:
-        messages.error(request, f"Invalid pet class ID. Please specify a value between 1 and 15.")
+        # When pet_class_id isn't specified, don't show error. However, if it is out of range, show the error.
+        if pet_class_id is not None:
+            messages.error(request, f"Please specify a valid pet class id (1 -15).")
 
     return render(request=request, template_name="pets/list_pets.html", context=context)
 
