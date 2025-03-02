@@ -775,7 +775,7 @@ def npc_special_ability(values):
             html = (f'<button class="ability-button npc_special_ability list-group-item list-group-item-action d-inline-flex align-items-center gap-2" '
                     f'data-url="{ability}" type="button">'
                     f'{ability}'
-                    f'<i class="fa-solid fa-circle-info text-secondary ms-auto"></i>'
+                    f'<i class="fas-solid fas-circle-info text-secondary ms-auto"></i>'
                     f'</button>')
             result.append(html)
         except (IndexError, ValueError, KeyError) as e:
