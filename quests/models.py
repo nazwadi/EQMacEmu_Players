@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MinValueValidator
 from mdeditor.fields import MDTextField
 from common.constants import ZONE_SHORT_TO_LONG
 
@@ -81,6 +82,200 @@ PLAYER_DEITY_RESTRICTIONS = {
 }
 
 
+# Base Reward class - abstract
+class QuestReward(models.Model):
+    quest = models.ForeignKey('Quests', on_delete=models.CASCADE, related_name='%(class)s_rewards')
+    is_optional = models.BooleanField(default=False, help_text="Whether player can choose this reward or not")
+    reward_group = models.PositiveSmallIntegerField(default=0,
+                                                    help_text="Group rewards together - player chooses one reward from each group")
+
+    class Meta:
+        abstract = True
+        ordering = ['quest', 'reward_group']
+
+
+# Item rewards
+class ItemReward(QuestReward):
+    item_id = models.IntegerField()
+    item_name = models.CharField(max_length=100)
+    quantity = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1)])
+    charges = models.PositiveIntegerField(null=True, blank=True,
+                                          help_text="Number of charges, if applicable")
+    attuned = models.BooleanField(default=False, help_text="Whether the item is attuned (no-trade)")
+
+    def __str__(self):
+        qty = f"{self.quantity}x " if self.quantity > 1 else ""
+        return f"{qty}{self.item_name} ({self.item_id})"
+
+    class Meta(QuestReward.Meta):
+        verbose_name = "Item Reward"
+        verbose_name_plural = "Item Rewards"
+        indexes = [
+            models.Index(fields=['item_id'], name='reward_item_id_idx'),
+            models.Index(fields=['item_name'], name='reward_item_name_idx'),
+        ]
+
+
+# Experience rewards
+class ExperienceReward(QuestReward):
+    amount = models.IntegerField(validators=[MinValueValidator(1)])
+    is_percentage = models.BooleanField(default=False,
+                                        help_text="Whether this is a percentage of level or flat amount")
+
+    def __str__(self):
+        if self.is_percentage:
+            return f"{self.amount}% of level"
+        return f"{self.amount} experience points"
+
+    class Meta(QuestReward.Meta):
+        verbose_name = "Experience Reward"
+        verbose_name_plural = "Experience Rewards"
+
+
+# Money rewards
+class CurrencyReward(QuestReward):
+    platinum = models.PositiveIntegerField(default=0)
+    gold = models.PositiveIntegerField(default=0)
+    silver = models.PositiveIntegerField(default=0)
+    copper = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        parts = []
+        if self.platinum > 0:
+            parts.append(f"{self.platinum}pp")
+        if self.gold > 0:
+            parts.append(f"{self.gold}gp")
+        if self.silver > 0:
+            parts.append(f"{self.silver}sp")
+        if self.copper > 0:
+            parts.append(f"{self.copper}cp")
+        return " ".join(parts) if parts else "No currency"
+
+    class Meta(QuestReward.Meta):
+        verbose_name = "Currency Reward"
+        verbose_name_plural = "Currency Rewards"
+
+
+# Faction rewards
+class FactionReward(QuestReward):
+    faction_id = models.IntegerField()
+    faction_name = models.CharField(max_length=100)
+    amount = models.IntegerField(help_text="Positive for faction gain, negative for faction loss")
+
+    def __str__(self):
+        action = "gain" if self.amount > 0 else "loss"
+        return f"{self.faction_name} {action}: {abs(self.amount)}"
+
+    class Meta(QuestReward.Meta):
+        verbose_name = "Faction Reward"
+        verbose_name_plural = "Faction Rewards"
+        indexes = [
+            models.Index(fields=['faction_id'], name='reward_faction_id_idx'),
+            models.Index(fields=['faction_name'], name='reward_faction_name_idx'),
+        ]
+
+
+# Skill rewards
+class SkillReward(QuestReward):
+    skill_id = models.IntegerField(null=True, blank=True)
+    skill_name = models.CharField(max_length=100)
+    amount = models.PositiveIntegerField(default=1, help_text="Skill points gained")
+
+    def __str__(self):
+        return f"{self.skill_name} +{self.amount}"
+
+    class Meta(QuestReward.Meta):
+        verbose_name = "Skill Reward"
+        verbose_name_plural = "Skill Rewards"
+
+
+# Spell rewards
+class SpellReward(QuestReward):
+    spell_id = models.IntegerField()
+    spell_name = models.CharField(max_length=100)
+    spell_level = models.PositiveSmallIntegerField(default=1)
+
+    def __str__(self):
+        return f"{self.spell_name} (Level {self.spell_level})"
+
+    class Meta(QuestReward.Meta):
+        verbose_name = "Spell Reward"
+        verbose_name_plural = "Spell Rewards"
+        indexes = [
+            models.Index(fields=['spell_id'], name='reward_spell_id_idx'),
+        ]
+
+
+# Title rewards
+class TitleReward(QuestReward):
+    title_text = models.CharField(max_length=200)
+    is_prefix = models.BooleanField(default=True, help_text="Is this a prefix or suffix title")
+
+    def __str__(self):
+        title_type = "Prefix" if self.is_prefix else "Suffix"
+        return f"{title_type}: {self.title_text}"
+
+    class Meta(QuestReward.Meta):
+        verbose_name = "Title Reward"
+        verbose_name_plural = "Title Rewards"
+
+
+# AA rewards
+class AAReward(QuestReward):
+    aa_id = models.IntegerField(null=True, blank=True)
+    aa_name = models.CharField(max_length=100)
+    aa_points = models.PositiveIntegerField(default=1)
+
+    def __str__(self):
+        return f"{self.aa_name}: {self.aa_points} point(s)"
+
+    class Meta(QuestReward.Meta):
+        verbose_name = "AA Reward"
+        verbose_name_plural = "AA Rewards"
+
+
+# Access/Flag rewards
+class AccessReward(QuestReward):
+    flag_name = models.CharField(max_length=100)
+    flag_value = models.CharField(max_length=100, blank=True)
+    description = models.TextField(blank=True, help_text="What access does this flag provide?")
+
+    def __str__(self):
+        return f"Access: {self.flag_name}"
+
+    class Meta(QuestReward.Meta):
+        verbose_name = "Access Reward"
+        verbose_name_plural = "Access Rewards"
+        indexes = [
+            models.Index(fields=['flag_name'], name='reward_flag_name_idx'),
+        ]
+
+
+class QuestCategory(models.Model):
+    """Main categories for quests"""
+    name = models.CharField(max_length=50, unique=True)
+    description = models.TextField(blank=True)
+    icon = models.CharField(max_length=100, blank=True, help_text="CSS class or icon reference")
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = "Quest Categories"
+        ordering = ['name']
+
+
+class QuestTag(models.Model):
+    """Flexible tags for quest filtering and search"""
+    name = models.CharField(max_length=50, unique=True)
+    description = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ['name']
+
 class Quests(models.Model):
     """
     This model stores quest data that should correlate to quest scripts in the database
@@ -107,19 +302,48 @@ class Quests(models.Model):
     factions_required = models.ManyToManyField("QuestFactionRequired", blank=True, related_name="required_for_quests")
     factions_raised = models.ManyToManyField("QuestFactionRaised", blank=True, related_name="raised_for_quests")
     factions_lowered = models.ManyToManyField("QuestFactionLowered", blank=True, related_name="lowered_for_quests")
+    difficulty_rating = models.SmallIntegerField(choices=[(1, 'Very Easy'), (2, 'Easy'),
+                                                          (3, 'Medium'), (4, 'Hard'),
+                                                          (5, 'Very Hard')], default=3)
+    estimated_time = models.CharField(max_length=50, blank=True, help_text="Estimated time to complete")
+    category = models.ForeignKey(QuestCategory, null=True, blank=True,
+                                 on_delete=models.SET_NULL, related_name='quests')
+    tags = models.ManyToManyField(QuestTag, blank=True, related_name='quests')
 
     def __str__(self):
         return str(self.name)
 
-    # Helper method to find reward items
-    def get_reward_items(self):
-        """Return a list of item_ids from the quest_reward JSON field"""
-        if not self.quest_reward or 'item_id' not in self.quest_reward:
-            return []
+    def get_all_rewards(self):
+        """Get all rewards for this quest across all types"""
+        rewards = []
+        rewards.extend(list(self.itemreward_rewards.all()))
+        rewards.extend(list(self.experiencereward_rewards.all()))
+        rewards.extend(list(self.currencyreward_rewards.all()))
+        rewards.extend(list(self.factionreward_rewards.all()))
+        rewards.extend(list(self.skillreward_rewards.all()))
+        rewards.extend(list(self.spellreward_rewards.all()))
+        rewards.extend(list(self.titlereward_rewards.all()))
+        rewards.extend(list(self.aareward_rewards.all()))
+        rewards.extend(list(self.accessreward_rewards.all()))
 
-        if isinstance(self.quest_reward['item_id'], list):
-            return self.quest_reward['item_id']
-        return [self.quest_reward['item_id']]
+        # Sort by reward group
+        return sorted(rewards, key=lambda r: r.reward_group)
+
+    def get_reward_groups(self):
+        """Get rewards organized by group for selection UI"""
+        all_rewards = self.get_all_rewards()
+        groups = {}
+
+        for reward in all_rewards:
+            if reward.reward_group not in groups:
+                groups[reward.reward_group] = []
+            groups[reward.reward_group].append(reward)
+
+        return groups
+
+    def get_reward_items(self):
+        """Return a list of item_ids from item rewards"""
+        return [reward.item_id for reward in self.itemreward_rewards.all()]
 
     class Meta:
         managed = True
@@ -259,3 +483,4 @@ class QuestsRelatedZone(models.Model):
             models.Index(fields=['zone_id'], name='zone_id_idx'),
         ]
         ordering = ['short_name']
+

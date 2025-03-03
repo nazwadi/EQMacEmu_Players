@@ -14,6 +14,18 @@ from quests.models import QuestFactionLowered
 from quests.models import QuestsRelatedNPC
 from quests.models import QuestsRelatedZone
 from quests.models import QuestItem
+from quests.models import ItemReward
+from quests.models import ExperienceReward
+from quests.models import FactionReward
+from quests.models import SkillReward
+from quests.models import SpellReward
+from quests.models import AAReward
+from quests.models import AccessReward
+from quests.models import TitleReward
+from quests.models import CurrencyReward
+
+
+
 from quests.models import SERVER_MAX_LEVEL
 
 
@@ -110,6 +122,45 @@ class RelatedNPCInline(admin.TabularInline):
         models.ForeignKey: {'widget': NPCLookupWidget},
     }
 
+    # Custom template for the inline to include a lookup button
+    template = 'admin/edit_inline/tabular_with_npc_lookup.html'
+
+
+class ItemRewardInline(admin.TabularInline):
+    model = ItemReward
+    extra = 1
+
+class ExperienceRewardInline(admin.TabularInline):
+    model = ExperienceReward
+    extra = 1
+
+class CurrencyRewardInline(admin.TabularInline):
+    model = CurrencyReward
+    extra = 1
+
+class FactionRewardInline(admin.TabularInline):
+    model = FactionReward
+    extra = 1
+
+class SkillRewardInline(admin.TabularInline):
+    model = SkillReward
+    extra = 1
+
+class SpellRewardInline(admin.TabularInline):
+    model = SpellReward
+    extra = 1
+
+class TitleRewardInline(admin.TabularInline):
+    model = SpellReward
+    extra = 1
+
+class AARewardInline(admin.TabularInline):
+    model = SpellReward
+    extra = 1
+
+class AccessRewardInline(admin.TabularInline):
+    model = SpellReward
+    extra = 1
 
 class QuestAdminForm(forms.ModelForm):
     quest_reward = JSONFormField(schema={
@@ -138,17 +189,6 @@ class QuestAdminForm(forms.ModelForm):
             if 'related_npcs' in self.fields:
                 self.fields['related_npcs'].help_text = "Search for NPCs by name or ID"
 
-
-class RelatedNPCInline(admin.TabularInline):
-    model = Quests.related_npcs.through
-    extra = 1
-    verbose_name = "Related NPC"
-    verbose_name_plural = "Related NPCs"
-
-    # Custom template for the inline to include a lookup button
-    template = 'admin/edit_inline/tabular_with_npc_lookup.html'
-
-
 class QuestsAdmin(admin.ModelAdmin):
     form = QuestAdminForm
     search_fields = ["id", "name"]
@@ -159,7 +199,18 @@ class QuestsAdmin(admin.ModelAdmin):
     readonly_fields = ("id",)
 
     # Use the inline for related NPCs
-    inlines = [RelatedNPCInline]
+    inlines = [
+        RelatedNPCInline,
+        ItemRewardInline,
+        ExperienceRewardInline,
+        CurrencyRewardInline,
+        FactionRewardInline,
+        SkillRewardInline,
+        SpellRewardInline,
+        TitleRewardInline,
+        AARewardInline,
+        AccessRewardInline,
+    ]
     exclude = ('related_npcs',)  # Exclude the original field since we're using the inline
 
     fieldsets = (
@@ -216,6 +267,50 @@ class QuestsAdmin(admin.ModelAdmin):
     class Media:
         js = ('admin/js/npc_lookup.js',)
 
+class ItemRewardAdmin(admin.ModelAdmin):
+    list_display = ('quest', 'item_name', 'item_id', 'quantity')
+    search_fields = ['item_name', 'item_id', 'quest__name']
+    list_filter = ['is_optional', 'reward_group', 'attuned']
+
+class ExperienceRewardAdmin(admin.ModelAdmin):
+    list_display = ('quest', 'amount', 'is_percentage')
+    search_fields = ['amount', 'is_percentage', 'quest__name']
+    list_filter = ['is_optional', 'reward_group']
+
+class CurrencyRewardAdmin(admin.ModelAdmin):
+    list_display = ('quest','platinum', 'gold', 'silver', 'copper')
+    search_fields = ['platinum', 'gold', 'silver', 'copper', 'quest__name']
+    list_filter = ['is_optional', 'reward_group']
+
+class FactionRewardAdmin(admin.ModelAdmin):
+    list_display = ('quest', 'faction_name', 'faction_id', 'amount')
+    search_fields = ['faction_name', 'faction_id', 'quest__name']
+    list_filter = ['is_optional', 'reward_group']
+
+class SkillRewardAdmin(admin.ModelAdmin):
+    list_display = ('quest', 'skill_name', 'skill_id', 'amount')
+    search_fields = ['skill_name', 'skill_id', 'quest__name']
+    list_filter = ['is_optional', 'reward_group']
+
+class SpellRewardAdmin(admin.ModelAdmin):
+    list_display = ('quest', 'spell_name', 'spell_id', 'spell_level')
+    search_fields = ['spell_name', 'spell_id', 'quest__name']
+    list_filter = ['is_optional', 'reward_group']
+
+class TitleRewardAdmin(admin.ModelAdmin):
+    list_display = ('quest', 'title_text', 'is_prefix')
+    search_fields = ['title_text', 'is_prefix', 'quest__name']
+    list_filter = ['is_optional', 'reward_group']
+
+class AARewardAdmin(admin.ModelAdmin):
+    list_display = ('quest', 'aa_name', 'aa_id', 'aa_points')
+    search_fields = ['aa_name', 'aa_id', 'quest__name']
+    list_filter = ['is_optional', 'reward_group']
+
+class AccessRewardAdmin(admin.ModelAdmin):
+    list_display = ('quest', 'flag_name', 'flag_value', 'description')
+    search_fields = ['flag_name', 'flag_value', 'quest__name']
+    list_filter = ['is_optional', 'reward_group']
 
 admin.site.register(Quests, QuestsAdmin)
 admin.site.register(QuestFactionRequired, QuestFactionRequiredAdmin)
@@ -224,3 +319,13 @@ admin.site.register(QuestFactionLowered, QuestFactionLoweredAdmin)
 admin.site.register(QuestsRelatedZone, QuestsRelatedZoneAdmin)
 admin.site.register(QuestsRelatedNPC, QuestsRelatedNPCAdmin)
 admin.site.register(QuestItem, QuestItemAdmin)
+
+admin.site.register(ItemReward, ItemRewardAdmin)
+admin.site.register(ExperienceReward, ExperienceRewardAdmin)
+admin.site.register(CurrencyReward, CurrencyRewardAdmin)
+admin.site.register(FactionReward, FactionRewardAdmin)
+admin.site.register(SkillReward, SkillRewardAdmin)
+admin.site.register(SpellReward, SpellRewardAdmin)
+admin.site.register(TitleReward, TitleRewardAdmin)
+admin.site.register(AAReward, AARewardAdmin)
+admin.site.register(AccessReward, AccessRewardAdmin)
