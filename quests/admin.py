@@ -1,7 +1,6 @@
 from django import forms
 from django.contrib import admin
 from django.db import models
-from django_jsonform.forms.fields import JSONFormField
 from common.templatetags.expansion_filters import exp_filter
 from django.urls import reverse
 from django.utils.html import format_html
@@ -127,6 +126,7 @@ class QuestsRelatedNPCAdmin(admin.ModelAdmin):
 class RelatedNPCInline(admin.TabularInline):
     model = Quests.related_npcs.through
     extra = 1
+    classes = ['collapse']  # This makes the inline collapsed by default
     verbose_name = "Related NPC"
     verbose_name_plural = "Related NPCs"
 
@@ -141,56 +141,71 @@ class RelatedNPCInline(admin.TabularInline):
 class ItemRewardInline(admin.TabularInline):
     model = ItemReward
     extra = 1
+    verbose_name = "Item Reward"
+    verbose_name_plural = "Item Rewards"
 
 class ExperienceRewardInline(admin.TabularInline):
     model = ExperienceReward
+    classes = ['collapse']  # This makes the inline collapsed by default
     extra = 1
+    verbose_name = "Experience Reward"
+    verbose_name_plural = "Experience Rewards"
 
 class CurrencyRewardInline(admin.TabularInline):
     model = CurrencyReward
+    classes = ['collapse']  # This makes the inline collapsed by default
     extra = 1
+    verbose_name = "Currency Reward"
+    verbose_name_plural = "Currency Rewards"
 
 class FactionRewardInline(admin.TabularInline):
     model = FactionReward
+    classes = ['collapse']  # This makes the inline collapsed by default
     extra = 1
+    verbose_name = "Faction Reward"
+    verbose_name_plural = "Faction Rewards"
 
 class SkillRewardInline(admin.TabularInline):
     model = SkillReward
+    classes = ['collapse']  # This makes the inline collapsed by default
     extra = 1
+    verbose_name = "Skill Reward"
+    verbose_name_plural = "Skill Rewards"
 
 class SpellRewardInline(admin.TabularInline):
     model = SpellReward
+    classes = ['collapse']  # This makes the inline collapsed by default
     extra = 1
+    verbose_name = "Spell Reward"
+    verbose_name_plural = "Spell Rewards"
 
 class TitleRewardInline(admin.TabularInline):
-    model = SpellReward
+    model = TitleReward
+    classes = ['collapse']  # This makes the inline collapsed by default
     extra = 1
+    verbose_name = "Title Reward"
+    verbose_name_plural = "Title Rewards"
 
 class AARewardInline(admin.TabularInline):
-    model = SpellReward
+    model = AAReward
+    classes = ['collapse']  # This makes the inline collapsed by default
     extra = 1
+    verbose_name = "AA Reward"
+    verbose_name_plural = "AA Rewards"
 
 class AccessRewardInline(admin.TabularInline):
-    model = SpellReward
+    model = AccessReward
+    classes = ['collapse']  # This makes the inline collapsed by default
     extra = 1
+    verbose_name = "Access Reward"
+    verbose_name_plural = "Access Rewards"
 
 class QuestAdminForm(forms.ModelForm):
-    quest_reward = JSONFormField(schema={
-        'type': 'object',
-        'properties': {
-            'item_id': {'type': 'integer'},
-            'item_name': {'type': 'string'},
-            'exp': {'type': 'integer'},
-            'faction': {'type': 'string'},
-            'flag': {'type': 'string'},
-        }
-    },
-        help_text=Quests._meta.get_field('quest_reward').help_text
-    )
 
     class Meta:
         model = Quests
         fields = '__all__'
+        exclude = ['quest_reward']  # Exclude the quest_reward field as we're using inlines
         widgets = {
             'starting_npc_id': NPCLookupWidget(),
         }
@@ -213,6 +228,8 @@ class QuestsAdmin(admin.ModelAdmin):
     # Use the inline for related NPCs
     inlines = [
         RelatedNPCInline,
+
+        # All rewards
         ItemRewardInline,
         ExperienceRewardInline,
         CurrencyRewardInline,
@@ -227,7 +244,7 @@ class QuestsAdmin(admin.ModelAdmin):
 
     fieldsets = (
         ("Where to Begin", {
-            "fields": ("id", "name", "starting_npc_id", "starting_zone", "quest_reward")
+            "fields": ("id", "name", "starting_npc_id", "starting_zone")
         }),
         ("Availability", {
             "classes": ("collapse",),
@@ -240,20 +257,23 @@ class QuestsAdmin(admin.ModelAdmin):
             "fields": ("description",),
         }),
         ("Quest Items", {
+            "classes": ("collapse",),
             "description": "Any items that are required for this quest.",
             "fields": ("quest_items",),
         }),
         ("Related Zones", {
+            "classes": ("collapse",),
             "description": "Include any zones related to this quest or that contain things required for this quest.",
             "fields": ("related_zones",),
         }),
-        # ("Related NPCs", {
-        #     "description": "Include any npcs involved directly in quest dialogues or that drop quest items, etc...",
-        #     "fields": ("related_npcs",),
-        # }),
         ("Factions", {
             "classes": ("collapse",),
             "fields": ("factions_required", "factions_raised", "factions_lowered")
+        }),
+        ("Meta", {
+            "classes": ("collapse",),
+            "description": "Provide category and tagging information.",
+            "fields": ("category", "tags")
         }),
     )
 
@@ -277,7 +297,8 @@ class QuestsAdmin(admin.ModelAdmin):
     get_expansion_introduced.short_description = "Expansion Introduced"
 
     class Media:
-        js = ('admin/js/npc_lookup.js',)
+        js = ['admin/js/npc_lookup.js']
+
 
 class ItemRewardAdmin(admin.ModelAdmin):
     list_display = ('quest', 'item_name', 'item_id', 'quantity')
