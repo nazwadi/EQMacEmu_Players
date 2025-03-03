@@ -243,14 +243,15 @@ class QuestsAdmin(admin.ModelAdmin):
     exclude = ('related_npcs',)  # Exclude the original field since we're using the inline
 
     fieldsets = (
-        ("Where to Begin", {
-            "fields": ("id", "name", "starting_npc_id", "starting_zone")
+        ("Summary Information", {
+            "fields": ("id", "name", "starting_npc_id", "starting_zone", "expansion_introduced",
+                       "minimum_level", "maximum_level")
         }),
         ("Availability", {
             "classes": ("collapse",),
             "description": f"Set restrictions to -1 to indicate no restrictions. (i.e. None). Setting Max Level to -1 will display the default Server Max Level, {SERVER_MAX_LEVEL}.",
-            "fields": ("expansion_introduced", "minimum_level", "maximum_level", "class_restrictions",
-                       "race_restrictions", "deity_restrictions", "is_repeatable", "monster_mission"),
+            "fields": ("class_restrictions", "race_restrictions", "deity_restrictions", "is_repeatable",
+                       "monster_mission"),
         }),
         ("Description", {
             "description": "Put the content of the quest page here (i.e. quest description, walkthrough, checklists, notes)",
@@ -270,7 +271,7 @@ class QuestsAdmin(admin.ModelAdmin):
             "classes": ("collapse",),
             "fields": ("factions_required", "factions_raised", "factions_lowered")
         }),
-        ("Meta", {
+        ("Category and Tags", {
             "classes": ("collapse",),
             "description": "Provide category and tagging information.",
             "fields": ("category", "tags")
