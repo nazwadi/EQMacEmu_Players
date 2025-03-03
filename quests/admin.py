@@ -8,6 +8,8 @@ from django.utils.html import format_html
 
 from common.models.npcs import NPCTypes
 from quests.models import Quests
+from quests.models import QuestCategory
+from quests.models import QuestTag
 from quests.models import QuestFactionRequired
 from quests.models import QuestFactionRaised
 from quests.models import QuestFactionLowered
@@ -27,6 +29,16 @@ from quests.models import CurrencyReward
 
 
 from quests.models import SERVER_MAX_LEVEL
+
+
+class QuestCategoryAdmin(admin.ModelAdmin):
+    search_fields = ["name", "description"]
+    list_display = ("name", "description")
+    list_filter = ["name"]
+
+
+class QuestTagAdmin(admin.ModelAdmin):
+    pass
 
 
 class QuestFactionRequiredAdmin(admin.ModelAdmin):
@@ -313,6 +325,8 @@ class AccessRewardAdmin(admin.ModelAdmin):
     list_filter = ['is_optional', 'reward_group']
 
 admin.site.register(Quests, QuestsAdmin)
+admin.site.register(QuestCategory, QuestCategoryAdmin)
+admin.site.register(QuestTag, QuestTagAdmin)
 admin.site.register(QuestFactionRequired, QuestFactionRequiredAdmin)
 admin.site.register(QuestFactionRaised, QuestFactionRaisedAdmin)
 admin.site.register(QuestFactionLowered, QuestFactionLoweredAdmin)
