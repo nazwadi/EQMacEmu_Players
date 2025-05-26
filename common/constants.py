@@ -1075,6 +1075,14 @@ ZONE_SHORT_TO_LONG = {
     "umbral": "The Umbral Plains",
     "katta": "Katta Castellum",
     "sharvahl": "The City of Sharvahl",
+    "akheva": "Akheva Ruins",
+    "echo": "Echo Caverns",
+    "fungusgrove": "Fungus Grove",
+    "netherbian": "Netherbian Lair",
+    "paladul": "Paladul Caverns",
+    "ssratemple": "Ssraeshza Temple",
+    "thedeep": "The Deep",
+    "vexthal": "Vex Thal",
 }
 
 SPELL_TARGETS = {
