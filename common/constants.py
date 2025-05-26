@@ -1079,7 +1079,7 @@ ZONE_SHORT_TO_LONG = {
     "echo": "Echo Caverns",
     "fungusgrove": "The Fungus Grove",
     "netherbian": "Netherbian Lair",
-    "paludal": "Paludal Caverns",
+    "paludal": "The Paludal Caverns",
     "ssratemple": "Ssraeshza Temple",
     "thedeep": "The Deep",
     "vexthal": "Vex Thal",
