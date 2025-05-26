@@ -1034,6 +1034,8 @@ ZONE_SHORT_TO_LONG = {
     "veeshan": "Veeshan's Peak",
     "veksar": "Veksar",
     "grimling": "The Grimling Forest",
+    "griegsend": "Grieg's End",
+    "hollowshade": "Hollowshade Moor",
     "nexus": "The Nexus",
     "twilight": "Twilight",
     "dawnshroud": "Dawnshroud",
@@ -1057,7 +1059,22 @@ ZONE_SHORT_TO_LONG = {
     "mischiefplane": "Plane of Mischief",
     "growthplane": "Plane of Growth",
     "frozenshadow": "Tower of Frozen Shadow",
-    "acrylia": "Acrylia Caverns"
+    "acrylia": "Acrylia Caverns",
+    "erudsxing2": "Marauder's Mire",
+    "shadowhaven": "Shadow Haven",
+    "bazaar": "The Bazaar",
+    "jaggedpine": "Jaggedpine Forest",
+    "maiden": "Maiden's Eye",
+    "mseru": "Marus Seru",
+    "sseru": "Sanctus Seru",
+    "letalis": "Mons Letalis",
+    "scarlet": "Scarlet Desert",
+    "shadeweaver": "Shadeweaver's Thicket",
+    "tenebrous": "The Tenebrous Mountains",
+    "thegrey": "The Grey",
+    "umbral": "The Umbral Plains",
+    "katta": "Katta Castellum",
+    "sharvahl": "The City of Sharvahl",
 }
 
 SPELL_TARGETS = {
