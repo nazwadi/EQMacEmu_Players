@@ -1037,7 +1037,7 @@ ZONE_SHORT_TO_LONG = {
     "griegsend": "Grieg's End",
     "hollowshade": "Hollowshade Moor",
     "nexus": "The Nexus",
-    "twilight": "Twilight",
+    "twilight": "Twilight Sea",
     "dawnshroud": "Dawnshroud",
     "poknowledge": "Plane of Knowledge",
     "iceclad": "Iceclad Ocean",

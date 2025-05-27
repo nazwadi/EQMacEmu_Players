@@ -673,7 +673,7 @@ def zone_filter(value, arg):
         167: ("Grimling Forest", "grimling"),
         168: ("Marus Seru", "mseru"),
         169: ("Mons Letalis", "letalis"),
-        170: ("Twilight", "twilight"),
+        170: ("Twilight Sea", "twilight"),
         171: ("The Grey", "thegrey"),
         172: ("The Tenebrous Mountains", "tenebrous"),
         173: ("The Maiden's Eye", "maiden"),
