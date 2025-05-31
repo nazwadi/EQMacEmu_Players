@@ -282,6 +282,7 @@ def character_profile(request, character_name):
     ac = get_max_ac(character.agi, character.level, defense.value, character.class_name, item_stats.total_ac,
                      character.race)
     atk = get_max_attack(item_stats.atk, character.str + item_stats.stat_bonuses['str'], offense.value)
+    mana = get_max_mana(character.level, character.class_name, character.int_stat, character.wis, item_stats.total_mana)
 
     # Build context
     context = {
@@ -305,7 +306,7 @@ def character_profile(request, character_name):
             },
             'total_stats': total_stats,
             'cur_hp': character.cur_hp,
-            'mana': get_max_mana(character.level, character.class_name, character.int_stat, character.wis, item_stats.total_mana), #character.mana,
+            'mana': mana,
             'hp_regen_cap': hp_regen_cap,
             'hp_regen': hp_regen,
             'ac' : ac,
