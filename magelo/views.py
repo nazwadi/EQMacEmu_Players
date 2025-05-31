@@ -186,7 +186,9 @@ def search(request):
 
 def character_profile(request, character_name):
     character = Characters.objects.filter(name=character_name).first()
-    defense = CharacterSkills.objects.filter(id=character.id).filter(skill_id=15).first()
+    character_stats = CharacterSkills.objects.filter(id=character.id)
+    defense = character_stats.filter(skill_id=15).first()
+    offense = character_stats.filter(skill_id=33).first()
     if character is None:
         raise Http404
 
@@ -279,7 +281,7 @@ def character_profile(request, character_name):
     hp_regen_cap = calc_hp_regen_cap(character.level)
     ac = get_max_ac(character.agi, character.level, defense.value, character.class_name, item_stats.total_ac,
                      character.race)
-    print(ac)
+    atk = get_max_attack(item_stats.atk, character.str + item_stats.stat_bonuses['str'], offense.value)
 
     # Build context
     context = {
@@ -306,7 +308,8 @@ def character_profile(request, character_name):
             'mana': get_max_mana(character.level, character.class_name, character.int_stat, character.wis, item_stats.total_mana), #character.mana,
             'hp_regen_cap': hp_regen_cap,
             'hp_regen': hp_regen,
-            'ac' : ac
+            'ac' : ac,
+            'atk': atk,
         },
         'magelo': True, # just a variable to let the templates know this is the magelo page
         'guild': guild_info,
@@ -714,3 +717,27 @@ def _calculate_high_agility_modifier(agility: int, level: int) -> int:
             return modifiers[level_bracket]
 
     return 0
+
+
+# Pythonic version with type hints and improved documentation
+def get_max_attack(item_atk: int, strength: int, offense: int) -> int:
+    """
+    Calculate maximum ATK value for a character.
+
+    This function combines item attack with character stats to determine
+    the total attack value using the game's formula.
+
+    Args:
+        item_atk: Base attack value from equipped items
+        strength: Character's strength stat (base + items)
+        offense: Character's offense skill level
+
+    Returns:
+        Total maximum attack value (floored to integer)
+
+    Formula:
+        max_attack = item_attack + ((strength + offense) * 0.9)
+    """
+    stat_bonus = (strength + offense) * 0.9
+    total_attack = item_atk + stat_bonus
+    return math.floor(total_attack)
