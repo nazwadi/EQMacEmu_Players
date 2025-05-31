@@ -1,26 +1,30 @@
+from enum import IntEnum
+from enum import Enum
+from typing import Union
+import math
+import json
+
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http import Http404
 from django.http import JsonResponse
+from django.http import HttpResponseNotAllowed
 from django.views.decorators.http import require_http_methods
 from django.core.exceptions import PermissionDenied
 from django.core.cache import cache
+
 from .models import CharacterPermissions
 from .validators import PermissionValidator
 from .utils import level_regen
 from .utils import calc_hp_regen_cap
 
-import json
-
 from common.utils import valid_game_account_owner
-
-from common.models.characters import Characters
+from common.models.characters import Characters, CharacterSkills
 from common.models.characters import CharacterInventory
 from common.models.characters import CharacterCurrency
 from common.models.guilds import GuildMembers
 from common.models.items import Items
 
-from enum import Enum
 
 class FlowingThoughtEffects(Enum):
     """Spell IDs for all known item-based Flowing Thought Spell Effects"""
@@ -178,9 +182,11 @@ def search(request):
                           "search_results": search_results
                       },
                       template_name="magelo/search.html")
+    return HttpResponseNotAllowed(['GET', 'POST']) # This will never be reached due to the decorator
 
 def character_profile(request, character_name):
     character = Characters.objects.filter(name=character_name).first()
+    defense = CharacterSkills.objects.filter(id=character.id).filter(skill_id=15).first()
     if character is None:
         raise Http404
 
@@ -271,6 +277,9 @@ def character_profile(request, character_name):
                             is_famished=False,
                             has_racial_regen_bonus=has_racial_regen_bonus)
     hp_regen_cap = calc_hp_regen_cap(character.level)
+    ac = get_max_ac(character.agi, character.level, defense.value, character.class_name, item_stats.total_ac,
+                     character.race)
+    print(ac)
 
     # Build context
     context = {
@@ -294,11 +303,12 @@ def character_profile(request, character_name):
             },
             'total_stats': total_stats,
             'cur_hp': character.cur_hp,
-            'mana': character.mana,
+            'mana': get_max_mana(character.level, character.class_name, character.int_stat, character.wis, item_stats.total_mana), #character.mana,
             'hp_regen_cap': hp_regen_cap,
             'hp_regen': hp_regen,
+            'ac' : ac
         },
-        'magelo': True,
+        'magelo': True, # just a variable to let the templates know this is the magelo page
         'guild': guild_info,
         'inventory_items': all_items,
         'currency': character_currency,
@@ -307,6 +317,131 @@ def character_profile(request, character_name):
     }
 
     return render(request=request, template_name='magelo/character_profile.html', context=context)
+
+
+def get_max_mana(level, class_type, int_stat, wis_stat, imana):
+    """
+    Calculate maximum mana for a character.
+    Modified from the https://github.com/EQMacEmu/magelo/blob/5289e3256c2f8d23f8a5434219fdfcb7a14ebd1c/include/calculatestats.php#L821
+
+    Args:
+        level: Character level
+        class_type: Character class
+        int_stat: Intelligence stat
+        wis_stat: Wisdom stat
+        imana: Additional mana modifier
+
+    Returns:
+        Maximum mana as an integer
+    """
+    # The next two lines should be updated when AAs lift the stat cap.
+    int_stat = min(255, int_stat)
+    wis_stat = min(255, wis_stat)
+
+    wis_int = 0
+    mind_lesser_factor = 0
+    mind_factor = 0
+    max_m = 0
+    wisint_mana = 0
+    base_mana = 3.8505 * level + 0.1869 * level * min(200, int_stat) + 0.0907 * level * (max(200, int_stat) - 200)
+    converted_wis_int = 0
+
+    caster_class = get_caster_class(class_type)
+
+    if caster_class == 'I':
+        wis_int = int_stat
+        if wis_int > 100:
+            converted_wis_int = (((wis_int - 100) * 5 / 2) + 100)
+            if wis_int > 201:
+                converted_wis_int -= ((wis_int - 201) * 5 / 4)
+        else:
+            converted_wis_int = wis_int
+
+        if level < 41:
+            wisint_mana = (level * 75 * converted_wis_int / 1000)
+            base_mana = (level * 15)
+        elif level < 81:
+            wisint_mana = ((3 * converted_wis_int) + ((level - 40) * 15 * converted_wis_int / 100))
+            base_mana = (600 + ((level - 40) * 30))
+        else:
+            wisint_mana = (9 * converted_wis_int)
+            base_mana = (1800 + ((level - 80) * 18))
+
+        max_mana = base_mana + wisint_mana
+        max_mana += imana
+
+    elif caster_class == 'W':
+        wis_int = wis_stat
+        if wis_int > 100:
+            converted_wis_int = (((wis_int - 100) * 5 / 2) + 100)
+            if wis_int > 201:
+                converted_wis_int -= ((wis_int - 201) * 5 / 4)
+        else:
+            converted_wis_int = wis_int
+
+        if level < 41:
+            wisint_mana = (level * 75 * converted_wis_int / 1000)
+            base_mana = (level * 15)
+        elif level < 81:
+            wisint_mana = ((3 * converted_wis_int) + ((level - 40) * 15 * converted_wis_int / 100))
+            base_mana = (600 + ((level - 40) * 30))
+        else:
+            wisint_mana = (9 * converted_wis_int)
+            base_mana = (1800 + ((level - 80) * 18))
+
+        max_mana = base_mana + wisint_mana
+        max_mana += imana
+
+    elif caster_class == 'N':
+        max_mana = 0
+    else:
+        max_mana = 0
+
+    return int(max_mana)
+
+
+def get_caster_class(class_id):
+    """
+    Determine caster type based on class ID.
+    Function copied/converted from EQEMU sourcecode may 2, 2009
+    """
+    # Class constants
+    WARRIOR = 1
+    CLERIC = 2
+    PALADIN = 3
+    RANGER = 4
+    SHADOWKNIGHT = 5
+    DRUID = 6
+    MONK = 7
+    BARD = 8
+    ROGUE = 9
+    SHAMAN = 10
+    NECROMANCER = 11
+    WIZARD = 12
+    MAGICIAN = 13
+    ENCHANTER = 14
+    BEASTLORD = 15
+    BERSERKER = 16
+
+    caster_types = {
+        # Wisdom-based casters
+        CLERIC: 'W',
+        PALADIN: 'W',
+        RANGER: 'W',
+        DRUID: 'W',
+        SHAMAN: 'W',
+        BEASTLORD: 'W',
+
+        # Intelligence-based casters
+        SHADOWKNIGHT: 'I',
+        BARD: 'I',
+        NECROMANCER: 'I',
+        WIZARD: 'I',
+        MAGICIAN: 'I',
+        ENCHANTER: 'I',
+    }
+
+    return caster_types.get(class_id, 'N')  # Default to 'N' for non-casters
 
 
 def rate_limit_by_user(user_id, key_prefix, max_requests=5, time_window=60):
@@ -391,3 +526,191 @@ def update_permission(request):
             'success': False,
             'error': f'{str(e)} An error occurred processing your request'
         }, status=500)
+
+class CharacterClass(IntEnum):
+    """Character class constants using IntEnum for better type safety"""
+    WARRIOR = 1
+    CLERIC = 2
+    PALADIN = 3
+    RANGER = 4
+    SHADOWKNIGHT = 5
+    DRUID = 6
+    MONK = 7
+    BARD = 8
+    ROGUE = 9
+    SHAMAN = 10
+    NECROMANCER = 11
+    WIZARD = 12
+    MAGICIAN = 13
+    ENCHANTER = 14
+    BEASTLORD = 15
+    BERSERKER = 16
+
+class Race(IntEnum):
+    """Race constants"""
+    IKSAR = 128
+
+def get_max_ac(agility: int, level: int, defense: int,
+               char_class: Union[int, CharacterClass],
+               iac: int, race: Union[int, Race]) -> int:
+    """
+    Calculate maximum AC for a character.
+
+    Args:
+        agility: Character's agility stat
+        level: Character level
+        defense: Defense skill value
+        char_class: Character class (int or CharacterClass enum)
+        iac: Item AC value
+        race: Character race (int or Race enum)
+
+    Returns:
+        Maximum AC value (floored)
+    """
+    # Calculate avoidance component
+    avoidance = max(0, acmod(agility, level) + (defense * 16 / 9))
+
+    # Calculate mitigation based on class
+    caster_classes = {CharacterClass.WIZARD, CharacterClass.MAGICIAN,
+                      CharacterClass.NECROMANCER, CharacterClass.ENCHANTER}
+
+    if char_class in caster_classes:
+        mitigation = defense / 4 + (iac + 1) - 4
+    else:
+        mitigation = defense / 3 + (iac * 4 / 3)
+        if char_class == CharacterClass.MONK:
+            mitigation += level * 1.3  # More readable than 13/10
+
+    # Calculate natural AC
+    natural_ac = (avoidance + mitigation) * 1000 / 847
+
+    # Apply racial bonuses
+    if race == Race.IKSAR:
+        natural_ac += 12
+        # Iksar level bonus (capped at 25 levels above 10)
+        iksar_bonus_levels = min(25, max(0, level - 10))
+        natural_ac += iksar_bonus_levels * 1.2  # More readable than 12/10
+
+    return math.floor(natural_ac)
+
+def acmod(agility: int, level: int) -> float:
+    """
+    Calculate agility modifier for AC based on agility and level.
+
+    This function implements complex game logic for calculating AC modifiers
+    based on character agility and level ranges.
+
+    Args:
+        agility: Character's agility stat
+        level: Character level
+
+    Returns:
+        Agility modifier value for AC calculation
+    """
+    if agility < 1 or level < 1:
+        return 0
+
+    # Define lookup tables for cleaner code
+    low_agility_map = {
+        1: -24, 2: -23, 3: -23, 4: -22, 5: -21, 6: -21,
+        7: -20, 8: -20, 9: -19, 10: -18, 11: -18, 12: -17,
+        13: -16, 14: -16, 15: -15, 16: -15, 17: -14, 18: -13,
+        19: -13, 20: -12, 21: -11, 22: -11, 23: -10, 24: -10,
+        25: -9, 26: -8, 27: -8, 28: -7, 29: -6, 30: -6,
+        31: -5, 32: -5, 33: -4, 34: -3, 35: -3, 36: -2,
+        37: -1, 38: -1
+    }
+
+    # Handle low agility values (1-74)
+    if agility <= 74:
+        if agility in low_agility_map:
+            return low_agility_map[agility]
+        elif agility <= 65:
+            return 0  # 39-65
+        elif agility <= 70:
+            return 1  # 66-70
+        else:
+            return 5  # 71-74
+
+    # Handle medium agility values (75-137)
+    elif agility <= 137:
+        return _calculate_medium_agility_modifier(agility, level)
+
+    # Handle high agility values (138-300)
+    elif agility <= 300:
+        return _calculate_high_agility_modifier(agility, level)
+
+    # Handle very high agility (300+)
+    else:
+        return 65 + ((agility - 300) / 21)
+
+    return 0
+
+def _calculate_medium_agility_modifier(agility: int, level: int) -> int:
+    """Helper function for agility 75-137 range."""
+    # Define level-based modifier tables
+    level_modifiers = {
+        (75, 75): [9, 23, 33, 39],
+        (76, 79): [10, 23, 33, 40],
+        (80, 80): [11, 24, 34, 41],
+        (81, 85): [12, 25, 35, 42],
+        (86, 90): [12, 26, 36, 42],
+        (91, 95): [13, 26, 36, 43],
+        (96, 99): [14, 27, 37, 44],
+        (100, 100): [None, 28, 38, 45],  # Special case for level <= 6
+        (101, 105): [15, 29, 39, 45],
+        (106, 110): [15, 29, 39, 46],
+        (111, 115): [15, 30, 40, 47],
+        (116, 119): [15, 31, 41, 47],
+        (120, 120): [15, 32, 42, 48],
+        (121, 125): [15, 32, 42, 49],
+        (126, 135): [15, 32, 42, 50],
+        (136, 137): [15, 32, 42, 51],
+    }
+
+    # Determine level bracket (0: <=6, 1: <=19, 2: <=39, 3: >=40)
+    level_bracket = 0 if level <= 6 else (1 if level <= 19 else (2 if level <= 39 else 3))
+
+    for (min_agi, max_agi), modifiers in level_modifiers.items():
+        if min_agi <= agility <= max_agi:
+            if agility == 100 and level <= 6:
+                return 15  # Special case
+            elif agility == 100 and level < 7:
+                return 15
+            return modifiers[level_bracket]
+
+    return 0
+
+def _calculate_high_agility_modifier(agility: int, level: int) -> int:
+    """Helper function for agility 138-300 range."""
+    # Define agility breakpoints and their corresponding modifiers
+    agility_breakpoints = [
+        (139, [21, 34, 44, 51]),
+        (140, [22, 35, 45, 52]),
+        (145, [23, 36, 46, 53]),
+        (150, [23, 37, 47, 53]),
+        (155, [24, 37, 47, 54]),
+        (159, [25, 38, 48, 55]),
+        (160, [26, 39, 49, 56]),
+        (165, [26, 40, 50, 56]),
+        (170, [27, 40, 50, 57]),
+        (175, [28, 41, 51, 58]),
+        (179, [28, 42, 52, 58]),
+        (180, [29, 43, 53, 59]),
+        (185, [30, 43, 53, 60]),
+        (190, [31, 44, 54, 61]),
+        (195, [31, 45, 55, 61]),
+        (199, [32, 45, 55, 62]),
+        (219, [33, 46, 56, 63]),
+        (239, [34, 47, 57, 64]),
+        (300, [35, 48, 58, 65]),
+    ]
+
+    # Determine level bracket (0: <=6, 1: <=19, 2: <=39, 3: >=40)
+    level_bracket = 0 if level <= 6 else (1 if level <= 19 else (2 if level <= 39 else 3))
+
+    for max_agi, modifiers in agility_breakpoints:
+        if agility <= max_agi:
+            return modifiers[level_bracket]
+
+    return 0

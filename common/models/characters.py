@@ -186,7 +186,7 @@ class CharacterSkills(models.Model):
     """
 
     def __str__(self):
-        return self.skill_id
+        return str(self.value)
 
     id = models.IntegerField(primary_key=True, null=False, default=None)
     skill_id = models.SmallIntegerField(null=False, default=0)
