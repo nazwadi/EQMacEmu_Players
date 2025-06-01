@@ -304,9 +304,11 @@ body {
     top: 20px;
     height: fit-content;
     margin-bottom: 0;
-    min-width: 100px;
+    width: 150px;                    /* Fixed width for navigation */
+    min-width: 150px;                /* Prevent shrinking */
+    max-width: 150px;                /* Prevent growing */
+    flex-shrink: 0;                  /* Don't allow flex to shrink this */
     background-image: url(light.gif);
-    width: auto;
     padding: 11px 5px 9px;
     border: 2px #7b714a solid;
     font-family: Arial, sans-serif;
@@ -337,6 +339,39 @@ body {
 .character-main {
     flex: 1;
     min-width: 0; /* Prevent flex item from overflowing */
+}
+
+/* Content containers within character-main */
+.character-windows-container,
+.keys-container {
+    margin-left: 0;                  /* Ensure no left margin */
+    padding-left: 0;                 /* Ensure no left padding */
+}
+
+/* Keys container specific positioning */
+.character-main .keys-container {
+    background-image: url(light.gif);
+    border: 2px #7b714a solid;
+    padding: 20px;
+    margin: 0;                       /* No margins */
+    position: relative;
+    display: block;
+    width: auto;
+    min-width: 400px;
+}
+
+/* Character windows container positioning */
+.character-windows-container {
+    display: flex;
+    align-items: flex-start;
+    flex: 1;
+}
+
+/* Ensure inventory and bank containers don't add extra spacing */
+.inventory-container,
+.bank-container {
+    margin-left: 0;
+    padding-left: 0;
 }
 
 /* Item Window */
@@ -1141,6 +1176,7 @@ div.Slot.slotloc9999.slotimage9999 {
     gap: 20px;
     padding: 20px;
     min-height: calc(100vh - 100px); /* Adjust based on your header height */
+    position: relative;
 }
 
 .character-windows-container {
@@ -1164,12 +1200,17 @@ div.Slot.slotloc9999.slotimage9999 {
         position: relative;
         top: 0;
         width: 100%;
+        max-width: none;
     }
 
     .NavInner {
         flex-direction: row;
         flex-wrap: wrap;
         justify-content: center;
+    }
+
+    .character-main {
+        margin-left: 0;
     }
 
     .inventory-container {
@@ -1196,6 +1237,30 @@ div.Slot.slotloc9999.slotimage9999 {
         max-width: 90vw;
         width: auto;
         margin: 10px auto;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .character-layout {
+        flex-direction: column;
+    }
+
+    .NavOuter {
+        position: relative;
+        top: 0;
+        width: 100%;
+        max-width: none;
+    }
+
+    .NavInner {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .character-main {
+        margin-left: 0;
     }
 }
 
@@ -1267,9 +1332,6 @@ div.Slot.slotloc9999.slotimage9999 {
     padding: 10px;
 }
 
-.keys-container .ItemTitle {
-}
-
 .keys-container .StatTable {
     background-image: url(dark.gif);
     border: 1px #444444 solid;
@@ -1303,3 +1365,4 @@ div.Slot.slotloc9999.slotimage9999 {
     color: #7b714a;
     text-decoration: underline;
 }
+

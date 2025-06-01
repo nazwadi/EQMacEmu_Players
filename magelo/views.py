@@ -268,11 +268,11 @@ def character_profile(request, character_name):
         'int': character.int_stat + item_stats.stat_bonuses['int'],
         'wis': character.wis + item_stats.stat_bonuses['wis'],
         'cha': character.cha + item_stats.stat_bonuses['cha'],
-        'fr': item_stats.stat_bonuses['fr'],
-        'cr': item_stats.stat_bonuses['cr'],
-        'mr': item_stats.stat_bonuses['mr'],
-        'dr': item_stats.stat_bonuses['dr'],
-        'pr': item_stats.stat_bonuses['pr'],
+        'fr': fr_by_race(character.race) + fr_by_class(character.class_name, character.level) + item_stats.stat_bonuses['fr'],
+        'cr': cr_by_race(character.race) + cr_by_class(character.class_name, character.level) + item_stats.stat_bonuses['cr'],
+        'mr': mr_by_race(character.race) + mr_by_class(character.class_name, character.level) + item_stats.stat_bonuses['mr'],
+        'dr': dr_by_race(character.race) + dr_by_class(character.class_name, character.level) + item_stats.stat_bonuses['dr'],
+        'pr': pr_by_race(character.race) + pr_by_class(character.class_name, character.level) + item_stats.stat_bonuses['pr'],
     }
     troll = 9
     iksar = 128
@@ -287,6 +287,7 @@ def character_profile(request, character_name):
     ac = get_max_ac(character.agi, character.level, defense.value, character.class_name, item_stats.total_ac,
                      character.race)
     atk = get_max_attack(item_stats.atk, character.str + item_stats.stat_bonuses['str'], offense.value)
+    print(character.class_name)
     mana = get_max_mana(character.level, character.class_name, character.int_stat, character.wis, item_stats.total_mana)
 
     # Build context
@@ -568,7 +569,85 @@ class CharacterClass(IntEnum):
 
 class Race(IntEnum):
     """Race constants"""
+    HUMAN = 1
+    BARBARIAN = 2
+    ERUDITE = 3
+    DWARF = 8
+    TROLL = 9
+    HALFLING = 11
     IKSAR = 128
+
+def pr_by_race(race):
+    """Calculate Poison Resistance by race"""
+    if race in (Race.DWARF, Race.HALFLING):
+        return 20
+    return 15
+
+def mr_by_race(race):
+    """Calculate Magic Resistance by race"""
+    if race in (Race.ERUDITE, Race.DWARF):
+        return 30
+    return 25
+
+def dr_by_race(race):
+    """Calculate Disease Resistance by race"""
+    if race == Race.ERUDITE:
+        return 10
+    elif race == Race.HALFLING:
+        return 20
+    return 15
+
+def fr_by_race(race):
+    """Calculate Fire Resistance by race"""
+    if race == Race.TROLL:
+        return 5
+    elif race == Race.IKSAR:
+        return 30
+    return 25
+
+def cr_by_race(race):
+    """Calculate Cold Resistance by race"""
+    if race == Race.BARBARIAN:
+        return 35
+    elif race == Race.IKSAR:
+        return 15
+    return 25
+
+def pr_by_class(char_class, char_level):
+    """Calculate Poison Resistance by class and level"""
+    if char_class == CharacterClass.SHADOWKNIGHT:
+        return (char_level - 49) + 4 if char_level >= 50 else 4
+    elif char_class == CharacterClass.ROGUE:
+        return (char_level - 49) + 8 if char_level >= 50 else 8
+    return 0
+
+def mr_by_class(char_class, char_level):
+    """Calculate Magic Resistance by class and level"""
+    if char_class == CharacterClass.WARRIOR:
+        return char_level // 2
+    return 0
+
+def dr_by_class(char_class, char_level):
+    """Calculate Disease Resistance by class and level"""
+    if char_class == CharacterClass.PALADIN:
+        return (char_level - 49) + 8 if char_level >= 50 else 8
+    elif char_class in (CharacterClass.SHADOWKNIGHT, CharacterClass.BEASTLORD):
+        return (char_level - 49) + 4 if char_level >= 50 else 4
+    return 0
+
+def fr_by_class(char_class, char_level):
+    """Calculate Fire Resistance by class and level"""
+    if char_class == CharacterClass.RANGER:
+        return (char_level - 49) + 4 if char_level >= 50 else 4
+    elif char_class == CharacterClass.MONK:
+        return (char_level - 49) + 8 if char_level >= 50 else 8
+    return 0
+
+def cr_by_class(char_class, char_level):
+    """Calculate Cold Resistance by class and level"""
+    if char_class in (CharacterClass.RANGER, CharacterClass.BEASTLORD):
+        return (char_level - 49) + 4 if char_level >= 50 else 4
+    return 0
 
 def get_max_ac(agility: int, level: int, defense: int,
                char_class: Union[int, CharacterClass],
