@@ -1,0 +1,168 @@
+{% extends 'magelo/header.html' %}
+{% load static %}
+{% load data_utilities %}
+{% block content %}
+    <div class="container-fluid container-lg py-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'accounts:index' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'magelo:search' %}">Character Browser</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ character.name }}</li>
+            </ol>
+        </nav>
+        <div class="row mt-2">
+            <div class="col">
+                {% if is_character_owner %}
+                    <!-- Settings Panel -->
+                    <div class="collapse mb-4" id="settingsPanel">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3">Profile Permission Settings for {{ character.name }}</h5>
+                                <div class="row g-3">
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="card permission-card">
+                                            <div class="card-body">
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox" id="inventoryToggle"
+                                                           {% if permissions.inventory %}checked{% endif %}
+                                                           onchange="updatePermission('inventory', this.checked, '{{ character.name }}')">
+                                                    <label class="form-check-label" for="inventoryToggle">
+                                                        Gear is Publicly Visible
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="card permission-card">
+                                            <div class="card-body">
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox" id="bagsToggle"
+                                                           {% if permissions.bags %}checked{% endif %}
+                                                           onchange="updatePermission('bags', this.checked, '{{ character.name }}')">
+                                                    <label class="form-check-label" for="bagsToggle">
+                                                        Bags are Publicly Visible
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="card permission-card">
+                                            <div class="card-body">
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox" id="bankToggle"
+                                                           {% if permissions.bank %}checked{% endif %}
+                                                           onchange="updatePermission('bank', this.checked, '{{ character.name }}')">
+                                                    <label class="form-check-label" for="bankToggle">
+                                                        Bank is Publicly Visible
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="card permission-card">
+                                            <div class="card-body">
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox"
+                                                           id="coinInventoryToggle"
+                                                           {% if permissions.coin_inventory %}checked{% endif %}
+                                                           onchange="updatePermission('coin_inventory', this.checked, '{{ character.name }}')">
+                                                    <label class="form-check-label" for="coinInventoryToggle">
+                                                        Coin in Inventory is Publicly Visible
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="card permission-card">
+                                            <div class="card-body">
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox" id="coinBankToggle"
+                                                           {% if permissions.coin_bank %}checked{% endif %}
+                                                           onchange="updatePermission('coin_bank', this.checked, '{{ character.name }}')">
+                                                    <label class="form-check-label" for="coinBankToggle">
+                                                        Coin in Bank is Publicly Visible
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="character-layout">
+                    <nav class="NavOuter">
+                        <div class="NavInner">
+                            <button class="eq-button"
+                                    onclick="window.location='{% url 'magelo:character_profile' character_name %}'"
+                                    style="color:#606060;">Profile
+                            </button>
+                            {% if is_character_owner %}
+                                <button class="eq-button" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#settingsPanel" aria-expanded="false"
+                                        aria-controls="settingsPanel" style="color:#606060;">
+                                    Settings
+                                </button>
+                            {% endif %}
+                            {#                        <button class="eq-button" onclick="window.location='{% url 'magelo:aas' character.name %}'"#}
+                            {#                                style="margin:3px">AAs#}
+                            {#                        </button>#}
+                            <button class="eq-button"
+                                    disabled
+                                    style="margin:3px">Keys
+                            </button>
+                            {#                                                            <button class="eq-button"#}
+                            {#                                onclick="window.location='{% url 'magelo:flags' character.name %}'"#}
+                            {#                                style="margin:3px">Flags#}
+                            {#                        </button>#}
+                            {#                        <button class="eq-button"#}
+                            {#                                onclick="window.location='{% url 'magelo:skills' character.name %}'"#}
+                            {#                                style="margin:3px">Skills#}
+                            {#                        </button>#}
+                            {#                        <button class="eq-button"#}
+                            {#                                onclick="window.location='{% url 'magelo:corpse' character.name %}'"#}
+                            {#                                style="margin:3px">Corpse#}
+                            {#                        </button>#}
+                        </div>
+                    </nav>
+
+                    <main class="character-main">
+                        <div class="character-windows-container">
+                            <div class="ItemOuter">
+                                <div class="ItemInner">
+
+
+                                    <h2>Keyring</h2>
+                                    {% if keys %}
+                                        <table class="eq-table eq-highlight-rows">
+                                            <thead>
+                                            <tr>
+                                                <th>Key (Item Id)</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for item_id, key in keys %}
+                                                <tr>
+                                                    <td>{{ key }} ({{ item_id }})</td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    {% else %}
+                                        <div style="text-align: center;">{{ character_name }} has no keys.</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

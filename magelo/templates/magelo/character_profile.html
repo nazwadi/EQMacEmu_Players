@@ -3,14 +3,13 @@
 {% load data_utilities %}
 {% block content %}
     <div class="container-fluid container-lg py-4">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{% url 'accounts:index' %}">Home</a></li>
-                    <li class="breadcrumb-item"><a href="{% url 'magelo:search' %}">Character Browser</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">{{ character.name }}</li>
-                </ol>
-            </nav>
-
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'accounts:index' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'magelo:search' %}">Character Browser</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ character.name }}</li>
+            </ol>
+        </nav>
         <div class="row mt-2">
             <div class="col">
                 {% if is_character_owner %}
@@ -353,11 +352,11 @@
                                     {#                        <button class="eq-button" onclick="window.location='{% url 'magelo:aas' character.name %}'"#}
                                     {#                                style="margin:3px">AAs#}
                                     {#                        </button>#}
-                                    {#                        <button class="eq-button"#}
-                                    {#                                onclick="window.location='{% url 'magelo:keys' character.name %}'"#}
-                                    {#                                style="margin:3px">Keys#}
-                                    {#                        </button>#}
-                                    {#                        <button class="eq-button"#}
+                                    <button class="eq-button"
+                                            onclick="window.location='{% url 'magelo:keys' character.name %}'"
+                                            style="margin:3px">Keys
+                                    </button>
+                                    {#                                                            <button class="eq-button"#}
                                     {#                                onclick="window.location='{% url 'magelo:flags' character.name %}'"#}
                                     {#                                style="margin:3px">Flags#}
                                     {#                        </button>#}
@@ -422,7 +421,8 @@
                                                                 Haste
                                                             </td>
                                                             <td>
-                                                                {{ character.hp_regen }} / {{ character.hp_regen_cap }}<br>
+                                                                {{ character.hp_regen }}
+                                                                / {{ character.hp_regen_cap }}<br>
                                                                 {{ item_stats.ft }} / {{ item_stats.ft_cap }}<br>
                                                                 {{ item_stats.atk }} / {{ item_stats.atk_cap }}<br>
                                                                 {{ item_stats.ds }}<br>
@@ -536,6 +536,10 @@
 
                                                 <div class="InventoryMonogram">
                                                     <img src="
+
+
+
+
 
                                                             {% static 'magelo/monograms/' %}{{ character.class_name }}.gif"
                                                          alt="Class Icon">
@@ -781,4 +785,6 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 {% endblock %}

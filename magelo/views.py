@@ -25,6 +25,8 @@ from common.models.characters import CharacterCurrency
 from common.models.guilds import GuildMembers
 from common.models.items import Items
 
+from characters.utils import get_character_keyring
+
 
 class FlowingThoughtEffects(Enum):
     """Spell IDs for all known item-based Flowing Thought Spell Effects"""
@@ -186,6 +188,9 @@ def search(request):
 
 def character_profile(request, character_name):
     character = Characters.objects.filter(name=character_name).first()
+    if character is None:
+        raise Http404("This character does not exist")
+
     character_stats = CharacterSkills.objects.filter(id=character.id)
     defense = character_stats.filter(skill_id=15).first()
     offense = character_stats.filter(skill_id=33).first()
@@ -321,6 +326,17 @@ def character_profile(request, character_name):
     }
 
     return render(request=request, template_name='magelo/character_profile.html', context=context)
+
+def character_keys(request, character_name):
+    character = Characters.objects.filter(name=character_name).first()
+    if character is None:
+        raise Http404("This character does not exist")
+    character_keyring = get_character_keyring(character_id=character.id)
+    context = {
+        'character_name': character_name,
+        'keys': character_keyring
+    }
+    return render(request=request, template_name='magelo/character_keys.html', context=context)
 
 
 def get_max_mana(level, class_type, int_stat, wis_stat, imana):
