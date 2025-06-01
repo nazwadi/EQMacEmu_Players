@@ -345,7 +345,7 @@ body {
     display: none;
     margin: 0 auto;
     pointer-events: auto;
-    width: 364px;
+    width: 100%;
     max-width: 350px;
     padding: 11px 5px 9px;
     font-family: Arial, sans-serif;
@@ -1241,4 +1241,65 @@ div.Slot.slotloc9999.slotimage9999 {
 /* Custom separator to match theme */
 .breadcrumb-item + .breadcrumb-item::before {
     color: #7b714a;
+}
+
+/* Simple alternative - add this to your style.css instead */
+
+.keys-container {
+    background-image: url(light.gif);
+    border: 2px #7b714a solid;
+    padding: 20px;
+    margin: 20px 0;
+    position: relative;
+    display: inline-block;  /* Makes container size to content */
+    min-width: 350px;       /* Minimum width for the container */
+    width: auto;            /* Let it size to content */
+}
+
+.keys-container h2 {
+    color: #FFFFFF;
+    font-family: Arial, sans-serif;
+    font-size: 14pt;
+    margin-bottom: 15px;
+    text-align: center;
+    background-image: url(dark.gif);
+    border: 1px #444444 solid;
+    padding: 10px;
+}
+
+.keys-container .ItemTitle {
+}
+
+.keys-container .StatTable {
+    background-image: url(dark.gif);
+    border: 1px #444444 solid;
+    padding: 0;             /* Remove table padding */
+    width: auto !important;            /* Let table size to content */
+    min-width: 364px;       /* Minimum table width */
+    box-sizing: border-box; /* Include padding in width calculation */
+    margin: 0;
+    text-align: left;
+}
+
+.keys-container .StatTable th {
+    background-color: rgba(123, 113, 74, 0.5);
+    padding: 12px 15px;     /* Increased padding since table padding is removed */
+    text-align: left;
+    border-bottom: 2px solid #7b714a;
+    white-space: nowrap;
+}
+
+.keys-container .StatTable td {
+    padding: 15px 20px;     /* Increased padding since table padding is removed */
+    border-bottom: 1px solid #555555;
+}
+
+.keys-container .StatTable td a {
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+.keys-container .StatTable td a:hover {
+    color: #7b714a;
+    text-decoration: underline;
 }

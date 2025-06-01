@@ -333,7 +333,7 @@ def character_keys(request, character_name):
         raise Http404("This character does not exist")
     character_keyring = get_character_keyring(character_id=character.id)
     context = {
-        'character_name': character_name,
+        'character': character,
         'keys': character_keyring
     }
     return render(request=request, template_name='magelo/character_keys.html', context=context)

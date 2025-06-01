@@ -100,7 +100,7 @@
                     <nav class="NavOuter">
                         <div class="NavInner">
                             <button class="eq-button"
-                                    onclick="window.location='{% url 'magelo:character_profile' character_name %}'"
+                                    onclick="window.location='{% url 'magelo:character_profile' character.name %}'"
                                     style="color:#606060;">Profile
                             </button>
                             {% if is_character_owner %}
@@ -133,31 +133,31 @@
                     </nav>
 
                     <main class="character-main">
-                        <div class="character-windows-container">
-                            <div class="ItemOuter">
-                                <div class="ItemInner">
-
-
-                                    <h2>Keyring</h2>
-                                    {% if keys %}
-                                        <table class="eq-table eq-highlight-rows">
-                                            <thead>
+                        <div class="keys-container">
+                            <div style="" class='ItemTitle'>
+                                <div class='ItemTitleLeft'></div>
+                                <div class='ItemTitleMid'>Keys - {{ character.name }}</div>
+                                <div class='ItemTitleRight'></div>
+                            </div>
+                            <div class='ItemInner'>
+                                {% if keys %}
+                                    <table style="min-width: 90%;" class="StatTable">
+                                        <thead>
+                                        <tr>
+                                            <th>Key (Item Id)</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for item_id, key in keys %}
                                             <tr>
-                                                <th>Key (Item Id)</th>
+                                                <td><a href="/items/view/{{ item_id }}" target="_blank">{{ key }} ({{ item_id }})</a></td>
                                             </tr>
-                                            </thead>
-                                            <tbody>
-                                            {% for item_id, key in keys %}
-                                                <tr>
-                                                    <td>{{ key }} ({{ item_id }})</td>
-                                                </tr>
-                                            {% endfor %}
-                                            </tbody>
-                                        </table>
-                                    {% else %}
-                                        <div style="text-align: center;">{{ character_name }} has no keys.</div>
-                                    {% endif %}
-                                </div>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                {% else %}
+                                    <div style="text-align: center;">{{ character_name }} has no keys.</div>
+                                {% endif %}
                             </div>
                         </div>
                     </main>
