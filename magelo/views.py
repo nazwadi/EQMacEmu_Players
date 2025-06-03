@@ -1,4 +1,3 @@
-from enum import IntEnum
 from enum import Enum
 from typing import Union
 import math
@@ -17,6 +16,8 @@ from .models import CharacterPermissions
 from .validators import PermissionValidator
 from .utils import level_regen
 from .utils import calc_hp_regen_cap
+from .utils import CharacterClass
+from .utils import Race
 
 from common.utils import valid_game_account_owner
 from common.models.characters import Characters, CharacterSkills
@@ -105,7 +106,7 @@ class ItemStats:
         self.total_hp += item.hp
         self.total_mana += item.mana
 
-        if item.worn_effect == 998: # Haste
+        if item.worn_effect == 998:  # Haste
             self.haste += item.worn_level + 1
 
         if FlowingThoughtEffects.has_value(item.worn_effect):
@@ -184,7 +185,8 @@ def search(request):
                           "search_results": search_results
                       },
                       template_name="magelo/search.html")
-    return HttpResponseNotAllowed(['GET', 'POST']) # This will never be reached due to the decorator
+    return HttpResponseNotAllowed(['GET', 'POST'])  # This will never be reached due to the decorator
+
 
 def character_profile(request, character_name):
     character = Characters.objects.filter(name=character_name).first()
@@ -268,27 +270,36 @@ def character_profile(request, character_name):
         'int': character.int_stat + item_stats.stat_bonuses['int'],
         'wis': character.wis + item_stats.stat_bonuses['wis'],
         'cha': character.cha + item_stats.stat_bonuses['cha'],
-        'fr': fr_by_race(character.race) + fr_by_class(character.class_name, character.level) + item_stats.stat_bonuses['fr'],
-        'cr': cr_by_race(character.race) + cr_by_class(character.class_name, character.level) + item_stats.stat_bonuses['cr'],
-        'mr': mr_by_race(character.race) + mr_by_class(character.class_name, character.level) + item_stats.stat_bonuses['mr'],
-        'dr': dr_by_race(character.race) + dr_by_class(character.class_name, character.level) + item_stats.stat_bonuses['dr'],
-        'pr': pr_by_race(character.race) + pr_by_class(character.class_name, character.level) + item_stats.stat_bonuses['pr'],
+        'fr': fr_by_race(character.race) + fr_by_class(character.class_name, character.level) + item_stats.stat_bonuses[
+            'fr'],
+        'cr': cr_by_race(character.race) + cr_by_class(character.class_name, character.level) + item_stats.stat_bonuses[
+            'cr'],
+        'mr': mr_by_race(character.race) + mr_by_class(character.class_name, character.level) + item_stats.stat_bonuses[
+            'mr'],
+        'dr': dr_by_race(character.race) + dr_by_class(character.class_name, character.level) + item_stats.stat_bonuses[
+            'dr'],
+        'pr': pr_by_race(character.race) + pr_by_class(character.class_name, character.level) + item_stats.stat_bonuses[
+            'pr'],
     }
     troll = 9
     iksar = 128
     has_racial_regen_bonus = True if character.race in [troll, iksar] else False
     hp_regen = level_regen(level=character.level,
-                            is_sitting=False,
-                            is_resting=False,
-                            is_feigned=False,
-                            is_famished=False,
-                            has_racial_regen_bonus=has_racial_regen_bonus)
+                           is_sitting=False,
+                           is_resting=False,
+                           is_feigned=False,
+                           is_famished=False,
+                           has_racial_regen_bonus=has_racial_regen_bonus)
     hp_regen_cap = calc_hp_regen_cap(character.level)
     ac = get_max_ac(character.agi, character.level, defense.value, character.class_name, item_stats.total_ac,
-                     character.race)
+                    character.race)
     atk = get_max_attack(item_stats.atk, character.str + item_stats.stat_bonuses['str'], offense.value)
-    print(character.class_name)
-    mana = get_max_mana(character.level, character.class_name, character.int_stat, character.wis, item_stats.total_mana)
+
+    total_int = character.int_stat + item_stats.stat_bonuses['int']
+    total_wis = character.wis + item_stats.stat_bonuses['wis']
+    mana = get_max_mana(character.level, character.class_name, total_int, total_wis, item_stats.total_mana)
+    max_mana, current_mana = calc_max_mana(character.class_name, total_int, total_wis, character.level,
+                                           item_stats.total_mana, 0, character.mana)
 
     # Build context
     context = {
@@ -312,13 +323,14 @@ def character_profile(request, character_name):
             },
             'total_stats': total_stats,
             'cur_hp': character.cur_hp,
-            'mana': mana,
+            'max_mana': max_mana,
+            'current_mana': current_mana,
             'hp_regen_cap': hp_regen_cap,
             'hp_regen': hp_regen,
-            'ac' : ac,
+            'ac': ac,
             'atk': atk,
         },
-        'magelo': True, # just a variable to let the templates know this is the magelo page
+        'magelo': True,  # just a variable to let the templates know this is the magelo page
         'guild': guild_info,
         'inventory_items': all_items,
         'currency': character_currency,
@@ -327,6 +339,7 @@ def character_profile(request, character_name):
     }
 
     return render(request=request, template_name='magelo/character_profile.html', context=context)
+
 
 def character_keys(request, character_name):
     character = Characters.objects.filter(name=character_name).first()
@@ -338,6 +351,117 @@ def character_keys(request, character_name):
         'keys': character_keyring
     }
     return render(request=request, template_name='magelo/character_keys.html', context=context)
+
+
+class CasterClass(Enum):
+    INTELLIGENCE = 'I'
+    WISDOM = 'W'
+    NONE = 'N'
+
+
+def calc_max_mana(character_class: Union[int, 'CharacterClass'],
+                  intelligence: int, wisdom: int, level: int, item_mana_bonus: int = 0,
+                  spell_mana_bonus: int = 0, current_mana: int = 0) -> tuple[int, int]:
+    """
+    Calculate maximum mana for a character and adjust current mana if needed.
+
+    Args:
+        character_class: Character's class (use CharacterClass enum values or int)
+        intelligence: Character's intelligence stat
+        wisdom: Character's wisdom stat
+        level: Character's level
+        item_mana_bonus: Bonus mana from items (default: 0)
+        spell_mana_bonus: Bonus mana from spells (default: 0)
+        current_mana: Character's current mana (default: 0)
+
+    Returns:
+        Tuple of (max_mana, adjusted_current_mana)
+
+    Raises:
+        ValueError: If inputs are invalid
+    """
+    # Get character class ID as integer
+    if hasattr(character_class, 'value'):  # scenario 1: Enum instance passed in
+        char_class_id = character_class.value
+    else:  # scenario 2: raw integer passed in
+        char_class_id = character_class
+
+    # Determine caster class using the existing function
+    caster_class = get_caster_class(char_class_id)
+
+    # Calculate max mana based on caster class
+    if caster_class in ['I', 'W']:
+        # Special case: Hybrid classes get no mana until level 9
+        # Using the actual enum values: RANGER=4, PALADIN=3, BEASTLORD=15
+        if char_class_id in [3, 4, 15] and level < 9:  # PALADIN, RANGER, BEASTLORD
+            max_mana = 0
+        else:
+            base_mana = calc_base_mana(caster_class, intelligence, wisdom, level)
+            max_mana = base_mana + item_mana_bonus + spell_mana_bonus
+    else:  # caster_class == 'N'
+        max_mana = 0
+
+    # Apply constraints
+    max_mana = max(0, max_mana)  # Ensure non-negative
+    max_mana = min(max_mana, 32767)  # Cap at 32767
+
+    # Adjust current mana if it exceeds maximum
+    adjusted_current_mana = min(current_mana, max_mana)
+
+    return max_mana, adjusted_current_mana
+
+
+def calc_base_mana(caster_class: Union[str, CasterClass], intelligence: int, wisdom: int, level: int) -> int:
+    """
+    Calculate base mana for a character based on their class and stats.
+
+    Args:
+        caster_class: Character class ('I' for Intelligence, 'W' for Wisdom, 'N' for None)
+        intelligence: Character's intelligence stat
+        wisdom: Character's wisdom stat
+        level: Character's level
+
+    Returns:
+        Calculated base mana value
+
+    Raises:
+        ValueError: If caster_class is invalid or stats are negative
+    """
+    # Input validation
+    if isinstance(caster_class, CasterClass):
+        class_char = caster_class.value
+    else:
+        class_char = caster_class
+
+    if class_char not in ['I', 'W', 'N']:
+        raise ValueError(f"Invalid caster class '{class_char}'. Must be 'I', 'W', or 'N'")
+
+    if intelligence < 0 or wisdom < 0 or level < 0:
+        raise ValueError("Stats and level must be non-negative")
+
+    # Non-caster classes return 0 mana
+    if class_char == 'N':
+        return 0
+
+    # Select the appropriate stat based on class
+    primary_stat = intelligence if class_char == 'I' else wisdom
+
+    return _calculate_mana_from_stat(primary_stat, level)
+
+
+def _calculate_mana_from_stat(stat_value: int, level: int) -> int:
+    """Helper function to calculate mana from a primary stat and level."""
+    # Calculate mind lesser factor (penalty for very high stats)
+    mind_lesser_factor = max(0, (stat_value - 199) // 2)
+    mind_factor = stat_value - mind_lesser_factor
+
+    # Different formulas based on stat threshold
+    if stat_value > 100:
+        # High stat formula
+        return ((5 * (mind_factor + 20)) // 2) * 3 * level // 40
+    else:
+        # Low stat formula
+        return ((5 * (mind_factor + 200)) // 2) * 3 * level // 100
 
 
 def get_max_mana(level, class_type, int_stat, wis_stat, imana):
@@ -472,6 +596,7 @@ def rate_limit_by_user(user_id, key_prefix, max_requests=5, time_window=60):
         raise PermissionDenied("Too many requests. Please try again later.")
     cache.set(cache_key, requests + 1, time_window)
 
+
 @login_required
 @require_http_methods(["POST"])
 def update_permission(request):
@@ -548,34 +673,6 @@ def update_permission(request):
             'error': f'{str(e)} An error occurred processing your request'
         }, status=500)
 
-class CharacterClass(IntEnum):
-    """Character class constants using IntEnum for better type safety"""
-    WARRIOR = 1
-    CLERIC = 2
-    PALADIN = 3
-    RANGER = 4
-    SHADOWKNIGHT = 5
-    DRUID = 6
-    MONK = 7
-    BARD = 8
-    ROGUE = 9
-    SHAMAN = 10
-    NECROMANCER = 11
-    WIZARD = 12
-    MAGICIAN = 13
-    ENCHANTER = 14
-    BEASTLORD = 15
-    BERSERKER = 16
-
-class Race(IntEnum):
-    """Race constants"""
-    HUMAN = 1
-    BARBARIAN = 2
-    ERUDITE = 3
-    DWARF = 8
-    TROLL = 9
-    HALFLING = 11
-    IKSAR = 128
 
 def pr_by_race(race):
     """Calculate Poison Resistance by race"""
@@ -583,11 +680,13 @@ def pr_by_race(race):
         return 20
     return 15
 
+
 def mr_by_race(race):
     """Calculate Magic Resistance by race"""
     if race in (Race.ERUDITE, Race.DWARF):
         return 30
     return 25
+
 
 def dr_by_race(race):
     """Calculate Disease Resistance by race"""
@@ -597,6 +696,7 @@ def dr_by_race(race):
         return 20
     return 15
 
+
 def fr_by_race(race):
     """Calculate Fire Resistance by race"""
     if race == Race.TROLL:
@@ -604,6 +704,7 @@ def fr_by_race(race):
     elif race == Race.IKSAR:
         return 30
     return 25
+
 
 def cr_by_race(race):
     """Calculate Cold Resistance by race"""
@@ -613,6 +714,7 @@ def cr_by_race(race):
         return 15
     return 25
 
+
 def pr_by_class(char_class, char_level):
     """Calculate Poison Resistance by class and level"""
     if char_class == CharacterClass.SHADOWKNIGHT:
@@ -621,11 +723,13 @@ def pr_by_class(char_class, char_level):
         return (char_level - 49) + 8 if char_level >= 50 else 8
     return 0
 
+
 def mr_by_class(char_class, char_level):
     """Calculate Magic Resistance by class and level"""
     if char_class == CharacterClass.WARRIOR:
         return char_level // 2
     return 0
+
 
 def dr_by_class(char_class, char_level):
     """Calculate Disease Resistance by class and level"""
@@ -635,6 +739,7 @@ def dr_by_class(char_class, char_level):
         return (char_level - 49) + 4 if char_level >= 50 else 4
     return 0
 
+
 def fr_by_class(char_class, char_level):
     """Calculate Fire Resistance by class and level"""
     if char_class == CharacterClass.RANGER:
@@ -643,11 +748,13 @@ def fr_by_class(char_class, char_level):
         return (char_level - 49) + 8 if char_level >= 50 else 8
     return 0
 
+
 def cr_by_class(char_class, char_level):
     """Calculate Cold Resistance by class and level"""
     if char_class in (CharacterClass.RANGER, CharacterClass.BEASTLORD):
         return (char_level - 49) + 4 if char_level >= 50 else 4
     return 0
+
 
 def get_max_ac(agility: int, level: int, defense: int,
                char_class: Union[int, CharacterClass],
@@ -691,6 +798,7 @@ def get_max_ac(agility: int, level: int, defense: int,
         natural_ac += iksar_bonus_levels * 1.2  # More readable than 12/10
 
     return math.floor(natural_ac)
+
 
 def acmod(agility: int, level: int) -> float:
     """
@@ -745,6 +853,7 @@ def acmod(agility: int, level: int) -> float:
 
     return 0
 
+
 def _calculate_medium_agility_modifier(agility: int, level: int) -> int:
     """Helper function for agility 75-137 range."""
     # Define level-based modifier tables
@@ -779,6 +888,7 @@ def _calculate_medium_agility_modifier(agility: int, level: int) -> int:
             return modifiers[level_bracket]
 
     return 0
+
 
 def _calculate_high_agility_modifier(agility: int, level: int) -> int:
     """Helper function for agility 138-300 range."""

@@ -3,6 +3,37 @@ Utility functions for calculating character profile data
 
 These functions are generally used by the magelo view but didn't belong in that file
 """
+from enum import IntEnum
+
+class CharacterClass(IntEnum):
+    """Character class constants using IntEnum for better type safety"""
+    WARRIOR = 1
+    CLERIC = 2
+    PALADIN = 3
+    RANGER = 4
+    SHADOWKNIGHT = 5
+    DRUID = 6
+    MONK = 7
+    BARD = 8
+    ROGUE = 9
+    SHAMAN = 10
+    NECROMANCER = 11
+    WIZARD = 12
+    MAGICIAN = 13
+    ENCHANTER = 14
+    BEASTLORD = 15
+    BERSERKER = 16
+
+class Race(IntEnum):
+    """Race constants"""
+    HUMAN = 1
+    BARBARIAN = 2
+    ERUDITE = 3
+    DWARF = 8
+    TROLL = 9
+    HALFLING = 11
+    IKSAR = 128
+
 
 def level_regen(level: int, is_sitting: bool, is_resting: bool, is_feigned: bool, is_famished: bool,
                 has_racial_regen_bonus: bool) -> int:
