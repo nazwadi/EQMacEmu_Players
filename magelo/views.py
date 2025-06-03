@@ -380,6 +380,10 @@ def calc_max_mana(character_class: Union[int, 'CharacterClass'],
     Raises:
         ValueError: If inputs are invalid
     """
+    # Update these next two lines when AA's lift the stat cap (or detect those AA's)
+    intelligence = min(255, intelligence)
+    wisdom = min(255, wisdom)
+
     # Get character class ID as integer
     if hasattr(character_class, 'value'):  # scenario 1: Enum instance passed in
         char_class_id = character_class.value
