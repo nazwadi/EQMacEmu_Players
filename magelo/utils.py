@@ -742,7 +742,7 @@ def get_hp_base(level: int, character_class: int, stamina: int) -> float:
     post_255_sta = max(0, (stamina - 255))
 
     # Calculate stamina gain with post-255 penalty
-    sta_gain = (stamina - round(post_255_sta / 2)) * 10 // 3
+    sta_gain = math.floor((stamina - round(post_255_sta / 2)) * 10 / 3)
 
     # Calculate HP components
     hp_from_level = level * lm
