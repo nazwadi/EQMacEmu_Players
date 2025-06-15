@@ -243,7 +243,7 @@ def character_profile(request: HttpRequest, character_name: str) -> HttpResponse
             'total_stats': total_stats,
             'max_hp': get_max_hp(level=character.level,
                                  character_class=character.class_name,
-                                 stamina=character.sta,
+                                 stamina=character.sta + item_stats.stat_bonuses['sta'],
                                  item_hp_bonus=item_stats.total_hp,
                                  stat_cap=255),
             'cur_hp': character.cur_hp,

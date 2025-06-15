@@ -693,6 +693,7 @@ def get_max_hp(level: int, character_class: int, stamina: int, item_hp_bonus: in
 
     This function will need to be modified in Luclin for the ND and PE AAs.
     The stat_cap parameter should be removed when the 255 stat cap is lifted.
+    TODO: See Server source zone/client_mods.cpp
 
     Args:
         level: Character's level
@@ -735,7 +736,7 @@ def get_hp_base(level: int, character_class: int, stamina: int) -> float:
         Base hit points as a float
     """
     # Get level multiplier for the class
-    lm = float(get_lm(character_class, level))
+    level_multiplier = float(get_lm(character_class, level))
 
     # Calculate post-255 stamina penalty
     post_255_sta = max(0, (stamina - 255))
@@ -744,8 +745,8 @@ def get_hp_base(level: int, character_class: int, stamina: int) -> float:
     sta_gain = math.floor((stamina - round(post_255_sta / 2)) * 10 / 3)
 
     # Calculate HP components
-    hp_from_level = level * lm
-    hp_from_sta = level * lm * sta_gain / 1000
+    hp_from_level = level * level_multiplier
+    hp_from_sta = level * level_multiplier * sta_gain / 1000
 
     # Base HP calculation
     base_hp = 5 + hp_from_level + hp_from_sta
