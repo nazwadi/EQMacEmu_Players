@@ -716,10 +716,9 @@ def get_max_hp(level: int, character_class: int, stamina: int, item_hp_bonus: in
 
     # Calculate base HP and add item bonuses
     base_hp = get_hp_base(level, character_class, capped_stamina)
-    total_hp = int(base_hp) + int(item_hp_bonus)
+    total_hp = math.floor(base_hp) + math.floor(item_hp_bonus)
 
     return total_hp
-
 
 def get_hp_base(level: int, character_class: int, stamina: int) -> float:
     """
@@ -756,64 +755,62 @@ def get_hp_base(level: int, character_class: int, stamina: int) -> float:
 def get_lm(character_class: int, level: int) -> float:
     """
     Get the level multiplier for a character class.
-
-    Args:
-        character_class: Character's class ID
-        level: Character's level
-
-    Returns:
-        Level multiplier as a float
     """
     class_name = get_class_name(character_class)
 
-    # Level multiplier configuration: class_names -> [(min_level, multiplier), ...]
-    # Ordered from the highest level requirement to lowest
-    level_multipliers = {
-        frozenset(['Monk', 'Rogue', 'Beastlord', 'Bard']): [
-            (58, 20.0), (51, 19.0), (0, 18.0)
-        ],
-        frozenset(['Cleric', 'Druid', 'Shaman']): [
-            (0, 15.0)
-        ],
-        frozenset(['Magician', 'Necromancer', 'Enchanter', 'Wizard']): [
-            (0, 12.0)
-        ],
-        frozenset(['Ranger']): [
-            (58, 21.0), (0, 20.0)
-        ],
-        frozenset(['Shadow Knight', 'Shadowknight', 'Paladin']): [
-            (60, 26.0), (56, 25.0), (51, 24.0), (45, 23.0), (35, 22.0), (0, 21.0)
-        ],
-        frozenset(['Warrior']): [
-            (60, 30.0), (57, 29.0), (53, 28.0), (40, 27.0), (30, 25.0), (20, 23.0), (0, 22.0)
-        ]
-    }
+    # Level multiplier configuration matching PHP exactly
+    if class_name in ['Monk', 'Rogue', 'Beastlord', 'Bard']:
+        if level > 57: return 20.0
+        if level > 50: return 19.0
+        return 18.0
 
-    # Find the class group and return the appropriate multiplier
-    for class_group, multipliers in level_multipliers.items():
-        if class_name in class_group:
-            for min_level, multiplier in multipliers:
-                if level >= min_level:
-                    return multiplier
+    if class_name in ['Cleric', 'Druid', 'Shaman']:
+        return 15.0
 
-    # Default case if class not found
-    return 1.0
+    if class_name in ['Magician', 'Necromancer', 'Enchanter', 'Wizard']:
+        return 12.0
 
+    if class_name == 'Ranger':
+        if level > 57: return 21.0
+        return 20.0
+
+    if class_name in ['Shadow Knight', 'Shadowknight', 'Paladin']:
+        if level > 59: return 26.0
+        if level > 55: return 25.0
+        if level > 50: return 24.0
+        if level > 44: return 23.0
+        if level > 34: return 22.0
+        return 21.0
+
+    if class_name == 'Warrior':
+        if level > 59: return 30.0
+        if level > 56: return 29.0
+        if level > 52: return 28.0
+        if level > 39: return 27.0
+        if level > 29: return 25.0
+        if level > 19: return 23.0
+        return 22.0
+
+    return 1.0  # Default for unknown classes
 
 def get_class_name(character_class: int) -> str:
-    """
-    Get the class name from a character class ID.
-
-    Args:
-        character_class: Character's class ID
-
-    Returns:
-        Class name as a string, or 'Unknown' if class ID is invalid
-    """
-    try:
-        return CharacterClass(character_class).name.title()
-    except ValueError:
-        return 'Unknown'
-
-
-
+    """Get the class name from a character class ID, matching PHP exactly."""
+    class_names = {
+        1: "Warrior",
+        2: "Cleric",
+        3: "Paladin",
+        4: "Ranger",
+        5: "Shadow Knight",  # Note: with space to match PHP
+        6: "Druid",
+        7: "Monk",
+        8: "Bard",
+        9: "Rogue",
+        10: "Shaman",
+        11: "Necromancer",
+        12: "Wizard",
+        13: "Magician",
+        14: "Enchanter",
+        15: "Beastlord",
+        16: "Berserker"
+    }
+    return class_names.get(character_class, "Unknown Class")
