@@ -283,6 +283,7 @@ body {
     position: absolute;
     z-index: 3;
 }
+
 .BagOuter .Slot {
     position: absolute;
     /* Positions will be relative to the .BagOuter container */
@@ -394,10 +395,26 @@ body {
     font-size: 9pt;
     color: #FFFFFF;
     transition: opacity 0.2s ease-in-out;
+    background-image: url(light.gif); /* Add background for better visibility when dragging */
+    border: 2px #7b714a solid; /* Add border for better visibility when dragging */
 }
 
 .ItemOuter.visible {
     opacity: 1;
+}
+
+.ItemOuter:hover {
+    cursor: move;
+}
+
+/* Ensure tooltip content doesn't interfere with dragging */
+.ItemOuter * {
+    pointer-events: none;
+}
+
+/* Re-enable pointer events for the tooltip itself */
+.ItemOuter {
+    pointer-events: auto;
 }
 
 .ItemInner {
@@ -646,7 +663,7 @@ body {
     background-image: url(light.gif);
     width: 100px;
     max-width: 102px;
-    min-height: 107px;   /* Minimum height for smallest bag */
+    min-height: 107px; /* Minimum height for smallest bag */
     padding: 11px 5px 50px; /* Added bottom padding for button space */
     border: 2px #7b714a solid;
     pointer-events: auto;
@@ -879,6 +896,7 @@ body {
     top: 192px;
     left: 6px;
 }
+
 .bagslotloc9 {
     top: 192px;
     left: 49px;

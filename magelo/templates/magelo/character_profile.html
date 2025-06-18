@@ -141,12 +141,21 @@
                              * Hides all tooltips in the inventory
                              */
                             function hideAllTooltips() {
+                                // Stop any current dragging
+                                isDragging = false;
+                                currentDragElement = null;
+
                                 // Hide regular slot tooltips
                                 for (let i = 0; i <= 2270; i++) {
                                     const element = document.getElementById('slot' + i);
                                     if (element) {
                                         element.style.display = 'none';
                                         element.classList.remove('visible');
+                                        // Reset position
+                                        element.style.position = 'relative';
+                                        element.style.left = '';
+                                        element.style.top = '';
+                                        element.style.zIndex = '1000';
                                     }
                                 }
 
@@ -156,6 +165,11 @@
                                     if (element) {
                                         element.style.display = 'none';
                                         element.classList.remove('visible');
+                                        // Reset position
+                                        element.style.position = 'absolute';
+                                        element.style.left = '';
+                                        element.style.top = '';
+                                        element.style.zIndex = '1000';
                                     }
                                 }
                             }
@@ -177,20 +191,29 @@
                             function showTooltip(tooltip) {
                                 tooltip.setAttribute('role', 'tooltip');
                                 tooltip.setAttribute('aria-hidden', 'false');
+
+                                // Reset to original positioning system
+                                tooltip.style.position = 'relative';
+                                tooltip.style.left = '';
+                                tooltip.style.top = '';
+                                tooltip.style.zIndex = '1000';
+
                                 // Show the tooltip
                                 tooltip.style.display = 'block';
 
                                 // Use RAF to ensure smooth transition
                                 requestAnimationFrame(() => {
                                     tooltip.classList.add('visible');
+
+                                    // Make tooltip draggable after it's visible
+                                    makeDraggable(tooltip);
                                 });
 
-                                // Check if tooltip is in viewport
+                                // Check if tooltip is in viewport and scroll if needed
                                 const rect = tooltip.getBoundingClientRect();
                                 const viewportHeight = window.innerHeight;
 
                                 if (rect.bottom > viewportHeight) {
-                                    // Scroll tooltip into view if needed
                                     window.scrollBy({
                                         top: rect.bottom - viewportHeight + 20,
                                         behavior: 'smooth'
@@ -346,6 +369,100 @@
                                     toastContainer.remove();
                                 });
                             }
+
+                            // Drag functionality variables
+                            let isDragging = false;
+                            let currentDragElement = null;
+                            let dragOffset = {x: 0, y: 0};
+
+                            /**
+                             * Initialize drag functionality for a tooltip
+                             * @param {HTMLElement} element - The tooltip element
+                             */
+                            function makeDraggable(element) {
+                                element.style.cursor = 'move';
+
+                                // Store original position for reference
+                                if (!element.dataset.originalPosition) {
+                                    const rect = element.getBoundingClientRect();
+                                    element.dataset.originalLeft = rect.left;
+                                    element.dataset.originalTop = rect.top;
+                                    element.dataset.originalPosition = 'true';
+                                }
+
+                                element.addEventListener('mousedown', startDrag);
+                                document.addEventListener('mousemove', drag);
+                                document.addEventListener('mouseup', stopDrag);
+                            }
+
+                            /**
+                             * Start dragging
+                             * @param {MouseEvent} e - Mouse event
+                             */
+                            function startDrag(e) {
+                                if (e.button !== 0) return; // Only left mouse button
+
+                                isDragging = true;
+                                currentDragElement = e.currentTarget;
+
+                                // Convert to fixed positioning for dragging if not already
+                                if (currentDragElement.style.position !== 'fixed') {
+                                    const rect = currentDragElement.getBoundingClientRect();
+                                    currentDragElement.style.position = 'fixed';
+                                    currentDragElement.style.left = rect.left + 'px';
+                                    currentDragElement.style.top = rect.top + 'px';
+                                }
+
+                                const rect = currentDragElement.getBoundingClientRect();
+                                dragOffset.x = e.clientX - rect.left;
+                                dragOffset.y = e.clientY - rect.top;
+
+                                currentDragElement.style.zIndex = '2000';
+                                currentDragElement.style.userSelect = 'none';
+
+                                e.preventDefault();
+                            }
+
+                            /**
+                             * Handle dragging
+                             * @param {MouseEvent} e - Mouse event
+                             */
+                            function drag(e) {
+                                if (!isDragging || !currentDragElement) return;
+
+                                const x = e.clientX - dragOffset.x;
+                                const y = e.clientY - dragOffset.y;
+
+                                // Keep tooltip within viewport bounds
+                                const rect = currentDragElement.getBoundingClientRect();
+                                const maxX = window.innerWidth - rect.width;
+                                const maxY = window.innerHeight - rect.height;
+
+                                const boundedX = Math.max(0, Math.min(x, maxX));
+                                const boundedY = Math.max(0, Math.min(y, maxY));
+
+                                currentDragElement.style.left = boundedX + 'px';
+                                currentDragElement.style.top = boundedY + 'px';
+
+                                e.preventDefault();
+                            }
+
+                            /**
+                             * Stop dragging
+                             * @param {MouseEvent} e - Mouse event
+                             */
+                            function stopDrag(e) {
+                                if (!isDragging) return;
+
+                                isDragging = false;
+
+                                if (currentDragElement) {
+                                    currentDragElement.style.userSelect = '';
+                                    currentDragElement.style.opacity = '1'; // Reset opacity
+                                    currentDragElement.style.transform = ''; // Reset scale
+                                    currentDragElement = null;
+                                }
+                            }
                         </script>
 
                         <div class="character-layout">
@@ -398,7 +515,7 @@
                                             {% endfor %}
 
                                             {% for item in bag.items %}
-                                                <div onclick="display(0, {{ item.slot }}, 'slot');"
+                                                <div onmouseover="display(0, {{ item.slot }}, 'slot');"
                                                      class="Slot bagslotloc{{ item.relative_slot }} bag-item"
                                                      style="background-image: url({{ item.icon_url }});">
                                                     {% if item.stackable and item.charges > 1 and item.charges != 32767 %}
@@ -552,6 +669,14 @@
                                                 <div class="InventoryMonogram">
                                                     <img src="
 
+
+
+
+
+
+
+
+
                                                             {% static 'magelo/monograms/' %}{{ character.class_name }}.gif"
                                                          alt="Class Icon">
                                                 </div>
@@ -651,13 +776,13 @@
 
                                                 {% for key, item in inventory_items.items.items %}
                                                     {% if item.slot <= 21 and permissions.inventory %}
-                                                        <div on="display(0, {{ item.slot }}, 'slot');{% if item.is_bag %}display(0, {{ item.slot }}, 'bag');{% endif %}"
+                                                        <div onmouseover="display(0, {{ item.slot }}, 'slot');{% if item.is_bag %}display(0, {{ item.slot }}, 'bag');{% endif %}"
                                                              class="Slot slotloc{{ item.slot }}"
                                                              style="background-image: url('{{ item.icon_url }}');">
                                                         </div>
                                                     {% endif %}
                                                     {% if item.slot > 21 and item.slot <= 29 and permissions.bags %}
-                                                        <div onclick="display(0, {{ item.slot }}, 'slot');{% if item.is_bag %}hideAllBags();display(0, {{ item.slot }}, 'bag');{% endif %}"
+                                                        <div onmouseover="display(0, {{ item.slot }}, 'slot');{% if item.is_bag %}hideAllBags();display(0, {{ item.slot }}, 'bag');{% endif %}"
                                                              class="Slot slotloc{{ item.slot }}"
                                                              style="background-image: url('{{ item.icon_url }}');">
                                                         </div>
@@ -705,7 +830,7 @@
                                                 {% for key, item in inventory_items.items.items %}
                                                     {% if item.slot >= 2000 and item.slot <= 2009 %}
                                                         {# TODO: Bag contents 29 to 2023 #}
-                                                        <div onclick="display(0, {{ item.slot }}, 'slot');{% if item.is_bag %}display(0, {{ item.slot }}, 'bag');{% endif %}"
+                                                        <div onmouseover="display(0, {{ item.slot }}, 'slot');{% if item.is_bag %}display(0, {{ item.slot }}, 'bag');{% endif %}"
                                                              class="Slot slotloc{{ item.slot }}"
                                                              style="background-image: url({{ item.icon_url }});">
                                                         </div>
