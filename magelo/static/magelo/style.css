@@ -641,10 +641,10 @@ body {
 
 /* Bag Window */
 .BagOuter {
-    position: relative;
+    position: absolute;
     display: none;
     background-image: url(light.gif);
-    width: 120px;
+    width: 100px;
     max-width: 102px;
     min-height: 107px;   /* Minimum height for smallest bag */
     padding: 11px 5px 50px; /* Added bottom padding for button space */
@@ -1278,16 +1278,15 @@ div.Slot.slotloc9999.slotimage9999 {
 
 .character-windows-container {
     display: flex;
-    justify-content: center;
+    align-items: flex-start;
     gap: 20px;
-    position: relative;
-    min-height: 600px;
+    justify-content: center;
+    /*position: relative;*/
+    /*min-height: 350px;*/
 }
 
 .bags-container {
     position: relative;
-    left: -220px;
-    top: 60px;
     width: 200px;
     min-width: 200px;
     max-width: 200px;
@@ -1295,7 +1294,7 @@ div.Slot.slotloc9999.slotimage9999 {
     text-align: right;
     pointer-events: none; /* Allow clicks to pass through the container */
     z-index: 10;
-    order: 2; /* Position between nav (order 1) and main (order 3) */
+    height: 0; /* Don't take up vertical space */
 }
 
 /* Responsive Adjustments */

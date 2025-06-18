@@ -382,41 +382,40 @@
                             </nav>
 
                             <main class="character-main">
-                                <div class="character-windows-container">
-                                    <div class="bags-container" style="width:200px;text-align:right">
-                                        {% for bag in inventory_items.bags %}
-                                            <div class="BagOuter bagrow{{ bag.rows }}"
-                                                 style="height: {{ bag.height }}px"
-                                                 id="bag{{ bag.slot }}">
-                                                <div class="BagTitle">
-                                                    <div class="BagTitleLeft"></div>
-                                                    <div class="BagTitleMid">Container</div>
-                                                    <div class="BagTitleRight"></div>
-                                                </div>
-
-                                                {% for slot in bag.slots %}
-                                                    <div class="Slot bagslotloc{{ slot.number }} slotimage bag-slot"></div>
-                                                {% endfor %}
-
-                                                {% for item in bag.items %}
-                                                    <div onclick="display(0, {{ item.slot }}, 'slot');"
-                                                         class="Slot bagslotloc{{ item.relative_slot }} bag-item"
-                                                         style="background-image: url({{ item.icon_url }});">
-                                                        {% if item.stackable and item.charges > 1 and item.charges != 32767 %}
-                                                            <div class="stack-count">{{ item.charges }}</div>
-                                                        {% endif %}
-                                                    </div>
-                                                {% endfor %}
-
-                                                <button class="Button"
-                                                        style="position: absolute; top: {{ bag.button_top }}px; left: 25px;"
-                                                        onclick="document.getElementById('bag{{ bag.slot }}').style.display='none';">
-                                                    Done
-                                                </button>
+                                <div class="bags-container" style="width:200px;text-align:right">
+                                    {% for bag in inventory_items.bags %}
+                                        <div class="BagOuter bagrow{{ bag.rows }}"
+                                             style="height: {{ bag.height }}px"
+                                             id="bag{{ bag.slot }}">
+                                            <div class="BagTitle">
+                                                <div class="BagTitleLeft"></div>
+                                                <div class="BagTitleMid">Container</div>
+                                                <div class="BagTitleRight"></div>
                                             </div>
-                                        {% endfor %}
-                                    </div>
 
+                                            {% for slot in bag.slots %}
+                                                <div class="Slot bagslotloc{{ slot.number }} slotimage bag-slot"></div>
+                                            {% endfor %}
+
+                                            {% for item in bag.items %}
+                                                <div onclick="display(0, {{ item.slot }}, 'slot');"
+                                                     class="Slot bagslotloc{{ item.relative_slot }} bag-item"
+                                                     style="background-image: url({{ item.icon_url }});">
+                                                    {% if item.stackable and item.charges > 1 and item.charges != 32767 %}
+                                                        <div class="stack-count">{{ item.charges }}</div>
+                                                    {% endif %}
+                                                </div>
+                                            {% endfor %}
+
+                                            <button class="Button"
+                                                    style="position: absolute; top: {{ bag.button_top }}px; left: 25px;"
+                                                    onclick="document.getElementById('bag{{ bag.slot }}').style.display='none';">
+                                                Done
+                                            </button>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="character-windows-container">
                                     <div class="inventory-container" style="width:460px;text-align:left">
                                         <div class="InventoryOuter{% if magelo %} GM{% endif %}">
                                             <div class="ItemTitle">
@@ -652,7 +651,7 @@
 
                                                 {% for key, item in inventory_items.items.items %}
                                                     {% if item.slot <= 21 and permissions.inventory %}
-                                                        <div onclick="display(0, {{ item.slot }}, 'slot');{% if item.is_bag %}display(0, {{ item.slot }}, 'bag');{% endif %}"
+                                                        <div on="display(0, {{ item.slot }}, 'slot');{% if item.is_bag %}display(0, {{ item.slot }}, 'bag');{% endif %}"
                                                              class="Slot slotloc{{ item.slot }}"
                                                              style="background-image: url('{{ item.icon_url }}');">
                                                         </div>
