@@ -402,6 +402,9 @@
                                                     <div onclick="display(0, {{ item.slot }}, 'slot');"
                                                          class="Slot bagslotloc{{ item.relative_slot }} bag-item"
                                                          style="background-image: url({{ item.icon_url }});">
+                                                        {% if item.stackable and item.charges > 1 and item.charges != 32767 %}
+                                                            <div class="stack-count">{{ item.charges }}</div>
+                                                        {% endif %}
                                                     </div>
                                                 {% endfor %}
 
@@ -549,6 +552,7 @@
 
                                                 <div class="InventoryMonogram">
                                                     <img src="
+
                                                             {% static 'magelo/monograms/' %}{{ character.class_name }}.gif"
                                                          alt="Class Icon">
                                                 </div>
