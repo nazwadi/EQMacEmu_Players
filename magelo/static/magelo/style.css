@@ -70,6 +70,7 @@ body {
     font-size: 14px;
     background-image: url(button.gif);
 }
+
 .eq-button:hover {
     background-image: url(/static/eq-ui/images/button_small_hover.png);
 }
@@ -161,6 +162,7 @@ body {
 .eq-button:hover {
     cursor: pointer;
 }
+
 .eq-button-fancy {
     text-shadow: 0px 0px 3px #000, 0px 0px 0px #000, 1px 2px 5px #000, 4px 4px 5px #000;
     font-family: menuetto, serif;
@@ -198,6 +200,7 @@ body {
     box-shadow: 0px 0px 4px #fff300; /* some variation of blue for the shadow */
 
 }
+
 .eq-button-fancy.active {
     border: 2px solid #fff300; /* some kind of blue border */
 
@@ -213,8 +216,6 @@ body {
     -moz-box-shadow: 0px 0px 4px #fff300;
     box-shadow: 0px 0px 4px #fff300; /* some variation of blue for the shadow */
 }
-
-
 
 
 /* Utility Classes */
@@ -304,16 +305,17 @@ body {
     top: 20px;
     height: fit-content;
     margin-bottom: 0;
-    width: 150px;                    /* Fixed width for navigation */
-    min-width: 150px;                /* Prevent shrinking */
-    max-width: 150px;                /* Prevent growing */
-    flex-shrink: 0;                  /* Don't allow flex to shrink this */
+    width: 150px; /* Fixed width for navigation */
+    min-width: 150px; /* Prevent shrinking */
+    max-width: 150px; /* Prevent growing */
+    flex-shrink: 0; /* Don't allow flex to shrink this */
     background-image: url(light.gif);
     padding: 11px 5px 9px;
     border: 2px #7b714a solid;
     font-family: Arial, sans-serif;
     font-size: 9pt;
     color: #FFFFFF;
+    order: 1;
 }
 
 .NavInner {
@@ -332,20 +334,21 @@ body {
 
 .NavInner .eq-button {
     width: auto;
-        padding: 0 20px;  /* Increase horizontal padding */
+    padding: 0 20px; /* Increase horizontal padding */
     /*margin: 0 !important; !* Override existing margins *!*/
 }
 
 .character-main {
     flex: 1;
     min-width: 0; /* Prevent flex item from overflowing */
+    order: 3;
 }
 
 /* Content containers within character-main */
 .character-windows-container,
 .keys-container {
-    margin-left: 0;                  /* Ensure no left margin */
-    padding-left: 0;                 /* Ensure no left padding */
+    margin-left: 0; /* Ensure no left margin */
+    padding-left: 0; /* Ensure no left padding */
 }
 
 /* Keys container specific positioning */
@@ -353,7 +356,7 @@ body {
     background-image: url(light.gif);
     border: 2px #7b714a solid;
     padding: 20px;
-    margin: 0;                       /* No margins */
+    margin: 0; /* No margins */
     position: relative;
     display: block;
     width: auto;
@@ -641,6 +644,10 @@ body {
     max-width: 86px;
     padding: 11px 5px 9px;
     border: 2px #7b714a solid;
+    pointer-events: auto;
+    z-index: 15;
+    margin-bottom: 10px; /* Add spacing between multiple bags */
+    margin-left: auto;
 }
 
 /* Slot Images - Keeping original paths */
@@ -1138,14 +1145,15 @@ font[color="Gold"],
 div.Slot.slotloc9999.slotimage9999 {
     display: none;
 }
- .tooltip-container {
-     position: absolute;
-     left: 0;
-     width: 100%;
-     top: calc(100% - 275px); /* Adjust based on your needs */
-     z-index: 1000;
-     pointer-events: none;
- }
+
+.tooltip-container {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    top: calc(100% - 275px); /* Adjust based on your needs */
+    z-index: 1000;
+    pointer-events: none;
+}
 
 .tooltip-spacer {
     height: 220px;
@@ -1181,13 +1189,24 @@ div.Slot.slotloc9999.slotimage9999 {
 
 .character-windows-container {
     display: flex;
-    align-items: flex-start;
-    flex: 1;
+    justify-content: center;
+    gap: 20px;
+    position: relative;
+    min-height: 600px;
 }
 
 .bags-container {
+    position: relative;
+    left: -220px;
+    top: 60px;
     width: 200px;
+    min-width: 200px;
+    max-width: 200px;
+    flex-shrink: 0;
     text-align: right;
+    pointer-events: none; /* Allow clicks to pass through the container */
+    z-index: 10;
+    order: 2; /* Position between nav (order 1) and main (order 3) */
 }
 
 /* Responsive Adjustments */
@@ -1283,24 +1302,24 @@ div.Slot.slotloc9999.slotimage9999 {
 }
 
 .breadcrumb {
-    background-color: rgba(123, 113, 74, 0.1);  /* Matches your theme color with transparency */
+    background-color: rgba(123, 113, 74, 0.1); /* Matches your theme color with transparency */
     padding: 0.75rem 1rem;
     border-radius: 4px;
     margin: 1rem 0;
 }
 
 .breadcrumb-item a {
-    color: #7b714a;  /* Matches your theme color */
+    color: #7b714a; /* Matches your theme color */
     text-decoration: none;
 }
 
 .breadcrumb-item a:hover {
-    color: #6b614a;  /* Slightly darker on hover */
+    color: #6b614a; /* Slightly darker on hover */
     text-decoration: underline;
 }
 
 .breadcrumb-item.active {
-    color: #4a4532;  /* Darker version of theme color for current page */
+    color: #4a4532; /* Darker version of theme color for current page */
 }
 
 /* Custom separator to match theme */
@@ -1316,9 +1335,9 @@ div.Slot.slotloc9999.slotimage9999 {
     padding: 20px;
     margin: 20px 0;
     position: relative;
-    display: inline-block;  /* Makes container size to content */
-    min-width: 350px;       /* Minimum width for the container */
-    width: auto;            /* Let it size to content */
+    display: inline-block; /* Makes container size to content */
+    min-width: 350px; /* Minimum width for the container */
+    width: auto; /* Let it size to content */
 }
 
 .keys-container h2 {
@@ -1335,9 +1354,9 @@ div.Slot.slotloc9999.slotimage9999 {
 .keys-container .StatTable {
     background-image: url(dark.gif);
     border: 1px #444444 solid;
-    padding: 0;             /* Remove table padding */
-    width: auto !important;            /* Let table size to content */
-    min-width: 364px;       /* Minimum table width */
+    padding: 0; /* Remove table padding */
+    width: auto !important; /* Let table size to content */
+    min-width: 364px; /* Minimum table width */
     box-sizing: border-box; /* Include padding in width calculation */
     margin: 0;
     text-align: left;
@@ -1345,14 +1364,14 @@ div.Slot.slotloc9999.slotimage9999 {
 
 .keys-container .StatTable th {
     background-color: rgba(123, 113, 74, 0.5);
-    padding: 12px 15px;     /* Increased padding since table padding is removed */
+    padding: 12px 15px; /* Increased padding since table padding is removed */
     text-align: left;
     border-bottom: 2px solid #7b714a;
     white-space: nowrap;
 }
 
 .keys-container .StatTable td {
-    padding: 15px 20px;     /* Increased padding since table padding is removed */
+    padding: 15px 20px; /* Increased padding since table padding is removed */
     border-bottom: 1px solid #555555;
 }
 

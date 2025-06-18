@@ -167,6 +167,7 @@ def character_profile(request: HttpRequest, character_name: str) -> HttpResponse
                 'weight': item.weight,
                 'charges': inv_item['charges'],
                 'bag_slots': item.bag_slots,
+                'is_bag': item.bag_slots > 0,
                 'lore': item.lore,
                 'no_drop': item.no_drop,
                 'no_rent': item.no_rent,
@@ -180,6 +181,49 @@ def character_profile(request: HttpRequest, character_name: str) -> HttpResponse
             # Update stats if equipment slot
             if inv_item['slot_id'] < 22:  # Equipment slots
                 item_stats.add_item(item)
+
+    def calculate_bag_rows(bag_slots):
+        """Calculate number of rows for bag display"""
+        if bag_slots <= 4:
+            return 1
+        elif bag_slots <= 8:
+            return 2
+        elif bag_slots <= 12:
+            return 3
+        else:
+            return 4
+
+    # Process bags and their contents
+    bags_data = []
+
+    # Look for bags in inventory slots 22-29
+    for slot_id in range(22, 30):  # Slots 22-29 are general inventory where bags go
+        if slot_id in all_items:
+            item_data = all_items[slot_id]
+
+            # Check if this item is a bag
+            if item_data['bag_slots'] > 0:
+                # Calculate where this bag's contents start
+                bag_index = slot_id - 22  # 0-7 for slots 22-29
+                bag_start_slot = 2032 + (bag_index * 10)  # EQ bag content slots
+
+                # Collect items that belong in this bag
+                bag_contents = []
+                for i in range(item_data['bag_slots']):
+                    check_slot = bag_start_slot + i
+                    if check_slot in all_items:
+                        bag_item = all_items[check_slot].copy()
+                        bag_item['relative_slot'] = i  # Position within bag (0, 1, 2, etc.)
+                        bag_contents.append(bag_item)
+
+                # Create bag structure
+                bag_data = {
+                    'slot': slot_id,
+                    'rows': calculate_bag_rows(item_data['bag_slots']),
+                    'slots': [{'number': i} for i in range(item_data['bag_slots'])],
+                    'items': bag_contents
+                }
+                bags_data.append(bag_data)
 
     # Calculate total stats including items
     total_stats = {
@@ -256,7 +300,10 @@ def character_profile(request: HttpRequest, character_name: str) -> HttpResponse
         },
         'magelo': True,  # just a variable to let the templates know this is the magelo page
         'guild': guild_info,
-        'inventory_items': all_items,
+        'inventory_items': {
+            'items': all_items,
+            'bags': bags_data,
+        },
         'currency': character_currency,
         'permissions': permissions,
         'item_stats': item_stats,

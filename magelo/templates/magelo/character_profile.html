@@ -160,6 +160,16 @@
                                 }
                             }
 
+                            function hideAllBags() {
+                                // Hide all bag containers
+                                for (let i = 22; i <= 29; i++) {
+                                    const bagElement = document.getElementById('bag' + i);
+                                    if (bagElement) {
+                                        bagElement.style.display = 'none';
+                                    }
+                                }
+                            }
+
                             /**
                              * Shows and positions a tooltip
                              * @param {HTMLElement} tooltip - The tooltip element to show
@@ -389,7 +399,8 @@
                                                 {% for item in bag.items %}
                                                     <div onclick="display(0, {{ item.slot }}, 'slot');"
                                                          class="Slot bagslotloc{{ item.relative_slot }}"
-                                                         style="background-image: url({% static '/images/items/item_'|add:item.icon|add:'.png' %});">
+                                                         style="background-image: url(
+                                                                 {% static '/images/items/item_' %}{{ item.icon }}.png);">
                                                     </div>
                                                 {% endfor %}
 
@@ -541,6 +552,8 @@
 
 
 
+
+
                                                             {% static 'magelo/monograms/' %}{{ character.class_name }}.gif"
                                                          alt="Class Icon">
                                                 </div>
@@ -638,15 +651,15 @@
                                                 <div class='Slot slotloc29 slotimage'></div>
                                                 <div class='Slot slotloc9999 slotimage9999'></div>
 
-                                                {% for key, item in inventory_items.items %}
+                                                {% for key, item in inventory_items.items.items %}
                                                     {% if item.slot <= 21 and permissions.inventory %}
-                                                        <div onmouseover="display(0, {{ item.slot }}, 'slot');{% if item.is_bag %}display(0, {{ item.slot }}, 'bag');{% endif %}"
+                                                        <div onclick="display(0, {{ item.slot }}, 'slot');{% if item.is_bag %}display(0, {{ item.slot }}, 'bag');{% endif %}"
                                                              class="Slot slotloc{{ item.slot }}"
                                                              style="background-image: url('{{ item.icon_url }}');">
                                                         </div>
                                                     {% endif %}
                                                     {% if item.slot > 21 and item.slot <= 29 and permissions.bags %}
-                                                        <div onmouseover="display(0, {{ item.slot }}, 'slot');{% if item.is_bag %}display(0, {{ item.slot }}, 'bag');{% endif %}"
+                                                        <div onclick="display(0, {{ item.slot }}, 'slot');{% if item.is_bag %}hideAllBags();display(0, {{ item.slot }}, 'bag');{% endif %}"
                                                              class="Slot slotloc{{ item.slot }}"
                                                              style="background-image: url('{{ item.icon_url }}');">
                                                         </div>
@@ -691,7 +704,7 @@
                                             <div class='Slot slotloc2023 slotimage'></div>
 
                                             {% if permissions.bank %}
-                                                {% for key, item in inventory_items.items %}
+                                                {% for key, item in inventory_items.items.items %}
                                                     {% if item.slot >= 2000 and item.slot <= 2009 %}
                                                         {# TODO: Bag contents 29 to 2023 #}
                                                         <div onclick="display(0, {{ item.slot }}, 'slot');{% if item.is_bag %}display(0, {{ item.slot }}, 'bag');{% endif %}"
@@ -766,19 +779,30 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- Add spacer to maintain consistent height -->
-                                    <div class="tooltip-spacer"></div>
+                                </div>
+                                <!-- Add spacer to maintain consistent height -->
+                                <div class="tooltip-spacer"></div>
 
-                                    <!-- Tooltip container -->
-                                    <div class="tooltip-container">
-                                        {% for key, item in inventory_items.items %}
+                                <!-- Tooltip container -->
+                                <div class="tooltip-container">
+                                    {% for key, item in inventory_items.items.items %}
+                                        <div class="ItemOuter" id="slot{{ item.slot }}"
+                                             data-item-id="{{ item.id }}"
+                                             style="display:none;">
+                                            <!-- Content will be loaded dynamically -->
+                                        </div>
+                                    {% endfor %}
+
+                                    <!-- Add tooltips for bag items -->
+                                    {% for bag in inventory_items.bags %}
+                                        {% for item in bag.items %}
                                             <div class="ItemOuter" id="slot{{ item.slot }}"
                                                  data-item-id="{{ item.id }}"
                                                  style="display:none;">
                                                 <!-- Content will be loaded dynamically -->
                                             </div>
                                         {% endfor %}
-                                    </div>
+                                    {% endfor %}
                                 </div>
                             </main>
                         </div>
