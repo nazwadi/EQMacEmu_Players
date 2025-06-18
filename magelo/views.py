@@ -223,7 +223,7 @@ def character_profile(request: HttpRequest, character_name: str) -> HttpResponse
             if item_data['bag_slots'] > 0:
                 # Calculate where this bag's contents start
                 bag_index = slot_id - 22  # 0-7 for slots 22-29
-                bag_start_slot = 2032 + (bag_index * 10)  # EQ bag content slots
+                bag_start_slot = 250 + (bag_index * 10)  # EQ bag content slots
 
                 # Collect items that belong in this bag
                 bag_contents = []
