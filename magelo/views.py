@@ -193,6 +193,24 @@ def character_profile(request: HttpRequest, character_name: str) -> HttpResponse
         else:
             return 4
 
+    def calculate_bag_height(bag_slots):
+        """Calculate bag height based on number of slots"""
+        rows = calculate_bag_rows(bag_slots)
+        base_height = 60  # Base height for title, padding, etc.
+        row_height = 43  # Height per row of slots
+        button_height = 36  # Height of the button itself
+        button_margin = 65  # Margin between last slot row and button
+        return base_height + (rows * row_height) + button_margin + button_height
+
+    def calculate_button_position(bag_slots):
+        """Calculate button top position based on number of slots"""
+        rows = calculate_bag_rows(bag_slots)
+        base_top = 20 + 60  # Starting position of first slot row
+        row_height = 43  # Height per row
+        button_margin = 25  # Space between last slot and button
+
+        return base_top + (rows * row_height) + button_margin
+
     # Process bags and their contents
     bags_data = []
 
@@ -220,6 +238,8 @@ def character_profile(request: HttpRequest, character_name: str) -> HttpResponse
                 bag_data = {
                     'slot': slot_id,
                     'rows': calculate_bag_rows(item_data['bag_slots']),
+                    'height': calculate_bag_height(item_data['bag_slots']),
+                    'button_top': calculate_button_position(item_data['bag_slots']),
                     'slots': [{'number': i} for i in range(item_data['bag_slots'])],
                     'items': bag_contents
                 }

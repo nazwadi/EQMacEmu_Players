@@ -644,10 +644,9 @@ body {
     position: relative;
     display: none;
     background-image: url(light.gif);
-    width: 100px;
-    height: auto;        /* Changed from fixed height */
+    width: 120px;
+    max-width: 102px;
     min-height: 107px;   /* Minimum height for smallest bag */
-    max-width: 86px;
     padding: 11px 5px 50px; /* Added bottom padding for button space */
     border: 2px #7b714a solid;
     pointer-events: auto;
@@ -703,30 +702,6 @@ body {
     height: 21px;
     border: 0;
     padding: 0;
-}
-.bagbuttonrow1 {
-    bottom: 10px;  /* Position from bottom instead of top */
-    left: 25px;
-}
-
-.bagbuttonrow2 {
-    bottom: 10px;
-    left: 25px;
-}
-
-.bagbuttonrow3 {
-    bottom: 10px;
-    left: 25px;
-}
-
-.bagbuttonrow4 {
-    bottom: 10px;
-    left: 25px;
-}
-
-.bagbuttonrow5 {
-    bottom: 10px;
-    left: 25px;
 }
 
 /* Make sure button is positioned relative to bag */
@@ -834,53 +809,52 @@ body {
 /* ----------------------------------------------
          locations for bag slots
 ------------------------------------------------- */
-.bagslotloc1 {
+.bagslotloc0 {
     top: 20px;
     left: 6px;
 }
 
-.bagslotloc2 {
+.bagslotloc1 {
     top: 20px;
     left: 49px;
+}
+
+.bagslotloc2 {
+    top: 63px;
+    left: 6px;
 }
 
 .bagslotloc3 {
     top: 63px;
-    left: 6px;
+    left: 49px;
 }
 
 .bagslotloc4 {
-    top: 63px;
-    left: 49px;
+    top: 106px;
+    left: 6px;
 }
 
 .bagslotloc5 {
     top: 106px;
-    left: 6px;
+    left: 49px;
 }
 
 .bagslotloc6 {
-    top: 106px;
-    left: 49px;
+    top: 149px;
+    left: 6px;
 }
 
 .bagslotloc7 {
-    top: 148px;
-    left: 6px;
-}
-
-.bagslotloc8 {
-    top: 148px;
+    top: 149px;
     left: 49px;
 }
 
-.bagslotloc9 {
-    top: 191px;
+.bagslotloc8 {
+    top: 192px;
     left: 6px;
 }
-
-.bagslotloc10 {
-    top: 191px;
+.bagslotloc9 {
+    top: 192px;
     left: 49px;
 }
 
