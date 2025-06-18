@@ -704,6 +704,14 @@ body {
     padding: 0;
 }
 
+.bag-item {
+    z-index: 5;
+}
+
+.bag-slot {
+    z-index: 3;
+}
+
 /* Make sure button is positioned relative to bag */
 .BagOuter .Button {
     position: absolute;
