@@ -119,7 +119,11 @@ def character_profile(request: HttpRequest, character_name: str) -> HttpResponse
 
     character_stats = CharacterSkills.objects.filter(id=character.id)
     defense = character_stats.filter(skill_id=15).first()
+    if defense is None:
+        defense = 0
     offense = character_stats.filter(skill_id=33).first()
+    if offense is None:
+        offense = 0
     if character is None:
         raise Http404
 
