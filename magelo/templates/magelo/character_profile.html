@@ -102,6 +102,17 @@
                             const tooltipCache = new Map();
                             let currentlyLoadingId = null;
 
+                            // Drag functionality variables
+                            let isDragging = false;
+                            let currentDragElement = null;
+                            let dragOffset = {x: 0, y: 0};
+
+                            // Add these new variables for shared tooltip positioning
+                            let sharedBagPosition = null;
+                            let hasBagPosition = false;
+                            let sharedItemPosition = null;
+                            let hasItemPosition = false;
+
                             /**
                              * Manages the display of item tooltips
                              * @param {boolean} type - Toggle type (true for toggle, false for show/hide others)
@@ -151,11 +162,8 @@
                                     if (element) {
                                         element.style.display = 'none';
                                         element.classList.remove('visible');
-                                        // Reset position
-                                        element.style.position = 'relative';
-                                        element.style.left = '';
-                                        element.style.top = '';
-                                        element.style.zIndex = '1000';
+
+                                        // Don't reset position - let shared positioning handle it
                                     }
                                 }
 
@@ -165,11 +173,8 @@
                                     if (element) {
                                         element.style.display = 'none';
                                         element.classList.remove('visible');
-                                        // Reset position
-                                        element.style.position = 'absolute';
-                                        element.style.left = '';
-                                        element.style.top = '';
-                                        element.style.zIndex = '1000';
+
+                                        // Don't reset position - let shared positioning handle it
                                     }
                                 }
                             }
@@ -184,19 +189,33 @@
                                 }
                             }
 
-                            /**
-                             * Shows and positions a tooltip
-                             * @param {HTMLElement} tooltip - The tooltip element to show
-                             */
                             function showTooltip(tooltip) {
+                                console.log('Tooltip type:', tooltip.dataset.tooltipType, 'Element ID:', tooltip.id);
                                 tooltip.setAttribute('role', 'tooltip');
                                 tooltip.setAttribute('aria-hidden', 'false');
 
-                                // Reset to original positioning system
-                                tooltip.style.position = 'relative';
-                                tooltip.style.left = '';
-                                tooltip.style.top = '';
-                                tooltip.style.zIndex = '1000';
+                                // Determine tooltip type from data attribute
+                                const tooltipType = tooltip.dataset.tooltipType || 'item';
+
+                                if (tooltipType === 'bag' && hasBagPosition && sharedBagPosition) {
+                                    // Use the shared bag position
+                                    tooltip.style.position = 'fixed';
+                                    tooltip.style.left = sharedBagPosition.x + 'px';
+                                    tooltip.style.top = sharedBagPosition.y + 'px';
+                                    tooltip.style.zIndex = '1000';
+                                } else if (tooltipType === 'item' && hasItemPosition && sharedItemPosition) {
+                                    // Use the shared item position
+                                    tooltip.style.position = 'fixed';
+                                    tooltip.style.left = sharedItemPosition.x + 'px';
+                                    tooltip.style.top = sharedItemPosition.y + 'px';
+                                    tooltip.style.zIndex = '1000';
+                                } else {
+                                    // Use original positioning system
+                                    tooltip.style.position = 'relative';
+                                    tooltip.style.left = '';
+                                    tooltip.style.top = '';
+                                    tooltip.style.zIndex = '1000';
+                                }
 
                                 // Show the tooltip
                                 tooltip.style.display = 'block';
@@ -209,15 +228,17 @@
                                     makeDraggable(tooltip);
                                 });
 
-                                // Check if tooltip is in viewport and scroll if needed
-                                const rect = tooltip.getBoundingClientRect();
-                                const viewportHeight = window.innerHeight;
+                                // Check if tooltip is in viewport and scroll if needed (only for non-positioned tooltips)
+                                if ((tooltipType === 'bag' && !hasBagPosition) || (tooltipType === 'item' && !hasItemPosition)) {
+                                    const rect = tooltip.getBoundingClientRect();
+                                    const viewportHeight = window.innerHeight;
 
-                                if (rect.bottom > viewportHeight) {
-                                    window.scrollBy({
-                                        top: rect.bottom - viewportHeight + 20,
-                                        behavior: 'smooth'
-                                    });
+                                    if (rect.bottom > viewportHeight) {
+                                        window.scrollBy({
+                                            top: rect.bottom - viewportHeight + 20,
+                                            behavior: 'smooth'
+                                        });
+                                    }
                                 }
                             }
 
@@ -370,11 +391,6 @@
                                 });
                             }
 
-                            // Drag functionality variables
-                            let isDragging = false;
-                            let currentDragElement = null;
-                            let dragOffset = {x: 0, y: 0};
-
                             /**
                              * Initialize drag functionality for a tooltip
                              * @param {HTMLElement} element - The tooltip element
@@ -447,10 +463,6 @@
                                 e.preventDefault();
                             }
 
-                            /**
-                             * Stop dragging
-                             * @param {MouseEvent} e - Mouse event
-                             */
                             function stopDrag(e) {
                                 if (!isDragging) return;
 
@@ -458,10 +470,60 @@
 
                                 if (currentDragElement) {
                                     currentDragElement.style.userSelect = '';
-                                    currentDragElement.style.opacity = '1'; // Reset opacity
-                                    currentDragElement.style.transform = ''; // Reset scale
+                                    currentDragElement.style.opacity = '1';
+                                    currentDragElement.style.transform = '';
+
+                                    // Determine tooltip type and save to appropriate shared position
+                                    const tooltipType = currentDragElement.dataset.tooltipType || 'item';
+                                    const rect = currentDragElement.getBoundingClientRect();
+
+                                    if (tooltipType === 'bag') {
+                                        // Save as bag position
+                                        sharedBagPosition = {
+                                            x: rect.left,
+                                            y: rect.top
+                                        };
+                                        hasBagPosition = true;
+                                    } else {
+                                        // Save as item position
+                                        sharedItemPosition = {
+                                            x: rect.left,
+                                            y: rect.top
+                                        };
+                                        hasItemPosition = true;
+                                    }
+
                                     currentDragElement = null;
                                 }
+                            }
+
+                            /**
+                             * Reset bag tooltip position back to default
+                             */
+                            function resetBagTooltipPosition() {
+                                sharedBagPosition = null;
+                                hasBagPosition = false;
+                                hideAllTooltips();
+                            }
+
+                            /**
+                             * Reset item tooltip position back to default
+                             */
+                            function resetItemTooltipPosition() {
+                                sharedItemPosition = null;
+                                hasItemPosition = false;
+                                hideAllTooltips();
+                            }
+
+                            /**
+                             * Reset all tooltip positions back to default
+                             */
+                            function resetAllTooltipPositions() {
+                                sharedBagPosition = null;
+                                hasBagPosition = false;
+                                sharedItemPosition = null;
+                                hasItemPosition = false;
+                                hideAllTooltips();
                             }
                         </script>
 
@@ -503,7 +565,9 @@
                                     {% for bag in inventory_items.bags %}
                                         <div class="BagOuter bagrow{{ bag.rows }}"
                                              style="height: {{ bag.height }}px"
-                                             id="bag{{ bag.slot }}">
+                                             id="bag{{ bag.slot }}"
+                                             data-tooltip-type="bag"
+                                        >
                                             <div class="BagTitle">
                                                 <div class="BagTitleLeft"></div>
                                                 <div class="BagTitleMid">Container</div>
@@ -677,6 +741,25 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                                                             {% static 'magelo/monograms/' %}{{ character.class_name }}.gif"
                                                          alt="Class Icon">
                                                 </div>
@@ -784,6 +867,8 @@
                                                     {% if item.slot > 21 and item.slot <= 29 and permissions.bags %}
                                                         <div onmouseover="display(0, {{ item.slot }}, 'slot');{% if item.is_bag %}hideAllBags();display(0, {{ item.slot }}, 'bag');{% endif %}"
                                                              class="Slot slotloc{{ item.slot }}"
+                                                             {% if item.is_bag %}data-tooltip-type="bag"
+                                                             {% else %}data-tooltip-type="item"{% endif %}
                                                              style="background-image: url('{{ item.icon_url }}');">
                                                         </div>
                                                     {% endif %}
@@ -832,6 +917,7 @@
                                                         {# TODO: Bag contents 29 to 2023 #}
                                                         <div onmouseover="display(0, {{ item.slot }}, 'slot');{% if item.is_bag %}display(0, {{ item.slot }}, 'bag');{% endif %}"
                                                              class="Slot slotloc{{ item.slot }}"
+                                                             {% if item.is_bag %} data-tooltip-type="bag" {% else %} data-tooltip-type="item" {% endif %}
                                                              style="background-image: url({{ item.icon_url }});">
                                                         </div>
                                                     {% endif %}
@@ -911,6 +997,7 @@
                                     {% for key, item in inventory_items.items.items %}
                                         <div class="ItemOuter" id="slot{{ item.slot }}"
                                              data-item-id="{{ item.id }}"
+                                             data-tooltip-type="item"
                                              style="display:none;">
                                             <!-- Content will be loaded dynamically -->
                                         </div>
@@ -921,6 +1008,7 @@
                                         {% for item in bag.items %}
                                             <div class="ItemOuter" id="slot{{ item.slot }}"
                                                  data-item-id="{{ item.id }}"
+                                                 data-tooltip-type="item"
                                                  style="display:none;">
                                                 <!-- Content will be loaded dynamically -->
                                             </div>
