@@ -283,6 +283,10 @@ body {
     position: absolute;
     z-index: 3;
 }
+.BagOuter .Slot {
+    position: absolute;
+    /* Positions will be relative to the .BagOuter container */
+}
 
 .Slot:hover {
     cursor: pointer;
@@ -641,13 +645,93 @@ body {
     display: none;
     background-image: url(light.gif);
     width: 100px;
+    height: auto;        /* Changed from fixed height */
+    min-height: 107px;   /* Minimum height for smallest bag */
     max-width: 86px;
-    padding: 11px 5px 9px;
+    padding: 11px 5px 50px; /* Added bottom padding for button space */
     border: 2px #7b714a solid;
     pointer-events: auto;
     z-index: 15;
-    margin-bottom: 10px; /* Add spacing between multiple bags */
+    margin-bottom: 10px;
     margin-left: auto;
+    overflow: visible;
+}
+
+.BagTitle {
+    position: absolute;
+    top: -11px;
+    left: 4px;
+    border: 0;
+    padding: 0;
+    width: 92px; /* Adjust width to fit bag container */
+    height: 21px;
+    font-family: arial, serif;
+    font-size: 9pt;
+    color: #FFFFFF;
+}
+
+.BagTitleLeft {
+    background-image: url(leftt.gif);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 14px;
+    height: 21px;
+    border: 0;
+    padding: 0;
+}
+
+.BagTitleMid {
+    background-image: url(midt.gif);
+    position: absolute;
+    text-align: center;
+    line-height: 21px;
+    top: 0;
+    left: 14px;
+    width: 64px; /* Adjust for bag width */
+    height: 21px;
+    border: 0;
+    padding: 0;
+}
+
+.BagTitleRight {
+    background-image: url(rightt.gif);
+    position: absolute;
+    top: 0;
+    left: 78px; /* Adjust for bag width */
+    width: 14px;
+    height: 21px;
+    border: 0;
+    padding: 0;
+}
+.bagbuttonrow1 {
+    bottom: 10px;  /* Position from bottom instead of top */
+    left: 25px;
+}
+
+.bagbuttonrow2 {
+    bottom: 10px;
+    left: 25px;
+}
+
+.bagbuttonrow3 {
+    bottom: 10px;
+    left: 25px;
+}
+
+.bagbuttonrow4 {
+    bottom: 10px;
+    left: 25px;
+}
+
+.bagbuttonrow5 {
+    bottom: 10px;
+    left: 25px;
+}
+
+/* Make sure button is positioned relative to bag */
+.BagOuter .Button {
+    position: absolute;
 }
 
 /* Slot Images - Keeping original paths */
@@ -1115,28 +1199,33 @@ body {
          bag rows
 ------------------------------------------------- */
 .bagrow1 {
-    height: 107px;
-    max-height: 83px;
+    height: auto;
+    min-height: 107px;
+    padding-bottom: 50px; /* Space for button */
 }
 
 .bagrow2 {
-    height: 150px;
-    max-height: 126px;
+    height: auto;
+    min-height: 150px;
+    padding-bottom: 50px;
 }
 
 .bagrow3 {
-    height: 193px;
-    max-height: 169px;
+    height: auto;
+    min-height: 193px;
+    padding-bottom: 50px;
 }
 
 .bagrow4 {
-    height: 235px;
-    max-height: 211px;
+    height: auto;
+    min-height: 235px;
+    padding-bottom: 50px;
 }
 
 .bagrow5 {
-    height: 278px;
-    max-height: 254px;
+    height: auto;
+    min-height: 278px;
+    padding-bottom: 50px;
 }
 
 /* Hide Elements */

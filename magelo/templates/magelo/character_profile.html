@@ -393,14 +393,13 @@
                                                 </div>
 
                                                 {% for slot in bag.slots %}
-                                                    <div class="Slot bagslotloc{{ slot.number }} slotimage"></div>
+                                                    <div class="Slot bagslotloc{{ slot.number|add:1 }} slotimage"></div>
                                                 {% endfor %}
 
                                                 {% for item in bag.items %}
                                                     <div onclick="display(0, {{ item.slot }}, 'slot');"
-                                                         class="Slot bagslotloc{{ item.relative_slot }}"
-                                                         style="background-image: url(
-                                                                 {% static '/images/items/item_' %}{{ item.icon }}.png);">
+                                                         class="Slot bagslotloc{{ item.relative_slot|add:1 }}"
+                                                         style="background-image: url({% static 'images/items/item_'|add:item.icon|add:'.png' %});">
                                                     </div>
                                                 {% endfor %}
 
@@ -547,13 +546,6 @@
 
                                                 <div class="InventoryMonogram">
                                                     <img src="
-
-
-
-
-
-
-
                                                             {% static 'magelo/monograms/' %}{{ character.class_name }}.gif"
                                                          alt="Class Icon">
                                                 </div>
