@@ -430,7 +430,6 @@ def view_item(request, item_id):
                       "related_quests": related_quests,
                   })
 
-
 @require_http_methods(["GET"])
 def item_detail_api(request: HttpRequest, item_id: int) -> HttpResponse:
     """
@@ -440,16 +439,39 @@ def item_detail_api(request: HttpRequest, item_id: int) -> HttpResponse:
     :param item_id: An Item ID field unique identifier.
     :return: An HTTP response rendering the item stats template.
     """
-    item = Items.objects.get(id=item_id)
-    effect_name, effect_id = get_item_effect(item)
-    return render(
-        request=request,
-        template_name="items/item_stats_template.html",
-        context={
-             "effect_name": effect_name,
-             "item": item,
-        }
-    )
+    import traceback
+
+    try:
+        print(f"=== Starting item_detail_api for item {item_id} ===")
+
+        print(f"Step 1: Attempting to fetch item {item_id}")
+        item = Items.objects.get(id=item_id)
+        print(f"Step 1: SUCCESS - fetched item: {item.Name}")
+
+        print(f"Step 2: Calling get_item_effect...")
+        effect_name, effect_id = get_item_effect(item)
+        print(f"Step 2: SUCCESS - effect result: name={effect_name}, id={effect_id}")
+
+        print(f"Step 3: Rendering template...")
+        response = render(
+            request=request,
+            template_name="items/item_stats_template.html",
+            context={
+                "effect_name": effect_name,
+                "item": item,
+            }
+        )
+        print(f"Step 3: SUCCESS - template rendered")
+        return response
+
+    except Items.DoesNotExist:
+        print(f"ERROR: Item {item_id} does not exist")
+        return HttpResponse(f"Item {item_id} not found", status=404)
+    except Exception as e:
+        print(f"ERROR in item_detail_api for item {item_id}: {e}")
+        print(f"ERROR TYPE: {type(e).__name__}")
+        print(f"Full traceback:\n{traceback.format_exc()}")
+        return HttpResponse("Internal server error", status=500)
 
 
 def best_in_slot(request: HttpRequest, class_id: int = None) -> HttpResponse:

@@ -149,7 +149,6 @@ def build_stat_query(clause: str,
 
     return partial_query, error_messages
 
-
 def get_item_effect(item: Items) -> Tuple[Optional[str], Optional[int]]:
     """
     Retrieve the name and ID of an item's effect, checking click, worn, and proc effects in order.
@@ -158,20 +157,38 @@ def get_item_effect(item: Items) -> Tuple[Optional[str], Optional[int]]:
     :return: A tuple of (effect_name, effect_id), where effect_name is the spell name or None,
              and effect_id is the corresponding effect ID or None if no valid effect is found.
     """
-    effect_types = [
-        ('click_effect', item.click_effect),
-        ('worn_effect', item.worn_effect),
-        ('proc_effect', item.proc_effect),
-    ]
+    try:
+        print(f"=== get_item_effect called for item {item.id} ===")
 
-    for _, effect_id in effect_types:
-        if not effect_id or effect_id <= 0:
-            continue
+        effect_types = [
+            ('click_effect', item.click_effect),
+            ('worn_effect', item.worn_effect),
+            ('proc_effect', item.proc_effect),
+        ]
 
-        effect = SpellsNew.objects.filter(id=effect_id).first()
-        if effect:
-            if effect.name is not None and effect.name != '':
-                return effect.name, effect_id
+        print(f"Effect values: click={item.click_effect}, worn={item.worn_effect}, proc={item.proc_effect}")
 
-    # No valid effect with a non-null, non-empty name found
-    return None, None
+        for _, effect_id in effect_types:
+            if not effect_id or effect_id <= 0:
+                continue
+
+            print(f"Checking effect_id: {effect_id}")
+            effect = SpellsNew.objects.filter(id=effect_id).first()
+            print(f"Effect query result: {effect}")
+
+            if effect:
+                print(f"Effect name: '{effect.name}'")
+                if effect.name is not None and effect.name != '':
+                    print(f"Returning: name='{effect.name}', id={effect_id}")
+                    return effect.name, effect_id
+
+        print("No valid effect found, returning None, None")
+        # No valid effect with a non-null, non-empty name found
+        return None, None
+
+    except Exception as e:
+        print(f"ERROR in get_item_effect: {e}")
+        print(f"ERROR TYPE: {type(e).__name__}")
+        import traceback
+        print(f"Traceback:\n{traceback.format_exc()}")
+        raise
