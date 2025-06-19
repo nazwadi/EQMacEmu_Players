@@ -83,7 +83,7 @@ def list_characters(request, game_account_name):
             messages.error(request, "The world server has not seen this account. If this account is new, "
                                     "please log in to character select first.")
             return redirect("accounts:list_accounts")
-        if not valid_game_account_owner(forum_name, game_account.id):
+        if not valid_game_account_owner(forum_name, str(game_account.id)):
             raise Http404("Either this account does not exist or does not belong to you.  If you have registered this "
                           "account with the login server, you must log in to the game server at least once before "
                           "attempting to view this page.")
@@ -115,7 +115,7 @@ def view_character(request, character_name):
         account = Account.objects.filter(id=character.account_id).first()
 
         forum_name = request.user.username
-        if not valid_game_account_owner(forum_name, account.id):
+        if not valid_game_account_owner(forum_name, str(account.id)):
             raise Http404("This account does not exist")
 
         character_currency = CharacterCurrency.objects.filter(id=character.id).first()
