@@ -245,6 +245,40 @@ def character_profile(request: HttpRequest, character_name: str) -> HttpResponse
                 }
                 bags_data.append(bag_data)
 
+    # Process bank bags and their contents
+    bank_bags_data = []
+
+    # Look for bags in bank slots 2000-2007
+    for slot_id in range(2000, 2008):  # Bank slots 2000-2007 where bags can go
+        if slot_id in all_items:
+            item_data = all_items[slot_id]
+
+            # Check if this item is a bag
+            if item_data['bag_slots'] > 0:
+                # Calculate where this bank bag's contents start
+                bag_index = slot_id - 2000  # 0-7 for slots 2000-2007
+                bag_start_slot = 2030 + (bag_index * 10)  # Bank bag content slots start at 2030
+
+                # Collect items that belong in this bank bag
+                bag_contents = []
+                for i in range(item_data['bag_slots']):
+                    check_slot = bag_start_slot + i
+                    if check_slot in all_items:
+                        bag_item = all_items[check_slot].copy()
+                        bag_item['relative_slot'] = i  # Position within bag (0, 1, 2, etc.)
+                        bag_contents.append(bag_item)
+
+                # Create bank bag structure
+                bank_bag_data = {
+                    'slot': slot_id,
+                    'rows': calculate_bag_rows(item_data['bag_slots']),
+                    'height': calculate_bag_height(item_data['bag_slots']),
+                    'button_top': calculate_button_position(item_data['bag_slots']),
+                    'slots': [{'number': i} for i in range(item_data['bag_slots'])],
+                    'items': bag_contents
+                }
+                bank_bags_data.append(bank_bag_data)
+
     # Calculate total stats including items
     total_stats = {
         'str': character.str + item_stats.stat_bonuses['str'],
@@ -331,6 +365,10 @@ def character_profile(request: HttpRequest, character_name: str) -> HttpResponse
         'inventory_items': {
             'items': all_items,
             'bags': bags_data,
+        },
+        'bank_items': {
+            'items': all_items,  # Same items dict, but filtered in template
+            'bags': bank_bags_data,
         },
         'currency': character_currency,
         'permissions': permissions,

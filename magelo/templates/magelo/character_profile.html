@@ -112,6 +112,8 @@
                             let hasBagPosition = false;
                             let sharedItemPosition = null;
                             let hasItemPosition = false;
+                            let sharedBankBagPosition = null;
+                            let hasBankBagPosition = false;
 
                             /**
                              * Manages the display of item tooltips
@@ -180,11 +182,19 @@
                             }
 
                             function hideAllBags() {
-                                // Hide all bag containers
+                                // Hide all inventory bag containers
                                 for (let i = 22; i <= 29; i++) {
                                     const bagElement = document.getElementById('bag' + i);
                                     if (bagElement) {
                                         bagElement.style.display = 'none';
+                                    }
+                                }
+
+                                // Hide all bank bag containers
+                                for (let i = 2000; i <= 2007; i++) {
+                                    const bankBagElement = document.getElementById('bag' + i);
+                                    if (bankBagElement) {
+                                        bankBagElement.style.display = 'none';
                                     }
                                 }
                             }
@@ -196,12 +206,30 @@
                                 // Determine tooltip type from data attribute
                                 const tooltipType = tooltip.dataset.tooltipType || 'item';
 
-                                if (tooltipType === 'bag' && hasBagPosition && sharedBagPosition) {
-                                    // Use the shared bag position
-                                    tooltip.style.position = 'fixed';
-                                    tooltip.style.left = sharedBagPosition.x + 'px';
-                                    tooltip.style.top = sharedBagPosition.y + 'px';
-                                    tooltip.style.zIndex = '1000';
+                                if (tooltipType === 'bag') {
+                                    // Determine if this is a bank bag (slot >= 2000) or inventory bag
+                                    const slotId = tooltip.id.replace('bag', '');
+                                    const isBank = parseInt(slotId) >= 2000;
+
+                                    if (isBank && hasBankBagPosition && sharedBankBagPosition) {
+                                        // Use the shared bank bag position
+                                        tooltip.style.position = 'fixed';
+                                        tooltip.style.left = sharedBankBagPosition.x + 'px';
+                                        tooltip.style.top = sharedBankBagPosition.y + 'px';
+                                        tooltip.style.zIndex = '1000';
+                                    } else if (!isBank && hasBagPosition && sharedBagPosition) {
+                                        // Use the shared inventory bag position
+                                        tooltip.style.position = 'fixed';
+                                        tooltip.style.left = sharedBagPosition.x + 'px';
+                                        tooltip.style.top = sharedBagPosition.y + 'px';
+                                        tooltip.style.zIndex = '1000';
+                                    } else {
+                                        // Use original positioning system
+                                        tooltip.style.position = 'relative';
+                                        tooltip.style.left = '';
+                                        tooltip.style.top = '';
+                                        tooltip.style.zIndex = '1000';
+                                    }
                                 } else if (tooltipType === 'item' && hasItemPosition && sharedItemPosition) {
                                     // Use the shared item position
                                     tooltip.style.position = 'fixed';
@@ -477,12 +505,25 @@
                                     const rect = currentDragElement.getBoundingClientRect();
 
                                     if (tooltipType === 'bag') {
-                                        // Save as bag position
-                                        sharedBagPosition = {
-                                            x: rect.left,
-                                            y: rect.top
-                                        };
-                                        hasBagPosition = true;
+                                        // Determine if this is a bank bag or inventory bag
+                                        const slotId = currentDragElement.id.replace('bag', '');
+                                        const isBank = parseInt(slotId) >= 2000;
+
+                                        if (isBank) {
+                                            // Save as bank bag position
+                                            sharedBankBagPosition = {
+                                                x: rect.left,
+                                                y: rect.top
+                                            };
+                                            hasBankBagPosition = true;
+                                        } else {
+                                            // Save as inventory bag position
+                                            sharedBagPosition = {
+                                                x: rect.left,
+                                                y: rect.top
+                                            };
+                                            hasBagPosition = true;
+                                        }
                                     } else {
                                         // Save as item position
                                         sharedItemPosition = {
@@ -515,11 +556,22 @@
                             }
 
                             /**
-                             * Reset all tooltip positions back to default
+                             * Reset bank bag tooltip position back to default
+                             */
+                            function resetBankBagTooltipPosition() {
+                                sharedBankBagPosition = null;
+                                hasBankBagPosition = false;
+                                hideAllTooltips();
+                            }
+
+                            /**
+                             * Update the existing reset function to include bank bags
                              */
                             function resetAllTooltipPositions() {
                                 sharedBagPosition = null;
                                 hasBagPosition = false;
+                                sharedBankBagPosition = null;
+                                hasBankBagPosition = false;
                                 sharedItemPosition = null;
                                 hasItemPosition = false;
                                 hideAllTooltips();
@@ -759,6 +811,16 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
                                                             {% static 'magelo/monograms/' %}{{ character.class_name }}.gif"
                                                          alt="Class Icon">
                                                 </div>
@@ -911,12 +973,12 @@
                                             <div class='Slot slotloc2023 slotimage'></div>
 
                                             {% if permissions.bank %}
-                                                {% for key, item in inventory_items.items.items %}
-                                                    {% if item.slot >= 2000 and item.slot <= 2009 %}
-                                                        {# TODO: Bag contents 29 to 2023 #}
-                                                        <div onmouseover="display(0, {{ item.slot }}, 'slot');{% if item.is_bag %}display(0, {{ item.slot }}, 'bag');{% endif %}"
+                                                {% for key, item in bank_items.items.items %}
+                                                    {% if item.slot >= 2000 and item.slot <= 2007 %}
+                                                        <div onmouseover="display(0, {{ item.slot }}, 'slot');{% if item.is_bag %}hideAllBags();display(0, {{ item.slot }}, 'bag');{% endif %}"
                                                              class="Slot slotloc{{ item.slot }}"
-                                                             {% if item.is_bag %} data-tooltip-type="bag" {% else %} data-tooltip-type="item" {% endif %}
+                                                                {% if item.is_bag %} data-tooltip-type="bag" {% else %}
+                                                             data-tooltip-type="item" {% endif %}
                                                              style="background-image: url({{ item.icon_url }});">
                                                         </div>
                                                     {% endif %}
@@ -1001,6 +1063,15 @@
                                             <!-- Content will be loaded dynamically -->
                                         </div>
                                     {% endfor %}
+                                    <!-- Add tooltips for bank items -->
+                                    {% for key, item in bank_items.items.items %}
+                                        <div class="ItemOuter" id="slot{{ item.slot }}"
+                                             data-item-id="{{ item.id }}"
+                                             data-tooltip-type="item"
+                                             style="display:none;">
+                                            <!-- Content will be loaded dynamically -->
+                                        </div>
+                                    {% endfor %}
 
                                     <!-- Add tooltips for bag items -->
                                     {% for bag in inventory_items.bags %}
@@ -1013,8 +1084,56 @@
                                             </div>
                                         {% endfor %}
                                     {% endfor %}
+                                    <!-- Add tooltips for bank bag items -->
+                                    {% for bag in bank_items.bags %}
+                                        {% for item in bag.items %}
+                                            <div class="ItemOuter" id="slot{{ item.slot }}"
+                                                 data-item-id="{{ item.id }}"
+                                                 data-tooltip-type="item"
+                                                 style="display:none;">
+                                                <!-- Content will be loaded dynamically -->
+                                            </div>
+                                        {% endfor %}
+                                    {% endfor %}
                                 </div>
                             </main>
+                            <!-- Bank Bags Container -->
+                            <div class="bank-bags-container"
+                                 style="position: absolute; width:200px;text-align:right; top: 0; right: 0; z-index: 999;">
+                                {% for bag in bank_items.bags %}
+                                    <div class="BagOuter bagrow{{ bag.rows }}"
+                                         style="height: {{ bag.height }}px"
+                                         id="bag{{ bag.slot }}"
+                                         data-tooltip-type="bag"
+                                    >
+                                        <div class="BagTitle">
+                                            <div class="BagTitleLeft"></div>
+                                            <div class="BagTitleMid">Container</div>
+                                            <div class="BagTitleRight"></div>
+                                        </div>
+
+                                        {% for slot in bag.slots %}
+                                            <div class="Slot bagslotloc{{ slot.number }} slotimage bag-slot"></div>
+                                        {% endfor %}
+
+                                        {% for item in bag.items %}
+                                            <div onmouseover="display(0, {{ item.slot }}, 'slot');"
+                                                 class="Slot bagslotloc{{ item.relative_slot }} bag-item"
+                                                 style="background-image: url({{ item.icon_url }});">
+                                                {% if item.stackable and item.charges > 1 and item.charges != 32767 %}
+                                                    <div class="stack-count">{{ item.charges }}</div>
+                                                {% endif %}
+                                            </div>
+                                        {% endfor %}
+
+                                        <button class="Button"
+                                                style="position: absolute; top: {{ bag.button_top }}px; left: 25px;"
+                                                onclick="document.getElementById('bag{{ bag.slot }}').style.display='none';">
+                                            Done
+                                        </button>
+                                    </div>
+                                {% endfor %}
+                            </div>
                         </div>
                     </div>
                 </div>
