@@ -95,8 +95,24 @@
                         </div>
                     </div>
                 {% endif %}
-
                 <div class="character-layout">
+                    <script type="text/javascript">
+                        function display(type, id, prefix) {
+                            if (target = document.getElementById(prefix + id))
+                                if (type) target.style.display = (target.style.display == 'none') ? 'block' : 'none';
+                                else {
+                                    for (var i = 0; i < 100; i++) if (hideme = document.getElementById(prefix + i)) hideme.style.display = 'none';
+                                    target.style.display = 'block';
+                                }
+                        }
+
+                        function color(id) {
+                            if (target = document.getElementById("link" + id)) {
+                                for (var i = 0; i < 100; i++) if (white = document.getElementById("link" + i)) white.style.color = '#FFFFFF';
+                                target.style.color = '#7b714a';
+                            }
+                        }
+                    </script>
                     <nav class="NavOuter">
                         <div class="NavInner">
                             <button class="eq-button"
@@ -115,7 +131,7 @@
                                     style="margin:3px">AAs
                             </button>
                             <button class="eq-button"
-                                    disabled
+                                    onclick="window.location='{% url 'magelo:keys' character.name %}'"
                                     style="margin:3px">Keys
                             </button>
                             {#                                                            <button class="eq-button"#}
@@ -132,33 +148,90 @@
                             {#                        </button>#}
                         </div>
                     </nav>
-
                     <main class="character-main">
-                        <div class="keys-container">
-                            <div style="" class='ItemTitle'>
-                                <div class='ItemTitleLeft'></div>
-                                <div class='ItemTitleMid'>Keys - {{ character.name }}</div>
-                                <div class='ItemTitleRight'></div>
+
+                        <div class='FlagOuter'>
+                            <div class='FlagTitle'>
+                                <div class='FlagTitleLeft'></div>
+                                <div class='FlagTitleMid'>Alternate Abilities - {{ character.name }}</div>
+                                <div class='FlagTitleRight'></div>
                             </div>
-                            <div class='ItemInner'>
-                                {% if keys %}
-                                    <table style="min-width: 90%;" class="StatTable">
-                                        <thead>
-                                        <tr>
-                                            <th>Key (Item Id)</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        {% for item_id, key in keys %}
-                                            <tr>
-                                                <td><a href="/items/view/{{ item_id }}" target="_blank">{{ key }} ({{ item_id }})</a></td>
-                                            </tr>
+                            <div class='FlagInner'>
+                                <table class='StatTable' style='width:625px;'>
+                                    <tr>
+                                        <!-- BEGIN tabs -->
+                                        {% for tab in tabs %}
+                                            <td nowrap style="text-align:center;">
+                                                <a style='color:#{{ tab.color }}'
+                                                   id='link{{ tab.id }}'
+                                                   onclick="display(0,{{ tab.id }},'tab');color({{ tab.id }});">{{ tab.name }}</a>
+                                            </td>
                                         {% endfor %}
-                                        </tbody>
-                                    </table>
-                                {% else %}
-                                    <div style="text-align: center;">{{ character.name }} has no keys.</div>
-                                {% endif %}
+                                        <!-- END tabs -->
+                                    </tr>
+                                </table>
+                                <br>
+                                <table class='StatTable' style='width:625px;'>
+                                    <tr>
+                                        <td>
+                                            <!-- BEGIN boxes -->
+                                            {% for box in boxes %}
+                                                <div id='tab{{ box.id }}' class='FlagTabBox'
+                                                     style='display: {{ box.display }};'>
+                                                    <table class='StatTable' style="height: 100%;">
+                                                        <tr>
+                                                            <td class='ColumnHead' style='padding: 0 3px 4px 30px;'>
+                                                                Title
+                                                            </td>
+                                                            <td class='ColumnHead'
+                                                                style='text-align: center; padding: 0 15px 4px 30px;'>
+                                                                Cur/Max
+                                                            </td>
+                                                            <td class='ColumnHead'
+                                                                style='text-align: center; padding: 0 30px 4px 15px;'>
+                                                                Cost
+                                                            </td>
+                                                        </tr>
+                                                        {% for aa in box.aas %}
+                                                            <tr onMouseOver="this.style.background = '#7b714a'"
+                                                                onMouseOut="this.style.background = 'none'">
+                                                                <td style='padding: 1px 3px 0 30px;color:{{ aa.COLOR }};'>
+                                                                    {{ aa.NAME|default:"Unknown" }}
+                                                                </td>
+                                                                <td style='text-align: center; padding: 1px 15px 0 30px;color:{{ aa.COLOR }};'
+                                                                >{{ aa.CUR|default:0 }}
+                                                                    / {{ aa.MAX|default:"?" }}
+                                                                </td>
+                                                                <td style='text-align: center; padding: 1px 30px 0 15px;color:{{ aa.COLOR }};'>
+                                                                    {{ aa.COST|default:"?" }}
+                                                                </td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                    </table>
+                                                </div>
+                                            {% endfor %}
+                                        </td>
+                                        <td style="text-align: center; width: 150px; vertical-align: top;">
+                                            <br><br><br>
+                                            <table class='StatTable' style='width:90%;'>
+                                                <tr>
+                                                    <td style="text-align: left;" nowrap>AA Points:</td>
+                                                    <td style="text-align: right;" nowrap>{{ AA_POINTS|default:0 }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="text-align: left;" nowrap>Points Spent:</td>
+                                                    <td style="text-align: right;"
+                                                        nowrap>{{ POINTS_SPENT|default:0 }}</td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <br>
+                                <div style="display: flex; justify-content: center;" class='FreeButton'
+                                     onclick="window.location='{% url 'magelo:character_profile' character.name %}';">
+                                    Done
+                                </div>
                             </div>
                         </div>
                     </main>

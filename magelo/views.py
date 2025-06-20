@@ -8,7 +8,7 @@ from django.views.decorators.http import require_http_methods
 
 from characters.utils import get_character_keyring
 
-from common.models.characters import Characters, CharacterSkills, CharacterInventory, CharacterCurrency
+from common.models.characters import Characters, CharacterAlternateAbility, CharacterSkills, CharacterInventory, CharacterCurrency
 from common.models.guilds import GuildMembers
 from common.models.items import Items
 from common.utils import valid_game_account_owner
@@ -37,6 +37,7 @@ from .utils import (
 )
 from .validators import PermissionValidator
 
+
 @require_http_methods(["GET", "POST"])
 def search(request: HttpRequest) -> HttpResponse:
     """
@@ -63,11 +64,12 @@ def search(request: HttpRequest) -> HttpResponse:
 
     if request.method == "POST":
         character_name = request.POST.get("character_name")
-        if character_name: # Only search if character_name is not empty
+        if character_name:  # Only search if character_name is not empty
             search_results = Characters.objects.filter(name__icontains=character_name)[:50]
             context["search_results"] = search_results
 
     return render(request=request, template_name="magelo/search.html", context=context)
+
 
 @require_http_methods(["GET"])
 def character_profile(request: HttpRequest, character_name: str) -> HttpResponse:
@@ -377,6 +379,7 @@ def character_profile(request: HttpRequest, character_name: str) -> HttpResponse
 
     return render(request=request, template_name='magelo/character_profile.html', context=context)
 
+
 @require_http_methods(["GET"])
 def character_keys(request: HttpRequest, character_name: str) -> HttpResponse:
     """
@@ -408,6 +411,102 @@ def character_keys(request: HttpRequest, character_name: str) -> HttpResponse:
         'keys': character_keyring
     }
     return render(request=request, template_name='magelo/character_keys.html', context=context)
+
+
+@require_http_methods(["GET"])
+def character_aas(request: HttpRequest, character_name: str) -> HttpResponse:
+    """
+    Display the character's Alternate Advancement information
+
+   :param request: The HTTP request object
+   :param character_name: The name of the EverQuest character
+   :raises Http404: If no character exists with the given name
+   :return: Rendered 'magelo/alternate_advancement.html' template with character and aas context data
+    """
+    boxes = []
+    display = "block"  # First box visible, rest hidden
+    spent_aa = 0
+
+    character = Characters.objects.filter(name=character_name).first()
+    if character is None:
+        raise Http404("This character does not exist")
+
+    char_aas = CharacterAlternateAbility.objects.filter(id=character.id)
+    aa_map = {}
+
+    for character_aa in char_aas:
+        parent_id = character_aa.aa_id if character_aa.aa_value <= 1 else character_aa.aa_id - (character_aa.aa_value - 1)
+        aa_map[parent_id] = character_aa.aa_value
+        # $parent_id = $value["aa_value"] <= 1 ? $value["aa_id"]: $value["aa_id"] - ($value["aa_value"] - 1);
+        # $aa_array[$parent_id] = $value["aa_value"];
+
+    aa_tabs = {
+        1: 'General',
+        2: 'Archetype',
+        3: 'Class',
+        4: 'PoP Advance',
+        5: 'PoP Ability',
+    }
+
+    # Create tabs structure for template
+    tabs = [
+        {'id': key, 'name': name, 'color': 'FFFFFF'}
+        for key, name in aa_tabs.items()
+    ]
+
+    from django.db import connections
+    db_connection = connections['game_database']
+    with db_connection.cursor() as cursor:
+        for key, value in aa_tabs.items():
+            # Create box data
+            box_data = {
+                'id': key,
+                'display': display,
+                'aas': []
+            }
+            display = "none"  # All subsequent boxes hidden
+
+            query = """
+                    SELECT skill_id, name, cost, cost_inc, max_level
+                    FROM altadv_vars
+                    WHERE type = %s
+                      AND (classes & 1 << %s) != 0
+                      AND eqmacid not in (14, 22, 51, 54, 59, 83, 88, 91, 92, 93, 95, 96, 99, 105, 106, 145)
+                    ORDER BY eqmacid
+                    """
+            cursor.execute(query, [key, character.class_name])
+            results = cursor.fetchall()
+            for row in results:
+                skill_id, name, cost, cost_inc, max_level = row
+                # Calculate spent AA for this skill
+                current_level = aa_map.get(skill_id, 0)
+                for i in range(1, current_level + 1):
+                    spent_aa += cost + (cost_inc * (i - 1))
+
+                # Calculate next level cost
+                next_level_cost = ""
+                if max_level > current_level:
+                    next_level_cost = cost + cost_inc * current_level
+
+                # Add AA data
+                aa_data = {
+                    'COLOR': '#CCCCCC' if next_level_cost == "" else '#FFFFFF',
+                    'NAME': name,
+                    'CUR': current_level,
+                    'MAX': max_level,
+                    'COST': next_level_cost
+                }
+                box_data['aas'].append(aa_data)
+            boxes.append(box_data)
+
+    context = {
+        'character': character,
+        'tabs': tabs,
+        'boxes': boxes,
+        'spent_aa': spent_aa,
+    }
+    return render(request=request, template_name='magelo/alternate_advancement.html', context=context)
+
 
 @login_required
 @require_http_methods(["POST"])

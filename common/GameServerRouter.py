@@ -1,7 +1,7 @@
 """
 This is the database router class for operations relating to tables found in the GameServer database.
 """
-from common.models.characters import Characters
+from common.models.characters import Characters, CharacterAlternateAbility
 from common.models.characters import CharacterCurrency
 from common.models.characters import CharacterFactionValues
 from common.models.characters import CharacterInventory
@@ -40,6 +40,7 @@ class GameServerRouter:
 
     route_app_labels = {"common"}
     game_server_models = [Characters,
+                          CharacterAlternateAbility,
                           CharacterCurrency,
                           CharacterFactionValues,
                           CharacterInventory,

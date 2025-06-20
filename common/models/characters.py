@@ -81,6 +81,23 @@ class Characters(models.Model):
         verbose_name_plural = 'Characters'
         managed = False
 
+class CharacterAlternateAbility(models.Model):
+    id = models.PositiveIntegerField(primary_key=True)
+    slot = models.PositiveSmallIntegerField()
+    aa_id = models.PositiveSmallIntegerField(default=0)
+    aa_value = models.PositiveSmallIntegerField(default=0)
+
+    class Meta:
+        db_table = 'character_alternate_abilities'
+        verbose_name_plural = 'Character Alternate Abilities'
+        managed = False
+        constraints = [
+            models.UniqueConstraint(fields=['id', 'slot'], name='unique_id_slot')
+        ]
+
+    def __str__(self):
+        return f"Character {self.id} - Slot {self.slot} - AA {self.aa_id}"
+
 
 class CharacterCurrency(models.Model):
     """
