@@ -126,62 +126,65 @@ ul {
 }
 
 .column-list {
-  -webkit-columns: 4 200px;
-  -moz-columns: 4 200px;
-  columns: 4 200px;
-  -webkit-column-gap: 4em;
-  -moz-column-gap: 4em;
-  column-gap: 4em;
-  -webkit-column-rule: 1px dotted;
-  -moz-column-rule: 1px dotted;
-  column-rule: 1px dotted;
-  padding: 5%;
+    -webkit-columns: 4 200px;
+    -moz-columns: 4 200px;
+    columns: 4 200px;
+    -webkit-column-gap: 4em;
+    -moz-column-gap: 4em;
+    column-gap: 4em;
+    -webkit-column-rule: 1px dotted;
+    -moz-column-rule: 1px dotted;
+    column-rule: 1px dotted;
+    padding: 5%;
 }
+
 #logo a {
-  background: url(/static/images/eqalogo.png) right no-repeat;
-  width: 331px;
+    background: url(/static/images/eqalogo.png) right no-repeat;
+    width: 331px;
 }
+
 .expansion-tag span {
-  border: 1px solid gray;
-  border-radius: 5px;
-  display: inline-block;
-  width: 60px;
-  text-align: center;
-  font-weight: bold;
-  text-shadow: 1px 1px 2px #222222;
-  padding-left: 2px;
-  padding-right: 2px;
-  font-size: 12px;
+    border: 1px solid gray;
+    border-radius: 5px;
+    display: inline-block;
+    width: 60px;
+    text-align: center;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px #222222;
+    padding-left: 2px;
+    padding-right: 2px;
+    font-size: 12px;
 }
-.default span, h2 .default{
-  background: #666666;
-  color: #dddddd;
+
+.default span, h2 .default {
+    background: #666666;
+    color: #dddddd;
 }
 
 .kunark span, h2 .kunark {
-  /* background: #765F35;*/
-  background: #607643;
-  color: #D3AB5C;
+    /* background: #765F35;*/
+    background: #607643;
+    color: #D3AB5C;
 }
 
 .velious span, h2 .velious {
-  background: #D0C4BA;
-  color: #5D1715;
+    background: #D0C4BA;
+    color: #5D1715;
 }
 
 .luclin span, h2 .luclin {
-  background: #2E57BF;
-  color: #DDBE47;
+    background: #2E57BF;
+    color: #DDBE47;
 }
 
 .planes span, h2 .planes {
-  background: #8B3E18;
-  color: #CEB04A;
+    background: #8B3E18;
+    color: #CEB04A;
 }
 
 .script span {
-  background: #880000;
-  color: #dddddd;
+    background: #880000;
+    color: #dddddd;
 }
 
 /* Responsive adjustments */
@@ -288,7 +291,7 @@ ul {
     /* Improve table header readability */
     #search-results-table th {
         white-space: nowrap;
-        min-width: 70px;  /* Minimum width for columns */
+        min-width: 70px; /* Minimum width for columns */
     }
 }
 
