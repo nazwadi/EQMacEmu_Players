@@ -247,7 +247,7 @@
                                     <img style="background:url({% static "/images/icons/blank_slot.gif" %});"
                                          src="{% static "/images/items/" %}item_{{ icon }}.png"
                                          alt="item_{{ icon }}.png">
-                                    <a href="/items/view/{{ itemid }}">{{ item_name }}</a>
+                                    <a class="tooltip-link link" data-url="{{ itemid }}" href="/items/view/{{ itemid }}">{{ item_name }}</a>
                                 </td>
                                 {% if stackable == 3 and max_charges > 0 %}
                                     <td>{{ charges }} / {{ max_charges }}</td>
