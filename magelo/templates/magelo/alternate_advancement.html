@@ -2,6 +2,77 @@
 {% load static %}
 {% load data_utilities %}
 {% block content %}
+    <style>
+        .aa-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .aa-modal-backdrop {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .aa-modal-content {
+            background: #FFF;
+            border: 2px solid #7b714a;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            position: relative;
+            z-index: 1001;
+            color: black;
+        }
+
+        .aa-modal-header {
+            padding: 20px 20px 10px;
+            border-bottom: 1px solid #444;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .aa-modal-header h3 {
+            margin: 0;
+            color: #7b714a;
+        }
+
+        .aa-modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+        }
+
+        .aa-modal-body {
+            padding: 20px;
+        }
+
+        .loading, .error {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .error {
+            color: #ff6b6b;
+        }
+    </style>
     <div class="container-fluid container-lg py-4">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
@@ -112,6 +183,96 @@
                                 target.style.color = '#7b714a';
                             }
                         }
+
+                        // Highlight the default tab on page load
+                        document.addEventListener('DOMContentLoaded', function () {
+                            // Find the first visible tab (the default one)
+                            {% for box in boxes %}
+                                {% if box.display == 'block' %}
+                                    color({{ box.id }});
+                                {% endif %}
+                            {% endfor %}
+                        });
+                        // Use event delegation for better performance
+                        document.addEventListener('click', function (e) {
+                            if (e.target.classList.contains('aa-tooltip')) {
+                                e.preventDefault();
+                                showAAModal(e.target.dataset.aaName);
+                            }
+                        });
+
+                        function showAAModal(aaName) {
+                            const modal = document.createElement('div');
+                            modal.className = 'aa-modal';
+                            modal.innerHTML = `
+        <div class="aa-modal-backdrop"></div>
+        <div class="aa-modal-content">
+            <div class="aa-modal-header">
+                <h3>${aaName}</h3>
+                <button class="aa-modal-close" aria-label="Close">&times;</button>
+            </div>
+            <div class="aa-modal-body">
+                <div class="loading">Loading description...</div>
+            </div>
+        </div>
+    `;
+
+                            document.body.appendChild(modal);
+
+                            // Fetch and display content
+                            fetchAADescription(aaName, modal.querySelector('.aa-modal-body'));
+
+                            // Close handlers
+                            modal.addEventListener('click', (e) => {
+                                if (e.target.classList.contains('aa-modal-backdrop') ||
+                                    e.target.classList.contains('aa-modal-close')) {
+                                    modal.remove();
+                                }
+                            });
+
+                            // ESC key support
+                            document.addEventListener('keydown', function escHandler(e) {
+                                if (e.key === 'Escape') {
+                                    modal.remove();
+                                    document.removeEventListener('keydown', escHandler);
+                                }
+                            });
+                        }
+
+                        const aaContentCache = new Map();
+
+                        function fetchAADescription(aaName, targetElement) {
+                            // Check cache first
+                            if (aaContentCache.has(aaName)) {
+                                targetElement.innerHTML = aaContentCache.get(aaName);
+                                return;
+                            }
+
+                            // Show loading state
+                            targetElement.innerHTML = '<div class="loading">Loading description...</div>';
+
+                            // Fetch from API
+                            fetch(`/magelo/api/aa-description/${encodeURIComponent(aaName)}`)
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error(`HTTP error! status: ${response.status}`);
+                                    }
+                                    return response.json();
+                                })
+                                .then(data => {
+                                    const content = `
+                <div class="aa-description">
+                    <p>${data.description}</p>
+                </div>
+            `;
+                                    aaContentCache.set(aaName, content);
+                                    targetElement.innerHTML = content;
+                                })
+                                .catch(error => {
+                                    console.error('Fetch error:', error);
+                                    targetElement.innerHTML = `<div class="error">Failed to load AA description: ${error.message}</div>`;
+                                });
+                        }
                     </script>
                     <nav class="NavOuter">
                         <div class="NavInner">
@@ -195,7 +356,10 @@
                                                         {% for aa in box.aas %}
                                                             <tr onMouseOver="this.style.background = '#7b714a'"
                                                                 onMouseOut="this.style.background = 'none'">
-                                                                <td style='padding: 1px 3px 0 30px;color:{{ aa.COLOR }};'>
+                                                                <td style='padding: 1px 3px 0 30px;color:{{ aa.COLOR }};'
+                                                                    class="aa-tooltip"
+                                                                    data-aa-name="{{ aa.NAME }}"
+                                                                >
                                                                     {{ aa.NAME|default:"Unknown" }}
                                                                 </td>
                                                                 <td style='text-align: center; padding: 1px 15px 0 30px;color:{{ aa.COLOR }};'

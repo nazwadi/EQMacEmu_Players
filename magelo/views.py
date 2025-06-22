@@ -1,4 +1,5 @@
 import json
+from dataclasses import asdict
 
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
@@ -24,6 +25,7 @@ from .utils import (
     dr_by_race,
     fr_by_class,
     fr_by_race,
+    get_aa_description_by_name,
     get_max_ac,
     get_max_attack,
     get_max_hp,
@@ -583,3 +585,19 @@ def update_permission(request):
             'success': False,
             'error': f'{str(e)} An error occurred processing your request'
         }, status=500)
+
+@require_http_methods(["GET"])
+def magelo_aa_description_api(request: HttpRequest, aa_name: str):
+    """
+
+    :param request:
+    :return:
+    """
+    if not aa_name:
+        return JsonResponse({'error': 'AA Name is required'}, status=400)
+
+    ability = get_aa_description_by_name(aa_name)
+    if ability:
+        return JsonResponse(asdict(ability))
+
+    return JsonResponse({'error': f'Ability "{aa_name}" not found'}, status=404)

@@ -13,10 +13,12 @@ from django.core.exceptions import PermissionDenied
 
 from .models import CharacterPermissions
 
+
 class CasterClass(Enum):
     INTELLIGENCE = 'I'
     WISDOM = 'W'
     NONE = 'N'
+
 
 def get_permissions(user, character_name, gm_level, anon_level):
     """
@@ -59,6 +61,7 @@ def get_permissions(user, character_name, gm_level, anon_level):
         # Log the error and return base permissions if something goes wrong
         print(f"Error getting permissions for user {user}: {str(e)}")
         return base_permissions
+
 
 class FlowingThoughtEffects(Enum):
     """Spell IDs for all known item-based Flowing Thought Spell Effects"""
@@ -158,7 +161,6 @@ class ItemStats:
         self.stat_bonuses['pr'] += item.pr
 
 
-
 class CharacterClass(IntEnum):
     """Character class constants using IntEnum for better type safety"""
     WARRIOR = 1
@@ -177,6 +179,7 @@ class CharacterClass(IntEnum):
     ENCHANTER = 14
     BEASTLORD = 15
     BERSERKER = 16
+
 
 class Race(IntEnum):
     """Race constants"""
@@ -249,6 +252,7 @@ def level_regen(level: int, is_sitting: bool, is_resting: bool, is_feigned: bool
 
     return hp_regen_amount
 
+
 def calc_hp_regen_cap(character_level: int) -> int:
     """
     Calculates HP Regen Cap based on character_level
@@ -261,6 +265,7 @@ def calc_hp_regen_cap(character_level: int) -> int:
     if character_level > 60:
         base = character_level - 30
     return base
+
 
 def calc_base_mana(caster_class: Union[str, CasterClass], intelligence: int, wisdom: int, level: int) -> int:
     """
@@ -299,6 +304,7 @@ def calc_base_mana(caster_class: Union[str, CasterClass], intelligence: int, wis
 
     return _calculate_mana_from_stat(primary_stat, level)
 
+
 def _calculate_mana_from_stat(stat_value: int, level: int) -> int:
     """Helper function to calculate mana from a primary stat and level."""
     # Calculate mind lesser factor (penalty for very high stats)
@@ -320,6 +326,7 @@ def rate_limit_by_user(user_id, key_prefix, max_requests=5, time_window=60):
     if requests >= max_requests:
         raise PermissionDenied("Too many requests. Please try again later.")
     cache.set(cache_key, requests + 1, time_window)
+
 
 def calc_max_mana(character_class: Union[int, 'CharacterClass'],
                   intelligence: int, wisdom: int, level: int, item_mana_bonus: int = 0,
@@ -398,6 +405,7 @@ def get_max_attack(item_atk: int, strength: int, offense: int) -> int:
     stat_bonus = (strength + offense) * 0.9
     total_attack = item_atk + stat_bonus
     return math.floor(total_attack)
+
 
 def pr_by_race(race):
     """Calculate Poison Resistance by race"""
@@ -480,6 +488,7 @@ def cr_by_class(char_class, char_level):
         return (char_level - 49) + 4 if char_level >= 50 else 4
     return 0
 
+
 def get_max_ac(agility: int, level: int, defense: int,
                char_class: Union[int, CharacterClass],
                iac: int, race: Union[int, Race]) -> int:
@@ -523,6 +532,7 @@ def get_max_ac(agility: int, level: int, defense: int,
 
     return math.floor(natural_ac)
 
+
 def _calculate_medium_agility_modifier(agility: int, level: int) -> int:
     """Helper function for agility 75-137 range."""
     # Define level-based modifier tables
@@ -558,6 +568,7 @@ def _calculate_medium_agility_modifier(agility: int, level: int) -> int:
 
     return 0
 
+
 def _calculate_high_agility_modifier(agility: int, level: int) -> int:
     """Helper function for agility 138-300 range."""
     # Define agility breakpoints and their corresponding modifiers
@@ -591,6 +602,7 @@ def _calculate_high_agility_modifier(agility: int, level: int) -> int:
             return modifiers[level_bracket]
 
     return 0
+
 
 def acmod(agility: int, level: int) -> float:
     """
@@ -643,28 +655,29 @@ def acmod(agility: int, level: int) -> float:
     else:
         return 65 + ((agility - 300) / 21)
 
+
 def get_caster_class(class_id):
     """
     Determine caster type based on class ID.
     Function copied/converted from EQEMU sourcecode May 2, 2009
     """
     # Class constants
-    _ = 1 # warrior
+    _ = 1  # warrior
     cleric = 2
     paladin = 3
     ranger = 4
     shadowknight = 5
     druid = 6
-    _ = 7 # monk
+    _ = 7  # monk
     bard = 8
-    _ = 9 # rogue
+    _ = 9  # rogue
     shaman = 10
     necromancer = 11
     wizard = 12
     magician = 13
     enchanter = 14
     beastlord = 15
-    _ = 16 # berserker
+    _ = 16  # berserker
 
     caster_types = {
         # Wisdom-based casters
@@ -685,6 +698,7 @@ def get_caster_class(class_id):
     }
 
     return caster_types.get(class_id, 'N')  # Default to 'N' for non-casters
+
 
 def get_max_hp(level: int, character_class: int, stamina: int, item_hp_bonus: int,
                stat_cap: int = 255) -> int:
@@ -721,6 +735,7 @@ def get_max_hp(level: int, character_class: int, stamina: int, item_hp_bonus: in
 
     return total_hp
 
+
 def get_hp_base(level: int, character_class: int, stamina: int) -> float:
     """
     Calculate base hit points for a character.
@@ -752,6 +767,7 @@ def get_hp_base(level: int, character_class: int, stamina: int) -> float:
     base_hp = 5 + hp_from_level + hp_from_sta
 
     return base_hp
+
 
 def get_lm(character_class: int, level: int) -> float:
     """
@@ -794,6 +810,7 @@ def get_lm(character_class: int, level: int) -> float:
 
     return 1.0  # Default for unknown classes
 
+
 def get_class_name(character_class: int) -> str:
     """Get the class name from a character class ID, matching PHP exactly."""
     class_names = {
@@ -815,3 +832,232 @@ def get_class_name(character_class: int) -> str:
         16: "Berserker"
     }
     return class_names.get(character_class, "Unknown Class")
+
+
+from dataclasses import dataclass
+
+
+@dataclass
+class Ability:
+    name: str
+    description: str
+
+
+def get_aa_description_by_name(aa_name: str):
+    aa_descriptions = {
+        "First Aid": "This ability increases the maximum that you can bind wound by 10 percent for each ability level.",
+        "Innate Agility": "This ability raises your base Agility by 2 points for each ability level.",
+        "Innate Charisma": "This ability raises your base Charisma by 2 points for each ability level.",
+        "Innate Cold Protection": "This ability raises your base Save Vs Cold by 2 points for each ability level.",
+        "Innate Dexterity": "This ability raises your base Dexterity by 2 points for each ability level.",
+        "Innate Disease Protection": "This ability raises your base Save Vs Disease by 2 points for each ability level.",
+        "Innate Fire Protection": "This ability raises your base Save Vs Fire by 2 points for each ability level.",
+        "Innate Intelligence": "This ability raises your base Intelligence by 2 points for each ability level.",
+        "Innate Lung Capacity": "This ability increases the amount of air you have by 10, 25, and 50 percent.",
+        "Innate Magic Protection": "This ability raises your base Save Vs Magic by 2 points for each ability level.",
+        "Innate Metabolism": "This ability decreases your food consumption by 10, 25 and 50 percent.",
+        "Innate Poison Protection": "This ability raises your base Save Vs Poison by 2 points for each ability level.",
+        "Innate Regeneration": "This ability raises your regeneration ability by 1 point per ability level.",
+        "Innate Run Speed": "This ability will slightly modify your base run speed. This modification does NOT stack with movement rate spell effects.",
+        "Innate Stamina": "This ability raises your base Stamina by 2 points for each ability level.",
+        "Innate Strength": "This ability raises your base Strength by 2 points for each ability level.",
+        "Innate Wisdom": "This ability raises your base Wisdom by 2 points for each ability level.",
+        "New Tanaan Crafting Mastery": "Training with the sages and merchants of New Tanaan gives adventurers the chance to hone their crafting skills. For each rank of this ability that you purchase, you are able to raise an additional trade skill past its Specialization level (200). (This ability applies to Baking, Blacksmithing, Brewing, Fletching, Jewelcraft, Pottery, and Tailoring.)",
+        "Channeling Focus": "This ability reduces the chance of your spell casts being interrupted. The ability levels reduce your interrupts by 5, 10, and 15 percent.",
+        "Combat Agility": "This ability increases your melee damage avoidance by 2, 5 and 10 percent.",
+        "Combat Fury": "This ability increases your chance to land a critical hit. Non-Warriors will nearly match the original critical hit abilities of Warriors, while Warriors will remain significantly ahead of other classes.",
+        "Combat Stability": "This ability increases melee damage mitigation by 2, 5, and 10 percent.",
+        "Fear Resistance": "This ability grants you a resistance bonus to fear type spells of 5, 10, and 25 percent. It also increases the chance of breaking fear earlier.",
+        "Finishing Blow": "This ability gives you a chance to finish off an NPC that is below 10 percent health and fleeing with a single blow. The first level works on NPCs below 50, the second on NPCs below 52, and the third on NPCs below 54. (Non-Warriors must first train one level of Combat Fury to use this ability.)",
+        "Healing Adept": "This ability increases the maximum effectiveness of your healing spells by 2, 5, and 10 percent.",
+        "Healing Gift": "This ability grants you a chance to score an exceptional heal at 3, 6, and 10 percent. An exceptional heal doubles the healing value of the spell.",
+        "Mental Clarity": "This ability increases your natural mana regeneration by 1 point per ability level.",
+        "Natural Durability": "This ability increases your maximum hitpoints by 2, 5, and 10 percent. (The percentages are based off of your base hitpoints, which include stamina and stamina effects.)",
+        "Natural Healing": "This ability raises your natural regeneration by one point per ability level.",
+        "Spell Casting Deftness": "This ability reduces the casting time of beneficial spells that have a duration longer than instant and a cast time greater than four seconds. The ability levels reduce these casting times by 5, 15, and 25 percent.",
+        "Spell Casting Expertise": "This ability makes it impossible for you to fizzle a spell. The first level affects all spells below level 20. The second, on all spells below level 35. The third, on all spells below level 52.",
+        "Spell Casting Fury": "This ability gives you a chance to land critical hits with your direct damage spells. The ability levels increase your chance to score a critical by 2, 4, and 7 percent.",
+        "Spell Casting Mastery": "This ability gives you an increased chance of making your specialization checks. It also reduces your chance to fizzle and increases the chance to lower the mana cost for the spell by 5, 15, and 30 percent.",
+        "Spell Casting Reinforcement": "This ability increases the duration of beneficial spells that you cast by 5, 15, and 30 percent.",
+        "Spell Casting Subtlety": "After training in this ability, NPCs will notice your magical activities 5, 10, and 20 percent less.",
+        "Acrobatics": "This ability will reduce the damage that you take from falling.",
+        "Act of Valor": "This noble ability will allow you to transfer all of your hit points to a target player, killing you in the process.",
+        "Advanced Trap Negotiation": "This ability will reduce the reuse time on your sense and disarm trap skills.",
+        "Alchemy Mastery": "This ability reduces your chances of failing alchemy combinations by 10, 25, and 50 percent.",
+        "Ambidexterity": "This ability increases your chance to use dual wield successfully.",
+        "Archery Mastery": "This ability increases your archery damage 30, 60, and 100 percent.",
+        "Area Taunt": "This ability will allow you to taunt everything in a small radius.",
+        "Bandage Wound": "This ability will give you increased healing ability per bandage by 10, 25, and 50 percent.",
+        "Bestow Divine Aura": "This ability gives you the ability to cast a Divine Aura spell on a Player target, temporarily rendering the target invulnerable.",
+        "Body and Mind Rejuvenation": "This ability will give you one additional point of mana and hit point regeneration.",
+        "Call to Corpse": "This ability allows you to cast a no component summon corpse spell.",
+        "Cannibalization": "This ability will give the caster a new, massive Cannibalize spell.",
+        "Celestial Regeneration": "This ability gives you the ability to cast a large heal over time spell at no mana cost.",
+        "Chaotic Stab": "This ability will allow you to do minimal backstab damage on your backstab attempt, even if you are not positioned behind the monster.",
+        "Critical Mend": "This ability gives you a chance to perform a superior mend 5, 10, and 25 percent of the time.",
+        "Dead Mesmerization": "This ability allows you to cast an AE low resist mesmerization spell effective against the undead.",
+        "Dire Charm": "This ability gives you the chance to permanently charm an NPC. (Enchanters: All. Druids: Animals only. Necromancers: Undead only.)",
+        "Divine Resurrection": "This ability allows you to provide a resurrection that restores 100 percent experience, all hit points and mana, and causes no adverse resurrection effects.",
+        "Divine Stun": "Training in this ability gives you a new, fast-casting spell that has the chance to interrupt Level 68 or lower NPCs. Normal resist rules apply.",
+        "Double Riposte": "This ability will give you an increased chance to execute a double riposte 15, 35, and 50 percent of the time.",
+        "Dragon Punch": "This ability augments Dragon Punch for human monks and Tail Rake for iksars with the chance to automatically perform a Knockback.",
+        "Elemental Form: Air": "This ability will allow you to turn into an air elemental, gaining many of the innate benefits of the form, as well as some of the penalties.",
+        "Elemental Form: Earth": "This ability will allow you to turn into an earth elemental, gaining many of the innate benefits of the form, as well as some of the penalties.",
+        "Elemental Form: Fire": "This ability will allow you to turn into a fire elemental, gaining many of the innate benefits of the form, as well as some of the penalties.",
+        "Elemental Form: Water": "This ability will allow you to turn into a water elemental, gaining many of the innate benefits of the form, as well as some of the penalties.",
+        "Elemental Pact": "This ability will prevent components used in the summoning of pets from being expended.",
+        "Endless Quiver": "This ability provides you a never-ending supply of arrows.",
+        "Enhanced Root": "This ability reduces the chance that a rooted NPC will be freed by your damage spells by 50 percent.",
+        "Escape": "This ability will cause all NPCs to forget about you. If you are out of immediate combat, this ability will also make you invisible similar to your hiding ability.",
+        "Exodus": "This ability gives you the ability to cast an extremely fast-casting, no mana cost evacuation or succor spell.",
+        "Extended Notes": "This ability will increased your song ranges by 10, 15, and 25 percent.",
+        "Fearless": "This ability will make you permanently immune to fear spells.",
+        "Fearstorm": "Allows you to cast an AE low resist fear spell.",
+        "Flesh to Bone": "This ability allows you to turn any meat or body part item into bone chips. You must hold the item or stack on your cursor. *Warning* This ability will use magical or no trade items if they are held on the cursor.",
+        "Flurry": "This ability will allow you to perform up to 2 additional attacks from your primary hand.",
+        "Frenzied Burnout": "This ability allows you to cast a buff on your pet that will cause it to go berserk, doing increased damage.",
+        "Frenzy of Spirit": "This ability gives Beastlords the power to send themselves into an animalistic frenzy, bent only on slaughter, for a brief period of time.",
+        "Gather Mana": "This ability allows you to recover up to 10,000 points of mana nearly instantly.",
+        "Hobble of Spirits": "Once you train this ability, you may imbue your pet with an attack that is reputed to slow an enemys walking.",
+        "Holy Steed": "This ability provides you with the power to call the ultimate holy steed to your side.",
+        "Improved Familiar": "This ability will summon an improved familiar that is an upgrade from the greater familiar. This improved familiar is higher in level, has more hitpoints, and is very resistant to all spells.",
+        "Improved Harm Touch": "This ability gives you a low-resist Harm Touch. Using this ability also uses your existing Harm Touch timer.",
+        "Improved Lay on Hands": "This ability will turn your Lay of Hands into a complete heal.",
+        "Improved Reclaim Energy": "This ability will increase the amount of mana returned to you when reclaiming your pet.",
+        "Innate Camouflage": "This ability allows you to become invisible, nearly at will, without the need to memorize a spell.",
+        "Innate Invisibility vs Undead": "This ability allows you to become invisible to the undead, nearly at will, without the need to memorize a spell.",
+        "Instrument Mastery": "This ability allows for improved use of all instrument types.",
+        "Jam Fest": "This ability allows you to sing your songs at a higher apparent level. Note: This does not allow you to sing songs that are actually higher than your level.",
+        "Jewelcraft Mastery": "This ability reduces your chance of failing jewelcraft combinations by 10, 25, and 50 percent.",
+        "Leech Touch": "This ability gives you a life tap harm touch. Using this ability also uses your existing Harm Touch timer.",
+        "Lifeburn": "This ability allows you to cast a no-resist direct damage spell equal to that of your current hitpoints. The effect drains your life and provides a life bond effect that does 250 damage per tick, for 6 ticks.",
+        "Mana Burn": "This ability allows you to do non-resistable damage in an amount based off of your current mana. This is calculated as a random 50-100% of the current mana pool (gear and buffs) is added to the current mana pool number. A debuff is left on the mob for one minute that blocks other manaburns. Cap is 9492.",
+        "Mass Group Buff": "This ability turns the next group buff that you cast into a beneficial area effect spell, hitting everyone within its radius, at the cost of doubling the spells mana usage.",
+        "Mend Companion": "This ability allows you to cast a Lay of Hands type spell on your pet.",
+        "Nexus Gate": "This ability gives you an instant-cast self gate spell to the Nexus.",
+        "Paragon of Spirit": "This ability allows the Beastlord to share some of his natural attunement with his party in the form of health and mana.",
+        "Permanent Illusion": "This ability allows you to zone without losing your current illusion.",
+        "Pet Discipline": "This ability will allow you to give your pet a hold command until explicitly told to attack. Usage: /pet hold.",
+        "Physical Enhancement": "This ability will give you additional improvements in your Natural Durability, Avoidance Boost, and Mitigation Boost.",
+        "Poison Mastery": "This ability reduces your chance of failing on a poison combination by 10, 25, and 50 percent. It also reduces the time to apply poison by 2.5 seconds per ability level. Once one point is applied to this ability, you will never again fail in poison application.",
+        "Purge Poison": "This ability will remove all poisons from your body.",
+        "Purify Body": "This ability removes all negative effects from your body except for fear, charm, and resurrection effects.",
+        "Purify Soul": "This ability allows you to cast a spell that cures most ailments.",
+        "Quick Buff": "This ability reduces the casting time of many beneficial spells that have a duration by 10, 25, and 50 percent.",
+        "Quick Damage": "This ability reduces the casting time on your damage spells that have a casting time greater than four seconds by 2, 5 and 10 percent.",
+        "Quick Evacuation": "This ability reduces the casting time on your evacuation and succor spells by 10, 25, and 50 percent.",
+        "Quick Summoning": "This ability reduces the casting time of your summoning spells by 10, 25, and 50 percent. This includes CotH.",
+        "Rabid Bear": "This ability turns you into a Rabid Bear, boosting all of your offensive capabilities.",
+        "Rampage": "This ability will allow you to strike everything in a small radius.",
+        "Rapid Feign": "This ability reduces your reuse time on feign death by 10, 25, and 50 percent.",
+        "Return Kick": "This ability gives you the chance to automatically perform a bonus flying kick on ripostes 25, 35, and 50 percent of the time.",
+        "Scribble Notes": "This ability will reduce the amount of time that it takes you to memorize a song.",
+        "Singing Mastery": "This ability allows for specialization and improved use of your voice.",
+        "Slay Undead": "This ability will cause your criticals to inflict greatly improved damage versus the undead.",
+        "Soul Abrasion": "This ability gives you increased damage off of the lifetap procs that result from your self buffs.",
+        "Spell Casting Fury Mastery": "This ability gives you an increased chance to score a critical hit with your direct damage spells.",
+        "Spell Casting Reinforcement Mastery": "This ability increases the duration of beneficial buffs that you cast by an additional 20 percent.",
+        "Strong Root": "This ability will grant you the ability to cast an extremely low resistance Root-type spell.",
+        "Turn Summoned": "This ability infuses a summoned NPC with elemental energy, causing it to continually take damage for the next 30 seconds. Each additional level of this ability increases the damage done. Occasionally a summoned NPC will react violently to the infusion of energy, potentially destroying it outright.",
+        "Turn Undead": "This ability infuses an undead NPC with holy energy, causing it to continually take damage for the next 30 seconds. Each additional level of this ability increases the damage done. Occasionally an undead NPC will react violently to the infusion of holy energy, potentially destroying it outright.",
+        "Two Hand Bash": "This ability will allow you to use your Bash skill while wielding any 2-handed weapon.",
+        "Unholy Steed": "This ability provides you with the power to call the ultimate unholy steed to your side.",
+        "Warcry": "This ability will allow you to make your entire group immune to fear for 10 seconds per level of the ability.",
+        "Advanced Innate Agility": "This ability raises your innate Agility by two points per rank. You may train in this ability twice each level, beginning at level 61.",
+        "Advanced Innate Charisma": "This ability raises your innate Charisma by two points per rank. You may train in this ability twice each level, beginning at level 61.",
+        "Advanced Innate Dexterity": "This ability raises your innate Dexterity by two points per rank. You may train in this ability twice each level, beginning at level 61.",
+        "Advanced Innate Intelligence": "This ability raises your innate Intelligence by two points per rank. You may train in this ability twice each level, beginning at level 61.",
+        "Advanced Innate Stamina": "This ability raises your innate Stamina by two points per rank. You may train in this ability twice each level, beginning at level 61.",
+        "Advanced Innate Strength": "This ability raises your innate Strength by two points per rank. You may train in this ability twice each level, beginning at level 61.",
+        "Advanced Innate Wisdom": "This ability raises your innate Wisdom by two points per rank. You may train in this ability twice each level, beginning at level 61.",
+        "Bertoxxulous' Gift": "This ability raises your base resistance to disease-based spells by two points per rank. You may train in this ability twice each level, beginning at level 61.",
+        "Blessing of E'ci": "This ability raises your base resistance to cold-based spells by two points per rank. You may train in this ability twice each level, beginning at level 61.",
+        "Innate Enlightenment": "Those who have meditated on the Plane of Tranquility find themselves able to expand their capacity of both Insight and Intellect. Each rank of this ability raises the maximum that you may raise your Intelligence and Wisdom by ten points. You may train in this ability once each level, beginning at level 61.",
+        "Marr's Protection": "This ability raises your base resistance to magic-based spells by two points per rank. You may train in this ability twice each level, beginning at level 61.",
+        "Planar Durability": "The planes demand a certain hardiness of those who adventure within. Each rank of this ability adds an additional 1.5% to your maximum hit points. You gain the ability to train an additional rank at levels 61, 63, and 65.",
+        "Planar Power": "This ability raises the maximum that your statistics can be raised to, with items or spells, by 5 points per rank. You may train in this ability once each level, beginning at level 61.",
+        "Shroud of the Faceless": "This ability raises your base resistance to poison-based spells by two points per rank. You may train in this ability twice each level, beginning at level 61.",
+        "Warding of Solusek": "This ability raises your base resistance to fire-based spells by two points per rank. You may train in this ability twice each level, beginning at level 61.",
+        "Advanced Healing Adept": "This ability increases the maximum effectiveness of your healing spells by three percent per rank. You may train in this ability once each level, upon reaching levels 62, 63, and 64.",
+        "Advanced Healing Gift": "This ability increases your chance to score an exceptional heal by two percent per rank. An exceptional heal doubles the healing value of the spell. You may train in this ability once each level, upon reaching levels 62, 63, and 64.",
+        "Allegiant Familiar": "This ability will cause your existing Improved Familiar to summon an even more powerful companion. This familiar provides even greater benefits to its owner than its predecessor.",
+        "Animation Empathy": "Progressive ranks of this ability grant you finer control over your animations. At its initial level, you are allowed to give your animations Guard and Follow commands. At the second rank, Attack and Go Away commands. At the final rank, back off, Taunt, and Sit commands. You gain the ability to train an additional rank at levels 61, 63, and 65.",
+        "Ayonae's Tutelage": "This ability allows for further improvements in the use of all instrument and singing types. The three ranks of this ability may be trained once each level for levels 63 and above.",
+        "Bestial Frenzy": "This ability grants you a chance of performing a double attack in any given combat round. You may train in this ability once each level after reaching level 61.",
+        "Boastful Bellow": "This ability allows you to bellow with a force that causes physical harm to your enemies as well as potentially interfering with their spell casting.",
+        "Call of Xuzl": "This ability calls a number of swords of Xuzl into existence directed at a target. The swords attack the target until they dissipate 45 seconds later.",
+        "Celestial Renewal": "This ability grants improvements to your existing Celestial Regeneration. You may train in the two ranks of this ability at or after levels 63 and 64.",
+        "Consumption of the Soul": "The most advanced Shadow Knights can further enhance their Leech Touch ability. This ability adds 200 additional damage and healing to Leech Touch, per rank. You gain the ability to train an additional rank at levels 61, 63, and 65. The ability caps at 1500 hp.",
+        "Coup de Grace": "This ability gives you a chance to immediately slay an NPC that is below ten percent health and fleeing with a single, well placed strike. The first level works on NPCs below level 55, the second on NPCs below 57, and the third on NPCs below 59. You may train in this ability once each level, upon reaching levels 62, 63, and 64.",
+        "Divine Arbitration": "Using this ability balances the health of your group such that all group members end up with the same amount of damage taken. The first rank does so at a 20 percent penalty to the average, the second rank does so at a 10 percent penalty, and the final rank does so at no penalty. You may train the ranks of this ability at or after levels 61, 63, and 65.",
+        "Eldritch Rune": "This ability provides Enchanters with an additional line of defense in the form of an added self-only rune. Each rank of this ability provides a stronger rune than the previous. You may train the ranks of this ability at or after levels 61, 63, and 65.",
+        "Entrap": "This ability provides you an additional means of entrapping, or more specifically, ensnaring an opponent.",
+        "Fading Memories": "This ability will cause all NPCs to forget about you. If you are out of immediate combat, this ability will also make you invisible. This ability is usable any time that you have 900 mana.",
+        "Feigned Minion": "This ability allows you to instruct your pet to feign death via the /pet feign command. Three ranks of this skill are available, causing your pet to succeed 25%, 50%, and 75% of the time, respectively. You gain the ability to train an additional rank at levels 61, 63, and 65.",
+        "Ferocity": "This ability grants you an increased chance of performing a double attack in any given combat round. You gain the ability to train an additional rank at levels 61, 63, and 65.",
+        "Feverent Blessing": "This ability decreases the amount of time required between uses of Lay Hands by twelve minutes per rank. You gain the ability to train an additional rank at levels 61, 63, and 65.",
+        "Flash of Steel": "This ability further increases your chance of double riposting your opponent each time you score a successful riposte by ten percent per rank. You may train in this ability once each level, upon reaching levels 62, 63, and 64.",
+        "Fleet of Foot": "This ability allows Bards to run at previously unheard of speeds. You may train in this ability at or after levels 62 and 64.",
+        "Furious Rampage": "This ability decreases the amount of time required between uses of Rampage by ten percent per rank. You may train in this ability once each level, upon reaching level 63.",
+        "Fury of Magic": "This ability further increases your chance to score a critical hit with your direct damage spells.",
+        "Fury of Magic Mastery": "This ability further increases your chance to score a critical hit with your direct damage spells.",
+        "Fury of the Ages": "This ability further increases your chance to score a critical blow against your opponent. You may train in this ability once each level, upon reaching levels 62, 63, and 64.",
+        "Guardian of the Forest": "This ability transforms you into an exceptionally bloodthirsty wolf that attacks with lightning speed, for a brief time. You may train the three ranks of this ability at or after levels 61, 63, and 65.",
+        "Hand of Piety": "This ability invokes the direct blessing of your deity upon all of those nearby. All group members in range are healed 750 hit points in the first rank, and successive ranks each add 250. You may train in this ability at or after levels 61, 63, and 65.",
+        "Harmonious Attack": "This ability grants you a chance of performing a double attack in any given combat round. You may train in this ability once each level after reaching level 61.",
+        "Harvest of Druzzil": "This ability gathers streams of additional mana into your being. You may train this ability at or after level 62.",
+        "Hastened Divinity": "This ability decreases the amount of time required between uses of Bestow Divine Aura by ten percent per rank. You may train in this ability once each level, upon reaching level 63.",
+        "Hastened Exodus": "This ability decreases the amount of time required between uses of Exodus by ten percent per rank. You may train in this ability once each level, upon reaching level 63.",
+        "Hastened Gathering": "This ability decreases the amount of time required between uses of Gather Mana by ten percent per rank. You may train in this ability once each level, upon reaching level 63.",
+        "Hastened Instigation": "This ability decreases the amount of time required between uses of Area Taunt by ten percent per rank. You may train in this ability once each level, upon reaching level 63.",
+        "Hastened Mending": "This ability decreases the amount of time required between uses of Mend Companion by ten percent per rank. You may train in this ability once each level, upon reaching level 63.",
+        "Hastened Purification": "This ability decreases the amount of time required between uses of Purge Poison by ten percent per rank. You may train in this ability once each level, upon reaching level 63.",
+        "Hastened Purification of Body": "This ability decreases the amount of time required between uses of Purify Body by ten percent per rank. You may train in this ability once each level, upon reaching level 63.",
+        "Hastened Purification of Soul": "This ability decreases the amount of time required between uses of Purify Soul by ten percent per rank. You may train in this ability once each level, upon reaching level 63.",
+        "Hastened Rabidity": "This ability decreases the amount of time required between uses of Rabid Bear by four minutes per rank. You may train in this ability once each level, upon reaching level 63.",
+        "Hastened Root": "This ability decreases the amount of time required between uses of Strong Root by ten percent per rank. You may train in this ability once each level, upon reaching level 63.",
+        "Hastened Stealth": "This ability reduces the time between which you may attempt to hide or evade by one second per rank. You may train the ranks of this ability at or after levels 61, 62, and 63.",
+        "Hasty Exit": "This ability decreases the amount of time required between uses of Escape by ten percent per rank. You may train in this ability once each level, upon reaching level 63.",
+        "Headshot": "This ability provides you the chance of instantly killing an opponent(humanoid only) who is too far below you in level to provide a challenge, when using a bow. (Deals 32,000 dmg on humanoid mobs lvl 46 and below.)",
+        "Host of the Elements": "This ability calls an assault of elemental minions into existence directed at a target. The minions attack the target without question until they are called back to their plane 30 seconds later. The initial rank of this ability calls five elementals. Additional ranks add two elementals each. You may train the ranks of this ability at or after levels 63, 64, and 65.",
+        "Ingenuity": "Years of experimentation have led to the discovery of how to gain additional performance (in the form of critical spell hits) from weapons and other items. You may train in this ability at or after levels 61, 63, and 65.",
+        "Innate Defense": "This ability further increases your mitigation of incoming melee damage. You may train in this ability once each level after reaching level 61.",
+        "Knight's Advantage": "This ability grants you an increased chance of performing a double attack in any given combat round. You gain the ability to train an additional rank at levels 61, 63, and 65.",
+        "Lightning Reflexes": "This ability further increases your chance of completely avoiding incoming melee damage. You may train in this ability once each level after reaching level 61.",
+        "Living Shield": "This extends your capacity to act as a living shield, This ability adds twelve seconds per rank to the duration of your /shield. You may train the ranks of this ability at or after levels 61, 63, and 65.",
+        "Mastery of the Past": "This ability makes it impossible for you to fizzle a spell. The first level affects all spells below level 54. The second, on all spells below level 56. The third, on all spells below level 58. You may train in this ability once each level, upon reaching levels 62, 63, and 64.",
+        "Mending of the Tranquil": "This ability further increases the chance of performing a superior mend. The three ranks of this ability may be trained once each level for levels 63 and above.",
+        "Mithaniel's Binding": "This ability further increases the amount of healing provided by a single bandage while binding wounds. The two ranks of this ability may be trained at or after levels 63 and 64.",
+        "Nimble Evasion": "This ability grants you a chance to hide or evade while moving. Each rank provides an increasing chance. You may train in this ability once each level after reaching level 61.",
+        "Project Illusion": "This ability allows you to project your innate talent with illusions upon others. (Activating this ability on a targeted group member causes your next illusion spell to affect that target.)",
+        "Punishing Blade": "This ability increases the chance of scoring an extra hit with all two-handed weapons that you wield. You gain the ability to train an additional rank at levels 61, 63, and 65.",
+        "Radiant Cure": "This ability grants its wielder the ability to cure their party of many afflictions, poisons, curses, and harmful magics. You may train in the ranks of this ability at or after levels 61, 63, and 65.",
+        "Raging Flurry": "This ability further increases the chance of performing a flurry attack upon successfully scoring a triple attack. The three ranks of this ability may be trained once each level for levels 63 and above.",
+        "Rush to Judgment": "Training in this ability shortens the time between uses of Divine Stun by seven seconds per rank. The three ranks of this ability may be trained once each level for levels 63 and above.",
+        "Servant of Ro": "This ability calls a loyal servant into being who will repeatedly hurl fire at your target. Each rank of this ability increases the amount of time that the servant is able to remain by your side (45, 70, and 90 seconds). You may train the ranks of this ability at or after levels 61, 63, and 65.",
+        "Shroud of Stealth": "This ability provides a previously unheard of level of stealth. The Rogue is able to draw shadows about himself so completely, even creatures that are normally not fooled by such trickery are frequently unable to see him. You may train in this ability upon reaching level 63.",
+        "Sionachie's Crescendo": "This ability provides an even greater extension to the range of group songs. The three ranks of this ability may be trained once each level for levels 63 and above.",
+        "Speed of the Knight": "This ability grants you the chance to score an additional attack with two-handed weapons. You gain the ability to train an additional rank at levels 61, 63, and 65.",
+        "Spirit Call": "This ability calls a number of spirit companions into existence directed at a target. The companions attack the target without question until they are called back to their home plane 60 seconds later. The initial rank of this ability calls three companions. Additional ranks add one companion each. You may train the ranks of this ability at or after levels 61, 63, and 65.",
+        "Spirit of the Wood": "For a brief time, you are able to commune with the woodland spirits who provide your party with exceptional regenerative abilities and a protective shield of armor and thorns. You may train in the three ranks of this ability at or after levels 61, 63, and 65.",
+        "Stalwart Endurance": "This ability grants a chance to endure what would otherwise be a stunning blow, from any angle, without being stunned. You may train in the ranks of this ability at or after levels 61, 63, and 65.",
+        "Suspended Minion": "This ability grants the summoner the ability to suspend and recall their existing pet at will, provided they remain in their current zone. The first rank suspends the pet at its current health only, while the second rank suspends the pet with all of its beneficial effects as well as its weapons and armor. You may cast a second pet while your first pet is Suspended. You may train the first rank upon reaching level 62 and the second rank upon reaching level 64.",
+        "Tactical Mastery": "Studying ones opponent for weaknesses provides the knowledge and ability to pierce through advanced defenses. Each rank of this ability grants an increasing chance of bypassing an opponents special defenses, such as dodge, block, parry, and riposte. You may train in this ability at or after levels 61, 63, and 65.",
+        "Technique of Master Wu": "Under the tutelage of Wu, Monks are able to hone their skills to the point of being able to execute a second and sometimes even third strike when scoring a hit with their special attacks. This ability grants a 20 percent increase in the chance of scoring multiple special attacks, per rank.",
+        "Theft of Life": "This ability grants a chance that the healing effect on your lifetaps will provide an exceptional amount of healing.",
+        "Total Domination": "This ability adds strength to your charm spells. Victims of your charm spells are less likely to break out of their charms early.",
+        "Touch of the Wicked": "This ability decreases the amount of time required between uses of Harm Touch and its upgrades by twelve minutes per rank. You gain the ability to train an additional rank at levels 61, 63, and 65.",
+        "Unfailing Divinity": "The most devout find that their calls are answered with much greater frequency. This ability grants your Death Pact-type spells a second chance to successfully heal their target. Additional ranks of this ability cause said spells to do a portion of their healing value even on a complete failure. You gain the ability to train an additional rank at levels 61, 63, and 65.",
+        "Unholy Touch": "A further enhancement to Improved Harm Touch, this ability grants a considerable bonus to the amount of damage done by that ability. You gain the ability to train an additional rank at levels 61, 63, and 65.",
+        "Virulent Paralysis": "This ability causes your target to succumb to a sudden, violent attack, after which they are frequently unable to move for a time. Each rank of this ability increases the amount of time that the victim remains immobile. You may train the ranks of this ability at or after levels 61, 63, and 65.",
+        "Viscid Roots": "Root spells applied by the owner of this ability are significantly less likely to break when the victim takes damage initiated by anyone, unlike previous abilities which only affect damage caused by the caster.",
+        "Wake the Dead": "This ability calls the shade of a nearby corpse back to life to serve the Necromancer. The soulless abomination will fight the target, until called back to the afterlife some time later. The slave summoned by the first rank of this ability serves for 60 seconds, and each increasing rank adds 15 additional seconds. You may train the ranks of this ability at or after levels 61, 63, and 65.",
+        "Wrack Summoned": "This ability further improves the damage caused by your Turn Summoned ability.",
+        "Wrack Undead": "This ability grants you a more damaging version of your Turn Undead ability.",
+        "Wrath of the Wild": "Developed by the denizens of Tranquility as a deterrent to potential attackers, this ability will shield you with a single-hit, large damage barrier of thorns. Additional ranks of this ability increase the amount of damage that is inflicted by 350, 500, and 650 points of damage. You may train the ranks of this ability at or after levels 61, 63, and 65."
+    }
+
+    description = aa_descriptions.get(aa_name)
+    if description:
+        return Ability(name=aa_name, description=description)
+    return None
