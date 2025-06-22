@@ -240,6 +240,7 @@ def character_profile(request: HttpRequest, character_name: str) -> HttpResponse
 
                 # Create bag structure
                 bag_data = {
+                    'name': item_data['name'],
                     'slot': slot_id,
                     'rows': calculate_bag_rows(item_data['bag_slots']),
                     'height': calculate_bag_height(item_data['bag_slots']),
@@ -274,6 +275,7 @@ def character_profile(request: HttpRequest, character_name: str) -> HttpResponse
 
                 # Create bank bag structure
                 bank_bag_data = {
+                    'name': item_data['name'],
                     'slot': slot_id,
                     'rows': calculate_bag_rows(item_data['bag_slots']),
                     'height': calculate_bag_height(item_data['bag_slots']),

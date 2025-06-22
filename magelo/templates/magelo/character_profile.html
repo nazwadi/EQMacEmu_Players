@@ -622,7 +622,7 @@
                                         >
                                             <div class="BagTitle">
                                                 <div class="BagTitleLeft"></div>
-                                                <div class="BagTitleMid">Container</div>
+                                                <div class="BagTitleMid" title="{{ bag.name }}">{{ bag.name|truncatechars:10 }}</div>
                                                 <div class="BagTitleRight"></div>
                                             </div>
 
@@ -1109,7 +1109,7 @@
                                     >
                                         <div class="BagTitle">
                                             <div class="BagTitleLeft"></div>
-                                            <div class="BagTitleMid">Container</div>
+                                            <div class="BagTitleMid" title="{{ bag.name }}">{{ bag.name|truncatechars:10 }}</div>
                                             <div class="BagTitleRight"></div>
                                         </div>
 
