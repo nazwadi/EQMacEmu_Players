@@ -14,6 +14,63 @@ document.addEventListener('DOMContentLoaded', function () {
     const MAX_HISTORY_ITEMS = 5;
     const STORAGE_KEY = 'searchHistory';
 
+    // Placeholder suggestions
+    const placeholderSuggestions = [
+        "Search items, spells, NPCs, zones...",
+        "Try searching for 'banded mail'",
+        "Try searching for 'claws of veeshan'",
+        "Try searching for 'lady vox'",
+        "Try searching for 'guards of qeynos'",
+        "Try searching for 'complete heal'",
+        "Try searching for 'fire'",
+        "Try searching for 'shadow'",
+        "Try searching for 'temple of veeshan'",
+        "Try searching for 'vex thal'"
+    ];
+
+    let currentPlaceholderIndex = 0;
+    let placeholderInterval;
+
+    function rotatePlaceholder() {
+        // Only rotate if input is empty and modal is visible
+        if (searchInput.value.trim() !== '' || !searchModalElement.classList.contains('show')) {
+            return;
+        }
+
+        // Fade out current placeholder
+        searchInput.style.opacity = '0.7';
+
+        setTimeout(() => {
+            // Change to next suggestion
+            currentPlaceholderIndex = (currentPlaceholderIndex + 1) % placeholderSuggestions.length;
+            searchInput.placeholder = placeholderSuggestions[currentPlaceholderIndex];
+
+            // Fade back in
+            searchInput.style.opacity = '1';
+        }, 150);
+    }
+
+    function startPlaceholderRotation() {
+        // Clear any existing interval
+        stopPlaceholderRotation();
+
+        // Start rotation every 3 seconds
+        placeholderInterval = setInterval(rotatePlaceholder, 3000);
+    }
+
+    function stopPlaceholderRotation() {
+        if (placeholderInterval) {
+            clearInterval(placeholderInterval);
+            placeholderInterval = null;
+        }
+    }
+
+    function resetToDefaultPlaceholder() {
+        searchInput.placeholder = placeholderSuggestions[0];
+        searchInput.style.opacity = '1';
+        currentPlaceholderIndex = 0;
+    }
+
     function getSearchHistory() {
         try {
             const history = localStorage.getItem(STORAGE_KEY);
@@ -99,7 +156,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Add click handlers
         document.querySelectorAll('.search-history-item').forEach(item => {
-            item.addEventListener('click', function(e) {
+            item.addEventListener('click', function (e) {
                 // Don't trigger if clicking the remove button
                 if (e.target.classList.contains('remove-history')) {
                     e.stopPropagation();
@@ -117,7 +174,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Add remove button handlers
         document.querySelectorAll('.remove-history').forEach(btn => {
-            btn.addEventListener('click', function(e) {
+            btn.addEventListener('click', function (e) {
                 e.stopPropagation();
                 const query = this.dataset.query;
                 removeFromHistory(query);
@@ -129,12 +186,21 @@ document.addEventListener('DOMContentLoaded', function () {
     searchInput.addEventListener('input', function (e) {
         const query = e.target.value.trim();
 
+        // Stop placeholder rotation when user starts typing
+        if (query.length > 0) {
+            stopPlaceholderRotation();
+            resetToDefaultPlaceholder();
+        }
+
         // Show clear button if there's text, hide if empty
         if (query.length > 0) {
             clearSearchBtn.classList.remove('d-none');
         } else {
             clearSearchBtn.classList.add('d-none');
             showSearchHistory(); // Show history when input is empty
+
+            // Restart placeholder rotation when input is empty
+            setTimeout(startPlaceholderRotation, 1000); // Small delay before starting rotation
             return;
         }
 
@@ -160,6 +226,9 @@ document.addEventListener('DOMContentLoaded', function () {
         clearSearchBtn.classList.add('d-none');
         showSearchHistory(); // Show history when cleared
         searchInput.focus();
+
+        // Restart placeholder rotation after clearing
+        setTimeout(startPlaceholderRotation, 1000);
     });
 
     // Focus input when modal is fully shown
@@ -175,11 +244,16 @@ document.addEventListener('DOMContentLoaded', function () {
         // Show search history if input is empty
         if (searchInput.value.trim() === '') {
             showSearchHistory();
+            // Start placeholder rotation after a delay
+            setTimeout(startPlaceholderRotation, 2000);
         }
     });
 
     // Restore focus when modal is hidden
     searchModalElement.addEventListener('hidden.bs.modal', function () {
+        // Stop placeholder rotation when modal closes
+        stopPlaceholderRotation();
+        resetToDefaultPlaceholder();
         const previousFocusId = searchModalElement.getAttribute('data-previous-focus');
         if (previousFocusId) {
             const previousElement = document.getElementById(previousFocusId);
@@ -244,7 +318,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Focus trap within modal
-    document.addEventListener('keydown', function(e) {
+    document.addEventListener('keydown', function (e) {
         if (e.key === 'Tab' && searchModalElement.classList.contains('show')) {
             const focusableElements = searchModalElement.querySelectorAll(
                 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
@@ -270,7 +344,7 @@ document.addEventListener('DOMContentLoaded', function () {
         items.forEach((item, index) => {
             if (index === selectedIndex) {
                 item.classList.add('active');
-                item.scrollIntoView({ block: 'nearest' });
+                item.scrollIntoView({block: 'nearest'});
             } else {
                 item.classList.remove('active');
             }
@@ -384,28 +458,28 @@ document.addEventListener('DOMContentLoaded', function () {
             method: 'GET',
             signal: controller.signal
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            displaySearchResults(data);
-        })
-        .catch(error => {
-            if (error.name !== 'AbortError') {
-                console.error('Search error:', error);
-                document.getElementById('searchResults').innerHTML = `
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                displaySearchResults(data);
+            })
+            .catch(error => {
+                if (error.name !== 'AbortError') {
+                    console.error('Search error:', error);
+                    document.getElementById('searchResults').innerHTML = `
                     <div class="text-center text-danger">
                         <p>Search failed. Please try again.</p>
                     </div>
                 `;
-            }
-        })
-        .finally(() => {
-            currentRequest = null;
-        });
+                }
+            })
+            .finally(() => {
+                currentRequest = null;
+            });
     }
 
     function displaySearchResults(data) {

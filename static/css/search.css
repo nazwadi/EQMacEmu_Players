@@ -215,3 +215,16 @@
 .search-history-clear:hover {
     color: var(--bs-primary-dark);
 }
+
+/* Placeholder suggestion animation */
+#searchInput::placeholder {
+    transition: opacity 0.3s ease;
+}
+
+.placeholder-fade-out {
+    opacity: 0 !important;
+}
+
+.placeholder-fade-in {
+    opacity: 1 !important;
+}
