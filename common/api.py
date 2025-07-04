@@ -31,7 +31,8 @@ def api_search(request):
         'id': item.id,
         'name': item.Name,
         'url': f'/items/view/{item.id}',
-        'icon': item.icon
+        'icon': item.icon,
+        'icon_url': f'/static/images/items/item_{item.icon}.png',
     } for item in items]
 
     # NPCs search

@@ -200,7 +200,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Add category-specific extra information
         switch (category) {
             case 'items':
-                extraInfo = item.icon ? `<small class="text-muted">Icon: ${item.icon}</small>` : '';
+                extraInfo = item.icon ? `<small class="text-muted">Icon: <img src="${item.icon_url}" alt="${item.icon}"></small>` : '';
                 break;
             case 'npcs':
                 extraInfo = item.level ? `<small class="text-muted">Level ${item.level}</small>` : '';
