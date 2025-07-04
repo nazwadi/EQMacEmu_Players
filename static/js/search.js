@@ -482,6 +482,75 @@ document.addEventListener('DOMContentLoaded', function () {
             });
     }
 
+    function getSearchSuggestions(query) {
+    const suggestions = [];
+    const lowerQuery = query.toLowerCase();
+
+    // Suggest corrections for common misspellings
+    const commonCorrections = {
+        'swrd': 'sword',
+        'sheild': 'shield',
+        'armour': 'armor',
+        'rouge': 'rogue',
+        'pally': 'paladin',
+        'zerker': 'berserker',
+        'shaman': 'shaman',
+        'kunark': 'kunark',
+        'velious': 'velious'
+    };
+
+    // Check for potential corrections
+    for (const [misspelled, correct] of Object.entries(commonCorrections)) {
+        if (lowerQuery.includes(misspelled)) {
+            suggestions.push(`Did you mean <strong>${correct}</strong>?`);
+            break;
+        }
+    }
+
+    // Suggest broader categories based on query
+    if (lowerQuery.includes('weapon') || lowerQuery.includes('sword') || lowerQuery.includes('axe')) {
+        suggestions.push('Try searching for specific weapon types like <strong>blade</strong>, <strong>staff</strong>, or <strong>bow</strong>');
+    }
+
+    if (lowerQuery.includes('armor') || lowerQuery.includes('plate') || lowerQuery.includes('chain')) {
+        suggestions.push('Try searching for <strong>helm</strong>, <strong>chest</strong>, or <strong>boots</strong>');
+    }
+
+    if (lowerQuery.includes('spell') || lowerQuery.includes('magic')) {
+        suggestions.push('Try searching for spell effects like <strong>heal</strong>, <strong>buff</strong>, or <strong>damage</strong>');
+    }
+
+    if (lowerQuery.includes('zone') || lowerQuery.includes('area')) {
+        suggestions.push('Try searching for zone names like <strong>crushbone</strong>, <strong>gfay</strong>, or <strong>cazic</strong>');
+    }
+
+    // If no specific suggestions, provide general ones
+    if (suggestions.length === 0) {
+        if (query.length < 3) {
+            suggestions.push('Search terms must be at least 3 characters long');
+        } else if (query.length > 20) {
+            suggestions.push('Try using shorter, more specific search terms');
+        } else {
+            suggestions.push('Try searching for broader terms or check the popular searches above');
+        }
+    }
+
+    if (suggestions.length > 0) {
+        return `
+            <div class="mt-3">
+                <div class="alert alert-info border-0 bg-primary bg-opacity-10">
+                    <h6 class="alert-heading mb-2">
+                        <i class="fas fa-info-circle me-2"></i>Suggestions
+                    </h6>
+                    ${suggestions.map(suggestion => `<p class="mb-1 small">${suggestion}</p>`).join('')}
+                </div>
+            </div>
+        `;
+    }
+
+    return '';
+}
+
     function displaySearchResults(data) {
         selectedIndex = -1;
         const resultsContainer = document.getElementById('searchResults');
@@ -492,12 +561,67 @@ document.addEventListener('DOMContentLoaded', function () {
         searchInput.setAttribute('aria-expanded', totalResults > 0 ? 'true' : 'false');
 
         if (totalResults === 0) {
+            const currentQuery = searchInput.value.trim();
+
             resultsContainer.innerHTML = `
-                <div class="text-center text-muted">
-                    <p>No results found. Try a different search term.</p>
+        <div class="p-4">
+            <div class="text-center text-muted mb-4">
+                <i class="fas fa-search-minus mb-3" style="font-size: 2.5rem; opacity: 0.5;"></i>
+                <h6 class="mb-2">No results found for "${currentQuery}"</h6>
+                <p class="mb-4">We couldn't find anything matching your search. Try these suggestions:</p>
+            </div>
+            
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="card border-0 bg-light">
+                        <div class="card-body p-3">
+                            <h6 class="card-title mb-2">
+                                <i class="fas fa-lightbulb text-warning me-2"></i>Search Tips
+                            </h6>
+                            <ul class="mb-0 small text-muted">
+                                <li>Check your spelling</li>
+                                <li>Try shorter or more general terms</li>
+                                <li>Use single words instead of phrases</li>
+                                <li>Try alternative names or abbreviations</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-            `;
-            announceToScreenReader("No results found");
+                
+                <div class="col-md-6">
+                    <div class="card border-0 bg-light">
+                        <div class="card-body p-3">
+                            <h6 class="card-title mb-2">
+                                <i class="fas fa-star text-primary me-2"></i>Popular Searches
+                            </h6>
+                            <div class="d-flex flex-wrap gap-1">
+                                <span class="badge bg-secondary cursor-pointer popular-search-tag" data-search="sword">sword</span>
+                                <span class="badge bg-secondary cursor-pointer popular-search-tag" data-search="heal">heal</span>
+                                <span class="badge bg-secondary cursor-pointer popular-search-tag" data-search="ring">ring</span>
+                                <span class="badge bg-secondary cursor-pointer popular-search-tag" data-search="dragon">dragon</span>
+                                <span class="badge bg-secondary cursor-pointer popular-search-tag" data-search="cleric">cleric</span>
+                                <span class="badge bg-secondary cursor-pointer popular-search-tag" data-search="fire">fire</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            ${getSearchSuggestions(currentQuery)}
+        </div>
+    `;
+
+            // Add click handlers for popular searches
+            document.querySelectorAll('.popular-search-tag').forEach(tag => {
+                tag.addEventListener('click', function () {
+                    const searchTerm = this.dataset.search;
+                    searchInput.value = searchTerm;
+                    clearSearchBtn.classList.remove('d-none');
+                    performSearch(searchTerm);
+                });
+            });
+
+            announceToScreenReader(`No results found for ${currentQuery}. Try checking spelling or using different search terms.`);
             return;
         }
 

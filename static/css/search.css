@@ -228,3 +228,24 @@
 .placeholder-fade-in {
     opacity: 1 !important;
 }
+
+/* No results styling */
+.popular-search-tag {
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.popular-search-tag:hover {
+    background-color: var(--bs-primary) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+/* Enhanced alert styling */
+.alert-info.bg-primary.bg-opacity-10 {
+    border-left: 3px solid var(--bs-primary);
+}
