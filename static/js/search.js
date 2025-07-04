@@ -7,6 +7,38 @@ document.addEventListener('DOMContentLoaded', function () {
     let searchTimeout;
     let currentRequest;
 
+    // Add this after: const searchInput = document.getElementById('searchInput');
+    const clearSearchBtn = document.getElementById('clearSearchBtn');
+
+// Show/hide clear button based on input content
+    searchInput.addEventListener('input', function (e) {
+        const query = e.target.value.trim();
+
+        // Show clear button if there's text, hide if empty
+        if (query.length > 0) {
+            clearSearchBtn.classList.remove('d-none');
+        } else {
+            clearSearchBtn.classList.add('d-none');
+        }
+
+        // ... rest of your existing input handler code stays the same
+    });
+
+// Clear search functionality
+    clearSearchBtn.addEventListener('click', function () {
+        searchInput.value = '';
+        clearSearchBtn.classList.add('d-none');
+        showDefaultState();
+        searchInput.focus(); // Keep focus in the input
+    });
+
+// Also hide clear button when modal opens
+    searchModalElement.addEventListener('shown.bs.modal', function () {
+        clearSearchBtn.classList.add('d-none'); // Hide clear button on open
+        searchInput.focus();
+        searchInput.select();
+    });
+
     // Focus input when modal is fully shown
     searchModalElement.addEventListener('shown.bs.modal', function () {
         searchInput.focus();
@@ -203,7 +235,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 extraInfo = item.icon ? `<small class="text-muted">Icon: <img src="${item.icon_url}" alt="${item.icon}"></small>` : '';
                 break;
             case 'npcs':
-                extraInfo = item.level ? `<small class="text-muted">Level ${item.level}</small>` : '';
+                extraInfo = item.level ? `<small class="text-muted">Level ${item.level}</small>&nbsp;|&nbsp;` : '';
+                extraInfo += item.race ? `<small class="text-muted">${item.race}</small>&nbsp;|&nbsp;` : '';
+                extraInfo += item.class ? `<small class="text-muted">${item.class}</small>&nbsp;|&nbsp;` : '';
+                extraInfo += item.body_type ? `<small class="text-muted">${item.body_type}</small>&nbsp;|&nbsp;` : '';
+                extraInfo += item.hp ? `<small class="text-muted">HP ${item.hp}</small>&nbsp;|&nbsp;` : '';
+                extraInfo += item.MR ? `<small class="text-muted">MR ${item.MR}</small>` : '';
                 break;
             case 'spells':
                 extraInfo = item.mana ? `<small class="text-muted">${item.mana} Mana</small>` : '';

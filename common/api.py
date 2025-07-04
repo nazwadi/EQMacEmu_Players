@@ -6,6 +6,8 @@ from common.models.spells import SpellsNew
 from common.models.zones import Zone
 from common.models.faction import FactionList
 from common.models.tradeskill import TradeskillRecipe
+from characters.templatetags import data_utilities
+from npcs.templatetags import npc_filters
 
 @require_http_methods(["GET"])
 def api_search(request):
@@ -41,7 +43,12 @@ def api_search(request):
         'id': npc.id,
         'name': npc.name,
         'url': f'/npcs/view/{npc.id}',
-        'level': npc.level
+        'level': npc.level,
+        'race': data_utilities.npc_race(npc.race),
+        'class': data_utilities.npc_class(npc.class_name),
+        'body_type': npc_filters.body_type(npc.bodytype),
+        'hp': npc.hp,
+        'MR': npc.MR
     } for npc in npcs]
 
     # Spells search
