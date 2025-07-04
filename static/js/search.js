@@ -194,13 +194,62 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function performSearch(query) {
         document.getElementById('searchResults').innerHTML = `
-            <div class="text-center">
-                <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
+        <div>
+            <!-- Items skeleton -->
+            <div class="mb-4">
+                <div class="skeleton skeleton-category mb-2"></div>
+                <div class="skeleton-item d-flex align-items-center">
+                    <div class="skeleton skeleton-icon"></div>
+                    <div class="flex-grow-1">
+                        <div class="skeleton skeleton-text wide"></div>
+                        <div class="skeleton skeleton-text narrow"></div>
+                    </div>
                 </div>
-                <p class="mt-2 text-muted">Searching...</p>
+                <div class="skeleton-item d-flex align-items-center">
+                    <div class="skeleton skeleton-icon"></div>
+                    <div class="flex-grow-1">
+                        <div class="skeleton skeleton-text wide"></div>
+                        <div class="skeleton skeleton-text narrow"></div>
+                    </div>
+                </div>
+                <div class="skeleton-item d-flex align-items-center">
+                    <div class="skeleton skeleton-icon"></div>
+                    <div class="flex-grow-1">
+                        <div class="skeleton skeleton-text wide"></div>
+                        <div class="skeleton skeleton-text narrow"></div>
+                    </div>
+                </div>
             </div>
-        `;
+            
+            <!-- NPCs skeleton -->
+            <div class="mb-4">
+                <div class="skeleton skeleton-category mb-2"></div>
+                <div class="skeleton-item d-flex align-items-center">
+                    <div class="flex-grow-1">
+                        <div class="skeleton skeleton-text wide"></div>
+                        <div class="skeleton skeleton-text narrow"></div>
+                    </div>
+                </div>
+                <div class="skeleton-item d-flex align-items-center">
+                    <div class="flex-grow-1">
+                        <div class="skeleton skeleton-text wide"></div>
+                        <div class="skeleton skeleton-text narrow"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Other categories skeleton -->
+            <div class="mb-4">
+                <div class="skeleton skeleton-category mb-2"></div>
+                <div class="skeleton-item d-flex align-items-center">
+                    <div class="flex-grow-1">
+                        <div class="skeleton skeleton-text wide"></div>
+                        <div class="skeleton skeleton-text narrow"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
 
         const controller = new AbortController();
         currentRequest = controller;

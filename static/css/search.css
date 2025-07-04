@@ -95,3 +95,60 @@
     outline: 2px solid #0d6efd;
     outline-offset: 2px;
 }
+
+/* Loading skeleton styles */
+.skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+.skeleton-item {
+    padding: 12px 16px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.skeleton-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 2px;
+    margin-right: 8px;
+    flex-shrink: 0;
+}
+
+.skeleton-text {
+    height: 16px;
+    border-radius: 4px;
+    margin-bottom: 4px;
+}
+
+.skeleton-text.wide {
+    width: 60%;
+}
+
+.skeleton-text.narrow {
+    width: 40%;
+    height: 12px;
+}
+
+.skeleton-category {
+    height: 14px;
+    width: 80px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+
+/* Dark mode skeleton (optional - adapts to Bootstrap themes) */
+[data-bs-theme="dark"] .skeleton {
+    background: linear-gradient(90deg, #2d3748 25%, #4a5568 50%, #2d3748 75%);
+    background-size: 200% 100%;
+}
