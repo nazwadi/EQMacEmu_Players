@@ -10,6 +10,121 @@ document.addEventListener('DOMContentLoaded', function () {
     let selectedIndex = -1;
     let announceTimeout;
 
+    // Search history management
+    const MAX_HISTORY_ITEMS = 5;
+    const STORAGE_KEY = 'searchHistory';
+
+    function getSearchHistory() {
+        try {
+            const history = localStorage.getItem(STORAGE_KEY);
+            return history ? JSON.parse(history) : [];
+        } catch (e) {
+            console.warn('Failed to load search history:', e);
+            return [];
+        }
+    }
+
+    function saveSearchHistory(query) {
+        try {
+            let history = getSearchHistory();
+
+            // Remove if already exists (to move to top)
+            history = history.filter(item => item.toLowerCase() !== query.toLowerCase());
+
+            // Add to beginning
+            history.unshift(query);
+
+            // Keep only MAX_HISTORY_ITEMS
+            history = history.slice(0, MAX_HISTORY_ITEMS);
+
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+        } catch (e) {
+            console.warn('Failed to save search history:', e);
+        }
+    }
+
+    function removeFromHistory(query) {
+        try {
+            let history = getSearchHistory();
+            history = history.filter(item => item.toLowerCase() !== query.toLowerCase());
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+
+            // Refresh the display if we're showing history
+            if (searchInput.value.trim() === '') {
+                showSearchHistory();
+            }
+        } catch (e) {
+            console.warn('Failed to remove from search history:', e);
+        }
+    }
+
+    function clearSearchHistory() {
+        try {
+            localStorage.removeItem(STORAGE_KEY);
+            showDefaultState();
+        } catch (e) {
+            console.warn('Failed to clear search history:', e);
+        }
+    }
+
+    function showSearchHistory() {
+        const history = getSearchHistory();
+
+        if (history.length === 0) {
+            showDefaultState();
+            return;
+        }
+
+        let html = `
+            <div class="p-2">
+                <div class="search-history-header d-flex justify-content-between align-items-center">
+                    <span>Recent Searches</span>
+                    <span class="search-history-clear" onclick="clearSearchHistory()">Clear All</span>
+                </div>
+        `;
+
+        history.forEach(query => {
+            html += `
+                <div class="search-history-item" data-query="${query.replace(/"/g, '&quot;')}">
+                    <i class="fas fa-history history-icon"></i>
+                    <span class="history-text">${query}</span>
+                    <i class="fas fa-times remove-history" data-query="${query.replace(/"/g, '&quot;')}" title="Remove from history"></i>
+                </div>
+            `;
+        });
+
+        html += '</div>';
+
+        document.getElementById('searchResults').innerHTML = html;
+
+        // Add click handlers
+        document.querySelectorAll('.search-history-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                // Don't trigger if clicking the remove button
+                if (e.target.classList.contains('remove-history')) {
+                    e.stopPropagation();
+                    const query = e.target.dataset.query;
+                    removeFromHistory(query);
+                    return;
+                }
+
+                const query = this.dataset.query;
+                searchInput.value = query;
+                clearSearchBtn.classList.remove('d-none');
+                performSearch(query);
+            });
+        });
+
+        // Add remove button handlers
+        document.querySelectorAll('.remove-history').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const query = this.dataset.query;
+                removeFromHistory(query);
+            });
+        });
+    }
+
     // Show/hide clear button based on input content and handle search
     searchInput.addEventListener('input', function (e) {
         const query = e.target.value.trim();
@@ -19,6 +134,8 @@ document.addEventListener('DOMContentLoaded', function () {
             clearSearchBtn.classList.remove('d-none');
         } else {
             clearSearchBtn.classList.add('d-none');
+            showSearchHistory(); // Show history when input is empty
+            return;
         }
 
         // Search functionality
@@ -41,7 +158,7 @@ document.addEventListener('DOMContentLoaded', function () {
     clearSearchBtn.addEventListener('click', function () {
         searchInput.value = '';
         clearSearchBtn.classList.add('d-none');
-        showDefaultState();
+        showSearchHistory(); // Show history when cleared
         searchInput.focus();
     });
 
@@ -54,6 +171,11 @@ document.addEventListener('DOMContentLoaded', function () {
         clearSearchBtn.classList.add('d-none');
         searchInput.focus();
         searchInput.select();
+
+        // Show search history if input is empty
+        if (searchInput.value.trim() === '') {
+            showSearchHistory();
+        }
     });
 
     // Restore focus when modal is hidden
@@ -93,7 +215,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Enhanced keyboard navigation
     searchInput.addEventListener('keydown', function (e) {
-        const items = document.querySelectorAll('#searchResults .list-group-item');
+        const items = document.querySelectorAll('#searchResults .list-group-item, #searchResults .search-history-item');
 
         if (e.key === 'ArrowDown') {
             e.preventDefault();
@@ -157,9 +279,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function announceCurrentSelection(items) {
         if (selectedIndex >= 0 && items[selectedIndex]) {
-            const itemText = items[selectedIndex].querySelector('.fw-medium').textContent;
-            const itemDesc = items[selectedIndex].querySelector('small')?.textContent || '';
-            announceToScreenReader(`Selected ${itemText} ${itemDesc}`);
+            const itemText = items[selectedIndex].querySelector('.fw-medium, .history-text')?.textContent || '';
+            announceToScreenReader(`Selected ${itemText}`);
         }
     }
 
@@ -193,6 +314,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function performSearch(query) {
+        // Save to search history
+        if (query.trim().length >= 3) {
+            saveSearchHistory(query.trim());
+        }
+
         document.getElementById('searchResults').innerHTML = `
         <div>
             <!-- Items skeleton -->
@@ -394,4 +520,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
     }
+
+    // Make clearSearchHistory available globally for onclick
+    window.clearSearchHistory = clearSearchHistory;
 });
