@@ -29,6 +29,13 @@
     box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
 }
 
+/* Item icon styling in search results */
+#searchResults .list-group-item img {
+    object-fit: contain;
+    flex-shrink: 0;
+    border-radius: 2px;
+}
+
 /* Clear search button */
 #clearSearchBtn {
     background: none !important;
