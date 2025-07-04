@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from common.models.items import Items
@@ -37,11 +38,19 @@ def api_search(request):
         'icon_url': f'/static/images/items/item_{item.icon}.png',
     } for item in items]
 
-    # NPCs search
-    npcs = NPCTypes.objects.filter(name__icontains=query)[:8]
+    # NPCs search with space/underscore handling
+    query_with_underscores = query.replace(' ', '_')
+    query_with_spaces = query.replace('_', ' ')
+
+    npcs = NPCTypes.objects.filter(
+        Q(name__icontains=query) |
+        Q(name__icontains=query_with_underscores) |
+        Q(name__icontains=query_with_spaces)
+    ).distinct()[:8]
+
     results['npcs'] = [{
         'id': npc.id,
-        'name': npc.name,
+        'name': npc.name.replace('_', ' '),
         'url': f'/npcs/view/{npc.id}',
         'level': npc.level,
         'race': data_utilities.npc_race(npc.race),
