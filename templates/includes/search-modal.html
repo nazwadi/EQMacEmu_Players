@@ -1,32 +1,45 @@
 <!-- Search Modal -->
-<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <!-- Responsive close button - only visible on mobile -->
             <button type="button" class="btn-close position-absolute top-0 end-0 m-3 modal-close-mobile-only"
-                    data-bs-dismiss="modal" aria-label="Close" style="z-index: 1055;"></button>
+                    data-bs-dismiss="modal" aria-label="Close search modal" style="z-index: 1055;"></button>
 
             <div class="modal-body p-0">
                 <!-- Search Input Section -->
                 <div class="p-4 border-bottom">
+                    <label for="searchInput" class="visually-hidden">Search across all categories</label>
                     <div class="position-relative">
-                        <i class="fas fa-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+                        <i class="fas fa-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted" aria-hidden="true"></i>
                         <input type="text"
                                class="form-control form-control-lg border-0 ps-5 pe-4"
                                id="searchInput"
                                placeholder="Search items, spells, NPCs, zones..."
-                               autocomplete="off">
+                               autocomplete="off"
+                               role="searchbox"
+                               aria-describedby="searchInstructions"
+                               aria-expanded="false"
+                               aria-owns="searchResults">
                         <button type="button"
                                 class="btn btn-link position-absolute top-50 translate-middle-y p-1 d-none"
                                 style="right: 0.5rem;"
                                 id="clearSearchBtn"
-                                aria-label="Clear search">
-                            <i class="fas fa-times-circle text-muted"></i>
+                                aria-label="Clear search input">
+                            <i class="fas fa-times-circle text-muted" aria-hidden="true"></i>
                         </button>
+                    </div>
+                    <div id="searchInstructions" class="visually-hidden">
+                        Type to search across items, spells, NPCs, zones, factions, and recipes. Use arrow keys to navigate results, Enter to select.
                     </div>
                 </div>
                 <!-- Results area -->
-                <div id="searchResults" class="p-4" style="min-height: 200px;">
+                <div id="searchResults"
+                     class="p-4"
+                     style="min-height: 200px;"
+                     role="region"
+                     aria-live="polite"
+                     aria-label="Search results">
                     <div class="text-center text-muted">
                         <p>Start typing to search across all categories...</p>
                     </div>
