@@ -57,6 +57,7 @@ def api_search(request):
         'id': spell.id,
         'name': spell.name,
         'url': f'/spells/view/{spell.id}',
+        'custom_icon': spell.custom_icon,
         'mana': spell.mana
     } for spell in spells]
 

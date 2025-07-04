@@ -294,10 +294,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function createResultItem(item, category, index) {
         let extraInfo = '';
+        let iconHtml = '';
 
         switch (category) {
             case 'items':
-                extraInfo = item.icon ? `<small class="text-muted">Icon: <img src="${item.icon_url}" alt="${item.icon}"></small>` : '';
+                iconHtml = item.icon ? `<img src="${item.icon_url}" alt="Item icon" class="me-2" style="width: 24px; height: 24px;">` : '';
                 break;
             case 'npcs':
                 extraInfo = item.level ? `<small class="text-muted">Level ${item.level}</small>&nbsp;|&nbsp;` : '';
@@ -308,6 +309,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 extraInfo += item.MR ? `<small class="text-muted">MR ${item.MR}</small>` : '';
                 break;
             case 'spells':
+                iconHtml = item.custom_icon ? `<img src="/static/images/icons/${item.custom_icon}.gif" alt="${item.custom_icon}.gif" class="me-2" style="width: 24px; height: 24px;"/>` : '';
                 extraInfo = item.mana ? `<small class="text-muted">${item.mana} Mana</small>` : '';
                 break;
             case 'zones':
@@ -323,9 +325,11 @@ document.addEventListener('DOMContentLoaded', function () {
                class="list-group-item list-group-item-action d-flex justify-content-between align-items-center search-result-link"
                role="option"
                aria-describedby="${category}-${index}-desc">
+               <div class="d-flex align-items-center">
                 <div>
-                    <div class="fw-medium">${item.name}</div>
+                    <div class="fw-medium">${iconHtml} ${item.name}</div>
                     <div id="${category}-${index}-desc">${extraInfo}</div>
+                </div>
                 </div>
                 <i class="fas fa-arrow-right text-muted" aria-hidden="true"></i>
             </a>
@@ -334,7 +338,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function addResultClickHandlers() {
         document.querySelectorAll('.search-result-link').forEach(link => {
-            link.addEventListener('click', function() {
+            link.addEventListener('click', function () {
                 setTimeout(() => {
                     searchModal.hide();
                 }, 100);
