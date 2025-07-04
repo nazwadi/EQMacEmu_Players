@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'factions/eq-ui.css' %}">
     <link rel="stylesheet" href="{% static 'factions/main.css' %}">
+    <link rel="stylesheet" href="{% static 'css/search.css' %}">
     <link href="https://cdn.datatables.net/v/bs5/dt-2.0.2/datatables.min.css" rel="stylesheet">
 
     {% if faction_name.1  %}
@@ -30,6 +31,7 @@
 
 {% endblock %}
 
+{% include 'includes/search-modal.html' %}
 {% include 'footer.html' %}
 
 <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha384-wsqsSADZR1YRBEZ4/kKHNSmU+aX8ojbnKUMN4RyD3jDkxw5mHtoe2z/T/n4l56U/" crossorigin="anonymous"></script>
@@ -44,5 +46,6 @@
         });
     });
 </script>
+<script src="{% static 'js/search.js' %}"></script>
 </body>
 </html>

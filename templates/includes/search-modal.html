@@ -1,0 +1,29 @@
+<!-- Search Modal -->
+<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body p-0">
+                <!-- Search Input Section -->
+                <div class="p-4 border-bottom">
+                    <div class="position-relative">
+                        <i class="fas fa-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+                        <input type="text"
+                               class="form-control form-control-lg border-0 ps-5"
+                               id="searchInput"
+                               placeholder="Search items, spells, NPCs, zones..."
+                               autocomplete="off">
+                        <button type="button" class="btn-close position-absolute top-50 end-0 translate-middle-y me-2"
+                                data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                </div>
+
+                <!-- Results will go here -->
+                <div id="searchResults" class="p-4" style="min-height: 200px;">
+                    <div class="text-center text-muted">
+                        <p>Start typing to search across all categories...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

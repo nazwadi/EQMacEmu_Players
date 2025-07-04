@@ -15,6 +15,7 @@
           integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'css/eq-ui.css' %}">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'css/search.css' %}">
     <link href="https://cdn.datatables.net/v/bs5/dt-2.0.2/datatables.min.css" rel="stylesheet">
      <style>
         /* Only the minimal necessary styles */
@@ -68,6 +69,7 @@
 
 {% endblock %}
 
+{% include 'includes/search-modal.html' %}
 {% include 'footer.html' %}
 
 <script src="https://code.jquery.com/jquery-3.7.1.js"
@@ -108,5 +110,6 @@
         });
     });
 </script>
+<script src="{% static 'js/search.js' %}"></script>
 </body>
 </html>

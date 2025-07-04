@@ -72,30 +72,32 @@
                     <a class="nav-link" href="{% url 'zones:index' %}">Zones</a>
                 </li>
             </ul>
-            <div class="d-flex px-5 text-end">
-                <div class="dropdown">
-                    {% if user.is_authenticated %}
-                        <button class="btn btn-secondary dropdown-toggle d-flex align-items-center" href="#"
-                                type="button"
-                                data-bs-toggle="dropdown" aria-expanded="false" id="navbarDropdownMenuLink">
-                            {#                        <i class="fas fa-user"></i> {{ user.username }}#}
-                            <img class="img-fluid img-responsive rounded-circle me-2"
-                                 src="{% gravatar_url user.email 150 %}" width="38" height="38" alt="User gravatar">
-                            <span class="d-none d-sm-inline">{{ user.username }}</span>
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <li><a class="dropdown-item" href="{% url 'accounts:list_accounts' %}">Accounts</a></li>
-                            <li><a class="dropdown-item" href="{% url 'character_transfer:index' %}">Character
-                                Transfer</a></li>
-                            <li><a class="dropdown-item" href="{% url 'accounts:inventory_search' %}">Inventory
-                                Search</a></li>
-                            <li><a class="dropdown-item" href="{% url 'accounts:logout' %}">Log Out</a></li>
-                        </ul>
-                    {% else %}
-                        <a class="btn btn-secondary" href="{% url 'accounts:login' %}" role="button"
-                           id="navbarDropdownMenuLink">Login</a>
-                    {% endif %}
-                </div>
+        </div>
+
+        <div class="d-flex px-5 text-end">
+            <button class="btn btn-outline-secondary fas fa-search me-2"></button>
+            <div class="dropdown">
+                {% if user.is_authenticated %}
+                    <button class="btn btn-secondary dropdown-toggle d-flex align-items-center" href="#"
+                            type="button"
+                            data-bs-toggle="dropdown" aria-expanded="false" id="navbarDropdownMenuLink">
+                        {#                        <i class="fas fa-user"></i> {{ user.username }}#}
+                        <img class="img-fluid img-responsive rounded-circle me-2"
+                             src="{% gravatar_url user.email 150 %}" width="38" height="38" alt="User gravatar">
+                        <span class="d-none d-sm-inline">{{ user.username }}</span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <li><a class="dropdown-item" href="{% url 'accounts:list_accounts' %}">Accounts</a></li>
+                        <li><a class="dropdown-item" href="{% url 'character_transfer:index' %}">Character
+                            Transfer</a></li>
+                        <li><a class="dropdown-item" href="{% url 'accounts:inventory_search' %}">Inventory
+                            Search</a></li>
+                        <li><a class="dropdown-item" href="{% url 'accounts:logout' %}">Log Out</a></li>
+                    </ul>
+                {% else %}
+                    <a class="btn btn-secondary" href="{% url 'accounts:login' %}" role="button"
+                       id="navbarDropdownMenuLink">Login</a>
+                {% endif %}
             </div>
         </div>
     </div>
