@@ -68,15 +68,15 @@ def search(request):
                       },
                       template_name="npcs/search_npc.html")
     if request.method == "POST":
-        body_type = request.POST.get("select_npc_body_type")
-        expansion = request.POST.get("select_expansion")
-        npc_name = request.POST.get("npc_name")
+        body_type = request.POST.get("select_npc_body_type", "-1")
+        expansion = request.POST.get("select_expansion", "-1")
+        npc_name = request.POST.get("npc_name", "")
         npc_name = npc_name.replace(' ', '_')
-        min_level = request.POST.get("min_level")
-        max_level = request.POST.get("max_level")
-        npc_race = request.POST.get("select_npc_race")
-        npc_class = request.POST.get("select_npc_class")
-        query_limit = request.POST.get("query_limit")
+        min_level = request.POST.get("min_level", "1")
+        max_level = request.POST.get("max_level", "100")
+        npc_race = request.POST.get("select_npc_race", "-1")
+        npc_class = request.POST.get("select_npc_class", "-1")
+        query_limit = request.POST.get("query_limit", "50")
         exclude_merchants = request.POST.get("exclude_merchants")
         try:
             query_limit = int(query_limit)

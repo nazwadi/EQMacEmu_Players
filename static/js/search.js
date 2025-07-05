@@ -31,6 +31,24 @@ document.addEventListener('DOMContentLoaded', function () {
     let currentPlaceholderIndex = 0;
     let placeholderInterval;
 
+    function getCSRFToken() {
+        const tokenElement = document.querySelector('[name=csrfmiddlewaretoken]');
+        if (tokenElement) {
+            return tokenElement.value;
+        }
+
+        // Fallback: try to get from cookies
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+            const [name, value] = cookie.trim().split('=');
+            if (name === 'csrftoken') {
+                return value;
+            }
+        }
+
+        return '';
+    }
+
     function rotatePlaceholder() {
         // Only rotate if input is empty and modal is visible
         if (searchInput.value.trim() !== '' || !searchModalElement.classList.contains('show')) {
@@ -483,60 +501,60 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function getSearchSuggestions(query) {
-    const suggestions = [];
-    const lowerQuery = query.toLowerCase();
+        const suggestions = [];
+        const lowerQuery = query.toLowerCase();
 
-    // Suggest corrections for common misspellings
-    const commonCorrections = {
-        'swrd': 'sword',
-        'sheild': 'shield',
-        'armour': 'armor',
-        'rouge': 'rogue',
-        'pally': 'paladin',
-        'zerker': 'berserker',
-        'shaman': 'shaman',
-        'kunark': 'kunark',
-        'velious': 'velious'
-    };
+        // Suggest corrections for common misspellings
+        const commonCorrections = {
+            'swrd': 'sword',
+            'sheild': 'shield',
+            'armour': 'armor',
+            'rouge': 'rogue',
+            'pally': 'paladin',
+            'zerker': 'berserker',
+            'shaman': 'shaman',
+            'kunark': 'kunark',
+            'velious': 'velious'
+        };
 
-    // Check for potential corrections
-    for (const [misspelled, correct] of Object.entries(commonCorrections)) {
-        if (lowerQuery.includes(misspelled)) {
-            suggestions.push(`Did you mean <strong>${correct}</strong>?`);
-            break;
+        // Check for potential corrections
+        for (const [misspelled, correct] of Object.entries(commonCorrections)) {
+            if (lowerQuery.includes(misspelled)) {
+                suggestions.push(`Did you mean <strong>${correct}</strong>?`);
+                break;
+            }
         }
-    }
 
-    // Suggest broader categories based on query
-    if (lowerQuery.includes('weapon') || lowerQuery.includes('sword') || lowerQuery.includes('axe')) {
-        suggestions.push('Try searching for specific weapon types like <strong>blade</strong>, <strong>staff</strong>, or <strong>bow</strong>');
-    }
-
-    if (lowerQuery.includes('armor') || lowerQuery.includes('plate') || lowerQuery.includes('chain')) {
-        suggestions.push('Try searching for <strong>helm</strong>, <strong>chest</strong>, or <strong>boots</strong>');
-    }
-
-    if (lowerQuery.includes('spell') || lowerQuery.includes('magic')) {
-        suggestions.push('Try searching for spell effects like <strong>heal</strong>, <strong>buff</strong>, or <strong>damage</strong>');
-    }
-
-    if (lowerQuery.includes('zone') || lowerQuery.includes('area')) {
-        suggestions.push('Try searching for zone names like <strong>crushbone</strong>, <strong>gfay</strong>, or <strong>cazic</strong>');
-    }
-
-    // If no specific suggestions, provide general ones
-    if (suggestions.length === 0) {
-        if (query.length < 3) {
-            suggestions.push('Search terms must be at least 3 characters long');
-        } else if (query.length > 20) {
-            suggestions.push('Try using shorter, more specific search terms');
-        } else {
-            suggestions.push('Try searching for broader terms or check the popular searches above');
+        // Suggest broader categories based on query
+        if (lowerQuery.includes('weapon') || lowerQuery.includes('sword') || lowerQuery.includes('axe')) {
+            suggestions.push('Try searching for specific weapon types like <strong>blade</strong>, <strong>staff</strong>, or <strong>bow</strong>');
         }
-    }
 
-    if (suggestions.length > 0) {
-        return `
+        if (lowerQuery.includes('armor') || lowerQuery.includes('plate') || lowerQuery.includes('chain')) {
+            suggestions.push('Try searching for <strong>helm</strong>, <strong>chest</strong>, or <strong>boots</strong>');
+        }
+
+        if (lowerQuery.includes('spell') || lowerQuery.includes('magic')) {
+            suggestions.push('Try searching for spell effects like <strong>heal</strong>, <strong>buff</strong>, or <strong>damage</strong>');
+        }
+
+        if (lowerQuery.includes('zone') || lowerQuery.includes('area')) {
+            suggestions.push('Try searching for zone names like <strong>crushbone</strong>, <strong>gfay</strong>, or <strong>cazic</strong>');
+        }
+
+        // If no specific suggestions, provide general ones
+        if (suggestions.length === 0) {
+            if (query.length < 3) {
+                suggestions.push('Search terms must be at least 3 characters long');
+            } else if (query.length > 20) {
+                suggestions.push('Try using shorter, more specific search terms');
+            } else {
+                suggestions.push('Try searching for broader terms or check the popular searches above');
+            }
+        }
+
+        if (suggestions.length > 0) {
+            return `
             <div class="mt-3">
                 <div class="alert alert-info border-0 bg-primary bg-opacity-10">
                     <h6 class="alert-heading mb-2">
@@ -546,10 +564,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 </div>
             </div>
         `;
-    }
+        }
 
-    return '';
-}
+        return '';
+    }
 
     function displaySearchResults(data) {
         selectedIndex = -1;
@@ -647,16 +665,85 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
+        // Add this to your displaySearchResults function where the "View all results" button was:
+
         if (totalResults > 0) {
+            const currentQuery = searchInput.value.trim();
+
             html += `
-                <div class="border-top pt-3 mt-3">
-                    <a href="/search?q=${encodeURIComponent(searchInput.value)}"
-                       class="btn btn-outline-primary btn-sm w-100 search-result-link"
-                       role="button">
-                        View all results for "${searchInput.value}"
-                    </a>
-                </div>
-            `;
+        <div class="border-top pt-3 mt-3">
+            <p class="text-center text-muted small mb-2">Need more results? Search specific categories:</p>
+            <div class="d-flex flex-wrap gap-1 justify-content-center">
+    `;
+
+            // Only show buttons for categories that have results
+            if (results.items && results.items.length > 0) {
+                html += `
+            <form action="/items/search" method="POST" class="d-inline" target="_blank">
+                <input type="hidden" name="csrfmiddlewaretoken" value="${getCSRFToken()}">
+                <input type="hidden" name="item_name" value="${currentQuery}">
+                <input type="hidden" name="query_limit" value="200">
+                <button type="submit" class="btn btn-outline-secondary btn-sm">
+                    More Items (${results.items.length}+)
+                </button>
+            </form>
+        `;
+            }
+
+            if (results.spells && results.spells.length > 0) {
+                html += `
+            <form action="/spells/search" method="POST" class="d-inline" target="_blank">
+                <input type="hidden" name="csrfmiddlewaretoken" value="${getCSRFToken()}">
+                <input type="hidden" name="spell_name" value="${currentQuery}">
+                <button type="submit" class="btn btn-outline-secondary btn-sm">
+                    More Spells (${results.spells.length}+)
+                </button>
+            </form>
+        `;
+            }
+
+            if (results.npcs && results.npcs.length > 0) {
+                html += `
+            <form action="/npcs/search" method="POST" class="d-inline" target="_blank">
+                <input type="hidden" name="csrfmiddlewaretoken" value="${getCSRFToken()}">
+                <input type="hidden" name="npc_name" value="${currentQuery}">
+                <button type="submit" class="btn btn-outline-secondary btn-sm">
+                    More NPCs (${results.npcs.length}+)
+                </button>
+            </form>
+        `;
+            }
+
+            if (results.recipes && results.recipes.length > 0) {
+                html += `
+            <form action="/recipes/search" method="POST" class="d-inline" target="_blank">
+                <input type="hidden" name="csrfmiddlewaretoken" value="${getCSRFToken()}">
+                <input type="hidden" name="recipe_name" value="${currentQuery}">
+                <button type="submit" class="btn btn-outline-secondary btn-sm">
+                    More Recipes (${results.recipes.length}+)
+                </button>
+            </form>
+        `;
+            }
+
+            if (results.factions && results.factions.length > 0) {
+                html += `
+            <form action="/factions/search" method="POST" class="d-inline" target="_blank">
+                <input type="hidden" name="csrfmiddlewaretoken" value="${getCSRFToken()}">
+                <input type="hidden" name="faction_name" value="${currentQuery}">
+                <button type="submit" class="btn btn-outline-secondary btn-sm">
+                    More Factions (${results.factions.length}+)
+                </button>
+            </form>
+        `;
+            }
+
+            // Add other categories as needed...
+
+            html += `
+            </div>
+        </div>
+    `;
         }
 
         resultsContainer.innerHTML = html;

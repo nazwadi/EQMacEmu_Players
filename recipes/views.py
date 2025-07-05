@@ -48,11 +48,11 @@ def search(request):
                       })
 
     if request.method == "POST":
-        recipe_name = request.POST.get("recipe_name")
-        tradeskill = request.POST.get("tradeskill")
-        min_trivial = request.POST.get("min_trivial")
-        max_trivial = request.POST.get("max_trivial")
-        query_limit = request.POST.get("query_limit")
+        recipe_name = request.POST.get("recipe_name", "")
+        tradeskill = request.POST.get("tradeskill", "-1")
+        min_trivial = request.POST.get("min_trivial", "0")
+        max_trivial = request.POST.get("max_trivial", "300")
+        query_limit = request.POST.get("query_limit", "50")
         try:
             query_limit = int(query_limit)
         except ValueError:

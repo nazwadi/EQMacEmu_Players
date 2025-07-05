@@ -28,7 +28,7 @@ def search(request):
                       template_name="factions/search_faction.html")
     if request.method == "POST":
         faction_name = request.POST.get("faction_name")
-        query_limit = request.POST.get("query_limit")
+        query_limit = request.POST.get("query_limit", "50")
         try:
             query_limit = int(query_limit)
         except ValueError:
