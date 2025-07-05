@@ -783,7 +783,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 extraInfo = item.short_name ? `<small class="text-muted">(${item.short_name})</small>` : '';
                 break;
             case 'recipes':
-                extraInfo = item.tradeskill ? `<small class="text-muted">Tradeskill ${item.tradeskill}</small>` : '';
+                extraInfo = item.tradeskill ? `<small class="text-muted">${item.tradeskill}</small>` : '';
                 break;
         }
 

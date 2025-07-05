@@ -7,6 +7,7 @@ from common.models.spells import SpellsNew
 from common.models.zones import Zone
 from common.models.faction import FactionList
 from common.models.tradeskill import TradeskillRecipe
+from common.templatetags.tradeskill_filters import tradeskill_filter
 from characters.templatetags import data_utilities
 from npcs.templatetags import npc_filters
 
@@ -93,7 +94,7 @@ def api_search(request):
         'id': recipe.id,
         'name': recipe.name,
         'url': f'/recipes/view/{recipe.id}',
-        'tradeskill': recipe.tradeskill
+        'tradeskill': tradeskill_filter(recipe.tradeskill)
     } for recipe in recipes]
 
     return JsonResponse({'results': results})
