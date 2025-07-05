@@ -5,7 +5,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+    <meta name="csrf-token" content="{{ csrf_token }}">
+
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
     {% if item.Name %}
         <meta content="EQ Archives" property="og:site_name">
@@ -15,7 +17,7 @@
         <meta name="description" content="EQA Item Information for Robe of the Azure Sky">
         <meta content="https://{{ request.get_host }}/static/images/items/item_{{ item.icon }}.png" property="og:image">
         <meta property="og:url" content="https://{{ request.get_host }}/items/view/{{ item.id }}">
-        <link rel="canonical" href="https://{{ request.get_host}}/items/view/{{item.id }}">
+        <link rel="canonical" href="https://{{ request.get_host }}/items/view/{{ item.id }}">
     {% endif %}
 
     <!-- Bootstrap CSS -->
@@ -36,7 +38,7 @@
     {% else %}
         <title>EQ Archives</title>
     {% endif %}
- <style>
+    <style>
         /* Only the minimal necessary styles */
         .tooltip-container {
             position: relative;

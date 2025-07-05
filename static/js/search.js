@@ -32,12 +32,19 @@ document.addEventListener('DOMContentLoaded', function () {
     let placeholderInterval;
 
     function getCSRFToken() {
-        const tokenElement = document.querySelector('[name=csrfmiddlewaretoken]');
-        if (tokenElement) {
-            return tokenElement.value;
+        // First try to get from meta tag (most reliable)
+        const metaToken = document.querySelector('meta[name="csrf-token"]');
+        if (metaToken) {
+            return metaToken.getAttribute('content');
         }
 
-        // Fallback: try to get from cookies
+        // Try to get from existing form on the page
+        const formToken = document.querySelector('[name="csrfmiddlewaretoken"]');
+        if (formToken) {
+            return formToken.value;
+        }
+
+        // Get from cookie (requires js-cookie or custom function)
         const cookies = document.cookie.split(';');
         for (let cookie of cookies) {
             const [name, value] = cookie.trim().split('=');
