@@ -220,7 +220,7 @@
                             </table>
                             <hr/>
                         {% endif %}
-                        <span style="font-weight: bold; color: #8aa3ff;">Expansion:</span>&nbsp;?
+                        <span style="font-weight: bold; color: #8aa3ff;">Expansion:</span>&nbsp;{{ expansion|default_if_none:"?" }}
                         <hr/>
                         <span style="font-weight: bold; color: #8aa3ff;">Duration:</span>&nbsp;
                         {% if spell_data.buff_duration == 0 %}
