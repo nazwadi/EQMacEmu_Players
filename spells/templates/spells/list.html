@@ -47,6 +47,7 @@
                                             <th>Target Type</th>
                                             <th>Skill</th>
                                             <th>Effect</th>
+                                            <th>Expansion</th>
                                         </tr>
                                         </thead>
                                         {% for row in spells_in_level %}
@@ -64,6 +65,10 @@
                                                         <span style="font-weight: bold;">Slot {{ effect.0 }} : </span>
                                                         &nbsp;{{ effect.1|safe }}<br/>
                                                     {% endfor %}
+                                                </td>
+                                                <td><img
+                                                        src="/static/images/{{ row.expansion|expansion_icon }}"
+                                                        alt="{{ expansion|expansion_icon|default_if_none:"?" }}"/>
                                                 </td>
                                             </tr>
                                         {% endfor %}

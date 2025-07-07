@@ -159,11 +159,14 @@ def list_spells(request, class_id):
     spells = dict()
     if result is not None:
         for spell in result:
+            result = SpellExpansion.objects.filter(id=spell.id).first()
+            print(result)
+            expansion = result.expansion if result else None
             spell_effects = prep_spell_data(spell)
             if spell.level in spells:
-                spells[spell.level].append({"spell": spell, "spell_effects": spell_effects})
+                spells[spell.level].append({"spell": spell, "spell_effects": spell_effects, "expansion": expansion})
             else:
-                spells[spell.level] = [{"spell": spell, "spell_effects": spell_effects}]
+                spells[spell.level] = [{"spell": spell, "spell_effects": spell_effects, "expansion": expansion}]
     return render(request=request,
                   template_name="spells/list.html",
                   context={"class_id": clsid,
