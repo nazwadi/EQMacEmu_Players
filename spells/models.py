@@ -17,7 +17,8 @@ class SpellExpansion(models.Model):
         (6, 'Lost Dungeons of Norrath'),
         (7, 'Gates of Discord'),
         (8, 'Omens of War'),
-        (9, 'Omens of War'),
+        (9, 'Dragons of Norrath'),
+        (10, 'Depths of Darkhollow'),
     ]
     id = models.IntegerField(primary_key=True, null=False, default=0)
     # 0 - Original, 1 - Kunark, 2 - Velious, 3- Luclin, 4- PoP, 5 - LoY, etc...
