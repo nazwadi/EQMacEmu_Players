@@ -47,6 +47,7 @@ urlpatterns = [
     path("factions/", include("factions.urls")),
     path("items/", include("items.urls")),
     path("magelo/", include("magelo.urls")),
+    path('notifications/', include('django_nyt.urls')),
     path("npcs/", include("npcs.urls")),
     path("patch/", include("patch.urls")),
     path("pets/", include("pets.urls")),
@@ -56,6 +57,7 @@ urlpatterns = [
     path("zones/", include("zones.urls")),
     path("mdeditor/", include('mdeditor.urls')),
     path('robots.txt', robots_txt),
+    path('wiki/', include('wiki.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
