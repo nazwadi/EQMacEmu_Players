@@ -7,8 +7,13 @@
 {% endblock %}
 
 {% block wiki_header_navlinks %}
-<ul class="nav navbar-nav">
-  <li class="active"><a href="{% url 'wiki:root' %}">Wiki</a></li>
+<ul class="nav navbar-nav mr-auto">
+    <li class="nav-item">
+        <a class="nav-link" href="{% url "accounts:index" %}">Home</a>
+    </li>
+    <li class="nav-item active">
+        <a class="nav-link" href="{% url 'wiki:root' %}">Wiki</a>
+    </li>
 </ul>
 {% endblock %}
 {% block wiki_footer_logo %}
