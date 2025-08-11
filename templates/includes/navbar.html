@@ -41,6 +41,8 @@
                     <ul class="dropdown-menu dropdown-menu-light py-1" aria-labelledby="navbarMiscMenuLink">
                         <li><a class="dropdown-item py-2" href="{% url 'characters:exp' %}">Experience per Level</a>
                         </li>
+                        <li><a class="dropdown-item py-2" href="{% url 'accounts:server_list' %}">Server List</a>
+                        </li>
                     </ul>
                 </li>
                 <li class="nav-item">
@@ -55,9 +57,6 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'recipes:search' %}">Recipes</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'accounts:server_list' %}">Server List</a>
-                </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="{% url 'spells:search' %}" id="navbarSpellMenuLink"
                        role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -67,6 +66,9 @@
                         <li><a class="dropdown-item py-2" href="{% url 'spells:search' %}">Search</a></li>
                         <li><a class="dropdown-item py-2" href="{% url 'spells:index' %}">List By Class</a></li>
                     </ul>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://wiki.eqarchives.com">Wiki</a>
+                </li>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'zones:index' %}">Zones</a>
