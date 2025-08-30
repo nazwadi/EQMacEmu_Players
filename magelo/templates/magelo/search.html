@@ -89,15 +89,15 @@
                                                     </div>
                                                 </td>
                                                 <td class="px-3">
-                                            <span class="badge bg-primary">
-                                                {{ character.class_name|player_class }}
-                                            </span>
-                                                </td>
-                                                <td class="px-3 d-none d-md-table-cell">
-                                                    {{ character.race|player_race }}
+                                                    <span class="badge bg-primary">
+                                                        {{ character.class_name|player_class }}
+                                                    </span>
                                                 </td>
                                                 <td class="px-3 d-none d-md-table-cell">
                                                     {{ character.level }}
+                                                </td>
+                                                <td class="px-3 d-none d-md-table-cell">
+                                                    {{ character.race|player_race }}
                                                 </td>
                                             </tr>
                                         {% endfor %}
