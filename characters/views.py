@@ -89,9 +89,11 @@ def list_characters(request, game_account_name):
                           "attempting to view this page.")
 
         if game_account.id is not None:
+            is_mule = bool(game_account.mule)
             characters = Characters.objects.filter(account_id=game_account.id)
             return render(request=request, template_name="characters/list.html",
                           context={"characters": characters,
+                                   "is_mule": is_mule,
                                    "game_account_name": game_account.name, }
                           )
     return redirect("accounts:login")
