@@ -4,130 +4,125 @@
 {% load static %}
 {% block title %}Recipe Search - EQ Archives{% endblock %}
 {% block content %}
-    <main class="flex-shrink-0">
-        <div class="container py-4">
-            <div class="row justify-content-center">
-                <div class="col-12 col-lg-10">
-                    <h1 class="text-center mb-4">Recipe Search</h1>
+    <div class="container py-4">
+        <div class="row">
+            <div class="col">
+                <h1 class="text-center mb-4">Recipe Search</h1>
 
-                    <!-- Search Form -->
-                    <form class="p-3 mb-4 border rounded shadow-sm" action="/recipes/search"
-                          method="post">
-                        {% csrf_token %}
+                <!-- Search Form -->
+                <form class="p-3 mb-4 border rounded" action="/recipes/search"
+                      method="post">
+                    {% csrf_token %}
 
-                        <!-- Main Search Controls -->
-                        <div class="row g-3">
-                            <div class="col-12 col-md-6">
-                                <label for="recipe_name" class="form-label">Recipe Name</label>
-                                <input type="text" class="form-control" id="recipe_name" name="recipe_name"
-                                       placeholder="Banded Mail">
-                            </div>
-
-                            <!-- Tradeskill - Full width on mobile, quarter on desktop -->
-                            <div class="col-12 col-md-3">
-                                <label for="tradeskill" class="form-label">Tradeskill</label>
-                                <select id="tradeskill" name="tradeskill" class="form-select">
-                                    <option value="-1" selected>any</option>
-                                    {% for tradeskill_index, tradeskill_name in tradeskill_options.items %}
-                                        <option value="{{ tradeskill_index }}">{{ tradeskill_name }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-
-                            <!-- Query Limit - Full width on mobile, quarter on desktop -->
-                            <div class="col-12 col-md-3">
-                                <label for="query_limit" class="form-label">Query Limit (Max: 200)</label>
-                                <input class="form-control" id="query_limit" name="query_limit" type="number" min="0"
-                                       max="200" value="50">
-                            </div>
+                    <!-- Main Search Controls -->
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6">
+                            <label for="recipe_name" class="form-label">Recipe Name</label>
+                            <input type="text" class="form-control" id="recipe_name" name="recipe_name"
+                                   placeholder="Banded Mail">
                         </div>
 
-                        <div class="row g-3 mt-2">
-                            <div class="col-6 col-md-3">
-                                <label for="min_trivial" class="form-label">Min Trivial</label>
-                                <input class="form-control" id="min_trivial" name="min_trivial" type="number" min="0"
-                                       max="350" value="0">
-                            </div>
-                            <div class="col-6 col-md-3">
-                                <label for="max_trivial" class="form-label">Max Trivial</label>
-                                <input class="form-control" id="max_trivial" name="max_trivial" type="number" min="0"
-                                       max="350" value="300">
-                            </div>
+                        <!-- Tradeskill - Full width on mobile, quarter on desktop -->
+                        <div class="col-12 col-md-3">
+                            <label for="tradeskill" class="form-label">Tradeskill</label>
+                            <select id="tradeskill" name="tradeskill" class="form-select">
+                                <option value="-1" selected>any</option>
+                                {% for tradeskill_index, tradeskill_name in tradeskill_options.items %}
+                                    <option value="{{ tradeskill_index }}">{{ tradeskill_name }}</option>
+                                {% endfor %}
+                            </select>
                         </div>
 
-                        <!-- Submit Button -->
-                        <div class="row mt-4">
-                            <div class="col-12">
-                                <button type="submit" class="btn btn-outline-primary w-100">Search</button>
-                            </div>
+                        <!-- Query Limit - Full width on mobile, quarter on desktop -->
+                        <div class="col-12 col-md-3">
+                            <label for="query_limit" class="form-label">Query Limit (Max: 200)</label>
+                            <input class="form-control" id="query_limit" name="query_limit" type="number" min="0"
+                                   max="200" value="50">
                         </div>
-                    </form>
+                    </div>
 
-                    {% if search_results|length >= 1 %}
-
-                        <div class="card mt-4">
-                            <div class="card-header">
-                                <h2 class="h5 mb-0 text-center">Search Results</h2>
-                            </div>
-                            <div class="card-body p-0">
-                                <div class="table-responsive">
-                                    <table id="search-results-table" class="table table-striped table-hover mb-0">
-                                        <thead>
-                                        <tr>
-                                            <th class="px-3">Recipe</th>
-                                            <th class="px-3">Yield</th>
-                                            <th class="px-3" style="width: 100px;">Trivial</th>
-                                            <th class="px-3">Components</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        {% for recipe, recipe_entries in search_results %}
-                                            <tr>
-                                                <td class="px-3">
-                                                    <div class="d-flex flex-column">
-                                                        <a href="/recipes/view/{{ recipe.id }}" target="_blank"
-                                                           class="text-break">{{ recipe.name|clean_name }}</a>
-                                                        <small class="text-muted">({{ recipe.tradeskill|tradeskill_filter }})</small>
-                                                    </div>
-                                                </td>
-                                                <td class="px-3">
-                                                    {% for entry in recipe_entries %}
-                                                        {% if entry.success_count > 0 %}
-                                                            <div class="text-nowrap">
-                                                                {{ entry.success_count }}x&nbsp;
-                                                                <a href="/items/view/{{ entry.item_id.id }}"
-                                                                   target="_blank">{{ entry.item_id.Name }}</a>
-                                                            </div>
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                </td>
-                                                <td class="px-3 text-center">{{ recipe.trivial }}</td>
-                                                <td class="px-3">
-                                                    <div class="d-flex flex-wrap gap-1">
-                                                        {% for entry in recipe_entries %}
-                                                            {% if entry.component_count > 0 %}
-                                                                <div class="text-nowrap">
-                                                                    {{ entry.component_count }}x
-                                                                    <a href="/items/view/{{ entry.item_id.id }}"
-                                                                       target="_blank">{{ entry.item_id.Name }}</a>
-                                                                    {% if not forloop.last %},{% endif %}
-                                                                </div>
-                                                            {% endif %}
-                                                        {% endfor %}
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+                    <div class="row g-3 mt-2">
+                        <div class="col-6 col-md-3">
+                            <label for="min_trivial" class="form-label">Min Trivial</label>
+                            <input class="form-control" id="min_trivial" name="min_trivial" type="number" min="0"
+                                   max="350" value="0">
                         </div>
-                    {% endif %}
-                </div>
+                        <div class="col-6 col-md-3">
+                            <label for="max_trivial" class="form-label">Max Trivial</label>
+                            <input class="form-control" id="max_trivial" name="max_trivial" type="number" min="0"
+                                   max="350" value="300">
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-outline-primary w-100">Search</button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
-    </main>
+
+        {% if search_results|length >= 1 %}
+            <div class="row py-5">
+                <div class="col">
+                    <h1 class="text-center mb-4">Search Results</h1>
+                    <div class="table-responsive">
+                        <table id="search-results-table" class="display table table-striped">
+                            <thead>
+                            <tr>
+                                <th>Recipe</th>
+                                <th>Yield</th>
+                                <th style="width: 100px;">Trivial</th>
+                                <th>Components</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for recipe, recipe_entries in search_results %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex flex-column">
+                                            <a href="/recipes/view/{{ recipe.id }}" target="_blank"
+                                               class="text-break">{{ recipe.name|clean_name }}</a>
+                                            <small class="text-muted">({{ recipe.tradeskill|tradeskill_filter }})</small>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {% for entry in recipe_entries %}
+                                            {% if entry.success_count > 0 %}
+                                                <div class="text-nowrap">
+                                                    {{ entry.success_count }}x&nbsp;
+                                                    <a href="/items/view/{{ entry.item_id.id }}"
+                                                       target="_blank">{{ entry.item_id.Name }}</a>
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                    <td class="text-center">{{ recipe.trivial }}</td>
+                                    <td>
+                                        <div class="d-flex flex-wrap gap-1">
+                                            {% for entry in recipe_entries %}
+                                                {% if entry.component_count > 0 %}
+                                                    <div class="text-nowrap">
+                                                        {{ entry.component_count }}x
+                                                        <a href="/items/view/{{ entry.item_id.id }}"
+                                                           target="_blank">{{ entry.item_id.Name }}</a>
+                                                        {% if not forloop.last %},{% endif %}
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
 {% endblock %}
 {% block extra_js %}
     <script src="https://cdn.datatables.net/v/bs5/dt-2.0.2/datatables.min.js"></script>
