@@ -5,6 +5,7 @@ class Items(models.Model):
     """
     This model maps to the items table in the database.
     """
+
     def __str__(self):
         return str(self.id)
 
@@ -158,7 +159,7 @@ class Items(models.Model):
             return f"+{value}"
         return str(value)
 
-    def generate_og_description(self):
+    def generate_og_description(self, effect_name=None):
         """Generate Open Graph description for Discord/social media"""
         lines = []
 
@@ -181,9 +182,10 @@ class Items(models.Model):
         if slot_display:
             lines.append(f"Slot: {slot_display}")
 
-        # Skill and delay
+        # Skill and delay - only for weapons
         skill_delay_parts = []
-        if self.item_type >= 0:
+        weapon_types = [0, 1, 2, 3, 4, 5, 35]  # Various weapon types
+        if self.item_type in weapon_types:
             type_display = self.get_item_type_display()
             if "Unknown" not in type_display:
                 skill_delay_parts.append(f"Skill: {type_display}")
@@ -237,6 +239,37 @@ class Items(models.Model):
         if resists:
             lines.append(" ".join(resists))
 
+        # Effects (if stackable == 3 means spell effect)
+        if self.stackable == 3 and effect_name:
+            effects = []
+
+            # Click effects
+            if self.click_type in [1, 3, 4, 5]:
+                effect_parts = [f"Effect: {effect_name}"]
+                if self.click_type == 1:
+                    effect_parts.append("(Any Slot,")
+                elif self.click_type == 4:
+                    effect_parts.append("(Must Equip,")
+
+                cast_time = "Instant" if self.cast_time in [0, -1] else f"{self.cast_time / 1000:.1f} sec"
+                effect_parts.append(f"Casting Time: {cast_time})")
+                effects.append(" ".join(effect_parts))
+
+            # Worn effects
+            if self.worn_type == 2:
+                worn_effect = f"Effect: {effect_name} (Worn)"
+                if self.worn_effect == 998 and self.worn_level:
+                    worn_effect += f" ({self.worn_level + 1}%)"
+                effects.append(worn_effect)
+
+            # Proc effects
+            if self.proc_type == 0 and self.proc_effect > 0:
+                cast_time = "Instant" if self.cast_time == 0 else f"{self.cast_time / 1000:.1f} sec"
+                effects.append(f"Effect: {effect_name} (Combat, Casting Time: {cast_time}) at Level {self.proc_level}")
+
+            if effects:
+                lines.extend(effects)
+
         # Recommended level
         if self.rec_level:
             lines.append(f"Recommended level of {self.rec_level}.")
@@ -286,4 +319,3 @@ class DiscoveredItems(models.Model):
     class Meta:
         db_table = 'discovered_items'
         managed = False
-
