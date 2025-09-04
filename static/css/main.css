@@ -1,20 +1,47 @@
-:root {
-    /* Original Dark Palette Variables */
-    --bg-primary: #0b0b10;
-    --bg-secondary: #2a2420;
-    --bg-tertiary: #1f1b17;
-    --border-color: #7b714a;
-    --text-primary: #ffffff;
-    --text-secondary: #cccccc;
-    --accent-color: #fcc721;
-    --link-color: #8aa3ff;
-    --hover-color: #b8941f;
+/*:root {*/
+/*    !* Original Dark Palette Variables *!*/
+/*    --bg-primary: #0b0b10;*/
+/*    --bg-secondary: #2a2420;*/
+/*    --bg-tertiary: #1f1b17;*/
+/*    --border-color: #7b714a;*/
+/*    --text-primary: #ffffff;*/
+/*    --text-secondary: #cccccc;*/
+/*    --accent-color: #fcc721;*/
+/*    --link-color: #8aa3ff;*/
+/*    --hover-color: #b8941f;*/
 
-    /* Additional supporting colors */
-    --bg-content: #262623;
-    --bg-dark: #000000;
-    --text-muted: #999999;
-    --border-light: rgba(123, 113, 74, 0.3);
+/*    !* Additional supporting colors *!*/
+/*    --bg-content: #262623;*/
+/*    --bg-dark: #000000;*/
+/*    --text-muted: #999999;*/
+/*    --border-light: rgba(123, 113, 74, 0.3);*/
+/*}*/
+:root {
+    /* Updated Cool Dark Gray Palette with Brown Accents */
+    --bg-primary: #0f0f0f;           /* Almost black primary background */
+    --bg-secondary: #1a1a1a;         /* Dark gray for content areas */
+    --bg-tertiary: #2d2d2d;          /* Medium gray for cards/panels */
+    --bg-content: #242424;           /* Content background gray */
+
+    /* Brown accent colors - used for borders and highlights */
+    --accent-brown-primary: #7b714a;    /* Your original brown */
+    --accent-brown-secondary: #2a2420;  /* Darker brown accent */
+    --accent-brown-light: rgba(123, 113, 74, 0.3);  /* Transparent brown */
+
+    /* Text colors */
+    --text-primary: #ffffff;         /* Pure white for main text */
+    --text-secondary: #cccccc;       /* Light gray for secondary text */
+    --text-muted: #999999;           /* Muted gray text */
+
+    /* UI colors */
+    --border-color: #7b714a;         /* Brown borders */
+    --accent-color: #fcc721;         /* Gold accent */
+    --link-color: #8aa3ff;           /* Light blue links */
+    --hover-color: #b8941f;          /* Darker gold for hovers */
+
+    /* Utility */
+    --bg-dark: #000000;              /* Pure black */
+    --border-light: rgba(123, 113, 74, 0.2);  /* Light brown borders */
 }
 
 /*:root {*/
@@ -1003,4 +1030,66 @@ footer .border-top {
     background-color: var(--accent-color) !important;
     border-color: var(--accent-color) !important;
     color: var(--bg-dark) !important;
+}
+
+/* Offcanvas dark mode styling */
+.offcanvas {
+    background-color: var(--bg-secondary) !important;
+    color: var(--text-primary) !important;
+    border-left: 2px solid var(--border-color) !important;
+}
+
+.offcanvas-header {
+    background-color: var(--bg-tertiary) !important;
+    color: var(--text-primary) !important;
+    border-bottom: 2px solid var(--border-color) !important;
+    padding: 1rem 1.5rem !important;
+}
+
+.offcanvas-title {
+    color: var(--accent-color) !important;
+    font-weight: bold !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+}
+
+.offcanvas-body {
+    background-color: var(--bg-secondary) !important;
+    color: var(--text-primary) !important;
+    padding: 1.5rem !important;
+}
+
+/* Close button styling */
+.btn-close {
+    filter: invert(1) !important;
+    opacity: 0.8 !important;
+}
+
+.btn-close:hover {
+    opacity: 1 !important;
+    filter: invert(1) sepia(1) saturate(5) hue-rotate(35deg) !important;
+}
+
+/* Offcanvas backdrop */
+.offcanvas-backdrop {
+    background-color: rgba(0, 0, 0, 0.7) !important;
+}
+
+/* Any lists or content within offcanvas */
+.offcanvas .list-group-item {
+    background-color: var(--bg-tertiary) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border-color) !important;
+}
+
+.offcanvas .list-group-item:hover {
+    background-color: rgba(123, 113, 74, 0.1) !important;
+}
+
+/* Links within offcanvas */
+.offcanvas a {
+    color: #d4b866 !important;
+}
+
+.offcanvas a:hover {
+    color: var(--accent-color) !important;
 }
