@@ -1,4 +1,4 @@
-{% extends 'patch/header.html' %}
+{% extends 'patch/base.html' %}
 {% load static %}
 {% load humanize %}
 {% block content %}
@@ -37,7 +37,7 @@
 
                 {% if search_query or start_date or end_date %}
                     <!-- Search Results Card -->
-                    <div class="card p-3 mb-4 shadow bg-body-tertiary">
+                    <div class="card p-3 mb-4 shadow">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center mb-4">
                                 <h5 class="card-title mb-0">
@@ -89,7 +89,7 @@
                     </div>
                 {% else %}
                     <!-- Year-based Browse Card -->
-                    <div class="card p-3 shadow bg-body-tertiary">
+                    <div class="card p-3 shadow ">
                         <div class="card-body">
                             <h5 class="card-title text-center mb-4">EQ Live Patch History</h5>
 

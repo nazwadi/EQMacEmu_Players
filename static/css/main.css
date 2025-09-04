@@ -1093,3 +1093,283 @@ footer .border-top {
 .offcanvas a:hover {
     color: var(--accent-color) !important;
 }
+
+/* Added for patch messages app */
+/* Patch Messages Index Dark Theme Styling */
+
+/* Main container */
+.container.py-5 {
+    background-color: var(--bg-primary);
+}
+
+/* Search Card Styling */
+.card.p-3.mb-4.shadow-sm.bg-light.border {
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%) !important;
+    border: 2px solid var(--border-color) !important;
+    box-shadow:
+        0 4px 20px rgba(0, 0, 0, 0.7),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+    border-radius: 8px !important;
+}
+
+.card.p-3.mb-4.shadow-sm.bg-light.border .card-body {
+    background: transparent !important;
+}
+
+.card.p-3.mb-4.shadow-sm.bg-light.border .card-title {
+    color: var(--accent-color) !important;
+    font-weight: bold !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Search Results Card */
+.card.p-3.mb-4.shadow {
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%) !important;
+    border: 2px solid var(--border-color) !important;
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+    border-radius: 8px !important;
+}
+
+.card.p-3.mb-4.shadow .card-title {
+    color: var(--accent-color) !important;
+    font-weight: bold !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+}
+
+.card.p-3.mb-4.shadow .text-primary {
+    color: var(--link-color) !important;
+}
+
+/* Year-based Browse Card */
+.card.p-3.shadow {
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%) !important;
+    border: 2px solid var(--border-color) !important;
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+    border-radius: 8px !important;
+}
+
+.card.p-3.shadow .card-title {
+    color: var(--accent-color) !important;
+    font-weight: bold !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Year cards */
+.card.h-100.border-0.bg-light {
+    background: var(--bg-tertiary) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 6px !important;
+    transition: all 0.3s ease !important;
+}
+
+.card.h-100.border-0.bg-light:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5) !important;
+    border-color: var(--accent-brown-primary) !important;
+}
+
+.card.h-100.border-0.bg-light .card-header {
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--accent-brown-light) 100%) !important;
+    color: var(--text-primary) !important;
+    border-bottom: 1px solid var(--border-color) !important;
+}
+
+.card.h-100.border-0.bg-light .card-body {
+    background: var(--bg-tertiary) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Form elements */
+.form-control.form-control-lg.shadow-sm,
+.form-control.shadow-sm {
+    background-color: var(--bg-tertiary) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-primary) !important;
+    border-radius: 6px !important;
+}
+
+.form-control.form-control-lg.shadow-sm:focus,
+.form-control.shadow-sm:focus {
+    background-color: var(--bg-secondary) !important;
+    border-color: var(--accent-color) !important;
+    color: var(--text-primary) !important;
+    box-shadow: 0 0 0 0.25rem rgba(252, 199, 33, 0.25) !important;
+}
+
+.form-control::placeholder {
+    color: var(--text-muted) !important;
+}
+
+/* Form labels */
+.form-label {
+    color: var(--text-secondary) !important;
+    font-weight: 500 !important;
+}
+
+/* Buttons */
+.btn.btn-primary.w-100.shadow-sm {
+    background: linear-gradient(135deg, var(--accent-color) 0%, #d4a928 100%) !important;
+    border: 2px solid var(--accent-color) !important;
+    color: var(--bg-dark) !important;
+    font-weight: bold !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+    border-radius: 6px !important;
+    transition: all 0.3s ease !important;
+}
+
+.btn.btn-primary.w-100.shadow-sm:hover {
+    background: linear-gradient(135deg, #d4a928 0%, var(--hover-color) 100%) !important;
+    border-color: #d4a928 !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 15px rgba(252, 199, 33, 0.4) !important;
+}
+
+.btn-outline-primary.btn-sm {
+    color: var(--accent-color) !important;
+    border-color: var(--accent-color) !important;
+    background-color: transparent !important;
+    border-radius: 4px !important;
+    font-weight: 500 !important;
+}
+
+.btn-outline-primary.btn-sm:hover {
+    background-color: var(--accent-color) !important;
+    border-color: var(--accent-color) !important;
+    color: var(--bg-dark) !important;
+    font-weight: bold !important;
+}
+
+.btn-outline-secondary.btn-sm {
+    color: var(--text-secondary) !important;
+    border-color: var(--border-color) !important;
+    background-color: transparent !important;
+    border-radius: 4px !important;
+}
+
+.btn-outline-secondary.btn-sm:hover {
+    background-color: var(--border-color) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-primary) !important;
+    font-weight: bold !important;
+}
+
+/* Search result items */
+.search-result-item {
+    border-bottom: 1px solid var(--border-light) !important;
+    transition: all 0.2s ease !important;
+}
+
+.search-result-item:hover {
+    background-color: var(--accent-brown-light) !important;
+    padding: 0.5rem !important;
+    border-radius: 4px !important;
+    margin: 0 -0.5rem !important;
+}
+
+.search-result-item h6 a {
+    color: #d4b866 !important;
+    font-weight: 600 !important;
+    transition: all 0.2s ease !important;
+}
+
+.search-result-item h6 a:hover {
+    color: var(--accent-color) !important;
+    text-shadow: 0 0 8px rgba(252, 199, 33, 0.5) !important;
+}
+
+/* Patch list items */
+.list-unstyled li a {
+    color: var(--text-primary) !important;
+    transition: all 0.2s ease !important;
+    border-radius: 4px !important;
+}
+
+.list-unstyled li a:hover,
+.list-unstyled li a.hover-bg:hover {
+    background-color: var(--accent-brown-light) !important;
+    color: var(--accent-color) !important;
+    text-decoration: none !important;
+}
+
+/* Badges */
+.badge.bg-primary.rounded-pill {
+    background: linear-gradient(135deg, var(--link-color) 0%, #6b8cff 100%) !important;
+    color: white !important;
+    font-weight: bold !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Text styling */
+.text-muted {
+    color: var(--text-muted) !important;
+}
+
+.text-muted.small {
+    color: var(--text-secondary) !important;
+}
+
+/* Border styling */
+.border-bottom {
+    border-bottom-color: var(--border-light) !important;
+}
+
+/* List styling */
+.list-unstyled {
+    color: var(--text-primary) !important;
+}
+
+.list-unstyled li {
+    color: var(--text-primary) !important;
+}
+
+/* Year section cards enhanced hover */
+.year-section:hover .card {
+    border-color: var(--accent-color) !important;
+    box-shadow: 0 0 15px rgba(252, 199, 33, 0.3) !important;
+}
+
+/* Tooltip styling */
+[data-bs-toggle="tooltip"] {
+    position: relative;
+}
+
+/* Date input specific styling */
+input[type="date"] {
+    color-scheme: dark;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    opacity: 0.8;
+}
+
+/* Ensure proper spacing and alignment */
+.d-flex.flex-wrap.gap-2.mb-4.justify-content-center .btn {
+    margin: 0.25rem !important;
+}
+
+/* No results message */
+.text-center.text-muted {
+    color: var(--text-secondary) !important;
+    font-style: italic;
+    padding: 2rem !important;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .container.py-5 {
+        padding: 2rem 1rem !important;
+    }
+
+    .col-md-2.d-flex.align-items-end .btn {
+        margin-top: 1rem !important;
+    }
+
+    .d-flex.flex-wrap.gap-2.mb-4.justify-content-center {
+        gap: 0.5rem !important;
+    }
+}
