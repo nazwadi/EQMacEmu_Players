@@ -422,6 +422,7 @@ def view_item(request, item_id):
                       "obj_path": obj_path,
                       "drops_from": drops_from,
                       "effect_name": effect_name,
+                      "og_description": item.generate_og_description(),
                       "created_by_these_tradeskill_recipes": created_by_these_tradeskill_recipes,
                       "used_in_these_tradeskill_recipes": used_in_these_tradeskill_recipes,
                       "sold_by": sold_by,

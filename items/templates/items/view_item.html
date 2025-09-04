@@ -8,15 +8,15 @@
     {% if item.Name %}
         <meta content="EQ Archives" property="og:site_name">
         <meta content="article" property="og:type">
-        <meta content="{{ item.Name|clean_name }}" property="og:title">
-        <meta content="EQA Item information for {{ item.Name|clean_name }}" property="og:description">
-        <meta name="description" content="EQA Item Information for Robe of the Azure Sky">
+        <meta content="{{ item.get_clean_name }}" property="og:title">
+        <meta content="{{ og_description }}" property="og:description">
+        <meta name="description" content="EQA Item Information for {{ item.get_clean_name }}">
         <meta content="https://{{ request.get_host }}/static/images/items/item_{{ item.icon }}.png" property="og:image">
         <meta property="og:url" content="https://{{ request.get_host }}/items/view/{{ item.id }}">
         <link rel="canonical" href="https://{{ request.get_host }}/items/view/{{ item.id }}">
     {% endif %}
 {% endblock %}
-{% block title %} {{ item.Name|clean_name }} - EQ Archives{% endblock %}
+{% block title %} {{ item.get_clean_name }} - EQ Archives{% endblock %}
 {% block content %}
     <div class="container py-4">
         <div class="row">
