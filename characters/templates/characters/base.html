@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load data_utilities %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/eq-ui.css' %}">
+{% endblock %}
+
+{% block inline_js %}
+    <script>
+        $(document).ready(function () {
+            $("#spell-filter").on("keyup", function () {
+                let value = $(this).val().toLowerCase();
+                $("#spell-table tbody>tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+        $(document).ready(function () {
+            $("#inventory-filter").on("keyup", function () {
+                let value = $(this).val().toLowerCase();
+                $("#inventory-table tbody>tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+        $(document).ready(function () {
+            $("#faction-filter").on("keyup", function () {
+                let value = $(this).val().toLowerCase();
+                $("#faction-table tbody>tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+        $(document).ready(function () {
+            $("#discovered-filter").on("keyup", function () {
+                let value = $(this).val().toLowerCase();
+                $("#discovered-item-table tbody>tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
+{% endblock %}

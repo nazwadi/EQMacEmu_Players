@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load data_utilities %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'factions/eq-ui.css' %}">
+    <link href="https://cdn.datatables.net/v/bs5/dt-2.0.2/datatables.min.css" rel="stylesheet">
+{% endblock %}
+{% block extra_js %}
+    <script src="https://cdn.datatables.net/v/bs5/dt-2.0.2/datatables.min.js"></script>
+{% endblock %}
+{% block inline_js %}
+    <script>
+    $(document).ready(function () {
+        $("#search-results-table").DataTable( {
+            order: [[3, 'desc']],
+            pageLength: 50
+        });
+    });
+</script>
+{% endblock %}

@@ -1,38 +1,38 @@
-{% extends 'magelo/header.html' %}
+{% extends 'magelo/base.html' %}
 {% load data_utilities %}
 {% load tradeskill_filters %}
 {% load static %}
-
+{% block title %}Magelo Search - EQ Archives{% endblock %}
 {% block content %}
     <main class="flex-shrink-0">
         <div class="container-fluid container-lg py-4"> {# Better container behavior #}
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{% url 'accounts:index' %}">Home</a></li>
-                    <li class="breadcrumb-item"><a href="{% url 'magelo:search' %}">Character Browser</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'magelo:search' %}">Character Search</a></li>
                 </ol>
             </nav>
             <div class="row justify-content-center">
-                <div class="col-12 col-md-10 col-lg-8"> {# More granular breakpoints #}
-                    <h1 class="display-5 text-center mb-4" style="color: #000000">Character Search</h1>
+                <div class="col-12 col-md-10 col-lg-8">
+                    <h1 class="display-5 text-center mb-4">Character Search</h1>
 
                     <!-- Search Form -->
-                    <form class="p-3 p-md-4 mb-4 bg-body-tertiary border rounded-3 shadow-sm"
-                          action="{% url 'magelo:search' %}" {# Use URL naming #}
+                    <form class="p-3 p-md-4 mb-4 border rounded-3 shadow-sm"
+                          action="{% url 'magelo:search' %}"
                           method="post">
                         {% csrf_token %}
 
                         <!-- Main Search Controls -->
                         <div class="row g-3">
                             <div class="col-12">
-                                <div class="form-floating"> {# Enhanced form control #}
+                                <div class="form-floating">
                                     <input type="text"
                                            class="form-control form-control-lg"
                                            id="character_name"
                                            name="character_name"
                                            placeholder="Character name"
                                            autocomplete="off"
-                                           maxlength="64" {# Match model field length #}
+                                           maxlength="64"
                                            required>
                                     <label for="character_name">Character Name</label>
                                 </div>

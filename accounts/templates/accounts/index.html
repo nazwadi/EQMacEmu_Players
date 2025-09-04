@@ -1,365 +1,265 @@
-{% extends 'accounts/header.html' %}
+{% extends 'accounts/base.html' %}
+
+{% block title %}Accounts - EQ Archives{% endblock %}
+
 {% load render_table from django_tables2 %}
 
 {% block content %}
     <style>
-        /* Import your existing styles */
-        pre {
-            padding: 1em;
-            border: 1px dashed #2f6fab;
-            color: #333;
-            background-color: #f9f9f9;
-            line-height: 1.4;
-            font-family: monospace, Courier;
-            border-radius: 4px;
-            overflow-x: auto;
-        }
 
-        .expansion-tag span {
-            border: 1px solid gray;
-            border-radius: 5px;
-            display: inline-block;
-            width: 60px;
-            text-align: center;
-            font-weight: bold;
-            text-shadow: 1px 1px 2px #222222;
-            padding-left: 2px;
-            padding-right: 2px;
-            font-size: 12px;
-        }
+body {
+    background-color: #0b0b10 !important;
+    background-image: repeating-linear-gradient(45deg,
+        transparent,
+        transparent 2px,
+        rgba(255,255,255,0.02) 2px,
+        rgba(255,255,255,0.02) 4px
+    ) !important;
+}
 
-        .default span, h2 .default {
-            background: #666666;
-            color: #dddddd;
-        }
+/* Hero Section - EQ-UI Colors */
+.hero-section {
+    background: linear-gradient(135deg, #1a1a20 0%, #2a2a35 100%) !important;
+    border-bottom: 3px solid #555555 !important;
+    padding: 80px 0;
+    position: relative;
+}
 
-        .kunark span, h2 .kunark {
-            background: #607643;
-            color: #D3AB5C;
-        }
+.hero-title {
+    color: #ffffff !important;
+    font-size: 3.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
 
-        .velious span, h2 .velious {
-            background: #D0C4BA;
-            color: #5D1715;
-        }
+.hero-subtitle {
+    color: #cccccc !important;
+    font-size: 1.4rem;
+    margin-bottom: 2rem;
+}
 
-        .luclin span, h2 .luclin {
-            background: #2E57BF;
-            color: #DDBE47;
-        }
+.eq-logo-accent {
+    color: #8aa3ff !important;
+    font-weight: bold;
+}
 
-        .planes span, h2 .planes {
-            background: #8B3E18;
-            color: #CEB04A;
-        }
+.lead {
+    color: #cccccc !important;
+}
 
-        .ykesha span, h2 .ykesha {
-            background: #4A6741;
-            color: #C4D4A8;
-        }
+/* Feature Cards - EQ-UI Colors */
+.feature-card {
+    background: #1a1a20 !important;
+    border: 1px solid #555555 !important;
+    color: #ffffff !important;
+    border-radius: 10px;
+    padding: 2rem;
+    height: 100%;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+.feature-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 25px rgba(138, 163, 255, 0.15) !important;
+}
 
-        .ldon span, h2 .ldon {
-            background: #8B4513;
-            color: #F4A460;
-        }
+.feature-icon {
+    font-size: 3rem;
+    color: #8aa3ff !important;
+    margin-bottom: 1rem;
+}
 
-        .gates span, h2 .gates {
-            background: #483D8B;
-            color: #E6E6FA;
-        }
+.feature-title {
+    color: #8aa3ff !important;
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
 
-        .omens span, h2 .omens {
-            background: #8B0000;
-            color: #FFB6C1;
-        }
+.feature-text {
+    color: #cccccc !important;
+}
 
-        .dragons span, h2 .dragons {
-            background: #2F4F4F;
-            color: #98FB98;
-        }
+/* Expansion Tags */
+.expansion-showcase {
+    padding: 60px 0;
+    border-bottom: 1px solid #becfe2;
+}
+.expansion-tag {
+    display: inline-block;
+    margin: 0.5rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+.expansion-tag:hover {
+    transform: scale(1.05);
+}
 
-        /* Hero Section */
-        .hero-section {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border-bottom: 3px solid #2f6fab;
-            padding: 80px 0;
-            position: relative;
-        }
+/* Section Backgrounds - EQ-UI Colors */
+.py-5[style*="background: var(--bg-primary)"],
+.expansion-showcase,
+.community-section
+{
+    background: #0b0b10 !important;
+    border-color: #555555 !important;
+}
 
-        .hero-title {
-            font-size: 3.5rem;
-            font-weight: bold;
-            color: #2f4f8f;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-        }
+.section-header {
+    color: #8aa3ff !important;
+}
 
-        .hero-subtitle {
-            font-size: 1.4rem;
-            color: #6c757d;
-            margin-bottom: 2rem;
-        }
+.section-subtitle {
+    color: #cccccc !important;
+}
 
-        .eq-logo-accent {
-            background: linear-gradient(45deg, #ff8c00, #ffa500, #ff8c00);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: bold;
-        }
+/* Sections */
+.discord-card {
+    background: #1a1a20 !important;
+    border-color: #555555 !important;
+}
+/* Step Cards - EQ-UI Colors */
+.step-card {
+    background: #1a1a20 !important;
+    border: 1px solid #555555 !important;
+    color: #ffffff !important;
+    padding: 2rem;
+    border-radius: 10px;
+}
 
-        .btn-primary-custom {
-            border: 2px solid #2f6fab;
-            color: white;
-            background: #2f6fab;
-            padding: 13px 30px;
-            font-weight: bold;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
+.step-title {
+    color: #8aa3ff !important;
+}
 
-        .btn-primary-custom:hover {
-            background: #245a94;
-            border-color: #245a94;
-            color: white;
-        }
+/* Buttons - EQ-UI Colors */
+.btn-primary {
+    background-color: var(--accent-color) !important;
+    border-color: var(--accent-color) !important;
+    color: var(--bg-dark) !important;
+    font-weight: bold;
+}
+.btn-primary:hover {
+    background-color: var(--hover-color) !important;
+    border-color: var(--hover-color) !important;
+    color: var(--text-primary) !important;
+}
 
-        .btn-outline-primary-custom {
-            border: 2px solid #2f6fab;
-            color: #2f6fab;
-            background: white;
-            padding: 13px 30px;
-            font-weight: bold;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
+.btn-outline-primary
+{
+    border-color: #555555 !important;
+    color: #ffffff !important;
+    background: transparent !important;
+}
+.btn-outline-primary
+{
+    border-color: var(--border-color) !important;
+    color: var(--text-primary) !important;
+    background: transparent !important;
+}
 
-        .btn-outline-primary-custom:hover {
-            background: #2f6fab;
-            color: white;
-            transform: translateY(-2px);
-        }
+.btn-outline-primary:hover {
+    background-color: var(--accent-color) !important;
+    color: var(--bg-dark) !important;
+}
 
-        /* Feature Cards */
-        .feature-card {
-            background: white;
-            border: 1px solid #becfe2;
-            border-radius: 10px;
-            padding: 2rem;
-            height: 100%;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
 
-        .feature-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 8px 25px rgba(47, 111, 171, 0.15);
-            border-color: #2f4f8f;
-        }
+.discord-btn {
+    background: #8aa3ff !important;
+    color: #000000 !important;
+}
 
-        .feature-icon {
-            font-size: 3rem;
-            color: #2f4f8f;
-            margin-bottom: 1rem;
-        }
+.discord-btn:hover {
+    background: #b8c5ff !important;
+}
 
-        .feature-title {
-            color: #2f4f8f;
-            font-size: 1.4rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
-        }
+/* Pre blocks and code */
+pre {
+    {#background-color: var(--bg-tertiary) !important;#}
+    {#color: var(--text-primary) !important;#}
+    {#border-color: var(--border-color) !important;#}
+}
+pre {
+    background-color: #2a2a35 !important;
+    color: #ffffff !important;
+    border-color: #555555 !important;
+}
 
-        .feature-text {
-            color: #6c757d;
-            line-height: 1.6;
-        }
+/* List items in community section */
+.list-unstyled li {
+    color: #cccccc !important;
+}
 
-        /* Stats Section */
-        .stats-section {
-            background: #f8f9fa;
-            border-top: 1px solid #becfe2;
-            border-bottom: 1px solid #becfe2;
-            padding: 60px 0;
-        }
+/* Container overrides to match EQ-UI theme */
+.container {
+    background-color: transparent !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
 
-        .stat-item {
-            text-align: center;
-            padding: 2rem;
-        }
+/* Override any Bootstrap .bg-light classes */
+.bg-light,
+.section-bg-light {
+    background-color: #0b0b10 !important;
+}
 
-        .stat-number {
-            font-size: 3rem;
-            font-weight: bold;
-            color: #ff8c00;
-            display: block;
-        }
+/* Make sure the .bg-light div in the code section uses dark colors */
+.bg-light.p-3.rounded {
+    background-color: #2a2a35 !important;
+    color: #ffffff !important;
+    border: 1px solid #555555 !important;
+}
 
-        .stat-label {
-            font-size: 1.1rem;
-            color: #6c757d;
-            margin-top: 0.5rem;
-            font-weight: 500;
-        }
+/* Override any remaining Bootstrap background utilities */
+.py-5:not(.hero-section) {
+    background-color: #0b0b10 !important;
+}
 
-        /* Expansion Tags */
-        .expansion-showcase {
-            background: white;
-            padding: 60px 0;
-            border-bottom: 1px solid #becfe2;
-        }
+/* Ensure all text in containers is readable */
+.container h2,
+.container h3,
+.container h4,
+.container h5,
+.container p,
+.container span,
+.container strong {
+    color: inherit !important;
+}
 
-        .expansion-tag {
-            display: inline-block;
-            margin: 0.5rem;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
+.fas.fa-check-circle.text-primary-custom {
+    color: #8aa3ff !important;
+}
 
-        .expansion-tag:hover {
-            transform: scale(1.05);
-        }
+/* Text utilities */
+.text-muted-custom,
+.text-muted {
+    color: #cccccc !important;
+}
 
-        /* Community Section */
-        .community-section {
-            background: #f8f9fa;
-            padding: 80px 0;
-        }
+.text-primary-custom {
+    color: #8aa3ff !important;
+}
 
-        .discord-card {
-            background: white;
-            border: 2px solid #7289da;
-            border-radius: 15px;
-            padding: 2rem;
-            text-align: center;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(114, 137, 218, 0.1);
-        }
-
-        .discord-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(114, 137, 218, 0.2);
-        }
-
-        .discord-btn {
-            background: #7289da;
-            border: none;
-            color: white;
-            padding: 12px 30px;
-            border-radius: 8px;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-
-        .discord-btn:hover {
-            background: #5b6eae;
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        /* Process Steps */
-        .process-section {
-            background: white;
-            padding: 80px 0;
-        }
-
-        .step-number {
-            background: linear-gradient(45deg, #ff8c00, #ffa500);
-            color: white;
-            border-radius: 50%;
-            width: 80px;
-            height: 80px;
-            display: inline-flex;
-            align-items: center;
-            justify-content-center;
-            font-size: 2rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
-        }
-
-        .step-title {
-            color: #2f4f8f;
-            font-size: 1.3rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
-        }
-
-        .step-text {
-            color: #6c757d;
-            line-height: 1.6;
-        }
-
-        /* Section Headers */
-        .section-header {
-            color: #2f4f8f;;
-            font-size: 2.5rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
-        }
-
-        .section-subtitle {
-            color: #6c757d;
-            font-size: 1.2rem;
-            margin-bottom: 3rem;
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .hero-title {
-                font-size: 2.5rem;
-            }
-
-            .hero-subtitle {
-                font-size: 1.2rem;
-            }
-
-            .cta-button {
-                padding: 12px 30px;
-                font-size: 1rem;
-            }
-
-            .stat-number {
-                font-size: 2.2rem;
-            }
-
-            .section-header {
-                font-size: 2rem;
-            }
-        }
-
-        /* Subtle animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .fade-in-up {
-            animation: fadeInUp 0.8s ease-out;
-        }
-
-        /* Additional styling to match your theme */
-        .text-primary-custom {
-            color: #2f6fab !important;
-        }
-
-        .text-muted-custom {
-            color: #6c757d !important;
-        }
-
-        .bg-light-custom {
-            background-color: #f8f9fa !important;
-        }
-
-        .border-primary-custom {
-            border-color: #2f6fab !important;
-        }
-    </style>
+.ykesha span, h2 .ykesha {
+    background: #4A6741;
+    color: #C4D4A8;
+}
+.ldon span, h2 .ldon {
+    background: #8B4513;
+    color: #F4A460;
+}
+.gates span, h2 .gates {
+    background: #483D8B;
+    color: #E6E6FA;
+}
+.omens span, h2 .omens {
+    background: #8B0000;
+    color: #FFB6C1;
+}
+.dragons span, h2 .dragons {
+    background: #2F4F4F;
+    color: #98FB98;
+}
+</style>
     <section class="hero-section">
         <div class="container">
             <div class="py-5 row justify-content-center text-center">
@@ -387,7 +287,7 @@
         </div>
     </section>
     <!-- Features Section -->
-    <section class="py-5" style="background: white;">
+    <section class="py-5 hero-section">
         <div class="container">
             <div class="row text-center mb-5">
                 <div class="col-12">
@@ -489,7 +389,7 @@
         </div>
     </section>
     <!-- Expansion Showcase -->
-    <section class="expansion-showcase">
+    <section class="expansion-showcase hero-section">
         <div class="container text-center">
             <h2 class="section-header">Progression from Classic to Modern Era Expansions</h2>
             <p class="section-subtitle">Experience the evolution of EverQuest as we progress through each expansion</p>
@@ -509,7 +409,7 @@
         </div>
     </section>
     <!-- Community Section -->
-    <section class="community-section">
+    <section class="community-section hero-section">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-6">
@@ -568,7 +468,7 @@
                 <div class="col-lg-4">
                     <div class="step-card">
                         <h3 class="step-title h5">1. Download Client</h3>
-                        <p class="text-muted-custom mb-3">Get the client for Windows, Linux, or 32-bit MacOS</p>
+                        <p class="text-muted-custom mb-3">Get the client for Windows, Linux, or 32-bit macOS</p>
                         <a href="https://www.dropbox.com/s/bppy4ebt7vl7hwk/TAKP%20PC%20V2.1c.zip?dl=0"
                            class="btn btn-primary btn-sm">
                             <i class="bi bi-download me-2"></i>Download Windows Client

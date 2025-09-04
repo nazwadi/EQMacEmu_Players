@@ -153,6 +153,7 @@ TEMPLATES = [
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
                 "sekizai.context_processors.sekizai",
+                'EQMacEmu_Players.context_processors.navigation_context',
             ],
         },
     },

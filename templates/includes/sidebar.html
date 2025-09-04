@@ -1,0 +1,54 @@
+<!-- Side Navigation -->
+<nav class="side-nav" id="sideNav">
+    <!-- Database Navigation (default visible) -->
+    <div class="side-nav-section" id="database-nav">
+        <div class="side-nav-title">Database</div>
+
+        <!-- Items Group -->
+        <div class="side-nav-group">
+            <div class="side-nav-group-title">Items & Equipment</div>
+            <a href="{% url 'items:search' %}" class="side-nav-item">Item Search</a>
+            <a href="{% url 'items:discovered' %}" class="side-nav-item">Recently Discovered</a>
+            <a href="{% url 'items:bis' class_id=0 %}" class="side-nav-item">Best in Slot</a>
+        </div>
+
+        <!-- Spells Group -->
+        <div class="side-nav-group">
+            <div class="side-nav-group-title">Spells</div>
+            <a href="{% url 'spells:search' %}" class="side-nav-item">Spell Search</a>
+            <a href="{% url 'spells:index' %}" class="side-nav-item">Spells by Class</a>
+        </div>
+
+        <!-- World Data Group -->
+        <div class="side-nav-group">
+            <div class="side-nav-group-title">World</div>
+            <a href="{% url 'npcs:search' %}" class="side-nav-item">NPCs/Mobs</a>
+            <a href="{% url 'zones:index' %}" class="side-nav-item">Zones</a>
+            <a href="{% url 'factions:search' %}" class="side-nav-item">Factions</a>
+        </div>
+
+        <!-- Crafting Group -->
+        <div class="side-nav-group">
+            <div class="side-nav-group-title">Crafting & Pets</div>
+            <a href="{% url 'recipes:search' %}" class="side-nav-item">Recipes</a>
+            <a href="{% url 'pets:list' %}" class="side-nav-item">Pets</a>
+        </div>
+    </div>
+
+    <!-- Tools Navigation (hidden by default) -->
+    <div class="side-nav-section" id="tools-nav" style="display: none;">
+        <div class="side-nav-title">Tools</div>
+        <a href="{% url 'magelo:search' %}" class="side-nav-item">Magelo</a>
+        <a href="{% url 'characters:exp' %}" class="side-nav-item">Experience Calculator</a>
+        <a href="{% url 'accounts:inventory_search' %}" class="side-nav-item">Inventory Search</a>
+        <a href="{% url 'items:bis' class_id=0 %}" class="side-nav-item">Best in Slot</a>
+    </div>
+
+    <!-- Account Navigation (hidden by default) -->
+    <div class="side-nav-section" id="account-nav" style="display: none;">
+        <div class="side-nav-title">My Account</div>
+        <a href="{% url 'accounts:list_accounts' %}" class="side-nav-item">Login Accounts</a>
+        <a href="{% url 'character_transfer:index' %}" class="side-nav-item">Character Transfer</a>
+        <a href="{% url 'accounts:server_list' %}" class="side-nav-item">Server Status</a>
+    </div>
+</nav>

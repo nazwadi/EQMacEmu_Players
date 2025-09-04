@@ -1,20 +1,23 @@
-{% extends 'factions/header.html' %}
+{% extends 'factions/base.html' %}
 {% load data_utilities %}
 {% load static %}
 {% load humanize %}
+{% block title %}
+    Faction Search - EQ Archives
+{% endblock %}
 {% block content %}
     <main class="flex-shrink-0">
         <div class="container py-4">
             <h1 class="text-center mb-4">Faction Search</h1>
-            <form class="p-3 mb-4 bg-body-tertiary border" action="" method="post" novalidate>
+            <form class="p-3 mb-4 border" action="" method="post" novalidate>
                 {% csrf_token %}
                 <div class="row">
                     <div class="col-12 col-md-10">
-                        <div class="form-text text-wrap"><label for="faction_name">Faction Name</label></div>
+                        <div class="form-label text-wrap"><label for="faction_name">Faction Name</label></div>
                         <input class="form-control" id="faction_name" name="faction_name" required type="text" value="">
                     </div>
                     <div class="col-12 col-md-2">
-                        <div class="form-text text-wrap"><label for="query_limit">Query Limit (Max: 200)</label></div>
+                        <div class="form-label text-wrap"><label for="query_limit">Query Limit (Max: 200)</label></div>
                         <input class="form-control" id="query_limit" name="query_limit" type="number" min="0" max="200"
                                value="50">
                     </div>

@@ -15,65 +15,84 @@
         </div>
 
         <div class="collapse navbar-collapse flex-grow-1" id="navbarText">
-            <ul class="navbar-nav me-auto flex-wrap col-12 col-md-auto mb-2 justify-content-center mb-md-0 nav-pills">
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'factions:search' %}">Factions</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarItemsMenuLink" role="button"
-                       data-bs-toggle="dropdown" aria-expanded="false">
-                        Items
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-light py-1" aria-labelledby="navbarItemsMenuLink">
-                        <li><a class="dropdown-item py-2" href="{% url 'items:search' %}">Items Search</a></li>
-                        <li><a class="dropdown-item py-2" href="{% url 'items:discovered' %}">Discovered Items</a></li>
-                        <li><a class="dropdown-item py-2" href="{% url 'items:bis' class_id=0 %}">Best in Slot</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'magelo:search' %}">Magelo</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarMiscMenuLink" role="button"
-                       data-bs-toggle="dropdown" aria-expanded="false">
-                        Misc
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-light py-1" aria-labelledby="navbarMiscMenuLink">
-                        <li><a class="dropdown-item py-2" href="{% url 'characters:exp' %}">Experience per Level</a>
-                        </li>
-                        <li><a class="dropdown-item py-2" href="{% url 'accounts:server_list' %}">Server List</a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'npcs:search' %}">Npcs</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'patch:index' %}">Patch</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'pets:list' %}">Pets</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'recipes:search' %}">Recipes</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="{% url 'spells:search' %}" id="navbarSpellMenuLink"
-                       role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Spells
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-light py-1" aria-labelledby="navbarSpellMenuLink">
-                        <li><a class="dropdown-item py-2" href="{% url 'spells:search' %}">Search</a></li>
-                        <li><a class="dropdown-item py-2" href="{% url 'spells:index' %}">List By Class</a></li>
-                    </ul>
-                <li class="nav-item">
-                    <a class="nav-link" href="https://wiki.eqarchives.com">Wiki</a>
-                </li>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'zones:index' %}">Zones</a>
-                </li>
-            </ul>
+
+            <ul class="navbar-nav me-auto">
+    <li class="nav-item">
+        <a class="nav-link active" href="#" data-section="database">Database</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#" data-section="tools">Tools</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="https://wiki.eqarchives.com">Wiki</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'patch:index' %}">Patch Notes</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#" data-section="account">My Account</a>
+    </li>
+</ul>
+
+{#            <ul class="navbar-nav me-auto flex-wrap col-12 col-md-auto mb-2 justify-content-center mb-md-0 nav-pills">#}
+{#                <li class="nav-item">#}
+{#                    <a class="nav-link" href="{% url 'factions:search' %}">Factions</a>#}
+{#                </li>#}
+{#                <li class="nav-item dropdown">#}
+{#                    <a class="nav-link dropdown-toggle" href="#" id="navbarItemsMenuLink" role="button"#}
+{#                       data-bs-toggle="dropdown" aria-expanded="false">#}
+{#                        Items#}
+{#                    </a>#}
+{#                    <ul class="dropdown-menu dropdown-menu-light py-1" aria-labelledby="navbarItemsMenuLink">#}
+{#                        <li><a class="dropdown-item py-2" href="{% url 'items:search' %}">Items Search</a></li>#}
+{#                        <li><a class="dropdown-item py-2" href="{% url 'items:discovered' %}">Discovered Items</a></li>#}
+{#                        <li><a class="dropdown-item py-2" href="{% url 'items:bis' class_id=0 %}">Best in Slot</a></li>#}
+{#                    </ul>#}
+{#                </li>#}
+{#                <li class="nav-item">#}
+{#                    <a class="nav-link" href="{% url 'magelo:search' %}">Magelo</a>#}
+{#                </li>#}
+{#                <li class="nav-item dropdown">#}
+{#                    <a class="nav-link dropdown-toggle" href="#" id="navbarMiscMenuLink" role="button"#}
+{#                       data-bs-toggle="dropdown" aria-expanded="false">#}
+{#                        Misc#}
+{#                    </a>#}
+{#                    <ul class="dropdown-menu dropdown-menu-light py-1" aria-labelledby="navbarMiscMenuLink">#}
+{#                        <li><a class="dropdown-item py-2" href="{% url 'characters:exp' %}">Experience per Level</a>#}
+{#                        </li>#}
+{#                        <li><a class="dropdown-item py-2" href="{% url 'accounts:server_list' %}">Server List</a>#}
+{#                        </li>#}
+{#                    </ul>#}
+{#                </li>#}
+{#                <li class="nav-item">#}
+{#                    <a class="nav-link" href="{% url 'npcs:search' %}">Npcs</a>#}
+{#                </li>#}
+{#                <li class="nav-item">#}
+{#                    <a class="nav-link" href="{% url 'patch:index' %}">Patch</a>#}
+{#                </li>#}
+{#                <li class="nav-item">#}
+{#                    <a class="nav-link" href="{% url 'pets:list' %}">Pets</a>#}
+{#                </li>#}
+{#                <li class="nav-item">#}
+{#                    <a class="nav-link" href="{% url 'recipes:search' %}">Recipes</a>#}
+{#                </li>#}
+{#                <li class="nav-item dropdown">#}
+{#                    <a class="nav-link dropdown-toggle" href="{% url 'spells:search' %}" id="navbarSpellMenuLink"#}
+{#                       role="button" data-bs-toggle="dropdown" aria-expanded="false">#}
+{#                        Spells#}
+{#                    </a>#}
+{#                    <ul class="dropdown-menu dropdown-menu-light py-1" aria-labelledby="navbarSpellMenuLink">#}
+{#                        <li><a class="dropdown-item py-2" href="{% url 'spells:search' %}">Search</a></li>#}
+{#                        <li><a class="dropdown-item py-2" href="{% url 'spells:index' %}">List By Class</a></li>#}
+{#                    </ul>#}
+{#                <li class="nav-item">#}
+{#                    <a class="nav-link" href="https://wiki.eqarchives.com">Wiki</a>#}
+{#                </li>#}
+{#                </li>#}
+{#                <li class="nav-item">#}
+{#                    <a class="nav-link" href="{% url 'zones:index' %}">Zones</a>#}
+{#                </li>#}
+{#            </ul>#}
         </div>
 
         <div class="d-flex px-5 text-end">

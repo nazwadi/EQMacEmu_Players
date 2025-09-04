@@ -1,9 +1,22 @@
-{% extends 'items/header.html' %}
+{% extends 'items/base.html' %}
 {% load data_utilities %}
 {% load item_filters %}
 {% load tradeskill_filters %}
 {% load static %}
 {% load humanize %}
+{% block extra_meta %}
+    {% if item.Name %}
+        <meta content="EQ Archives" property="og:site_name">
+        <meta content="article" property="og:type">
+        <meta content="{{ item.Name|clean_name }}" property="og:title">
+        <meta content="EQA Item information for {{ item.Name|clean_name }}" property="og:description">
+        <meta name="description" content="EQA Item Information for Robe of the Azure Sky">
+        <meta content="https://{{ request.get_host }}/static/images/items/item_{{ item.icon }}.png" property="og:image">
+        <meta property="og:url" content="https://{{ request.get_host }}/items/view/{{ item.id }}">
+        <link rel="canonical" href="https://{{ request.get_host }}/items/view/{{ item.id }}">
+    {% endif %}
+{% endblock %}
+{% block title %} {{ item.Name|clean_name }} - EQ Archives{% endblock %}
 {% block content %}
     <div class="container py-4">
         <div class="row">
@@ -14,9 +27,9 @@
                     <div class="col">
                         {% include 'items/item_stats_template.html' %}
                         <div>
-                            <span style="background-color:#FFF8DD; font-size: 10pt"><img
+                            <span style="font-size: 10pt"><img
                                     src="{% static "/images/spell_icons/Spellicon_U.png" %}" style="width:18px;"
-                                    alt="Lore Icon"><b>Item Lore</b> <span
+                                    alt="Lore Icon">&nbsp;<b>Item Lore</b> <span
                                     style="font-size:8pt">(from Identify)</span>: {{ item.lore }}</span>
                         </div>
                     </div>
@@ -213,4 +226,7 @@
             </div>
         </div>
     </div>
+{% endblock %}
+{% block extra_js %}
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 {% endblock %}

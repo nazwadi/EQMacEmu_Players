@@ -1,7 +1,8 @@
-{% extends 'recipes/header.html' %}
+{% extends 'recipes/base.html' %}
 {% load data_utilities %}
 {% load tradeskill_filters %}
 {% load static %}
+{% block title %}{% if tradeskill_recipe.name  %}{{ tradeskill_recipe.name }} - EQ Archives{% else %}View Recipe{% endif %}{% endblock %}
 {% block content %}
     <main class="flex-shrink-0">
         <div class="container py-4">

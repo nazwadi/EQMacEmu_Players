@@ -1,6 +1,9 @@
-{% extends 'spells/header.html' %}
+{% extends 'spells/base.html' %}
 {% load data_utilities %}
 {% load static %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'spells/css/eq-ui.css' %}">
+{% endblock %}
 {% block content %}
     <main class="flex-shrink-0">
         <div class="container py-4">

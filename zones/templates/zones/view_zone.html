@@ -1,7 +1,8 @@
-{% extends 'zones/header.html' %}
+{% extends 'zones/base.html' %}
 {% load static %}
 {% load data_utilities %}
 {% load humanize %}
+{% block title %}{{ zone_data.long_name }} - EQ Archives {% endblock %}
 {% block content %}
     <div class="container-fluid">
         <div class="py-5">
@@ -102,4 +103,90 @@
             </div>
         </div>
     </div>
+{% endblock %}
+{% block extra_js %}
+    <script src="https://cdn.datatables.net/v/bs5/dt-2.0.2/datatables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.1.2/js/dataTables.buttons.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.dataTables.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.print.min.js"></script>
+{% endblock %}
+{% block inline_js %}
+    <script>
+        $(document).ready(function () {
+            $("#zem-table").DataTable({
+                order: [[3, 'desc']]
+            });
+            $("#items-table").DataTable({
+                layout: {
+                    bottom: {
+                        buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
+                    },
+                },
+                order: [[3, 'desc']]
+            });
+            $("#npc-table").DataTable({
+                layout: {
+                    bottom: {
+                        buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
+                    },
+                },
+                order: [[3, 'desc']]
+            });
+            $("#ground-spawns-table").DataTable({
+                layout: {
+                    bottom: {
+                        buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
+                    },
+                },
+                order: [[3, 'desc']]
+            });
+            $("#fishing-table").DataTable({
+                layout: {
+                    bottom: {
+                        buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
+                    },
+                },
+                order: [[3, 'desc']]
+            });
+            $("#foraging-table").DataTable({
+                layout: {
+                    bottom: {
+                        buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
+                    },
+                },
+                order: [[3, 'desc']]
+            });
+            $("#merchants-table").DataTable({
+                layout: {
+                    bottom: {
+                        buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
+                    },
+                },
+                order: [[3, 'desc']]
+            });
+            $("#spawn-table").DataTable({
+                layout: {
+                    bottom: {
+                        buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
+                    },
+                },
+                order: [[3, 'desc']]
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        mapBaseName = JSON.parse('"{{ zone_data.short_name }}"')
+    </script>
+    <script type="text/javascript" src="{% static "leaflet.js" %}"></script>
+    <script type="text/javascript" src="{% static "L.SimpleGraticule.js" %}"></script>
+    <script type="text/javascript" src="{% static "L.Control.MousePosition.js" %}"></script>
+    <link href="{% static "leaflet.css" %}" rel="stylesheet">
+    <link href="{% static "L.Control.MousePosition.css" %}" rel="stylesheet">
+    <link href="{% static "nouislider.css" %}" rel="stylesheet">
+    <script src="{% static "nouislider.js" %}"></script>
+    <script src="{% static 'js/search.js' %}"></script>
 {% endblock %}

@@ -1,6 +1,17 @@
-{% extends 'spells/header.html' %}
-{% load data_utilities %}
+{% extends 'spells/base.html' %}
 {% load static %}
+{% load data_utilities %}
+{% load humanize %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'spells/css/eq-ui.css' %}">
+{% endblock %}
+{% block title %}
+    {% if class_id == '8' %}
+        {{ class_id|intword|player_class }} Song Purchase List
+    {% else %}
+        {{ class_id|intword|player_class }} Spell Purchase List
+    {% endif %}
+{% endblock %}
 {% block content %}
     <main class="flex-shrink-0">
         <div class="container py-4">

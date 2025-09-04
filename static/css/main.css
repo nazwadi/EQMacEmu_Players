@@ -1,8 +1,63 @@
+:root {
+    /* Original Dark Palette Variables */
+    --bg-primary: #0b0b10;
+    --bg-secondary: #2a2420;
+    --bg-tertiary: #1f1b17;
+    --border-color: #7b714a;
+    --text-primary: #ffffff;
+    --text-secondary: #cccccc;
+    --accent-color: #fcc721;
+    --link-color: #8aa3ff;
+    --hover-color: #b8941f;
+
+    /* Additional supporting colors */
+    --bg-content: #262623;
+    --bg-dark: #000000;
+    --text-muted: #999999;
+    --border-light: rgba(123, 113, 74, 0.3);
+}
+
+/*:root {*/
+/*    !* TAKP-inspired dark color scheme *!*/
+/*    --bg-primary: #1a1a1a;        !* Very dark gray, main background *!*/
+/*    --bg-secondary: #262623;      !* Dark brownish-gray for content areas *!*/
+/*    --bg-tertiary: #323231;       !* Lighter gray for accents *!*/
+/*    --border-color: #565545;      !* Muted gold-brown borders *!*/
+/*    --text-primary: #ffffff;      !* Pure white text *!*/
+/*    --text-secondary: #c0c0c0;    !* Light gray for secondary text *!*/
+/*    --accent-color: #565545;      !* Muted gold-brown for highlights *!*/
+/*    --link-color: #d3d2aa;        !* Light tan for links *!*/
+/*    --hover-color: #ffffff;       !* White for hover states *!*/
+/*    */
+/*    !* Additional TAKP colors from their CSS *!*/
+/*    --category-bg: #52513f;       !* Category strip background *!*/
+/*    --node-bg: #262623;          !* Node/forum backgrounds *!*/
+/*    --border-dark: #000000;      !* Black borders for definition *!*/
+/*}*/
+
+body {
+    background-color: var(--bg-primary);
+    background-image: repeating-linear-gradient(45deg,
+        transparent,
+        transparent 2px,
+        rgba(255,255,255,0.02) 2px,
+        rgba(255,255,255,0.02) 4px
+    );
+    color: var(--text-primary);
+}
+
+.container {
+    background-color: var(--bg-tertiary); /* #1f1b17 - lighter than navbar */
+    /*background-color: var(--bg-secondary);*/
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
 pre {
     padding: 1em;
-    border: 1px dashed #2f6fab;
-    color: #333;
-    background-color: #f9f9f9;
+    border: 1px dashed var(--border-color);
+    color: var(--text-primary);
+    background-color: var(--bg-tertiary);
     line-height: 1.4;
     font-family: monospace, Courier;
     border-radius: 4px;
@@ -12,30 +67,47 @@ pre {
 p {
     max-width: 100em;
     font-size: 16px;
+    color: var(--text-primary);
 }
 
 ul {
     font-size: 14px;
+    color: var(--text-primary);
 }
 
 .navbar ul {
     font-size: 16px;
 }
 
+/* Override navbar border */
+.navbar.border {
+    border: 2px solid var(--border-color) !important;
+}
+
+/* Or target it more specifically */
+nav.border {
+    border: 2px solid var(--border-color) !important;
+}
+
+
 /* NPC Page */
 .mobStatsBox {
-    border: 1px solid #becfe2;
+    border: 1px solid var(--border-color);
     margin: 0 5px 5px 0;
     float: left;
     width: 300px;
+    background-color: var(--bg-tertiary);
 }
 
 .mobStatsBox th {
-    background-color: #cedff2
+    background-color: var(--bg-tertiary);
+    color: var(--accent-color);
+    border-bottom: 1px solid var(--border-color);
 }
 
 .mobStatsBox .msb_sub {
-    background-color: #f3f8fd
+    background-color: var(--bg-content);
+    color: var(--text-secondary);
 }
 
 .table-floating-header {
@@ -43,13 +115,14 @@ ul {
     top: 0;
     border-collapse: separate;
     z-index: 9999;
-    border-bottom: 1px solid #ffffff1c;
-
-    filter: drop-shadow(0px 3px 3px rgba(0, 0, 0, .2));
+    border-bottom: 1px solid var(--border-color);
+    filter: drop-shadow(0px 3px 3px rgba(0, 0, 0, 0.5));
 }
 
 .table-floating-header th {
-    background: #cedff2;
+    background: var(--bg-secondary);
+    color: var(--accent-color);
+    border-bottom: 1px solid var(--border-color);
 }
 
 #konva-container {
@@ -58,15 +131,24 @@ ul {
 }
 
 .breadcrumb {
-    box-shadow: 1px 1px #d5d4d4;
-    background: #eeeded;
-    border: 1px solid #eeeded;
+    box-shadow: 1px 1px var(--bg-dark);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
     border-radius: 5px;
     padding: 0 5px 0 10px !important;
     font-size: 16px;
     line-height: 2em;
+    color: var(--text-primary);
 }
 
+.breadcrumb a {
+    color: var(--link-color);
+    text-decoration: none;
+}
+
+.breadcrumb a:hover {
+    color: var(--hover-color);
+}
 
 .item_background {
     width: 451px;
@@ -108,7 +190,7 @@ ul {
 }
 
 .text-disabled {
-    color: #bbb;
+    color: var(--text-muted);
     list-style: none;
 }
 
@@ -132,9 +214,9 @@ ul {
     -webkit-column-gap: 4em;
     -moz-column-gap: 4em;
     column-gap: 4em;
-    -webkit-column-rule: 1px dotted;
-    -moz-column-rule: 1px dotted;
-    column-rule: 1px dotted;
+    -webkit-column-rule: 1px dotted var(--border-color);
+    -moz-column-rule: 1px dotted var(--border-color);
+    column-rule: 1px dotted var(--border-color);
     padding: 5%;
 }
 
@@ -144,13 +226,13 @@ ul {
 }
 
 .expansion-tag span {
-    border: 1px solid gray;
+    border: 1px solid var(--border-color);
     border-radius: 5px;
     display: inline-block;
     width: 60px;
     text-align: center;
     font-weight: bold;
-    text-shadow: 1px 1px 2px #222222;
+    text-shadow: 1px 1px 2px var(--bg-dark);
     padding-left: 2px;
     padding-right: 2px;
     font-size: 12px;
@@ -162,7 +244,6 @@ ul {
 }
 
 .kunark span, h2 .kunark {
-    /* background: #765F35;*/
     background: #607643;
     color: #D3AB5C;
 }
@@ -295,9 +376,87 @@ ul {
     }
 }
 
-/* Ensure consistent spacing between form groups */
+.form-control,
+.form-select {
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    height: 38px;
+}
+
+.form-control:focus,
+.form-select:focus {
+    background-color: var(--bg-secondary);
+    border-color: var(--accent-color);
+    color: var(--text-primary);
+    box-shadow: 0 0 0 0.25rem rgba(252, 199, 33, 0.25);
+}
+
 .form-label {
+    color: var(--text-primary);
     margin-bottom: 0.25rem;
+}
+
+/* Comprehensive form element styling */
+.form-control,
+.form-select,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+input[type="number"],
+textarea,
+select {
+    background-color: var(--bg-tertiary) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+
+.form-control:focus,
+.form-select:focus,
+input:focus,
+textarea:focus,
+select:focus {
+    background-color: var(--bg-secondary) !important;
+    border-color: var(--accent-color) !important;
+    color: var(--text-primary) !important;
+    box-shadow: 0 0 0 0.25rem rgba(252, 199, 33, 0.25) !important;
+}
+
+/* Input groups */
+.input-group-text {
+    background-color: var(--bg-secondary) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Dropdown options */
+option {
+    background-color: var(--bg-tertiary) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Placeholders */
+::placeholder {
+    color: var(--text-muted) !important;
+    opacity: 0.7;
+}
+
+.btn {
+    height: 38px;
+    border-radius: 4px;
+}
+
+.btn-primary {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+    color: var(--bg-dark);
+}
+
+.btn-primary:hover {
+    background-color: var(--hover-color);
+    border-color: var(--hover-color);
+    color: var(--text-primary);
 }
 
 /* Improve table layout */
@@ -306,10 +465,36 @@ ul {
     margin-bottom: 1rem;
 }
 
+#search-results-table,
+.table {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
 #search-results-table td,
-#search-results-table th {
+#search-results-table th,
+.table td,
+.table th {
     padding: 0.75rem;
     vertical-align: middle;
+    border-bottom: 1px solid var(--border-light);
+    color: var(--text-primary);
+}
+
+#search-results-table th,
+.table th {
+    background-color: var(--bg-tertiary);
+    color: var(--accent-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+#search-results-table tbody tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+#search-results-table tbody tr:hover {
+    background-color: rgba(123, 113, 74, 0.1);
 }
 
 /* Make expansion icons consistent size */
@@ -317,4 +502,505 @@ ul {
     width: 24px;
     height: 24px;
     vertical-align: middle;
+}
+
+.nav-tabs {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.nav-tabs .nav-link {
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-bottom: none;
+    color: var(--text-secondary);
+    margin-right: 2px;
+}
+
+.nav-tabs .nav-link:hover {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+.nav-tabs .nav-link.active {
+    background-color: var(--bg-secondary);
+    border-color: var(--border-color);
+    border-bottom: 1px solid var(--bg-secondary);
+    color: var(--accent-color);
+    font-weight: bold;
+}
+
+.text-muted {
+    color: #cccccc !important;
+}
+
+p.text-muted {
+    color: #cccccc !important;
+}
+
+/* If you want even lighter muted text */
+.text-muted {
+    color: var(--text-secondary) !important;
+}
+
+.navbar {
+    background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%) !important;
+    border-bottom: 2px solid var(--border-color) !important;
+    min-height: 60px;
+    padding: 0 20px !important;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.5) !important;
+}
+
+/* Logo/brand styling */
+.navbar-brand {
+    color: var(--accent-color) !important;
+    font-size: 24px !important;
+    font-weight: bold !important;
+    text-shadow: 0px 0px 3px #000, 1px 2px 5px #000 !important;
+}
+.navbar-nav {
+    display: flex;
+    gap: 0;
+}
+
+.navbar-nav .nav-link {
+    padding: 15px 20px !important;
+    color: var(--text-primary) !important;
+    text-decoration: none !important;
+    border-right: 1px solid rgba(255,255,255,0.1) !important;
+    transition: all 0.2s ease !important;
+    cursor: pointer;
+    margin: 0 !important;
+}
+
+.navbar-nav .nav-link:hover {
+    color: var(--accent-color) !important;
+    background-color: rgba(255,255,255,0.1) !important;
+}
+
+/* Remove the border from the last nav item */
+.navbar-nav .nav-item:last-child .nav-link {
+    border-right: none !important;
+}
+
+/* Style dropdown toggles to match */
+.navbar-nav .dropdown-toggle {
+    padding: 15px 20px !important;
+    color: var(--text-primary) !important;
+    border-right: 1px solid rgba(255,255,255,0.1) !important;
+}
+
+.navbar-nav .dropdown-toggle:hover {
+    color: var(--accent-color) !important;
+    background-color: rgba(255,255,255,0.1) !important;
+}
+
+/* User section on the right */
+.navbar .d-flex {
+    align-items: center;
+}
+
+/* Override Bootstrap navbar classes */
+.navbar-light {
+    background-color: var(--bg-secondary) !important;
+}
+
+.bg-light {
+    background-color: var(--bg-secondary) !important;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: var(--text-primary) !important;
+}
+
+.navbar-light .navbar-nav .nav-link:hover {
+    color: var(--accent-color) !important;
+}
+
+.navbar-light .navbar-brand {
+    color: var(--text-primary) !important;
+}
+
+/* Dropdown menus */
+.dropdown-menu-light,
+.dropdown-menu {
+    background-color: var(--bg-secondary) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+.dropdown-item {
+    color: var(--text-primary) !important;
+}
+
+.dropdown-item:hover {
+    background-color: var(--bg-tertiary) !important;
+    color: var(--accent-color) !important;
+}
+
+/* Buttons */
+.btn-outline-secondary {
+    color: var(--text-primary) !important;
+    border-color: var(--border-color) !important;
+}
+
+.btn-outline-secondary:hover {
+    background-color: var(--accent-color) !important;
+    border-color: var(--accent-color) !important;
+    color: var(--bg-dark) !important;
+}
+
+.btn-secondary {
+    background-color: var(--bg-tertiary) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+
+.btn-secondary:hover {
+    background-color: var(--accent-color) !important;
+    border-color: var(--accent-color) !important;
+    color: var(--bg-dark) !important;
+}
+
+/* Navbar toggler for mobile */
+.navbar-light .navbar-toggler {
+    border-color: var(--border-color) !important;
+}
+
+.navbar-light .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%2833, 37, 41, 0.75%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+}
+
+/* Layout Container */
+.layout-container {
+    display: flex;
+    min-height: calc(100vh - 60px); /* Adjust based on your actual navbar height */
+}
+
+/* Side Navigation */
+.side-nav {
+    width: 250px;
+    background: var(--bg-tertiary);
+    border-right: 2px solid var(--border-color);
+    padding: 20px 0;
+    position: sticky;
+    top: 60px; /* Match your navbar height */
+    height: calc(100vh - 60px);
+    overflow-y: auto;
+}
+
+.side-nav-section {
+    margin-bottom: 30px;
+}
+
+.side-nav-title {
+    color: var(--accent-color);
+    font-size: 14px;
+    font-weight: bold;
+    padding: 0 20px 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid rgba(123, 113, 74, 0.3);
+    margin-bottom: 10px;
+}
+
+.side-nav-item {
+    display: block;
+    color: var(--text-primary);
+    text-decoration: none;
+    padding: 10px 20px;
+    transition: all 0.2s ease;
+    border-left: 3px solid transparent;
+}
+
+.side-nav-item:hover {
+    background: rgba(255,255,255,0.1);
+    color: var(--link-color);
+    border-left-color: var(--link-color);
+}
+
+.side-nav-item.active {
+    background: rgba(123, 113, 74, 0.2);
+    color: var(--accent-color);
+    border-left-color: var(--accent-color);
+}
+
+.side-nav-group {
+    margin-bottom: 20px;
+}
+
+.side-nav-group-title {
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 20px 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    opacity: 0.8;
+}
+
+.side-nav-group .side-nav-item {
+    padding-left: 25px; /* Slight indent to show hierarchy */
+    font-size: 14px;
+}
+
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    padding: 30px;
+    background: rgba(255,255,255,0.01);
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .layout-container {
+        flex-direction: column;
+    }
+
+    .side-nav {
+        width: 100%;
+        height: auto;
+        position: relative;
+        top: 0;
+    }
+}
+
+/* Django Tables2 Styling */
+.table {
+    background-color: var(--bg-tertiary) !important; /* Match containers */
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+.table th {
+    background-color: var(--bg-tertiary) !important;
+    color: var(--text-secondary) !important; /* Changed from accent-color to secondary text */
+    border-bottom: 2px solid var(--border-color) !important;
+    border-top: 1px solid var(--border-color) !important;
+    font-weight: bold;
+}
+
+.table td {
+    color: var(--text-primary) !important;
+    border-top: 1px solid rgba(123, 113, 74, 0.2) !important;
+    background-color: var(--bg-secondary) !important;
+}
+
+/* Links inside tables - use muted gold instead of blue */
+.table a {
+    color: #d4b866 !important; /* Muted gold, less harsh than accent */
+    text-decoration: none;
+}
+
+.table a:hover {
+    color: var(--accent-color) !important;
+    text-decoration: underline;
+}
+
+/* Buttons inside tables */
+.table .btn-primary {
+    background-color: var(--bg-tertiary) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+
+.table .btn-primary:hover {
+    background-color: var(--accent-color) !important;
+    border-color: var(--accent-color) !important;
+    color: var(--bg-dark) !important;
+    font-weight: bold !important;
+    text-shadow: 0 1px 2px rgba(255,255,255,0.3) !important;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.03) !important;
+}
+
+.table tbody tr:hover {
+    background-color: rgba(123, 113, 74, 0.1) !important;
+}
+
+/* Django Tables2 specific classes */
+.table-striped > tbody > tr:nth-of-type(odd) > td,
+.table-striped > tbody > tr:nth-of-type(odd) > th {
+    background-color: var(--bg-content) !important;
+}
+
+.table-hover > tbody > tr:hover > td,
+.table-hover > tbody > tr:hover > th {
+    background-color: rgba(123, 113, 74, 0.15) !important;
+}
+
+/* Pagination styling if used with django-tables2 */
+.pagination .page-link {
+    background-color: var(--bg-tertiary);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+.pagination .page-link:hover {
+    background-color: var(--bg-secondary);
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+}
+
+.pagination .page-item.active .page-link {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+    color: var(--bg-dark);
+}
+
+.btn-outline-warning:hover {
+    background-color: #b8941f !important; /* Darker gold */
+    border-color: #b8941f !important;
+    color: #ffffff !important;
+    font-weight: bold !important;
+}
+
+/* Footer styling to match navbar */
+.container-fluid.border-top {
+    border-top: 2px solid var(--border-color) !important;
+    background-color: var(--bg-secondary) !important;
+}
+
+.container-fluid.bg-light {
+    background-color: var(--bg-secondary) !important;
+}
+
+/* Footer content */
+footer {
+    color: var(--text-primary) !important;
+}
+
+footer h5 {
+    color: var(--accent-color) !important;
+}
+
+footer .nav-link {
+    color: var(--text-secondary) !important;
+}
+
+footer .nav-link:hover {
+    color: var(--accent-color) !important;
+}
+
+footer .text-muted {
+    color: var(--text-secondary) !important;
+}
+
+footer p {
+    color: var(--text-primary) !important;
+}
+
+/* Footer border styling */
+footer .border-top {
+    border-top: 1px solid var(--border-color) !important;
+}
+
+.breadcrumb {
+    box-shadow: 1px 1px var(--bg-dark);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    padding: 0 5px 0 10px !important;
+    font-size: 16px;
+    line-height: 2em;
+    color: var(--text-primary);
+    background: var(--bg-primary); /* Same as body background */
+    /* or */
+    /*background: rgba(255, 255, 255, 0.05); !* Subtle overlay *!*/
+}
+
+.breadcrumb a {
+    color: var(--link-color);
+    text-decoration: none;
+}
+
+.breadcrumb a:hover {
+    color: var(--hover-color);
+}
+
+/* Add these new styles for better visibility */
+.breadcrumb-item {
+    color: var(--text-primary) !important;
+}
+
+.breadcrumb-item.active {
+    color: var(--text-secondary) !important;
+}
+
+/* Style the breadcrumb separators */
+/*.breadcrumb-item + .breadcrumb-item::before {*/
+/*    content: "/" !important;*/
+/*    color: var(--border-color) !important;*/
+/*    font-weight: normal !important;*/
+/*}*/
+
+/* Alternative: use a more visible separator */
+.breadcrumb-item + .breadcrumb-item::before {
+    content: "›" !important;
+    color: var(--accent-color) !important;
+    font-weight: bold !important;
+}
+
+/* Force all DataTables elements to use dark theme */
+.dataTables_wrapper,
+.dataTables_wrapper * {
+    background-color: var(--bg-tertiary) !important;
+    color: var(--text-primary) !important;
+}
+
+/* List group items - dark theme */
+.list-group-item {
+    background-color: var(--bg-tertiary) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+/* Alternating row styling */
+.list-group-item:nth-child(even) {
+    background-color: var(--bg-secondary) !important;
+}
+
+/* Hover states */
+.list-group-item:hover {
+    background-color: rgba(123, 113, 74, 0.1) !important;
+}
+
+/* Horizontal list group items */
+.list-group-horizontal .list-group-item {
+    border-right: 1px solid var(--border-color) !important;
+    border-bottom: 1px solid var(--border-color) !important;
+}
+
+.list-group-horizontal .list-group-item:last-child {
+    border-right: 1px solid var(--border-color) !important;
+}
+
+.btn-outline-primary {
+    color: var(--accent-color) !important;
+    border-color: var(--accent-color) !important;
+    background-color: transparent !important;
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--accent-color) !important;
+    border-color: var(--accent-color) !important;
+    color: var(--bg-dark) !important;
+    font-weight: bold !important;
+}
+
+.nav-pills .nav-link {
+    background-color: var(--bg-tertiary) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+.nav-pills .nav-link.active,
+.nav-pills .nav-link:hover {
+    background-color: var(--accent-color) !important;
+    border-color: var(--accent-color) !important;
+    color: var(--bg-dark) !important;
 }

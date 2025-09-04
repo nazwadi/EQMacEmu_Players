@@ -1,4 +1,4 @@
-{% extends 'characters/header.html' %}
+{% extends 'characters/base.html' %}
 {% load humanize %}
 {% load data_utilities %}
 {% block content %}
@@ -12,10 +12,10 @@
                                 <div class="col-12">
                                     <nav aria-label="breadcrumb">
                                         <ol class="breadcrumb">
-                                            <li class="breadcrumb-item"><a href="/accounts/list">Game
-                                                Accounts</a>
+                                            <li class="breadcrumb-item"><a href="/accounts/list">EQA Login Server</a>
                                             </li>
-                                            <li class="breadcrumb-item active" aria-current="page">Characters
+                                            <li class="breadcrumb-item active"
+                                                aria-current="page">{{ game_account_name }}
                                             </li>
                                         </ol>
                                     </nav>
@@ -23,7 +23,11 @@
                                         <div class="row">
                                             <div class="WindowNestedTan col">
                                                 <div class="WindowNestedTanTitleBar eq-header">
-                                                    <h1>Characters</h1>
+                                                    {% if is_mule %}
+                                                        <p class="text-warning"><i class="fas fa-coins"></i>&nbsp;TRADER
+                                                            (MULE) Account</p>
+                                                    {% endif %}
+                                                    <h1>Character List</h1>
                                                 </div>
                                             </div>
                                             <table class="eq-table eq-highlight-rows" style="display: table">

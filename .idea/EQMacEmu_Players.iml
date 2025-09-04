@@ -28,6 +28,7 @@
     <orderEntry type="library" name="konva" level="application" />
     <orderEntry type="library" name="vue" level="application" />
     <orderEntry type="library" name="tippy.js" level="application" />
+    <orderEntry type="library" name="buttons.dataTables" level="application" />
   </component>
   <component name="TemplatesService">
     <option name="TEMPLATE_CONFIGURATION" value="Django" />

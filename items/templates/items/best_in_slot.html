@@ -1,5 +1,10 @@
-{% extends 'items/header.html' %}
+{% extends 'items/base.html' %}
+{% load static %}
 {% load markdown_extras %}
+{% block title %}Best in Slot - EQ Archives{% endblock %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'spells/css/eq-ui.css' %}">
+{% endblock %}
 {% block content %}
     <div class="container-fluid eq-window-complex-fancy py-4">
         <div class="row row-cols-9">

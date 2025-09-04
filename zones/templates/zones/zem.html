@@ -36,8 +36,14 @@
                         <tr>
                             <td>{{ zone.long_name }} (<span style="color: #535f50">{{ zone.short_name }}</span>)</td>
                             <td>{{ zone.zone_exp_multiplier }}</td>
-                            <td><img src="{% static "/images/" %}{{ zone.expansion|expansion_icon }}"
-                                     alt="{{ zone.expansion|expansion_icon }}"/></td>
+                            <td style="text-align: right;">
+                                {% if zone.expansion != 99 %}
+                                    <img src="{% static "/images/" %}{{ zone.expansion|expansion_icon }}"
+                                         alt="{{ zone.expansion|expansion_icon }}"/>
+                                {% else %}
+                                    Default
+                                {% endif %}
+                            </td>
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -45,4 +51,18 @@
             </div>
         </div>
     </div>
+{% endblock %}
+{% block extra_js %}
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha384-wsqsSADZR1YRBEZ4/kKHNSmU+aX8ojbnKUMN4RyD3jDkxw5mHtoe2z/T/n4l56U/"
+            crossorigin="anonymous"></script>
+{% endblock %}
+{% block inline_js %}
+    <script>
+        $(document).ready(function () {
+            $("#zem-table").DataTable({
+                order: [[3, 'desc']]
+            });
+        });
+    </script>
 {% endblock %}

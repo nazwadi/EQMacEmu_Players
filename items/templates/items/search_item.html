@@ -1,7 +1,50 @@
-{% extends 'items/header.html' %}
+{% extends 'items/base.html' %}
 {% load data_utilities %}
 {% load static %}
 {% load humanize %}
+{% block extra_css %}
+    <link href="https://cdn.datatables.net/v/bs5/dt-2.0.2/datatables.min.css" rel="stylesheet">
+    <style>
+        /* Only the minimal necessary styles */
+        .tooltip-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tippy-box {
+            position: relative;
+            pointer-events: none;
+            padding: 0;
+            border-radius: 4px;
+            background: transparent;
+        }
+
+        .tippy-box img {
+            max-width: 200px;
+            height: auto;
+            display: block;
+            border-radius: 4px;
+        }
+
+        .hover-link:hover + .tooltip, .tooltip:hover {
+            display: block;
+        }
+
+        .tooltip {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 1px solid #ccc;
+            padding: 8px;
+            display: none;
+            min-width: 200px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 50000;
+        }
+    </style>
+{% endblock %}
+{% block title %}Search Item - EQ Archives{% endblock %}
 {% block content %}
     <div class="container py-4">
         <div class="row">
@@ -11,16 +54,16 @@
                     <summary class="none">
                         <span class="mb-2">Item Search Form</span>
                     </summary>
-                    <form class="p-3 mb-4 bg-body-tertiary border" action="/items/search" method="post">
+                    <form class="p-3 mb-4 border" action="/items/search" method="post">
                         {% csrf_token %}
                         <div class="row mb-4">
                             <div class="col-12 col-md-10">
-                                <div class="form-text text-wrap"><label for="item_name">Item Name</label></div>
+                                <div class="form-label text-wrap"><label for="item_name">Item Name</label></div>
                                 <input type="text" class="form-control" id="item_name" name="item_name"
                                        placeholder="a tattered note">
                             </div>
                             <div class="col-12 col-md-2">
-                                <div class="form-text text-wrap"><label for="query_limit">Query Limit (Max: 200)</label>
+                                <div class="form-label text-wrap"><label for="query_limit">Query Limit (Max: 200)</label>
                                 </div>
                                 <input class="form-control" id="query_limit" name="query_limit" type="number" min="0"
                                        max="200" value="50">
@@ -31,7 +74,7 @@
                             <div class="row mb-4">
                                 <hr/>
                                 <div class="col-12 col-md-2">
-                                    <div class="form-text text-wrap"><label for="player_class">Class</label></div>
+                                    <div class="form-label text-wrap"><label for="player_class">Class</label></div>
                                     <select class="form-select" id="player_class" name="player_class"
                                             aria-label="player_class">
                                         <option value="0" selected>Any</option>
@@ -43,7 +86,7 @@
                                     </select>
                                 </div>
                                 <div class="col-12 col-md-2">
-                                    <div class="form-text text-wrap"><label for="player_race">Race</label></div>
+                                    <div class="form-label text-wrap"><label for="player_race">Race</label></div>
                                     <select class="form-select" id="player_race" name="player_race"
                                             aria-label="player_race">
                                         <option value="0" selected>Any</option>
@@ -55,7 +98,7 @@
                                     </select>
                                 </div>
                                 <div class="col-12 col-md-2">
-                                    <div class="form-text text-wrap"><label for="item_slot">Equip Slot</label></div>
+                                    <div class="form-label text-wrap"><label for="item_slot">Equip Slot</label></div>
                                     <select class="form-select" id="item_slot" name="item_slot" aria-label="item_slot">
                                         <option value="0" selected>Any</option>
                                         {% for slot, slot_name in EQUIPMENT_SLOTS.items %}
@@ -66,7 +109,7 @@
                                     </select>
                                 </div>
                                 <div class="col-12 col-md-2">
-                                    <div class="form-text text-wrap"><label for="item_type">Item Type</label></div>
+                                    <div class="form-label text-wrap"><label for="item_type">Item Type</label></div>
                                     <select class="form-select" id="item_type" name="item_type" aria-label="item_type">
                                         <option value="-1" selected>Any</option>
                                         {% for type, type_name in ITEM_TYPES.items %}
@@ -75,7 +118,7 @@
                                     </select>
                                 </div>
                                 <div class="col-12 col-md-2">
-                                    <div class="form-text text-wrap"><label for="resists_type">Resist Type</label></div>
+                                    <div class="form-label text-wrap"><label for="resists_type">Resist Type</label></div>
                                     <select class="form-select" id="resists_type" name="resists_type">
                                         <option value="Resist">Resist</option>
                                         <option value="mr">Resist Magic</option>
@@ -86,7 +129,7 @@
                                     </select>
                                 </div>
                                 <div class="col-6 col-md-1">
-                                    <div class="form-text text-wrap"><label for="resists_operator">Operator</label>
+                                    <div class="form-label text-wrap"><label for="resists_operator">Operator</label>
                                     </div>
                                     <select class="form-select" id="resists_operator" name="resists_operator">
                                         <option value=">">&gt;</option>
@@ -97,7 +140,7 @@
                                     </select>
                                 </div>
                                 <div class="col-6 col-md-1">
-                                    <div class="form-text text-wrap"><label for="resists_value">Resist Value</label>
+                                    <div class="form-label text-wrap"><label for="resists_value">Resist Value</label>
                                     </div>
                                     <input class="form-control" id="resists_value" name="resists_value" type="number"
                                            min="0"
@@ -107,7 +150,7 @@
                             <div class="row mt-2 mb-4">
                                 <hr/>
                                 <div class="col-xs-4 col-md-2">
-                                    <div class="form-text text-wrap"><label for="stat1">Stat 1</label></div>
+                                    <div class="form-label text-wrap"><label for="stat1">Stat 1</label></div>
                                     <select class="form-select" id="stat1" name="stat1" aria-label="stat1">
                                         <option value="stat1" selected>Stat</option>
                                         {% for key, value in ITEM_STATS.items %}
@@ -116,7 +159,7 @@
                                     </select>
                                 </div>
                                 <div class="col-xs-2 col-md-2">
-                                    <div class="form-text text-wrap"><label for="stat1_operator">Operator</label>
+                                    <div class="form-label text-wrap"><label for="stat1_operator">Operator</label>
                                     </div>
                                     <select class="form-select" id="stat1_operator" name="stat1_operator">
                                         <option value=">">&gt;</option>
@@ -127,14 +170,14 @@
                                     </select>
                                 </div>
                                 <div class="col-xs-2 col-md-2">
-                                    <div class="form-text text-wrap"><label for="stat1_value">Stat 1 Value</label>
+                                    <div class="form-label text-wrap"><label for="stat1_value">Stat 1 Value</label>
                                     </div>
                                     <input class="form-control" id="stat1_value" name="stat1_value" type="number"
                                            min="0"
                                            value="0">
                                 </div>
                                 <div class="col-xs-4 col-md-2">
-                                    <div class="form-text text-wrap"><label for="stat2">Stat 2</label></div>
+                                    <div class="form-label text-wrap"><label for="stat2">Stat 2</label></div>
                                     <select class="form-select" id="stat2" name="stat2" aria-label="stat2">
                                         <option value="stat2" selected>Stat</option>
                                         {% for key, value in ITEM_STATS.items %}
@@ -143,7 +186,7 @@
                                     </select>
                                 </div>
                                 <div class="col-xs-2 col-md-2">
-                                    <div class="form-text text-wrap"><label for="stat2_operator">Operator</label></div>
+                                    <div class="form-label text-wrap"><label for="stat2_operator">Operator</label></div>
                                     <select class="form-select" id="stat2_operator" name="stat2_operator">
                                         <option value=">">&gt;</option>
                                         <option value=">=">&gt;=</option>
@@ -153,7 +196,7 @@
                                     </select>
                                 </div>
                                 <div class="col-xs-4 col-md-2">
-                                    <div class="form-text text-wrap"><label for="stat2_value">Stat 2 Value</label></div>
+                                    <div class="form-label text-wrap"><label for="stat2_value">Stat 2 Value</label></div>
                                     <input class="form-control" id="stat2_value" name="stat2_value" type="number"
                                            min="0"
                                            value="0">
@@ -162,7 +205,7 @@
                             <div class="row mt-2 mb-4">
                                 <hr/>
                                 <div class="col-12 col-md-8">
-                                    <div class="form-text text-wrap"><label for="item_effect">Item Effect</label></div>
+                                    <div class="form-label text-wrap"><label for="item_effect">Item Effect</label></div>
                                     <input type="text" class="form-control" id="item_effect" name="item_effect"
                                            placeholder="Complete Healing">
                                 </div>
@@ -190,7 +233,7 @@
                             <div class="row mb-4">
                                 <hr/>
                                 <div class="col-12 col-xs-4 col-md-4">
-                                    <div class="form-text text-wrap"><label for="container_select">Container
+                                    <div class="form-label text-wrap"><label for="container_select">Container
                                         Type</label>
                                     </div>
                                     <select class="form-select" id="container_select" name="container_select">
@@ -201,7 +244,7 @@
                                     </select>
                                 </div>
                                 <div class="col-12 col-xs-4 col-md-4">
-                                    <div class="form-text text-wrap"><label for="container_slots">Container Slots
+                                    <div class="form-label text-wrap"><label for="container_slots">Container Slots
                                         >=</label>
                                     </div>
                                     <input class="form-control" id="container_slots" name="container_slots"
@@ -210,7 +253,7 @@
                                            value="0">
                                 </div>
                                 <div class="col-12 col-xs-4 col-md-4">
-                                    <div class="form-text text-wrap"><label for="container_wr">Container Weight
+                                    <div class="form-label text-wrap"><label for="container_wr">Container Weight
                                         Reduction
                                         >=</label>
                                     </div>
@@ -233,7 +276,7 @@
             </div>
         </div>
         {% if search_results %}
-            <div class="row py-5 bg-body bg-body-tertiary bg-border table-responsive">
+            <div class="row py-5 bg-border table-responsive">
                 <div class="col">
                     <h1 class="text-center">Search Results</h1>
                     <table id="search-results-table" class="display table table-striped">
@@ -256,4 +299,41 @@
             </div>
         {% endif %}
     </div>
+{% endblock %}
+{% block extra_js %}
+    <script src="https://cdn.datatables.net/v/bs5/dt-2.0.2/datatables.min.js"></script>
+    <script src="https://unpkg.com/tippy.js@6"></script>
+{% endblock %}
+{% block inline_js %}
+    <script>
+    $(document).ready(function () {
+        $("#search-results-table").DataTable({
+            order: [[3, 'desc']],
+            pageLength: 50
+        });
+        $("#recent-discoveries-table").DataTable({
+            order: [[3, 'desc']],
+            pageLength: 50
+        });
+    });
+    document.addEventListener('DOMContentLoaded', function () {
+        tippy('.tooltip-link', {
+            content: 'Loading...',
+            allowHTML: true,
+            interactive: true,
+            placement: 'right',
+            onShow(instance) {
+                const url = instance.reference.dataset.url;
+                fetch(`/items/api/${encodeURIComponent(url)}`)
+                    .then(response => response.text())
+                    .then(content => {
+                        instance.setContent(content);
+                    })
+                    .catch(error => {
+                        instance.setContent(`Failed to load data: ${error}`);
+                    });
+            }
+        });
+    });
+    </script>
 {% endblock %}

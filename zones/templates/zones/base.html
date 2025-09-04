@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/eq-ui.css' %}">
+    <link href="https://cdn.datatables.net/v/bs5/dt-2.0.2/datatables.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/buttons/3.1.2/css/buttons.dataTables.css" rel="stylesheet">
+{% endblock %}
+{% block extra_js %}
+    <script src="https://cdn.datatables.net/v/bs5/dt-2.0.2/datatables.min.js"></script>
+{% endblock %}

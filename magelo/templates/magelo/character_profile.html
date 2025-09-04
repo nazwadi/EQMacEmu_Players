@@ -1,12 +1,13 @@
-{% extends 'magelo/header.html' %}
+{% extends 'magelo/base.html' %}
 {% load static %}
 {% load data_utilities %}
+{% block title %}EQA Character Browser - {{ character_name }}'s Profile{% endblock %}
 {% block content %}
     <div class="container-fluid container-lg py-4">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{% url 'accounts:index' %}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{% url 'magelo:search' %}">Character Browser</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'magelo:search' %}">Character Search</a></li>
                 <li class="breadcrumb-item active" aria-current="page">{{ character.name }}</li>
             </ol>
         </nav>

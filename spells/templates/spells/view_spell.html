@@ -1,6 +1,10 @@
-{% extends 'spells/header.html' %}
+{% extends 'spells/base.html' %}
+{% load static %}
 {% load data_utilities %}
 {% load spell_page_tags %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'spells/css/eq-ui.css' %}">
+{% endblock %}
 {% block content %}
     {% if scrolls|length == 0 %}
         <div class="mt-3 border text-center alert alert-dark"><img src="/static/images/flag_topbox.png">&nbsp;This

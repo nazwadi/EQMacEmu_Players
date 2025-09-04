@@ -1,7 +1,11 @@
-{% extends 'characters/header.html' %}
+{% extends 'accounts/base.html' %}
+{% load static %}
 
-<!--Block content goes below-->
+{% block title %}Server List - EQ Archives{% endblock %}
 
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/eq-ui.css' %}">
+{% endblock %}
 {% block content %}
 
     <div class="container py-5">
