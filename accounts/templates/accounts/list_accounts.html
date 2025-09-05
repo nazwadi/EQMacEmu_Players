@@ -19,28 +19,33 @@
                     <li>World Server Account</li>
                 </ol>
                 <h5>Login Server</h5>
-                <p>The first account is created on the login server. These are the accounts you see here in the list on this
-                page.  From the player's perspective on the game client, this account is the one you use to
-                reach the Server Select screen to get a list of available servers. Each server you see at server
-                select is called a "world server".  When the world server's come online, they have to register with
-                a login server so that players have a way to find and connect to them. Once a player selects a world
-                server, the login server does a hand off with the world server - connecting the player to that world
-                server.</p>
+                <p>The first account is created on the login server. These are the accounts you see here in the list on
+                    this
+                    page. From the player's perspective on the game client, this account is the one you use to
+                    reach the Server Select screen to get a list of available servers. Each server you see at server
+                    select is called a "world server". When the world server's come online, they have to register with
+                    a login server so that players have a way to find and connect to them. Once a player selects a world
+                    server, the login server does a hand off with the world server - connecting the player to that world
+                    server.</p>
                 <h5>World Server</h5>
                 <p>Players are first connected to the world server at the Character Select screen.</p>
-                <p>A world server can register to multiple login servers.  For example, the EQA world server is registered
-                with, and thus discoverable, from the EQA, TAKP, and EQEMU login servers.  When a player reaches the
-                Character Select screen in the game client, that is the first point that they are actually connected
-                to a world server.</p>
+                <p>A world server can register to multiple login servers. For example, the EQA world server is
+                    registered
+                    with, and thus discoverable, from the EQA, TAKP, and EQEMU login servers. When a player reaches the
+                    Character Select screen in the game client, that is the first point that they are actually connected
+                    to a world server.</p>
                 <p>While it is possible to use multiple login servers to connect to a world server, you cannot use the
-                same account name.  The reason for this is simple: each login server operates independently and will not
-                stop you from creating an account name that is unique from its perspective.  In practice this means
-                that TAKP, EQA, and EQEMU could all have accounts named Soandso.  However, a world server requires account
-                names to be unique as well.  So the first login server to connect to a world server gets to reserve an
-                account name.</p>
+                    same account name. The reason for this is simple: each login server operates independently and will
+                    not
+                    stop you from creating an account name that is unique from its perspective. In practice this means
+                    that TAKP, EQA, and EQEMU could all have accounts named Soandso. However, a world server requires
+                    account
+                    names to be unique as well. So the first login server to connect to a world server gets to reserve
+                    an
+                    account name.</p>
                 <h6>1017 Error at Server Select</h6>
                 <p>When you try to connect to a world server and get a 1017 error, this usually means that your account
-                name is not unique on that world server and was already taken by another login server.</p>
+                    name is not unique on that world server and was already taken by another login server.</p>
 
             </article>
         </div>
@@ -59,8 +64,11 @@
             </a>
         </p>
         <div class="row">
-            <div class="col d-flex mb-3 flex-row-reverse">
+            <div class="col d-flex gap-3 mb-3 flex-row-reverse">
                 <a href="/accounts/create" class="btn btn-primary" role="button">Create Account</a>
+                <a href="/accounts/convert-to-trader" class="btn btn-outline-warning" style="min-width: 170px;white-space: nowrap">
+                    <i class="fas fa-coins me-1"></i>&nbsp;Manage Traders
+                </a>
             </div>
         </div>
         {% render_table table %}

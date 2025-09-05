@@ -1,0 +1,202 @@
+{% extends 'accounts/base.html' %}
+{% load static %}
+
+{% block title %}Manage Trader Accounts - EQ Archives{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/eq-ui.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="container py-5">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'accounts:list_accounts' %}">Login Server Accounts</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Manage Trader Accounts</li>
+            </ol>
+        </nav>
+
+        <h1>Manage Trader Accounts</h1>
+        <p class="text-muted">Convert eligible accounts to trader accounts for commerce activities.</p>
+
+        <!-- Status Section -->
+        <div class="eq-window-simple mb-4">
+            <h3 class="eq-header">Current Status</h3>
+            <div class="d-flex align-items-center gap-3">
+                <div class="trader-status">
+                    <span class="h4">{{ mule_count }} of {{ max_mules }}</span>
+                    <small class="text-muted d-block">Trader accounts used</small>
+                </div>
+                {% if at_limit %}
+                    <div class="alert alert-warning mb-0">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        You have reached the maximum number of trader accounts.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if at_limit %}
+            <div class="eq-window-simple">
+                <h4 class="eq-header">Maximum Trader Accounts Reached</h4>
+                <p>You already have the maximum number of trader accounts ({{ max_mules }}). Your current trader
+                    accounts are:</p>
+
+                <div class="trader-accounts-list mb-3">
+                    {% for trader in trader_accounts %}
+                        <div class="trader-account-item">
+                            <i class="fas fa-coins text-warning me-2"></i>
+                            <a href="{% url 'characters:list' trader.name %}">{{ trader.name }}</a>
+                            <small class="text-muted">(Trader Account)</small>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <p class="text-muted">You may not convert additional accounts per current server policy.</p>
+
+                <div class="mt-3">
+                    <a href="{% url 'accounts:list_accounts' %}" class="btn btn-primary">Back to Accounts</a>
+                </div>
+            </div>
+
+        {% elif no_eligible %}
+            <div class="eq-window-simple">
+                <h4 class="eq-header">No Eligible Accounts for Conversion</h4>
+
+                {% if has_orphaned %}
+                    <div class="alert alert-info mb-3">
+                        <h6><i class="fas fa-info-circle me-2"></i>Accounts Need Game Login</h6>
+                        <p class="mb-2">You have {{ orphaned_count }} login server account{{ orphaned_count|pluralize }}
+                            that haven't been used to log into the game yet.</p>
+                        <p class="mb-0"><strong>To convert accounts to trader accounts:</strong> Log into character
+                            select with each account at least once, then return here.</p>
+                    </div>
+                {% endif %}
+
+                <div class="mb-3">
+                    <p>To convert an account to a trader account, it must:</p>
+                    <ul>
+                        <li>Have been used to log into character select (creates world server account)</li>
+                        <li>Not already be a trader account</li>
+                        <li>Have no characters (fresh account only)</li>
+                    </ul>
+                </div>
+
+                <div class="mt-3">
+                    {% if has_orphaned %}
+                        <p class="text-muted">Log into the game with your login server accounts, then return here to
+                            convert them.</p>
+                    {% else %}
+                        <a href="{% url 'accounts:create_account' %}" class="btn btn-primary me-2">Create New
+                            Account</a>
+                    {% endif %}
+                    <a href="{% url 'accounts:list_accounts' %}" class="btn btn-outline-secondary">Back to Accounts</a>
+                </div>
+            </div>
+
+        {% else %}
+            <!-- Show conversion interface -->
+            <form method="post" id="conversionForm">
+                {% csrf_token %}
+
+                <!-- Account Selection -->
+                <div class="eq-window-simple mb-4">
+                    <h3 class="eq-header">Select Account to Convert</h3>
+                    <p class="text-muted mb-3">Choose one account to convert to a trader account. This action is
+                        permanent.</p>
+
+                    <div class="account-selection-grid">
+                        {% for account in eligible_accounts %}
+                            <div class="account-card selectable" data-account-id="{{ account.id }}">
+                                <div class="account-header">
+                                    <h5>{{ account.name }}</h5>
+                                    <span class="badge bg-success">Eligible</span>
+                                </div>
+                                <div class="account-details">
+                                    <small class="text-muted">Characters: 0</small>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <input type="hidden" name="account_id" id="selectedAccountId">
+                </div>
+
+                <!-- Confirmation Section -->
+                <div class="eq-window-simple mb-4" id="confirmationSection" style="display: none;">
+                    <h4 class="eq-header">Confirm Conversion</h4>
+                    <div class="alert alert-warning">
+                        <h6><i class="fas fa-exclamation-triangle me-2"></i>Important Information</h6>
+                        <ul class="mb-0">
+                            <li>This conversion is <strong>permanent</strong> and cannot be undone</li>
+                            <li>Trader accounts are intended for commerce and trading activities</li>
+                            <li>You can only have {{ max_mules }} trader accounts total</li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="confirmationText" class="form-label">
+                            Type <strong>CONVERT</strong> to confirm:
+                        </label>
+                        <input type="text" class="form-control" name="confirmation" id="confirmationText"
+                               placeholder="Type CONVERT here" autocomplete="off">
+                    </div>
+
+                    <div class="d-flex gap-3">
+                        <button type="submit" class="btn btn-warning" id="confirmButton" disabled>
+                            <i class="fas fa-coins me-2"></i>Convert to Trader Account
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" id="cancelButton">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </form>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block inline_js %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const accountCards = document.querySelectorAll('.account-card');
+            const confirmationSection = document.getElementById('confirmationSection');
+            const selectedAccountInput = document.getElementById('selectedAccountId');
+            const confirmationText = document.getElementById('confirmationText');
+            const confirmButton = document.getElementById('confirmButton');
+            const cancelButton = document.getElementById('cancelButton');
+
+            // Account selection
+            accountCards.forEach(card => {
+                card.addEventListener('click', function () {
+                    // Remove selection from other cards
+                    accountCards.forEach(c => c.classList.remove('selected'));
+
+                    // Select this card
+                    this.classList.add('selected');
+
+                    // Set hidden input
+                    selectedAccountInput.value = this.dataset.accountId;
+
+                    // Show confirmation section
+                    confirmationSection.style.display = 'block';
+                    confirmationSection.scrollIntoView({behavior: 'smooth'});
+                });
+            });
+
+            // Confirmation text validation
+            confirmationText.addEventListener('input', function () {
+                confirmButton.disabled = this.value.trim() !== 'CONVERT';
+            });
+
+            // Cancel button
+            cancelButton.addEventListener('click', function () {
+                // Reset form
+                accountCards.forEach(c => c.classList.remove('selected'));
+                selectedAccountInput.value = '';
+                confirmationText.value = '';
+                confirmButton.disabled = true;
+                confirmationSection.style.display = 'none';
+            });
+        });
+    </script>
+{% endblock %}

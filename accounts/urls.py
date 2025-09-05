@@ -14,4 +14,5 @@ urlpatterns = [
     path("create", views.create_account, name="create_account"),
     path("delete/<int:pk>", views.delete_account, name="delete_account"),
     path("update/<int:pk>", views.update_account, name="update_account"),
+    path('convert-to-trader/', views.convert_to_trader, name='convert_to_trader'),
 ]
