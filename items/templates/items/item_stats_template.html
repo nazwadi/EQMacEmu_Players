@@ -54,7 +54,9 @@
             Skill Mod: {{ item.skill_mod_type|player_skill }} +{{ item.skill_mod_value }}%<br/>
         {% endif %}
         {% if item.focus_effect and item.focus_effect > 0 and focus_effect_name %}
-            Focus: {{ focus_effect_name }}<br/>
+            Focus: <a style="text-decoration:none;color:#00ba00;"
+                      href="/spells/view/{{ item.focus_effect }}"
+                      target="_blank">{{ focus_effect_name }}</a><br/>
         {% endif %}
         {% if item.rec_level %}Recommended level of {{ item.rec_level }}.<br/>{% endif %}
         {# stackable == 3 means Spell Effect; this field is perhaps poorly named  #}
