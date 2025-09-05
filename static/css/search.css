@@ -1,18 +1,102 @@
-/* Search Modal Styling */
+/* Search Modal Dark Mode Styling - Updated to match main.css dark theme */
+
+/* Modal backdrop and positioning */
 #searchModal .modal-dialog {
     margin-top: 10vh;
 }
 
+/* Modal content - dark theme */
+#searchModal .modal-content {
+    background-color: var(--bg-secondary) !important;
+    border: 2px solid var(--border-color) !important;
+    border-radius: 8px !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6) !important;
+}
+
+/* Modal backdrop */
+#searchModal .modal-backdrop {
+    background-color: rgba(0, 0, 0, 0.7) !important;
+}
+
+/* Search input section */
+#searchModal .border-bottom {
+    border-bottom: 1px solid var(--border-color) !important;
+    background-color: var(--bg-tertiary) !important;
+}
+
+/* Main search input */
+#searchInput {
+    background-color: var(--bg-secondary) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-primary) !important;
+    border-radius: 6px !important;
+}
+
+#searchInput:focus {
+    background-color: var(--bg-tertiary) !important;
+    border-color: var(--accent-color) !important;
+    color: var(--text-primary) !important;
+    box-shadow: 0 0 0 0.25rem rgba(252, 199, 33, 0.25) !important;
+}
+
+#searchInput::placeholder {
+    color: var(--text-muted) !important;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+/* Search icon */
+#searchModal .fa-search {
+    color: var(--text-muted) !important;
+}
+
+/* Clear search button */
+#clearSearchBtn {
+    background: none !important;
+    border: none !important;
+    padding: 0.25rem !important;
+    line-height: 1;
+    color: var(--text-muted) !important;
+    text-decoration: none !important;
+    transition: all 0.15s ease;
+}
+
+#clearSearchBtn:hover {
+    color: var(--accent-color) !important;
+    transform: scale(1.1);
+}
+
+#clearSearchBtn:focus {
+    box-shadow: 0 0 0 0.125rem rgba(252, 199, 33, 0.25) !important;
+    outline: none !important;
+}
+
+/* Results area */
+#searchResults {
+    background-color: var(--bg-secondary) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Default/placeholder text in results */
+#searchResults .text-muted {
+    color: var(--text-secondary) !important;
+}
+
+/* List group items for search results */
 #searchModal .list-group-item {
+    background-color: var(--bg-secondary) !important;
+    border-color: var(--border-light) !important;
+    color: var(--text-primary) !important;
     border-left: none;
     border-right: none;
     border-radius: 0;
-    transition: background-color 0.15s ease;
+    transition: all 0.15s ease;
 }
 
 #searchModal .list-group-item:hover {
-    background-color: var(--bs-primary-bg-subtle);
-    border-color: var(--bs-primary-border-subtle);
+    background-color: rgba(123, 113, 74, 0.1) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-primary) !important;
 }
 
 #searchModal .list-group-item:first-child {
@@ -23,82 +107,67 @@
     border-bottom: none;
 }
 
-/* Search input focus styling */
-#searchInput:focus {
-    border: 0;
-    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+/* Links within search results */
+#searchModal .list-group-item a {
+    color: #d4b866 !important; /* Muted gold to match your table links */
+    text-decoration: none;
 }
 
-/* Item icon styling in search results */
+#searchModal .list-group-item a:hover {
+    color: var(--accent-color) !important;
+}
+
+/* Item icons in search results */
 #searchResults .list-group-item img {
     object-fit: contain;
     flex-shrink: 0;
     border-radius: 2px;
+    border: 1px solid var(--border-light);
 }
 
-/* Clear search button */
-#clearSearchBtn {
-    background: none !important;
-    border: none !important;
-    padding: 0.25rem !important;
-    line-height: 1;
-    color: var(--bs-secondary) !important;
-    text-decoration: none !important;
+/* Close button for mobile */
+#searchModal .btn-close {
+    filter: invert(1) !important;
+    opacity: 0.8 !important;
+    background-color: rgba(0, 0, 0, 0.1) !important;
+    border-radius: 50% !important;
+    padding: 0.5rem !important;
 }
 
-#clearSearchBtn:hover {
-    color: var(--bs-danger) !important;
-    transform: scale(1.1);
-    transition: all 0.15s ease;
+#searchModal .btn-close:hover {
+    opacity: 1 !important;
+    filter: invert(1) sepia(1) saturate(5) hue-rotate(35deg) !important;
+    background-color: rgba(252, 199, 33, 0.1) !important;
 }
 
-#clearSearchBtn:focus {
-    box-shadow: 0 0 0 0.125rem rgba(220, 53, 69, 0.25) !important;
-}
-
-/* Responsive close button - hide on desktop (768px+), show on mobile */
+/* Responsive close button visibility */
 @media (min-width: 768px) {
     .modal-close-mobile-only {
         display: none !important;
     }
 }
 
-/* Make sure it's visible and accessible on mobile */
 @media (max-width: 767px) {
     .modal-close-mobile-only {
         display: block !important;
     }
 }
 
-/* Screen reader only text */
-.visually-hidden {
-    position: absolute !important;
-    width: 1px !important;
-    height: 1px !important;
-    padding: 0 !important;
-    margin: -1px !important;
-    overflow: hidden !important;
-    clip: rect(0, 0, 0, 0) !important;
-    white-space: nowrap !important;
-    border: 0 !important;
-}
-
 /* Focus indicators for keyboard navigation */
 #searchModal .list-group-item:focus {
-    outline: 2px solid #0d6efd;
+    outline: 2px solid var(--accent-color) !important;
     outline-offset: 2px;
     z-index: 1;
 }
 
-/* High contrast focus for clear button */
 #clearSearchBtn:focus {
-    outline: 2px solid #0d6efd;
+    outline: 2px solid var(--accent-color) !important;
     outline-offset: 2px;
 }
 
-/* Loading skeleton styles */
+/* Dark mode skeleton loading styles */
 .skeleton {
-    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background: linear-gradient(90deg, var(--bg-tertiary) 25%, var(--bg-content) 50%, var(--bg-tertiary) 75%) !important;
     background-size: 200% 100%;
     animation: loading 1.5s infinite;
 }
@@ -114,7 +183,8 @@
 
 .skeleton-item {
     padding: 12px 16px;
-    border-bottom: 1px solid #dee2e6;
+    border-bottom: 1px solid var(--border-light);
+    background-color: var(--bg-secondary) !important;
 }
 
 .skeleton-icon {
@@ -147,13 +217,7 @@
     margin-bottom: 8px;
 }
 
-/* Dark mode skeleton (optional - adapts to Bootstrap themes) */
-[data-bs-theme="dark"] .skeleton {
-    background: linear-gradient(90deg, #2d3748 25%, #4a5568 50%, #2d3748 75%);
-    background-size: 200% 100%;
-}
-
-/* Search history styles */
+/* Search history styles - dark mode */
 .search-history-item {
     cursor: pointer;
     padding: 8px 12px;
@@ -162,19 +226,21 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    background-color: var(--bg-secondary) !important;
+    color: var(--text-primary) !important;
 }
 
 .search-history-item:hover {
-    background-color: var(--bs-light);
+    background-color: rgba(123, 113, 74, 0.1) !important;
 }
 
 .search-history-item .history-text {
     flex-grow: 1;
-    color: var(--bs-secondary);
+    color: var(--text-secondary) !important;
 }
 
 .search-history-item .history-icon {
-    color: var(--bs-secondary);
+    color: var(--text-muted) !important;
     font-size: 0.875rem;
     margin-right: 8px;
 }
@@ -182,7 +248,7 @@
 .search-history-item .remove-history {
     opacity: 0;
     transition: opacity 0.15s ease;
-    color: var(--bs-danger);
+    color: #dc3545 !important; /* Keep red for danger/remove actions */
     font-size: 0.75rem;
     padding: 2px 4px;
     border-radius: 2px;
@@ -193,12 +259,12 @@
 }
 
 .search-history-item .remove-history:hover {
-    background-color: var(--bs-danger-bg-subtle);
+    background-color: rgba(220, 53, 69, 0.1) !important;
 }
 
 .search-history-header {
     font-size: 0.75rem;
-    color: var(--bs-secondary);
+    color: var(--text-secondary) !important;
     text-transform: uppercase;
     font-weight: 600;
     margin-bottom: 8px;
@@ -207,20 +273,16 @@
 
 .search-history-clear {
     font-size: 0.75rem;
-    color: var(--bs-primary);
+    color: var(--link-color) !important;
     cursor: pointer;
     text-decoration: underline;
 }
 
 .search-history-clear:hover {
-    color: var(--bs-primary-dark);
+    color: var(--accent-color) !important;
 }
 
-/* Placeholder suggestion animation */
-#searchInput::placeholder {
-    transition: opacity 0.3s ease;
-}
-
+/* Placeholder animation classes */
 .placeholder-fade-out {
     opacity: 0 !important;
 }
@@ -229,23 +291,146 @@
     opacity: 1 !important;
 }
 
-/* No results styling */
+/* Popular search tags */
 .popular-search-tag {
     cursor: pointer;
     transition: all 0.15s ease;
+    background-color: var(--bg-tertiary) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-color) !important;
 }
 
 .popular-search-tag:hover {
-    background-color: var(--bs-primary) !important;
+    background-color: var(--accent-color) !important;
+    color: var(--bg-dark) !important;
     transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(252, 199, 33, 0.3);
+    border-color: var(--accent-color) !important;
 }
 
+/* Enhanced alert styling for dark mode */
+.alert-info {
+    background-color: rgba(138, 163, 255, 0.1) !important; /* Using your link color */
+    border: 1px solid rgba(138, 163, 255, 0.3) !important;
+    border-left: 3px solid var(--link-color) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Category badges in search results */
+.badge {
+    background-color: var(--bg-tertiary) !important;
+    color: var(--text-secondary) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+.badge.bg-primary {
+    background: linear-gradient(135deg, var(--link-color) 0%, #6b8cff 100%) !important;
+    color: white !important;
+    border: none !important;
+}
+
+.badge.bg-secondary {
+    background-color: var(--bg-content) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+/* Utility classes */
 .cursor-pointer {
     cursor: pointer;
 }
 
-/* Enhanced alert styling */
-.alert-info.bg-primary.bg-opacity-10 {
-    border-left: 3px solid var(--bs-primary);
+/* Text colors for various elements */
+.text-primary {
+    color: var(--link-color) !important;
+}
+
+.text-secondary {
+    color: var(--text-secondary) !important;
+}
+
+.text-muted {
+    color: var(--text-muted) !important;
+}
+
+/* Search result category headers */
+.search-category-header {
+    background-color: var(--bg-tertiary) !important;
+    color: var(--accent-color) !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+}
+
+/* Search result item enhancements */
+.search-result-item {
+    border-bottom: 1px solid var(--border-light) !important;
+    transition: all 0.2s ease !important;
+    padding: 0.75rem !important;
+}
+
+.search-result-item:hover {
+    background-color: rgba(123, 113, 74, 0.1) !important;
+    border-radius: 4px !important;
+}
+
+.search-result-item h6 {
+    color: var(--text-primary) !important;
+    margin-bottom: 0.25rem;
+}
+
+.search-result-item .search-result-description {
+    color: var(--text-secondary) !important;
+    font-size: 0.875rem;
+}
+
+.search-result-item .search-result-meta {
+    color: var(--text-muted) !important;
+    font-size: 0.75rem;
+}
+
+/* Loading state */
+.search-loading {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-secondary) !important;
+}
+
+.search-loading .spinner-border {
+    color: var(--accent-color) !important;
+    width: 2rem;
+    height: 2rem;
+}
+
+/* No results state */
+.search-no-results {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-secondary) !important;
+}
+
+.search-no-results .fa-search {
+    font-size: 3rem;
+    color: var(--text-muted) !important;
+    margin-bottom: 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    #searchModal .modal-dialog {
+        margin: 5vh 1rem;
+        max-width: none;
+    }
+
+    #searchModal .modal-content {
+        border-radius: 6px !important;
+    }
+
+    #searchInput {
+        font-size: 16px; /* Prevent zoom on iOS */
+    }
+
+    .search-result-item {
+        padding: 0.5rem !important;
+    }
 }
