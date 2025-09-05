@@ -507,7 +507,8 @@ def character_aas(request: HttpRequest, character_name: str) -> HttpResponse:
         'character': character,
         'tabs': tabs,
         'boxes': boxes,
-        'spent_aa': spent_aa,
+        'POINTS_SPENT': character.aa_points_spent,
+        'AA_POINTS': character.aa_points,
     }
     return render(request=request, template_name='magelo/alternate_advancement.html', context=context)
 
