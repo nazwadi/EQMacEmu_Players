@@ -1,4 +1,4 @@
-{% extends 'quests/header.html' %}
+{% extends 'quests/base.html' %}
 {% load static %}
 {% load expansion_filters %}
 {% load data_utilities %}
@@ -257,4 +257,22 @@
             </section>
         {% endif %} {# End if quest exists #}
     </main>
+{% endblock %}
+{% block inline_js %}
+    <script>
+        // Enable checkboxes
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.disabled = false;
+        });
+
+        // Back to Top functionality
+        window.onscroll = function() {
+            const backToTop = document.querySelector('.back-to-top');
+            if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+                backToTop.style.display = 'block';
+            } else {
+                backToTop.style.display = 'none';
+            }
+        };
+    </script>
 {% endblock %}
