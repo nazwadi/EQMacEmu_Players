@@ -422,6 +422,7 @@ def view_item(request, item_id):
                       "obj_path": obj_path,
                       "drops_from": drops_from,
                       "effect_name": effect_name,
+                      "focus_effect_name": focus_effect_name,
                       "og_description": item.generate_og_description(effect_name, focus_effect_name),
                       "created_by_these_tradeskill_recipes": created_by_these_tradeskill_recipes,
                       "used_in_these_tradeskill_recipes": used_in_these_tradeskill_recipes,
@@ -450,7 +451,7 @@ def item_detail_api(request: HttpRequest, item_id: int) -> HttpResponse:
         print(f"Step 1: SUCCESS - fetched item: {item.Name}")
 
         print(f"Step 2: Calling get_item_effect...")
-        effect_name, effect_id = get_item_effect(item)
+        effect_name, effect_id, focus_effect_name = get_item_effect(item)
         print(f"Step 2: SUCCESS - effect result: name={effect_name}, id={effect_id}")
 
         print(f"Step 3: Rendering template...")
@@ -459,6 +460,7 @@ def item_detail_api(request: HttpRequest, item_id: int) -> HttpResponse:
             template_name="items/item_stats_template.html",
             context={
                 "effect_name": effect_name,
+                "focus_effect_name": focus_effect_name,
                 "item": item,
             }
         )

@@ -49,6 +49,13 @@
             {% if item.pr %}SV POISON:&nbsp;+{{ item.pr }}{% endif %}
             <br/>
         {% endif %}
+        {# Focus effects and skill modifiers #}
+        {% if item.skill_mod_value and item.skill_mod_value != 0 %}
+            Skill Mod: {{ item.skill_mod_type|player_skill }} +{{ item.skill_mod_value }}%<br/>
+        {% endif %}
+        {% if item.focus_effect and item.focus_effect > 0 and focus_effect_name %}
+            Focus: {{ focus_effect_name }}<br/>
+        {% endif %}
         {% if item.rec_level %}Recommended level of {{ item.rec_level }}.<br/>{% endif %}
         {# stackable == 3 means Spell Effect; this field is perhaps poorly named  #}
         {% if item.stackable == 3 %}
@@ -71,8 +78,8 @@
             {% endif %}
             {% if item.proc_type == 0 and item.proc_effect > 0 %}
                 Effect:&nbsp;<a style="text-decoration:none;color:#00ba00;"
-                          href="https://lucy.alkabor.com/spell_{{ item.proc_effect }}.html"
-                          target="_blank">{{ effect_name }}</a>&nbsp;(Combat, Casting Time:
+                                href="https://lucy.alkabor.com/spell_{{ item.proc_effect }}.html"
+                                target="_blank">{{ effect_name }}</a>&nbsp;(Combat, Casting Time:
                 {% if item.cast_time == 0 %}
                     Instant{% else %}{{ item.cast_time|ms_to_seconds }} sec{% endif %}) at Level
                 {{ item.proc_level }}<br/>
