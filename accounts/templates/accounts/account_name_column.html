@@ -1,0 +1,6 @@
+<a href="{% url 'characters:list' record.AccountName %}">
+    {% if record.is_mule %}
+        <i class="fas fa-coins text-warning me-1" title="Trader (Mule) Account"></i>
+    {% endif %}
+    {{ record.AccountName }}
+</a>

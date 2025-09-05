@@ -85,7 +85,23 @@ def register_request(request):
 
 @login_required
 def accounts(request):
-    table = LoginServerAccountTable(LoginServerAccounts.objects.filter(ForumName=request.user.username))
+    from django.db.models import Case, When, IntegerField
+
+    # Get mule account IDs from the world server
+    mule_lsaccount_ids = Account.objects.filter(mule=1).values_list('lsaccount_id', flat=True)
+
+    # Create annotated queryset with mule status
+    queryset = LoginServerAccounts.objects.filter(
+        ForumName=request.user.username
+    ).annotate(
+        is_mule=Case(
+            When(LoginServerID__in=list(mule_lsaccount_ids), then=1),
+            default=0,
+            output_field=IntegerField()
+        )
+    )
+
+    table = LoginServerAccountTable(queryset)
 
     RequestConfig(request).configure(table)
 

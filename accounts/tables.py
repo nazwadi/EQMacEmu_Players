@@ -5,7 +5,11 @@ from .models import LoginServerAccounts
 
 
 class LoginServerAccountTable(ExportMixin, tables.Table):
-    AccountName = tables.LinkColumn("characters:list", args=[Accessor("AccountName")])
+    AccountName = tables.TemplateColumn(
+        template_name='accounts/account_name_column.html',
+        verbose_name='Account Name'
+    )
+    # AccountName = tables.LinkColumn("characters:list", args=[Accessor("AccountName")])
     update = tables.LinkColumn('accounts:update_account',
                                text="Update",
                                args=[Accessor('pk')],

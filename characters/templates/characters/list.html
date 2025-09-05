@@ -19,15 +19,25 @@
                                             </li>
                                         </ol>
                                     </nav>
+                                    {% if is_mule %}
+                                        <div class="eq-mule-alert mb-3" role="alert">
+                                            <div class="eq-mule-alert-content">
+                                                <i class="fas fa-coins eq-mule-icon"></i>
+                                                <div class="eq-mule-text">
+                                                    <strong>Trader Account</strong>
+                                                    <span class="eq-mule-description">This account is configured for trading and commerce activities.</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
                                     <div class="eq-window-fancy">
                                         <div class="row">
                                             <div class="WindowNestedTan col">
                                                 <div class="WindowNestedTanTitleBar eq-header">
-                                                    {% if is_mule %}
-                                                        <p class="text-warning"><i class="fas fa-coins"></i>&nbsp;TRADER
-                                                            (MULE) Account</p>
-                                                    {% endif %}
                                                     <h1>Character List</h1>
+                                                    <div class="text-muted small">
+                                                        Account: {{ game_account_name }}
+                                                    </div>
                                                 </div>
                                             </div>
                                             <table class="eq-table eq-highlight-rows" style="display: table">
