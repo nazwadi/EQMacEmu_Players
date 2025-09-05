@@ -50,6 +50,61 @@ class Items(models.Model):
     proc_level = models.IntegerField(null=False, default=0, db_column='proclevel')
     proc_effect = models.IntegerField(null=False, default=0, db_column='proceffect')
     cast_time = models.IntegerField(null=False, default=0, db_column='casttime')
+    focus_effect = models.IntegerField(null=False, default=0, db_column='focuseffect')
+    focus_type = models.IntegerField(null=False, default=0, db_column='focustype')
+    focus_level = models.IntegerField(null=False, default=0, db_column='focuslevel')
+    focus_level2 = models.IntegerField(null=False, default=0, db_column='focuslevel2')
+    skill_mod_type = models.IntegerField(null=False, default=0, db_column='skillmodtype')
+    skill_mod_value = models.IntegerField(null=False, default=0, db_column='skillmodvalue')
+    proc_level2 = models.IntegerField(null=False, default=0, db_column='proclevel2')
+    cast_time2 = models.IntegerField(null=False, default=0, db_column='casttime_')
+    click_level = models.IntegerField(null=False, default=0, db_column='clicklevel')
+    click_level2 = models.IntegerField(null=False, default=0, db_column='clicklevel2')
+    scroll_level = models.IntegerField(null=False, default=0, db_column='scrolllevel')
+    scroll_level2 = models.IntegerField(null=False, default=0, db_column='scrolllevel2')
+    material = models.IntegerField(null=False, default=0)
+    color = models.IntegerField(null=False, default=0)
+    light = models.IntegerField(null=False, default=0)
+    filename = models.CharField(max_length=32, null=False)
+    book = models.IntegerField(null=False, default=0)
+    booktype = models.IntegerField(null=False, default=0)
+    tradeskills = models.IntegerField(null=False, default=0)
+    stacksize = models.IntegerField(null=False, default=0)
+    recast_delay = models.IntegerField(null=False, default=0, db_column='recastdelay')
+    recast_type = models.IntegerField(null=False, default=0, db_column='recasttype')
+    proc_rate = models.IntegerField(null=False, default=0, db_column='procrate')
+    range = models.IntegerField(null=False, default=0)
+    req_level = models.IntegerField(null=False, default=0, db_column='reqlevel')
+    rec_skill = models.IntegerField(null=False, default=0, db_column='recskill')
+    item_class = models.IntegerField(null=False, default=0, db_column='itemclass')
+    sell_rate = models.FloatField(null=False, default=0, db_column='sellrate')
+    fv_nodrop = models.IntegerField(null=False, default=0, db_column='fvnodrop')
+    bane_dmg_amt = models.IntegerField(null=False, default=0, db_column='banedmgamt')
+    bane_dmg_body = models.IntegerField(null=False, default=0, db_column='banedmgbody')
+    bane_dmg_race = models.IntegerField(null=False, default=0, db_column='banedmgrace')
+    elem_dmg_type = models.IntegerField(null=False, default=0, db_column='elemdmgtype')
+    elem_dmg_amt = models.IntegerField(null=False, default=0, db_column='elemdmgamt')
+    faction_mod1 = models.IntegerField(null=False, default=0, db_column='factionmod1')
+    faction_mod2 = models.IntegerField(null=False, default=0, db_column='factionmod2')
+    faction_mod3 = models.IntegerField(null=False, default=0, db_column='factionmod3')
+    faction_mod4 = models.IntegerField(null=False, default=0, db_column='factionmod4')
+    faction_amt1 = models.IntegerField(null=False, default=0, db_column='factionamt1')
+    faction_amt2 = models.IntegerField(null=False, default=0, db_column='factionamt2')
+    faction_amt3 = models.IntegerField(null=False, default=0, db_column='factionamt3')
+    faction_amt4 = models.IntegerField(null=False, default=0, db_column='factionamt4')
+    bard_type = models.IntegerField(null=False, default=0, db_column='bardtype')
+    bard_value = models.IntegerField(null=False, default=0, db_column='bardvalue')
+    bard_effect = models.SmallIntegerField(null=False, default=0, db_column='bardeffect')
+    bard_effect_type = models.SmallIntegerField(null=False, default=0, db_column='bardeffecttype')
+    bard_level = models.SmallIntegerField(null=False, default=0, db_column='bardlevel')
+    bard_level2 = models.SmallIntegerField(null=False, default=0, db_column='bardlevel2')
+    updated = models.DateTimeField(null=False, default='0000-00-00 00:00:00')
+    created = models.CharField(max_length=64, null=False)
+    comment = models.CharField(max_length=255, null=False)
+    lore_file = models.CharField(max_length=32, null=False, db_column='lorefile')
+    quest_item_flag = models.IntegerField(null=False, default=0, db_column='questitemflag')
+    gm_flag = models.IntegerField(null=False, default=0, db_column='gmflag')
+    soul_bound = models.IntegerField(null=False, default=0, db_column='soulbound')
     weight = models.IntegerField(null=False, default=0)
     size = models.IntegerField(null=False, default=0)
     item_type = models.IntegerField(null=False, default=0, db_column='itemtype')
@@ -159,7 +214,7 @@ class Items(models.Model):
             return f"+{value}"
         return str(value)
 
-    def generate_og_description(self, effect_name=None):
+    def generate_og_description(self, effect_name=None, focus_effect_name=None):
         """Generate Open Graph description for Discord/social media"""
         lines = []
 
@@ -239,6 +294,24 @@ class Items(models.Model):
         if resists:
             lines.append(" ".join(resists))
 
+        # Focus effects and skill modifiers
+        focus_mods = []
+
+        # Skill modifiers
+        if self.skill_mod_value and self.skill_mod_value != 0:
+            skill_name = self.get_skill_mod_display()
+            focus_mods.append(f"Skill Mod: {skill_name} +{self.skill_mod_value}%")
+
+        # Focus effects (these need separate effect name lookup)
+        if self.focus_effect and self.focus_effect > 0:
+            if focus_effect_name:
+                focus_mods.append(f"Focus: {focus_effect_name}")
+            else:
+                focus_mods.append(f"Focus Effect: {self.focus_effect}")
+
+        if focus_mods:
+            lines.extend(focus_mods)
+
         # Effects (if stackable == 3 means spell effect)
         if self.stackable == 3 and effect_name:
             effects = []
@@ -298,6 +371,32 @@ class Items(models.Model):
             lines.append(f"Race: {race_display}")
 
         return "\n".join(lines)
+
+    def get_skill_mod_display(self):
+        """Convert skill_mod_type to readable format"""
+        skill_mapping = {
+            0: "1H Blunt", 1: "1H Slashing", 2: "2H Blunt", 3: "2H Slashing",
+            4: "Abjuration", 5: "Alteration", 6: "Apply Poison", 7: "Archery",
+            8: "Backstab", 9: "Bind Wound", 10: "Bash", 11: "Block",
+            12: "Brass Instruments", 13: "Channeling", 14: "Conjuration",
+            15: "Defense", 16: "Disarm", 17: "Disarm Traps", 18: "Divination",
+            19: "Dodge", 20: "Double Attack", 21: "Dragon Punch", 22: "Dual Wield",
+            23: "Eagle Strike", 24: "Evocation", 25: "Feign Death", 26: "Flying Kick",
+            27: "Forage", 28: "Hand to Hand", 29: "Hide", 30: "Kick",
+            31: "Meditate", 32: "Mend", 33: "Offense", 34: "Parry",
+            35: "Pick Lock", 36: "1H Piercing", 37: "Riposte", 38: "Round Kick",
+            39: "Safe Fall", 40: "Sense Heading", 41: "Singing", 42: "Sneak",
+            43: "Specialize Abjure", 44: "Specialize Alteration", 45: "Specialize Conjuration",
+            46: "Specialize Divination", 47: "Specialize Evocation", 48: "Pick Pockets",
+            49: "Stringed Instruments", 50: "Swimming", 51: "Throwing", 52: "Tiger Claw",
+            53: "Tracking", 54: "Wind Instruments", 55: "Fishing", 56: "Make Poison",
+            57: "Tinkering", 58: "Research", 59: "Alchemy", 60: "Baking",
+            61: "Tailoring", 62: "Sense Traps", 63: "Blacksmithing", 64: "Fletching",
+            65: "Brewing", 66: "Alcohol Tolerance", 67: "Begging", 68: "Jewelrymaking",
+            69: "Pottery", 70: "Percussion Instruments", 71: "Intimidation",
+            72: "Berserking", 73: "Taunt"
+        }
+        return skill_mapping.get(self.skill_mod_type, f"Unknown Skill ({self.skill_mod_type})")
 
     def get_clean_name(self):
         """Remove underscores and prepended # from item names"""

@@ -303,7 +303,7 @@ def view_item(request, item_id):
     if item is None:
         raise Http404(f"The Item you requested, {item_id}, does not exist.")
 
-    effect_name, effect_id = get_item_effect(item)
+    effect_name, effect_id, focus_effect_name = get_item_effect(item)
 
     cursor = connections['game_database'].cursor()
     cursor.execute("""SELECT tradeskill_recipe.id, tradeskill_recipe.name, tradeskill_recipe.tradeskill, 
@@ -422,7 +422,7 @@ def view_item(request, item_id):
                       "obj_path": obj_path,
                       "drops_from": drops_from,
                       "effect_name": effect_name,
-                      "og_description": item.generate_og_description(effect_name),
+                      "og_description": item.generate_og_description(effect_name, focus_effect_name),
                       "created_by_these_tradeskill_recipes": created_by_these_tradeskill_recipes,
                       "used_in_these_tradeskill_recipes": used_in_these_tradeskill_recipes,
                       "sold_by": sold_by,

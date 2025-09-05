@@ -149,13 +149,13 @@ def build_stat_query(clause: str,
 
     return partial_query, error_messages
 
-def get_item_effect(item: Items) -> Tuple[Optional[str], Optional[int]]:
+def get_item_effect(item: Items) -> Tuple[Optional[str], Optional[int], Optional[str]]:
     """
-    Retrieve the name and ID of an item's effect, checking click, worn, and proc effects in order.
+    Retrieve the name and ID of an item's effects, checking click, worn, proc, and focus effects.
 
     :param item: An Items instance containing effect IDs.
-    :return: A tuple of (effect_name, effect_id), where effect_name is the spell name or None,
-             and effect_id is the corresponding effect ID or None if no valid effect is found.
+    :return: A tuple of (effect_name, effect_id, focus_effect_name), where effect_name is the primary spell name or None,
+             effect_id is the corresponding effect ID or None, and focus_effect_name is the focus effect name or None.
     """
     try:
         print(f"=== get_item_effect called for item {item.id} ===")
@@ -180,15 +180,32 @@ def get_item_effect(item: Items) -> Tuple[Optional[str], Optional[int]]:
                 print(f"Effect name: '{effect.name}'")
                 if effect.name is not None and effect.name != '':
                     print(f"Returning: name='{effect.name}', id={effect_id}")
-                    return effect.name, effect_id
+
+                    focus_effect_name = None
+                    if item.focus_effect and item.focus_effect > 0:
+                        focus_effect = SpellsNew.objects.filter(id=item.focus_effect).first()
+                        if focus_effect and focus_effect.name:
+                            focus_effect_name = focus_effect.name
+
+                    return effect.name, effect_id, focus_effect_name
 
         print("No valid effect found, returning None, None")
+        print("Checking focus effect...")
+        focus_effect_name = None
+        if item.focus_effect and item.focus_effect > 0:
+            print(f"Checking focus_effect_id: {item.focus_effect}")
+            focus_effect = SpellsNew.objects.filter(id=item.focus_effect).first()
+            print(f"Focus effect query result: {focus_effect}")
+            if focus_effect and focus_effect.name:
+                focus_effect_name = focus_effect.name
+                print(f"Focus effect name: '{focus_effect_name}'")
+
         # No valid effect with a non-null, non-empty name found
-        return None, None
+        return None, None, focus_effect_name
 
     except Exception as e:
         print(f"ERROR in get_item_effect: {e}")
         print(f"ERROR TYPE: {type(e).__name__}")
         import traceback
         print(f"Traceback:\n{traceback.format_exc()}")
-        raise
+        return None, None, None
