@@ -1,12 +1,11 @@
 from datetime import datetime
+from django.utils import timezone
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
-from django.core.mail import BadHeaderError, send_mail
 from django.db import connections
-from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
 from django_tables2 import RequestConfig
@@ -271,9 +270,6 @@ def convert_to_trader(request):
         except Account.DoesNotExist:
             messages.error(request, "Invalid account selection.")
             return redirect('accounts:convert_to_trader')
-
-        # Perform conversion
-        from django.utils import timezone
 
         account.mule = 1
         # Ensure suspendeduntil has a valid datetime (not None)
