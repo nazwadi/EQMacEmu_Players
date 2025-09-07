@@ -80,28 +80,6 @@ body {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
-/* Apply dark theme to container-fluid as well */
-.container-fluid {
-    background-color: var(--bg-tertiary);
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-    min-height: calc(100vh - 60px);
-}
-
-/* Override hardcoded light backgrounds in zone pages */
-.list-group-item[style*="#cedff2"] {
-    background-color: var(--bg-secondary) !important;
-    color: var(--text-primary) !important;
-    border-color: var(--border-color) !important;
-}
-
-/* Fix all list group items in zone pages */
-.list-group-item {
-    background-color: var(--bg-tertiary) !important;
-    color: var(--text-primary) !important;
-    border-color: var(--border-color) !important;
-}
-
 pre {
     padding: 1em;
     border: 1px dashed var(--border-color);
