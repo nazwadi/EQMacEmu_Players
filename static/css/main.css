@@ -63,7 +63,8 @@
 /*}*/
 
 body {
-    background-color: var(--bg-primary);
+    background-color: var(--bg-primary) !important;
+    padding: 0 !important;
     background-image: repeating-linear-gradient(45deg,
         transparent,
         transparent 2px,
