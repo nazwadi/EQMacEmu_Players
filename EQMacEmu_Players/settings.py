@@ -60,9 +60,7 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sites.apps.SitesConfig',  # django-wiki
-#    'django.contrib.humanize.apps.HumanizeConfig',  # django-wiki
     'django.contrib.humanize',
-    'django_nyt.apps.DjangoNytConfig',  # django-wiki
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
@@ -75,24 +73,12 @@ INSTALLED_APPS = [
     'items.apps.ItemConfig',
     'magelo.apps.MageloConfig',
     'mdeditor',
-    'mptt',  # django-wiki
     'npcs.apps.NpcsConfig',
     'patch.apps.PatchConfig',
     'pets.apps.PetsConfig',
     'quests.apps.QuestsConfig',
     'recipes.apps.RecipesConfig',
-    'sekizai', # django-wiki
-    'sorl.thumbnail', # django-wiki
     'spells.apps.SpellsConfig',
-    'wiki.apps.WikiConfig', # django-wiki
-    'wiki.plugins.attachments.apps.AttachmentsConfig', # django-wiki
-    'wiki.plugins.editsection.apps.EditSectionConfig', # django-wiki
-    'wiki.plugins.globalhistory.apps.GlobalHistoryConfig', # django-wiki
-    'wiki.plugins.help.apps.HelpConfig', # django-wiki
-    'wiki.plugins.notifications.apps.NotificationsConfig', # django-wiki
-    'wiki.plugins.images.apps.ImagesConfig', # django-wiki
-    'wiki.plugins.links.apps.LinksConfig', # django-wiki
-    'wiki.plugins.macros.apps.MacrosConfig', # django-wiki
     'zones.apps.ZonesConfig',
 ]
 
@@ -132,10 +118,6 @@ CACHES = {
 
 ROOT_URLCONF = 'EQMacEmu_Players.urls'
 
-SITE_ID = 1
-WIKI_ACCOUNT_HANDLING = False
-WIKI_ACCOUNT_SIGNUP_ALLOWED = False
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -151,7 +133,6 @@ TEMPLATES = [
                 'django.template.context_processors.static',
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
-                "sekizai.context_processors.sekizai",
                 'EQMacEmu_Players.context_processors.navigation_context',
             ],
         },
