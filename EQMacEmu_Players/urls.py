@@ -47,7 +47,6 @@ urlpatterns = [
     path("factions/", include("factions.urls")),
     path("items/", include("items.urls")),
     path("magelo/", include("magelo.urls")),
-    path('notifications/', include('django_nyt.urls')),
     path("npcs/", include("npcs.urls")),
     path("patch/", include("patch.urls")),
     path("pets/", include("pets.urls")),
