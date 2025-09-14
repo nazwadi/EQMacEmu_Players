@@ -39,7 +39,7 @@ urlpatterns = [
     path(r"", lambda request: redirect("/accounts/")),
     path("__debug__/", include("debug_toolbar.urls")),
     path("accounts/", include("accounts.urls")),
-    path("admin/", admin.site.urls),
+    path(settings.ADMIN_URL, admin.site.urls),  # Use the custom admin URL
     path('npc-lookup/', NPCLookupView.as_view(), name='npc_lookup'),
     path("characters/", include("characters.urls")),
     path("character_transfer/", include("character_transfer.urls")),
