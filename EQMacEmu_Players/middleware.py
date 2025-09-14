@@ -5,20 +5,22 @@ class SecurityHeadersMiddleware:
     def __call__(self, request):
         response = self.get_response(request)
 
-        # Content Security Policy
+        # Content Security Policy - fixed syntax
         response['Content-Security-Policy'] = (
             "default-src 'self'; "
             "script-src 'self' 'unsafe-inline' "
-            "cdnjs.cloudflare.com "
-            "code.jquery.com "
-            "cdn.jsdelivr.net "
-            "unpkg.com; "
+            "https://cdnjs.cloudflare.com "
+            "https://code.jquery.com "
+            "https://cdn.jsdelivr.net "
+            "https://unpkg.com "
+            "https://cdn.datatables.net; "
             "style-src 'self' 'unsafe-inline' "
-            "fonts.googleapis.com "
-            "cdn.jsdelivr.net "
-            "use.fontawesome.com; "
-            "font-src 'self' fonts.gstatic.com use.fontawesome.com; "
-            "img-src 'self' data: *.cloudflare.com; "
+            "https://fonts.googleapis.com "
+            "https://cdn.jsdelivr.net "
+            "https://use.fontawesome.com "
+            "https://cdn.datatables.net; "
+            "font-src 'self' https://fonts.gstatic.com https://use.fontawesome.com; "
+            "img-src 'self' data: https://*.cloudflare.com https://secure.gravatar.com; "
             "connect-src 'self'; "
             "frame-ancestors 'none'; "
             "base-uri 'self'; "
