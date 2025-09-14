@@ -98,6 +98,7 @@ INTERNAL_IPS = [
 MIDDLEWARE = [
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     'django.middleware.security.SecurityMiddleware',
+    'EQMacEmu_Players.middleware.SecurityHeadersMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -212,6 +213,38 @@ if not DEBUG:
     SECURE_CONTENT_TYPE_NOSNIFF = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
+X_FRAME_OPTIONS = 'DENY'
+
+# Content Security Policy
+SECURE_CONTENT_SECURITY_POLICY = {
+    'default-src': ["'self'"],
+    'script-src': ["'self'", "'unsafe-inline'", "cdnjs.cloudflare.com"],
+    'style-src': ["'self'", "'unsafe-inline'", "fonts.googleapis.com"],
+    'font-src': ["'self'", "fonts.gstatic.com"],
+    'img-src': ["'self'", "data:", "*.cloudflare.com"],
+    'connect-src': ["'self'"],
+    'frame-ancestors': ["'none'"],
+    'base-uri': ["'self'"],
+    'form-action': ["'self'"],
+}
+
+# Convert CSP dict to header string
+CSP_DIRECTIVES = []
+for directive, sources in SECURE_CONTENT_SECURITY_POLICY.items():
+    CSP_DIRECTIVES.append(f"{directive.replace('_', '-')} {' '.join(sources)}")
+SECURE_CONTENT_SECURITY_POLICY_HEADER = '; '.join(CSP_DIRECTIVES)
+
+# Permissions Policy
+SECURE_PERMISSIONS_POLICY = {
+    'geolocation': [],
+    'microphone': [],
+    'camera': [],
+    'payment': [],
+    'usb': [],
+    'magnetometer': [],
+    'accelerometer': [],
+    'gyroscope': [],
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
@@ -259,9 +292,6 @@ LOGGING = {
         },
     },
 }
-
-# add frame settings for django3.0+ like this：
-X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 MDEDITOR_CONFIGS = {
     'default': {
