@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block extra_css %}
-     <style>
+    <style>
         /* Only the minimal necessary styles */
         .tooltip-container {
             position: relative;
@@ -44,30 +44,34 @@
 {% endblock %}
 
 {% block extra_js %}
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/tippy.js@6/dist/tippy-bundle.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+            integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tippy.js@6/dist/tippy-bundle.umd.min.js"
+            integrity="sha384-AiTRpehQ7zqeua0Ypfa6Q4ki/ddhczZxrKtiQbTQUlJIhBkTeyoZP9/W/5ulFt29"
+            crossorigin="anonymous"></script>
 {% endblock %}
 
 {% block inline_js %}
     <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        tippy('.tooltip-link', {
-            content: 'Loading...',
-            allowHTML: true,
-            interactive: true,
-            placement: 'right',
-            onShow(instance) {
-                const url = instance.reference.dataset.url;
-                fetch(`/items/api/${encodeURIComponent(url)}`)
-                    .then(response => response.text())
-                    .then(content => {
-                        instance.setContent(content);
-                    })
-                    .catch(error => {
-                        instance.setContent(`Failed to load data: ${error}`);
-                    });
-            }
+        document.addEventListener('DOMContentLoaded', function () {
+            tippy('.tooltip-link', {
+                content: 'Loading...',
+                allowHTML: true,
+                interactive: true,
+                placement: 'right',
+                onShow(instance) {
+                    const url = instance.reference.dataset.url;
+                    fetch(`/items/api/${encodeURIComponent(url)}`)
+                        .then(response => response.text())
+                        .then(content => {
+                            instance.setContent(content);
+                        })
+                        .catch(error => {
+                            instance.setContent(`Failed to load data: ${error}`);
+                        });
+                }
+            });
         });
-    });
-</script>
+    </script>
 {% endblock %}
