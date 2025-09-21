@@ -443,8 +443,6 @@ def item_detail_api(request: HttpRequest, item_id: int) -> HttpResponse:
     :param item_id: An Item ID field unique identifier.
     :return: An HTTP response rendering the item stats template.
     """
-    import traceback
-
     try:
         item = Items.objects.get(id=item_id)
         effect_name, effect_id, focus_effect_name = get_item_effect(item)
