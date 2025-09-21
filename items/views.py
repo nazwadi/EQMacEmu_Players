@@ -1,3 +1,4 @@
+import logging
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -20,6 +21,7 @@ from common.models.items import Items
 from quests.models import Quests
 from collections import namedtuple
 
+logger = logging.getLogger(__name__)
 
 def search(request):
     """
@@ -444,17 +446,8 @@ def item_detail_api(request: HttpRequest, item_id: int) -> HttpResponse:
     import traceback
 
     try:
-        print(f"=== Starting item_detail_api for item {item_id} ===")
-
-        print(f"Step 1: Attempting to fetch item {item_id}")
         item = Items.objects.get(id=item_id)
-        print(f"Step 1: SUCCESS - fetched item: {item.Name}")
-
-        print(f"Step 2: Calling get_item_effect...")
         effect_name, effect_id, focus_effect_name = get_item_effect(item)
-        print(f"Step 2: SUCCESS - effect result: name={effect_name}, id={effect_id}")
-
-        print(f"Step 3: Rendering template...")
         response = render(
             request=request,
             template_name="items/item_stats_template.html",
@@ -464,16 +457,13 @@ def item_detail_api(request: HttpRequest, item_id: int) -> HttpResponse:
                 "item": item,
             }
         )
-        print(f"Step 3: SUCCESS - template rendered")
         return response
 
     except Items.DoesNotExist:
-        print(f"ERROR: Item {item_id} does not exist")
+        logger.error(f"ERROR: Item {item_id} does not exist")
         return HttpResponse(f"Item {item_id} not found", status=404)
     except Exception as e:
-        print(f"ERROR in item_detail_api for item {item_id}: {e}")
-        print(f"ERROR TYPE: {type(e).__name__}")
-        print(f"Full traceback:\n{traceback.format_exc()}")
+        logger.error(f"ERROR in item_detail_api for item {item_id}: {e}", exc_info=True)
         return HttpResponse("Internal server error", status=500)
 
 
