@@ -128,19 +128,34 @@ class Items(models.Model):
         if not self.slots:
             return ""
 
-        slot_mapping = {
-            1: "CHARM", 2: "EAR", 4: "HEAD", 8: "FACE", 16: "NECK",
-            32: "SHOULDER", 64: "ARMS", 128: "BACK", 256: "WRIST",
-            512: "HANDS", 1024: "SHIELD", 2048: "BELT", 4096: "LEGS",
-            8192: "FEET", 16384: "FINGER", 32768: "PRIMARY", 65536: "SECONDARY"
-        }
+        slot_checks = [
+            ([2, 16], "EARS"),
+            ([4], "HEAD"),
+            ([8], "FACE"),
+            ([32], "NECK"),
+            ([64], "SHOULDER"),
+            ([128], "ARMS"),
+            ([256], "BACK"),
+            ([512, 1024], "WRIST"),
+            ([2048], "RANGE"),
+            ([4096], "HANDS"),
+            ([8192], "PRIMARY"),
+            ([16384], "SECONDARY"),
+            ([32768, 65536], "FINGERS"),
+            ([131072], "CHEST"),
+            ([262144], "LEGS"),
+            ([524288], "FEET"),
+            ([1048576], "WAIST"),
+            ([2097152], "POWERSOURCE"),
+            ([4194304], "AMMO"),
+        ]
 
-        slots = []
-        for bit_value, slot_name in slot_mapping.items():
-            if self.slots & bit_value:
-                slots.append(slot_name)
+        slots_available = [
+            slot_name for bits, slot_name in slot_checks
+            if any(self.slots & bit for bit in bits)
+        ]
 
-        return " ".join(slots)
+        return " ".join(slots_available)
 
     def get_item_type_display(self):
         """Convert item type to readable format"""
