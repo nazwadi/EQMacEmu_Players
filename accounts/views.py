@@ -1,5 +1,6 @@
 from datetime import datetime
 from django.utils import timezone
+from collections import namedtuple
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -531,8 +532,12 @@ def inventory_search(request):
 
             if len(character_inventory_results) == 0:
                 messages.info(request, "No search results found.")
-
-            context["search_results"] = character_inventory_results
+            else:
+                items = []
+                Item = namedtuple('Item', ['itemid', 'icon', 'item_name', 'slot_id', 'charges', 'max_charges', 'stackable', 'stack_size',
+                                           'char_name'])
+                items = [Item(*row) for row in character_inventory_results]
+                context["search_results"] = sorted(items)
 
             return render(request=request,
                           template_name="accounts/inventory_search.html",

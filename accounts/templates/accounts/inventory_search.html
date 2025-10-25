@@ -42,6 +42,61 @@
             z-index: 50000;
         }
 
+        /* Group header row styling */
+        /* Option 1: Minimal - just typography and spacing */
+        .group-header {
+            background-color: transparent !important;
+        }
+
+        .group-header td {
+            padding: 12px 10px 8px 10px;
+            border-top: none !important;
+            border-bottom: 1px solid var(--border-light) !important;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary) !important;
+        }
+
+        .group-header strong {
+            font-weight: 600;
+        }
+
+        .group-header .count {
+            opacity: 0.7;
+            font-size: 0.9em;
+        }
+
+        .item-row.grouped td:first-child {
+            padding-left: 20px;
+        }
+
+        /* Add subtle background to grouped items */
+        .item-row.grouped {
+            background-color: rgba(0, 0, 0, 0.02) !important;
+        }
+
+        /* Visual separation for last item in each group */
+        .item-row:last-child td {
+            border-bottom: 1px solid var(--border-color) !important;
+        }
+
+        /* Optional: slight indentation for item rows to show hierarchy */
+        .item-row td:first-child {
+            padding-left: 20px;
+        }
+
+        /* Style the last item in a group */
+        .item-row.group-last td {
+            border-bottom: 2px solid rgba(255, 255, 255, 0.05) !important;
+            padding-bottom: 1px;
+        }
+
+        /* Add extra space to whatever comes after */
+        .item-row.group-last + tr td {
+            padding-top: 12px;
+        }
+
     </style>
 {% endblock %}
 {% block content %}
@@ -282,28 +337,40 @@
                             <th>Slot / Slot ID</th>
                         </tr>
                         </thead>
-                        {% for itemid, icon, item_name, slot_id, charges, max_charges, stackable, stack_size, char_name  in search_results %}
-                            <tr>
-                                <td>{{ itemid }}</td>
-                                <td>
-                                    <img style="background:url({% static "/images/icons/blank_slot.gif" %});"
-                                         src="{% static "/images/items/" %}item_{{ icon }}.png"
-                                         alt="item_{{ icon }}.png">
-                                    <a class="tooltip-link link" data-url="{{ itemid }}" href="/items/view/{{ itemid }}">{{ item_name }}</a>
-                                </td>
-                                {% if stackable == 3 and max_charges > 0 %}
-                                    <td>{{ charges }} / {{ max_charges }}</td>
-                                    <td></td>
-                                {% elif stackable == 1 and max_charges > 0 %}
-                                    <td></td>
-                                    <td>{{ charges }} / {{ stack_size }}</td>
-                                {% else %}
-                                    <td style="text-align: center;">-</td>
-                                    <td style="text-align: center;">-</td>
-                                {% endif %}
-                                <td><a href="/characters/view/{{ char_name }}">{{ char_name }}</a></td>
-                                <td>{{ slot_id|inventory_slot|default:"Unknown Slot" }}</td>
-                            </tr>
+                        {% regroup search_results by item_name as grouped_items %}
+                        {% for item_group in grouped_items %}
+                            {% if item_group.list|length > 1 %}
+                                <tr class="group-header">
+                                    <td colspan="6">
+                                        <strong>{{ item_group.grouper }}</strong>
+                                        <span class="count">({{ item_group.list|length }} items)</span>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                            {% for item in item_group.list %}
+                                <tr class="item-row {% if item_group.list|length > 1 %}grouped{% if forloop.last %} group-last{% endif %}{% endif %}">
+                                    <td>{{ item.itemid }}</td>
+                                    <td>
+                                        <img style="background:url({% static "/images/icons/blank_slot.gif" %});"
+                                             src="{% static "/images/items/" %}item_{{ item.icon }}.png"
+                                             alt="item_{{ item.icon }}.png">
+                                        <a class="tooltip-link link" data-url="{{ item.itemid }}"
+                                           href="/items/view/{{ item.itemid }}">{{ item.item_name }}</a>
+                                    </td>
+                                    {% if item.stackable == 3 and item.max_charges > 0 %}
+                                        <td>{{ item.charges }} / {{ item.max_charges }}</td>
+                                        <td></td>
+                                    {% elif item.stackable == 1 and item.max_charges > 0 %}
+                                        <td></td>
+                                        <td>{{ item.charges }} / {{ item.stack_size }}</td>
+                                    {% else %}
+                                        <td style="text-align: center;">-</td>
+                                        <td style="text-align: center;">-</td>
+                                    {% endif %}
+                                    <td><a href="/characters/view/{{ item.char_name }}">{{ item.char_name }}</a></td>
+                                    <td>{{ item.slot_id|inventory_slot|default:"Unknown Slot" }}</td>
+                                </tr>
+                            {% endfor %}
                         {% endfor %}
                     </table>
                 </div>
@@ -313,36 +380,36 @@
 {% endblock %}
 {% block extra_js %}
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-        crossorigin="anonymous"></script>
+            integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+            crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/tippy.js@6/dist/tippy-bundle.umd.min.js"></script>
 {% endblock %}
 {% block inline_js %}
     <script>
-    $(document).ready(function () {
-        $("#search-results-table").DataTable({
-            order: [[3, 'desc']],
-            pageLength: 50
+        $(document).ready(function () {
+            $("#search-results-table").DataTable({
+                order: [[3, 'desc']],
+                pageLength: 50
+            });
         });
-    });
-    document.addEventListener('DOMContentLoaded', function () {
-        tippy('.tooltip-link', {
-            content: 'Loading...',
-            allowHTML: true,
-            interactive: true,
-            placement: 'right',
-            onShow(instance) {
-                const url = instance.reference.dataset.url;
-                fetch(`/items/api/${encodeURIComponent(url)}`)
-                    .then(response => response.text())
-                    .then(content => {
-                        instance.setContent(content);
-                    })
-                    .catch(error => {
-                        instance.setContent(`Failed to load data: ${error}`);
-                    });
-            }
+        document.addEventListener('DOMContentLoaded', function () {
+            tippy('.tooltip-link', {
+                content: 'Loading...',
+                allowHTML: true,
+                interactive: true,
+                placement: 'right',
+                onShow(instance) {
+                    const url = instance.reference.dataset.url;
+                    fetch(`/items/api/${encodeURIComponent(url)}`)
+                        .then(response => response.text())
+                        .then(content => {
+                            instance.setContent(content);
+                        })
+                        .catch(error => {
+                            instance.setContent(`Failed to load data: ${error}`);
+                        });
+                }
+            });
         });
-    });
-</script>
+    </script>
 {% endblock %}
