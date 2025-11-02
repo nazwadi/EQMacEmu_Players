@@ -112,7 +112,7 @@
                         {% csrf_token %}
                         <div class="row mb-4">
                             <div class="col-12 col-md-12">
-                                <div class="form-text text-wrap"><label for="item_name">Item Name</label></div>
+                                <label class="form-label" for="item_name">Item Name</label>
                                 <input type="text" class="form-control" id="item_name" name="item_name"
                                        placeholder="a tattered note">
                             </div>
@@ -122,7 +122,7 @@
                             <div class="row mb-4">
                                 <hr/>
                                 <div class="col-12 col-md-2">
-                                    <div class="form-text text-wrap"><label for="player_class">Class</label></div>
+                                    <label class="form-label" for="player_class">Class</label>
                                     <select class="form-select" id="player_class" name="player_class"
                                             aria-label="player_class">
                                         <option value="0" selected>Any</option>
@@ -134,7 +134,7 @@
                                     </select>
                                 </div>
                                 <div class="col-12 col-md-2">
-                                    <div class="form-text text-wrap"><label for="player_race">Race</label></div>
+                                    <label class="form-label" for="player_race">Race</label>
                                     <select class="form-select" id="player_race" name="player_race"
                                             aria-label="player_race">
                                         <option value="0" selected>Any</option>
@@ -146,7 +146,7 @@
                                     </select>
                                 </div>
                                 <div class="col-12 col-md-2">
-                                    <div class="form-text text-wrap"><label for="item_slot">Equip Slot</label></div>
+                                    <label class="form-label" for="item_slot">Equip Slot</label>
                                     <select class="form-select" id="item_slot" name="item_slot" aria-label="item_slot">
                                         <option value="0" selected>Any</option>
                                         {% for slot, slot_name in EQUIPMENT_SLOTS.items %}
@@ -157,7 +157,7 @@
                                     </select>
                                 </div>
                                 <div class="col-12 col-md-2">
-                                    <div class="form-text text-wrap"><label for="item_type">Item Type</label></div>
+                                    <label class="form-label" for="item_type">Item Type</label>
                                     <select class="form-select" id="item_type" name="item_type" aria-label="item_type">
                                         <option value="-1" selected>Any</option>
                                         {% for type, type_name in ITEM_TYPES.items %}
@@ -166,7 +166,7 @@
                                     </select>
                                 </div>
                                 <div class="col-12 col-md-2">
-                                    <div class="form-text text-wrap"><label for="resists_type">Resist Type</label></div>
+                                    <label class="form-label" for="resists_type">Resist Type</label>
                                     <select class="form-select" id="resists_type" name="resists_type">
                                         <option value="Resist">Resist</option>
                                         <option value="mr">Resist Magic</option>
@@ -177,8 +177,7 @@
                                     </select>
                                 </div>
                                 <div class="col-6 col-md-1">
-                                    <div class="form-text text-wrap"><label for="resists_operator">Operator</label>
-                                    </div>
+                                    <label class="form-label" for="resists_operator">Operator</label>
                                     <select class="form-select" id="resists_operator" name="resists_operator">
                                         <option value=">">&gt;</option>
                                         <option value=">=">&gt;=</option>
@@ -188,8 +187,7 @@
                                     </select>
                                 </div>
                                 <div class="col-6 col-md-1">
-                                    <div class="form-text text-wrap"><label for="resists_value">Resist Value</label>
-                                    </div>
+                                    <label class="form-label" for="resists_value">Resist Val.</label>
                                     <input class="form-control" id="resists_value" name="resists_value" type="number"
                                            min="0" value="0">
                                 </div>
@@ -197,7 +195,7 @@
                             <div class="row mt-2 mb-4">
                                 <hr/>
                                 <div class="col-xs-4 col-md-2">
-                                    <div class="form-text text-wrap"><label for="stat1">Stat 1</label></div>
+                                    <label class="form-label" for="stat1">Stat 1</label>
                                     <select class="form-select" id="stat1" name="stat1" aria-label="stat1">
                                         <option value="stat1" selected>Stat</option>
                                         {% for key, value in ITEM_STATS.items %}
@@ -206,8 +204,7 @@
                                     </select>
                                 </div>
                                 <div class="col-xs-2 col-md-2">
-                                    <div class="form-text text-wrap"><label for="stat1_operator">Operator</label>
-                                    </div>
+                                    <label class="form-label" for="stat1_operator">Operator</label>
                                     <select class="form-select" id="stat1_operator" name="stat1_operator">
                                         <option value=">">&gt;</option>
                                         <option value=">=">&gt;=</option>
@@ -217,14 +214,13 @@
                                     </select>
                                 </div>
                                 <div class="col-xs-2 col-md-2">
-                                    <div class="form-text text-wrap"><label for="stat1_value">Stat 1 Value</label>
-                                    </div>
+                                    <label class="form-label" for="stat1_value">Stat 1 Value</label>
                                     <input class="form-control" id="stat1_value" name="stat1_value" type="number"
                                            min="0"
                                            value="0">
                                 </div>
                                 <div class="col-xs-4 col-md-2">
-                                    <div class="form-text text-wrap"><label for="stat2">Stat 2</label></div>
+                                    <label class="form-label" for="stat2">Stat 2</label>
                                     <select class="form-select" id="stat2" name="stat2" aria-label="stat2">
                                         <option value="stat2" selected>Stat</option>
                                         {% for key, value in ITEM_STATS.items %}
@@ -233,7 +229,7 @@
                                     </select>
                                 </div>
                                 <div class="col-xs-2 col-md-2">
-                                    <div class="form-text text-wrap"><label for="stat2_operator">Operator</label></div>
+                                    <label class="form-label" for="stat2_operator">Operator</label>
                                     <select class="form-select" id="stat2_operator" name="stat2_operator">
                                         <option value=">">&gt;</option>
                                         <option value=">=">&gt;=</option>
@@ -243,7 +239,7 @@
                                     </select>
                                 </div>
                                 <div class="col-xs-4 col-md-2">
-                                    <div class="form-text text-wrap"><label for="stat2_value">Stat 2 Value</label></div>
+                                    <label class="form-label" for="stat2_value">Stat 2 Value</label>
                                     <input class="form-control" id="stat2_value" name="stat2_value" type="number"
                                            min="0"
                                            value="0">
@@ -252,7 +248,7 @@
                             <div class="row mt-2 mb-4">
                                 <hr/>
                                 <div class="col-12 col-md-8">
-                                    <div class="form-text text-wrap"><label for="item_effect">Item Effect</label></div>
+                                    <label class="form-label" for="item_effect">Item Effect</label>
                                     <input type="text" class="form-control" id="item_effect" name="item_effect"
                                            placeholder="Complete Healing">
                                 </div>
@@ -280,9 +276,7 @@
                             <div class="row mb-4">
                                 <hr/>
                                 <div class="col-12 col-xs-4 col-md-4">
-                                    <div class="form-text text-wrap"><label for="container_select">Container
-                                        Type</label>
-                                    </div>
+                                    <label class="form-label" for="container_select">Container Type</label>
                                     <select class="form-select" id="container_select" name="container_select">
                                         <option value="Container" selected>Container</option>
                                         {% for key, value in CONTAINER_TYPES.items %}
@@ -291,19 +285,14 @@
                                     </select>
                                 </div>
                                 <div class="col-12 col-xs-4 col-md-4">
-                                    <div class="form-text text-wrap"><label for="container_slots">Container Slots
-                                        >=</label>
-                                    </div>
+                                    <label class="form-label" for="container_slots">Container Slots >=</label>
                                     <input class="form-control" id="container_slots" name="container_slots"
                                            type="number"
                                            min="0"
                                            value="0">
                                 </div>
                                 <div class="col-12 col-xs-4 col-md-4">
-                                    <div class="form-text text-wrap"><label for="container_wr">Container Weight
-                                        Reduction
-                                        >=</label>
-                                    </div>
+                                    <label class="form-label" for="container_wr">Container Weight Reduction >=</label>
                                     <input class="form-control" id="container_wr" name="container_wr" type="number"
                                            min="0"
                                            value="0">
