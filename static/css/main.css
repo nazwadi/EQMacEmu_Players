@@ -548,8 +548,8 @@ option {
 
 /* Make expansion icons consistent size */
 #search-results-table img {
-    width: 24px;
-    height: 24px;
+    /*width: 24px;*/
+    /*height: 24px;*/
     vertical-align: middle;
 }
 
