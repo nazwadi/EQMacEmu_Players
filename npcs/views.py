@@ -140,11 +140,22 @@ def search(request):
 
         search_results = list()
         if results:
+            NpcTuple = namedtuple("NpcTuple", ["id", "name", "min_expansion", "long_name",
+                                               "short_name", "level", "maxlevel", "race", "class_name", "gender",
+                                               "hp", "MR", "CR", "FR", "DR", "PR"])
             for result in results:
-                NpcTuple = namedtuple("NpcTuple", ["id", "name", "min_expansion", "long_name",
-                                                   "short_name", "level", "maxlevel", "race", "class_name", "gender",
-                                                   "hp", "MR", "CR", "FR", "DR", "PR"])
-                search_results.append(NpcTuple(*result))
+                npc = NpcTuple(*result)
+                if npc.short_name is None:
+                    unknown_zone_query = """SELECT z.zoneidnumber, z.short_name, z.long_name, z.expansion
+                                            FROM npc_types n
+                                            LEFT JOIN zone z ON z.zoneidnumber = FLOOR(CAST((n.`id` / 1000) AS DOUBLE))
+                                            WHERE n.id = %s"""
+                    cursor = connections['game_database'].cursor()
+                    cursor.execute(unknown_zone_query, [npc.id])
+                    result = cursor.fetchone()
+                    npc = npc._replace(short_name=result[1], long_name=result[2], min_expansion=result[3])
+
+                search_results.append(npc)
 
         return render(request=request,
                       template_name="npcs/search_npc.html",
@@ -214,6 +225,7 @@ def view_npc(request, npc_id):
 
     try:
         cursor.execute("""SELECT 
+                                n.id,
                                 z.long_name,
                                 z.short_name,
                                 s.x,
@@ -241,18 +253,25 @@ def view_npc(request, npc_id):
 
     spawn_point_list = []
     if spawn_data:
+        SpawnData = namedtuple("SpawnData", ["id","long_name", "short_name", "x", "y", "z",
+                                             "respawntime", "variance", "min_expansion", "max_expansion"])
         for spawn in spawn_data:
-            SpawnData = namedtuple("SpawnData", ["long_name", "short_name", "x", "y", "z",
-                                                 "respawntime", "variance", "min_expansion", "max_expansion"])
-            spawn_point_list.append(SpawnData(*spawn))
+            sp = SpawnData(*spawn)
+            spawn_point_list.append(sp)
 
-    try:
-        expansion = spawn_point_list[0].min_expansion
-    except IndexError:
-        expansion = None
+    zone_query = """SELECT z.zoneidnumber, z.short_name, z.long_name, z.expansion
+                    FROM npc_types n
+                             LEFT JOIN zone z ON z.zoneidnumber = FLOOR(CAST((n.`id` / 1000) AS DOUBLE))
+                    WHERE n.id = %s"""
+    cursor.execute(zone_query, [npc_data.id])
+    result = cursor.fetchone()
     ZoneTuple = namedtuple("Zone", ["long_name", "short_name"])
     try:
-        zone = ZoneTuple(spawn_point_list[0].long_name, spawn_point_list[0].short_name)
+        expansion = result[3]
+    except IndexError:
+        expansion = None
+    try:
+        zone = ZoneTuple(result[2], result[1])
     except IndexError:
         zone = ZoneTuple(None, None)
 
