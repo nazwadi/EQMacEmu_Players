@@ -717,6 +717,7 @@ def guild_rank_filter(value):
 @register.filter(name="expansion_icon")
 def expansion_icon(value):
     expansion_icons = {
+        -2: "script", # This is set custom in the view
         -1: "default",
         0: "Original.gif",
         1: "Kunarkicon.gif",
@@ -725,6 +726,21 @@ def expansion_icon(value):
         4: "Powericon.gif",
         5: "Ykeshaicon.gif",
         6: "Ldonicon.gif"
+    }
+    return expansion_icons[value] if value in expansion_icons else None
+
+@register.filter(name="expansion_name")
+def expansion_name(value):
+    expansion_icons = {
+        -2: "script", # This is set custom in the view
+        -1: "default",
+        0: "vanilla",
+        1: "kunark",
+        2: "velious",
+        3: "luclin",
+        4: "planes",
+        5: "ykesha",
+        6: "ldon"
     }
     return expansion_icons[value] if value in expansion_icons else None
 

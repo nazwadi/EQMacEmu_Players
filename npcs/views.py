@@ -145,16 +145,19 @@ def search(request):
                                                "hp", "MR", "CR", "FR", "DR", "PR"])
             for result in results:
                 npc = NpcTuple(*result)
-                if npc.short_name is None:
+                if (npc.short_name is None and npc.min_expansion is None) or npc.min_expansion == -1:
                     unknown_zone_query = """SELECT z.zoneidnumber, z.short_name, z.long_name, z.expansion
                                             FROM npc_types n
-                                            LEFT JOIN zone z ON z.zoneidnumber = FLOOR(CAST((n.`id` / 1000) AS DOUBLE))
+                                                     LEFT JOIN zone z ON z.zoneidnumber = FLOOR(CAST((n.`id` / 1000) AS DOUBLE))
                                             WHERE n.id = %s"""
                     cursor = connections['game_database'].cursor()
                     cursor.execute(unknown_zone_query, [npc.id])
                     result = cursor.fetchone()
-                    npc = npc._replace(short_name=result[1], long_name=result[2], min_expansion=result[3])
-
+                    if npc.short_name is None and npc.min_expansion is None:
+                        npc = npc._replace(min_expansion=-2) # Custom value I've set in data_utilities.py
+                        npc = npc._replace(short_name=result[1], long_name=result[2], min_expansion=-2)
+                    elif npc.min_expansion == -1:
+                        npc = npc._replace(short_name=result[1], long_name=result[2], min_expansion=result[3])
                 search_results.append(npc)
 
         return render(request=request,

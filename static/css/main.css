@@ -312,6 +312,31 @@ nav.border {
     color: #CEB04A;
 }
 
+.ykesha span, h2 .ykesha {
+    background: #4A7023;
+    color: #C9E4CA;
+}
+
+.ldon span, h2 .ldon {
+    background: #5C4033;
+    color: #D4AF37;
+}
+
+.gates span, h2 .gates {
+    background: #1A1A2E;
+    color: #C19A6B;
+}
+
+.omens span, h2 .omens {
+    background: #2D132C;
+    color: #C41E3A;
+}
+
+.dragons span, h2 .dragons {
+    background: #8B0000;
+    color: #FFD700;
+}
+
 .script span {
     background: #880000;
     color: #dddddd;

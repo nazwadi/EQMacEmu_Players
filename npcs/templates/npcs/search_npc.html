@@ -135,8 +135,7 @@
                             {% for result in search_results %}
                                 <tr>
                                     <td><a href="/npcs/view/{{ result.id }}">{{ result.name|clean_name }}</a></td>
-                                    <td><img src="{% static "/images/" %}{{ result.min_expansion|expansion_icon }}"
-                                             alt="{{ result.min_expansion|expansion_icon }}"></td>
+                                    <td class="expansion-tag {{ result.min_expansion|expansion_name }}"><span>{{ result.min_expansion|expansion_name|title }}</span></td>
                                     <td><a href="/zones/view/{{ result.short_name }}">{{ result.long_name }}</a></td>
                                     {% if result.maxlevel %}
                                         <td>{{ result.level }} - {{ result.maxlevel }}</td>
