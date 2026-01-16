@@ -6,6 +6,7 @@ from django.db import connections
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
+from django.http import HttpResponseNotAllowed
 from dataclasses import asdict
 from collections import namedtuple
 from django.views.decorators.http import require_http_methods
@@ -20,7 +21,8 @@ from common.models.spawns import Spawn2
 from common.models.spawns import SpawnGroup
 from common.utils import calculate_item_price
 from quests.models import Quests
-from .abilities.special_abilities import get_ability_by_name, get_ability_by_id
+from .abilities.special_abilities import get_ability_by_name
+from .forms import NpcSearchForm
 
 logger = logging.getLogger(__name__)
 
@@ -59,110 +61,109 @@ def search(request):
         expansions = json.load(json_file)
 
     if request.method == "GET":
+        form = NpcSearchForm(
+            expansions=expansions['expansions'],
+            npc_body_types=npc_body_types['npc_body_types'],
+            npc_races=npc_races['npc_races'],
+            npc_classes=npc_classes['npc_classes'],
+        )
         return render(request=request,
                       context={
+                          'form': form,
                           'expansions': expansions['expansions'],
                           'npc_body_types': npc_body_types['npc_body_types'],
                           'npc_races': npc_races['npc_races'],
                           'npc_classes': npc_classes['npc_classes'],
                       },
                       template_name="npcs/search_npc.html")
-    if request.method == "POST":
-        body_type = request.POST.get("select_npc_body_type", "-1")
-        expansion = request.POST.get("select_expansion", "-1")
-        npc_name = request.POST.get("npc_name", "")
-        npc_name = npc_name.replace(' ', '_')
-        min_level = request.POST.get("min_level", "1")
-        max_level = request.POST.get("max_level", "100")
-        npc_race = request.POST.get("select_npc_race", "-1")
-        npc_class = request.POST.get("select_npc_class", "-1")
-        query_limit = request.POST.get("query_limit", "50")
-        exclude_merchants = request.POST.get("exclude_merchants")
-        try:
-            query_limit = int(query_limit)
-        except ValueError:
-            return redirect("/npcs/search")
-        if query_limit < 0:
-            query_limit = 0
-        elif query_limit > 200:  # yes, this is an arbitrary limit on search results
-            query_limit = 200
-        try:
-            cursor = connections['game_database'].cursor()
-            query = """SELECT DISTINCT
-                                nt.id,
-                                nt.NAME,
-                                s.min_expansion,
-                                z.long_name,
-                                z.short_name,
-                                nt.LEVEL,
-                                nt.maxlevel,
-                                nt.race,
-                                nt.class,
-                                nt.gender,
-                                nt.hp,
-                                nt.MR,
-                                nt.CR,
-                                nt.FR, 
-                                nt.DR,
-                                nt.PR
-                             FROM
-                                npc_types AS nt
-                                LEFT JOIN spawnentry AS se ON nt.id = se.npcID
-                                LEFT JOIN spawn2 AS s ON se.spawngroupID = s.spawngroupID
-                                LEFT JOIN zone AS z ON s.zone = z.short_name 
-                            WHERE
-                                nt.NAME LIKE %s
-                                AND nt.LEVEL >= %s
-                                AND nt.maxlevel <= %s
-            """
-            if exclude_merchants is not None:
-                query += " AND nt.merchant_id = 0"
-            query_list = ['%' + npc_name + '%', min_level, max_level]
-            if expansion != "-1":  # any
-                query += """ AND s.min_expansion = %s"""
-                query_list.append(expansion)
-            if body_type != "-1":  # any
-                query += """ AND nt.bodytype = %s"""
-                query_list.append(body_type)
-            if npc_race != "-1":  # any
-                query += """ AND nt.race = %s"""
-                query_list.append(npc_race)
-            if npc_class != "-1":  # any
-                query += """ AND nt.class = %s"""
-                query_list.append(npc_class)
-            query += """ LIMIT %s"""
-            query_list.append(int(query_limit))
-            cursor.execute(query, query_list)
-            results = cursor.fetchall()
-        except Exception as e:
-            logger.error(f"Error executing NPC search query: {e}", exc_info=True)
-            results = []
+    search_results = []
 
-        search_results = list()
-        if results:
-            NpcTuple = namedtuple("NpcTuple", ["id", "name", "min_expansion", "long_name",
-                                               "short_name", "level", "maxlevel", "race", "class_name", "gender",
-                                               "hp", "MR", "CR", "FR", "DR", "PR"])
-            for result in results:
-                npc = NpcTuple(*result)
-                if (npc.short_name is None and npc.min_expansion is None) or npc.min_expansion == -1:
-                    unknown_zone_query = """SELECT z.zoneidnumber, z.short_name, z.long_name, z.expansion
-                                            FROM npc_types n
-                                                     LEFT JOIN zone z ON z.zoneidnumber = FLOOR(CAST((n.`id` / 1000) AS DOUBLE))
-                                            WHERE n.id = %s"""
-                    cursor = connections['game_database'].cursor()
-                    cursor.execute(unknown_zone_query, [npc.id])
-                    result = cursor.fetchone()
-                    if npc.short_name is None and npc.min_expansion is None:
-                        npc = npc._replace(min_expansion=-2) # Custom value I've set in data_utilities.py
-                        npc = npc._replace(short_name=result[1], long_name=result[2], min_expansion=-2)
-                    elif npc.min_expansion == -1:
-                        npc = npc._replace(short_name=result[1], long_name=result[2], min_expansion=result[3])
-                search_results.append(npc)
+    if request.method == "POST":
+        form = NpcSearchForm(
+            request.POST,
+            expansions=expansions['expansions'],
+            npc_body_types=npc_body_types['npc_body_types'],
+            npc_races=npc_races['npc_races'],
+            npc_classes=npc_classes['npc_classes'],
+        )
+        if form.is_valid():
+            npc_name = form.cleaned_data['npc_name']
+            min_level = form.cleaned_data["min_level"]
+            max_level = form.cleaned_data["max_level"]
+            query_limit = form.cleaned_data["query_limit"]
+            body_type = form.cleaned_data["select_npc_body_type"]
+            expansion = form.cleaned_data["select_expansion"]
+            npc_race = form.cleaned_data["select_npc_race"]
+            npc_class = form.cleaned_data["select_npc_class"]
+            exclude_merchants = form.cleaned_data["exclude_merchants"]
+            try:
+                query = """SELECT DISTINCT nt.id, \
+                                           nt.NAME, \
+                                           COALESCE(z.expansion, z2.expansion)   as min_expansion, \
+                                           COALESCE(z.long_name, z2.long_name)   as long_name, \
+                                           COALESCE(z.short_name, z2.short_name) as short_name, \
+                                           nt.LEVEL, \
+                                           nt.maxlevel, \
+                                           nt.race, \
+                                           nt.class, \
+                                           nt.gender, \
+                                           nt.hp, \
+                                           nt.MR, \
+                                           nt.CR, \
+                                           nt.FR, \
+                                           nt.DR, \
+                                           nt.PR, \
+                                           IF(z.expansion IS NULL, 1, 0) as is_scripted
+                           FROM npc_types AS nt \
+                                    LEFT JOIN spawnentry AS se ON nt.id = se.npcID \
+                                    LEFT JOIN spawn2 AS s ON se.spawngroupID = s.spawngroupID \
+                                    LEFT JOIN zone AS z ON s.zone = z.short_name \
+                                    LEFT JOIN zone AS z2 ON z2.zoneidnumber = FLOOR(nt.id / 1000)
+                           WHERE nt.NAME LIKE %s
+                             AND nt.LEVEL >= %s
+                             AND nt.maxlevel <= %s \
+                        """
+                query_list: list[str | int] = ['%' + npc_name + '%', min_level, max_level]
+
+                if exclude_merchants:
+                    query += " AND nt.merchant_id = 0"
+                if expansion != "-1":  # any
+                    query += """ AND COALESCE(z.expansion, z2.expansion) = %s"""
+                    query_list.append(int(expansion))
+                if body_type != "-1":  # any
+                    query += """ AND nt.bodytype = %s"""
+                    query_list.append(body_type)
+                if npc_race != "-1":  # any
+                    query += """ AND nt.race = %s"""
+                    query_list.append(npc_race)
+                if npc_class != "-1":  # any
+                    query += """ AND nt.class = %s"""
+                    query_list.append(npc_class)
+
+                query += """ LIMIT %s"""
+                query_list.append(query_limit)
+
+                with connections['game_database'].cursor() as cursor:
+                    cursor.execute(query, query_list)
+                    results = cursor.fetchall()
+            except Exception as e:
+                logger.error(f"Error executing NPC search query: {e}", exc_info=True)
+                results = []
+
+            if results:
+                NpcTuple = namedtuple("NpcTuple", ["id", "name", "min_expansion", "long_name",
+                                                   "short_name", "level", "maxlevel", "race", "class_name", "gender",
+                                                   "hp", "MR", "CR", "FR", "DR", "PR", "is_scripted"])
+                for result in results:
+                    npc = NpcTuple(*result)
+                    if npc.min_expansion is None:
+                        npc = npc._replace(min_expansion=-2)
+                    search_results.append(npc)
 
         return render(request=request,
                       template_name="npcs/search_npc.html",
                       context={
+                          'form': form,
                           'expansions': expansions['expansions'],
                           "level_range": range(100),
                           'npc_body_types': npc_body_types['npc_body_types'],
@@ -170,6 +171,7 @@ def search(request):
                           'npc_classes': npc_classes['npc_classes'],
                           "search_results": search_results,
                       })
+    return HttpResponseNotAllowed(['GET', 'POST'])
 
 
 def view_npc(request, npc_id):

@@ -1,23 +1,23 @@
 {
   "expansions": [
     {
-      "id": 1,
+      "id": 0,
       "exp": "Vanilla"
     },
     {
-      "id": 2,
+      "id": 1,
       "exp": "Ruins of Kunark"
     },
     {
-      "id": 3,
+      "id": 2,
       "exp": "Scars of Velious"
     },
     {
-      "id": 4,
+      "id": 3,
       "exp": "Shadows of Luclin"
     },
     {
-      "id": 5,
+      "id": 4,
       "exp": "Planes of Power"
     }
   ]
