@@ -2,89 +2,72 @@
 {% load humanize %}
 {% load data_utilities %}
 {% block content %}
-    <div class="container py-5">
-        <div class="row">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="container-fluid content-pop">
-                            <div class="row">
-                                <div class="col-12">
-                                    <nav aria-label="breadcrumb">
-                                        <ol class="breadcrumb">
-                                            <li class="breadcrumb-item"><a href="/accounts/list">EQA Login Server</a>
-                                            </li>
-                                            <li class="breadcrumb-item active"
-                                                aria-current="page">{{ game_account_name }}
-                                            </li>
-                                        </ol>
-                                    </nav>
-                                    {% if is_mule %}
-                                        <div class="eq-mule-alert mb-3" role="alert">
-                                            <div class="eq-mule-alert-content">
-                                                <i class="fas fa-coins eq-mule-icon"></i>
-                                                <div class="eq-mule-text">
-                                                    <strong>Trader Account</strong>
-                                                    <span class="eq-mule-description">This account is configured for trading and commerce activities.</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    {% endif %}
-                                    <div class="eq-window-fancy">
-                                        <div class="row">
-                                            <div class="WindowNestedTan col">
-                                                <div class="WindowNestedTanTitleBar eq-header">
-                                                    <h1>Character Select</h1>
-                                                    <div class="text-muted small">
-                                                        Account: {{ game_account_name }}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <table class="eq-table eq-highlight-rows" style="display: table">
-                                                <thead>
-                                                <tr>
-                                                    <th>#</th>
-                                                    <th>Name</th>
-                                                    <th>Class</th>
-                                                    <th>Race</th>
-                                                    <th>Level</th>
-                                                    <th>Time Played</th>
-                                                    <th>Last Login</th>
-                                                    <th>Zone</th>
-                                                    <th>X</th>
-                                                    <th>Y</th>
-                                                    <th>Z</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                {% for character in characters %}
-                                                    <tr>
-                                                        <td>{{ forloop.counter }}</td>
-                                                        <td>
-                                                            <a href="/characters/view/{{ character.name }}">{{ character.name }}</a>
-                                                        </td>
-                                                        <td>{{ character.class_name|player_class }}</td>
-                                                        <td>{{ character.race|player_race }}</td>
-                                                        <td>{{ character.level }}</td>
-                                                        <td>{{ character.time_played|time_played }}</td>
-                                                        <td>{{ character.last_login|from_timestamp|naturaltime }}</td>
-                                                        <td>{{ character.zone_id|zone_filter:"long" }}</td>
-                                                        <td>{{ character.x }}</td>
-                                                        <td>{{ character.y }}</td>
-                                                        <td>{{ character.z }}</td>
-                                                    </tr>
-                                                {% endfor %}
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/accounts/list">EQA Login Server</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ game_account_name }}</li>
+            </ol>
+        </nav>
+
+        {% if is_mule %}
+            <div class="eq-mule-alert mb-3" role="alert">
+                <div class="eq-mule-alert-content">
+                    <i class="fas fa-coins eq-mule-icon"></i>
+                    <div class="eq-mule-text">
+                        <strong>Trader Account</strong>
+                        <span class="eq-mule-description">This account is configured for trading and commerce activities.</span>
                     </div>
                 </div>
             </div>
+        {% endif %}
+
+        <div class="eq-window mt-4">
+            <div class="WindowNestedTan">
+                <div class="WindowNestedTanTitleBar eq-header">
+                    <h1>Character Select</h1>
+                    <div class="text-muted small">
+                        Account: {{ game_account_name }}
+                    </div>
+                </div>
+            </div>
+
+            <table class="eq-table eq-highlight-rows" style="display: table">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Class</th>
+                    <th>Race</th>
+                    <th>Level</th>
+                    <th>Time Played</th>
+                    <th>Last Login</th>
+                    <th>Zone</th>
+                    <th>X</th>
+                    <th>Y</th>
+                    <th>Z</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for character in characters %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>
+                            <a href="/characters/view/{{ character.name }}">{{ character.name }}</a>
+                        </td>
+                        <td>{{ character.class_name|player_class }}</td>
+                        <td>{{ character.race|player_race }}</td>
+                        <td>{{ character.level }}</td>
+                        <td>{{ character.time_played|time_played }}</td>
+                        <td>{{ character.last_login|from_timestamp|naturaltime }}</td>
+                        <td>{{ character.zone_id|zone_filter:"long" }}</td>
+                        <td>{{ character.x }}</td>
+                        <td>{{ character.y }}</td>
+                        <td>{{ character.z }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
-
 {% endblock %}

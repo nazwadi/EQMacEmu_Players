@@ -40,4 +40,31 @@
             });
         });
     </script>
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.eq-tab-box-fancy li[data-tab]').forEach(tab => {
+        tab.addEventListener('click', function() {
+            // Remove active class from all tabs
+            document.querySelectorAll('.eq-tab-box-fancy li').forEach(t => {
+                t.classList.remove('eq-tab-open');
+            });
+
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.style.display = 'none';
+                content.classList.remove('active');
+            });
+
+            // Activate clicked tab
+            this.classList.add('eq-tab-open');
+            const tabId = 'tab-' + this.dataset.tab;
+            const content = document.getElementById(tabId);
+            if (content) {
+                content.style.display = 'block';
+                content.classList.add('active');
+            }
+        });
+    });
+});
+</script>
 {% endblock %}

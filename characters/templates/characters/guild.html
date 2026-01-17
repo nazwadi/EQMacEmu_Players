@@ -2,65 +2,78 @@
 {% load data_utilities %}
 {% load humanize %}
 {% block content %}
-    <div class="container-fluid">
+    <div class="">
         <div class="row">
             <div class="col-12">
-                <div class="container-fluid content-pop">
+                <div class="content-pop">
                     <div class="row">
                         <div class="col-12">
-                            <div class="eq-window-fancy">
-                                <div class="row">
-                                    <div class="eq-window-nested-tan col" style="overflow: hidden scroll">
-                                        <div class='WindowNestedTanTitleBar eq-header'>
-                                            <h2>{{ guild.name }}</h2>
-                                        </div>
-                                        <div class="eq-window-nested-tan eq-header">
-                                            <h5>MOTD:</h5>
-                                            {{ guild.motd }}
-                                        </div>
-                                        <table class="eq-table eq-highlight-rows" style="display: table">
-                                            <thead>
-                                            <tr>
-                                                <th>Name</th>
-                                                <th>Level</th>
-                                                <th>Class</th>
-                                                <th>Race</th>
-                                                <th>Rank</th>
-                                                <th>Zone</th>
-                                                <th>Alt</th>
-                                                <th>Last Online</th>
-                                                <th>Public Note</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            {% for member in guild_members %}
-                                                <tr>
-                                                    <td>{{ member.char_id.name }}</td>
-                                                    <td>{{ member.char_id.level }}</td>
-                                                    <td>{{ member.char_id.class_name|player_class }}</td>
-                                                    <td>{{ member.char_id.race|player_race }}</td>
-                                                    <td>{{ member.rank|guild_rank }}</td>
-                                                    <td>{{ member.char_id.zone_id|zone_filter:"long" }}</td>
-                                                    {% if member.alt %}
-                                                        <td>
-                                                            <label for="alt" class="eq-checkbox-label"></label>
-                                                            <input id="alt" class="eq-checkbox"
-                                                                   type="checkbox"/>
-                                                        </td>
-                                                    {% else %}
-                                                        <td>
-                                                            <label for="alt" class="eq-checkbox-label"></label>
-                                                            <input id="alt" class="eq-checkbox"
-                                                                   type="checkbox"/>
-                                                        </td>
-                                                    {% endif %}
-                                                    <td>{{ member.char_id.last_login|datetime_from_timestamp|naturaltime }}</td>
-                                                    <td>{{ member.public_note }}</td>
-                                                </tr>
-                                            {% endfor %}
-                                            </tbody>
-                                        </table>
+                            <div class="eq-window-simple">
+                                <div class="eq-window-title-bar">{{ guild.name }}</div>
+                                <div class="eq-window-nested-tan">
+                                    <div class="eq-window-nested-tan eq-header">
+                                        <h5>Message of the Day</h5>
                                     </div>
+                                    <p>{{ guild.motd }}</p>
+                                </div>
+
+                                <div class="eq-window-nested-tan" style="overflow-x: auto;">
+                                    <table class="eq-table eq-highlight-rows bordered">
+                                        <thead class="eq-table-floating-header">
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Level</th>
+                                            <th>Class</th>
+                                            <th>Race</th>
+                                            <th>Rank</th>
+                                            <th>Zone</th>
+                                            <th>Alt</th>
+                                            <th>Last Online</th>
+                                            <th>Public Note</th>
+                                            {% if user_is_guild_leader %}
+                                                <th>Actions</th>
+                                            {% endif %}
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for member in guild_members %}
+                                            <tr>
+                                                <td>{{ member.char_id.name }}</td>
+                                                <td>{{ member.char_id.level }}</td>
+                                                <td>{{ member.char_id.class_name|player_class }}</td>
+                                                <td>{{ member.char_id.race|player_race }}</td>
+                                                <td>{{ member.rank|guild_rank }}</td>
+                                                <td>{{ member.char_id.zone_id|zone_filter:"long" }}</td>
+                                                <td>
+                                                    <input id="alt-{{ member.char_id.id }}"
+                                                           class="eq-checkbox"
+                                                           type="checkbox"
+                                                           {% if member.alt %}checked{% endif %}
+                                                           disabled/>
+                                                    <label for="alt-{{ member.char_id.id }}"
+                                                           class="eq-checkbox-label"></label>
+                                                </td>
+                                                <td>{{ member.char_id.last_login|datetime_from_timestamp|naturaltime }}</td>
+                                                <td>{{ member.public_note }}</td>
+                                                {% if user_is_guild_leader %}
+                                                    <td>
+                                                    <form method="post"
+                                                          action="{% url 'characters:promote_member' member.char_id.id %}"
+                                                          style="display: flex; gap: 5px; align-items: center;">
+                                                        {% csrf_token %}
+                                                        <select name="new_rank">
+                                                            <option value="0" {% if member.rank == 0 %}selected{% endif %}>Member</option>
+                                                            <option value="1" {% if member.rank == 1 %}selected{% endif %}>Officer</option>
+                                                            <option value="2" {% if member.rank == 2 %}selected{% endif %}>Leader</option>
+                                                        </select>
+                                                        <button type="submit" class="eq-button-fancy">Update</button>
+                                                    </form>
+                                                    </td>
+                                                {% endif %}
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>

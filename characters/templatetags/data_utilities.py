@@ -868,3 +868,13 @@ def divide(value, arg):
 @register.filter(name="split")
 def split(value, arg):
     return value.split(arg)
+
+@register.filter
+def guild_rank(rank_value):
+    """Convert guild rank number to name"""
+    rank_names = {
+        0: 'Member',
+        1: 'Officer',
+        2: 'Leader',
+    }
+    return rank_names.get(rank_value, 'Member')
