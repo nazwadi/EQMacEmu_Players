@@ -338,8 +338,39 @@
 
                             async function updatePermission(permission, value, characterName) {
                                 try {
-                                    // Get CSRF token
-                                    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                                    // Get CSRF token - try multiple methods
+                                    let csrftoken = null;
+
+                                    // Method 1: Try to get from meta tag
+                                    const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+                                    if (csrfMeta) {
+                                        csrftoken = csrfMeta.getAttribute('content');
+                                    }
+
+                                    // Method 2: Try to get from hidden input field
+                                    if (!csrftoken) {
+                                        const csrfInput = document.querySelector('[name=csrfmiddlewaretoken]');
+                                        if (csrfInput) {
+                                            csrftoken = csrfInput.value;
+                                        }
+                                    }
+
+                                    // Method 3: Try to get from cookie
+                                    if (!csrftoken) {
+                                        const name = 'csrftoken';
+                                        const cookies = document.cookie.split(';');
+                                        for (let i = 0; i < cookies.length; i++) {
+                                            const cookie = cookies[i].trim();
+                                            if (cookie.startsWith(name + '=')) {
+                                                csrftoken = cookie.substring(name.length + 1);
+                                                break;
+                                            }
+                                        }
+                                    }
+
+                                    if (!csrftoken) {
+                                        throw new Error('CSRF token not found');
+                                    }
 
                                     console.log('Sending request:', {permission, value}); // Debug log
 
@@ -623,7 +654,8 @@
                                         >
                                             <div class="BagTitle">
                                                 <div class="BagTitleLeft"></div>
-                                                <div class="BagTitleMid" title="{{ bag.name }}">{{ bag.name|truncatechars:10 }}</div>
+                                                <div class="BagTitleMid"
+                                                     title="{{ bag.name }}">{{ bag.name|truncatechars:10 }}</div>
                                                 <div class="BagTitleRight"></div>
                                             </div>
 
@@ -785,6 +817,8 @@
 
                                                 <div class="InventoryMonogram">
                                                     <img src="
+
+
 
 
 
@@ -1110,7 +1144,8 @@
                                     >
                                         <div class="BagTitle">
                                             <div class="BagTitleLeft"></div>
-                                            <div class="BagTitleMid" title="{{ bag.name }}">{{ bag.name|truncatechars:10 }}</div>
+                                            <div class="BagTitleMid"
+                                                 title="{{ bag.name }}">{{ bag.name|truncatechars:10 }}</div>
                                             <div class="BagTitleRight"></div>
                                         </div>
 

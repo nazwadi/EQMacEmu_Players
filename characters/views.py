@@ -152,6 +152,7 @@ def view_character(request, character_name):
         time_played = datetime.timedelta(seconds=character.time_played)
         face_image = ''.join(["race_", str(character.race), "_gender_",
                               str(character.gender), "_face_", str(character.face), ".png"])
+
         return render(request=request, template_name="characters/view.html",
                       context={
                           "account": account,
