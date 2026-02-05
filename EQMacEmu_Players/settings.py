@@ -32,6 +32,13 @@ DJANGO_APP_DB_USER = os.environ.get("DJANGO_APP_DB_USER")
 DJANGO_APP_DB_PASSWORD = os.environ.get("DJANGO_APP_DB_PASSWORD")
 DJANGO_APP_DB_HOST = os.environ.get("DJANGO_APP_DB_HOST")
 DJANGO_APP_DB_PORT = os.environ.get("DJANGO_APP_DB_PORT")
+DJANGO_EMAIL_BACKEND = os.environ.get("DJANGO_EMAIL_BACKEND")
+DJANGO_EMAIL_HOST = os.environ.get("DJANGO_EMAIL_HOST")
+DJANGO_EMAIL_PORT = os.environ.get("DJANGO_EMAIL_PORT")
+DJANGO_EMAIL_USE_TLS = os.environ.get("DJANGO_EMAIL_USE_TLS")
+DJANGO_EMAIL_HOST_USER = os.environ.get("DJANGO_EMAIL_HOST_USER")
+DJANGO_EMAIL_HOST_PASSWORD = os.environ.get("DJANGO_EMAIL_HOST_PASSWORD")
+DJANGO_DEFAULT_FROM_EMAIL = os.environ.get("DJANGO_DEFAULT_FROM_EMAIL")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -327,3 +334,14 @@ MDEDITOR_CONFIGS = {
 # enabling media uploads
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 MEDIA_URL = '/media/'
+
+# Development - prints emails to console
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# Email backend configuration
+EMAIL_BACKEND = DJANGO_EMAIL_BACKEND
+EMAIL_HOST = DJANGO_EMAIL_HOST
+EMAIL_PORT = DJANGO_EMAIL_PORT
+EMAIL_USE_TLS = DJANGO_EMAIL_USE_TLS
+EMAIL_HOST_USER = DJANGO_EMAIL_HOST_USER
+EMAIL_HOST_PASSWORD = DJANGO_EMAIL_HOST_PASSWORD
+DEFAULT_FROM_EMAIL = DJANGO_DEFAULT_FROM_EMAIL

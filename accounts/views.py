@@ -57,7 +57,7 @@ def login_request(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                messages.info(request, f"You are now logged in as {username}.")
+                messages.success(request, f"Welcome back, {username}!")
                 return redirect("accounts:list_accounts")
             else:
                 messages.error(request, "Invalid username or password.")
@@ -80,9 +80,9 @@ def register_request(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            messages.success(request, "Registration successful.")
+            messages.success(request, "Registration successful! Welcome to EQArchives.")
             return redirect("accounts:index")
-        messages.error(request, "Unsuccessful registration. Invalid information.")
+        messages.error(request, "Registration unsuccessful. Please check the information and try again.")
     form = NewUserForm
     return render(request, "accounts/register.html", {'form': form})
 
