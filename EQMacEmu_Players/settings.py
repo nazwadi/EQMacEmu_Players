@@ -223,13 +223,53 @@ if not DEBUG:
 X_FRAME_OPTIONS = 'DENY'
 
 # Content Security Policy
+# Content Security Policy - protocol-aware
+if DEBUG:
+    # Development: allow both http and https (no protocol specified)
+    protocol = ""
+else:
+    # Production: enforce https only
+    protocol = "https://"
+
 SECURE_CONTENT_SECURITY_POLICY = {
     'default-src': ["'self'"],
-    'script-src': ["'self'", "'unsafe-inline'", "cdnjs.cloudflare.com"],
-    'style-src': ["'self'", "'unsafe-inline'", "fonts.googleapis.com"],
-    'font-src': ["'self'", "fonts.gstatic.com"],
-    'img-src': ["'self'", "data:", "*.cloudflare.com"],
-    'connect-src': ["'self'"],
+    'script-src': [
+        "'self'",
+        "'unsafe-inline'",
+        f"{protocol}cdnjs.cloudflare.com",
+        f"{protocol}cdn.jsdelivr.net",
+        f"{protocol}ajax.googleapis.com",
+        f"{protocol}static.cloudflareinsights.com",
+        f"{protocol}code.jquery.com",
+        f"{protocol}unpkg.com",
+        f"{protocol}cdn.datatables.net",
+    ],
+    'style-src': [
+        "'self'",
+        "'unsafe-inline'",
+        f"{protocol}fonts.googleapis.com",
+        f"{protocol}use.fontawesome.com",
+        f"{protocol}cdn.jsdelivr.net",
+        f"{protocol}cdn.datatables.net",
+    ],
+    'font-src': [
+        "'self'",
+        f"{protocol}fonts.gstatic.com",
+        f"{protocol}use.fontawesome.com",
+    ],
+    'img-src': [
+        "'self'",
+        "data:",
+        "blob:",
+        f"{protocol}*.cloudflare.com",
+        f"{protocol}secure.gravatar.com",
+    ],
+    'connect-src': [
+        "'self'",
+        "blob:",
+        f"{protocol}ajax.googleapis.com",
+        f"{protocol}static.cloudflareinsights.com",
+    ],
     'frame-ancestors': ["'none'"],
     'base-uri': ["'self'"],
     'form-action': ["'self'"],
@@ -239,7 +279,7 @@ SECURE_CONTENT_SECURITY_POLICY = {
 CSP_DIRECTIVES = []
 for directive, sources in SECURE_CONTENT_SECURITY_POLICY.items():
     CSP_DIRECTIVES.append(f"{directive.replace('_', '-')} {' '.join(sources)}")
-SECURE_CONTENT_SECURITY_POLICY_HEADER = '; '.join(CSP_DIRECTIVES)
+SECURE_CONTENT_SECURITY_POLICY = '; '.join(CSP_DIRECTIVES)
 
 # Permissions Policy
 SECURE_PERMISSIONS_POLICY = {
@@ -345,3 +385,7 @@ EMAIL_USE_TLS = DJANGO_EMAIL_USE_TLS
 EMAIL_HOST_USER = DJANGO_EMAIL_HOST_USER
 EMAIL_HOST_PASSWORD = DJANGO_EMAIL_HOST_PASSWORD
 DEFAULT_FROM_EMAIL = DJANGO_DEFAULT_FROM_EMAIL
+
+print("=" * 50)
+print("CSP Setting:", SECURE_CONTENT_SECURITY_POLICY)
+print("=" * 50)
