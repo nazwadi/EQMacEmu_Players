@@ -248,4 +248,11 @@ static/django_tables2/
 static/admin/
 staticfiles/
 
+# User-uploaded media (runtime artifacts)
+uploads/*
+!uploads/.gitkeep
+
+# Claude Code working files
+.claude/
+
 migrations/
