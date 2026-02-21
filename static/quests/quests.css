@@ -1,0 +1,317 @@
+/* Quest-specific styles that integrate with your dark theme main.css */
+
+/* Quest Info Box - adapted for dark theme */
+.questInfoBox {
+    border: 1px solid var(--border-color);
+    background: var(--bg-tertiary);
+    box-shadow: var(--shadow-standard, 5px 10px 20px rgba(0, 0, 0, 0.6));
+    box-sizing: border-box;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: box-shadow 0.2s ease;
+    font-size: 0.9375rem; /* 15px */
+    margin: 0 5px 5px 0;
+    width: 100%;
+}
+
+.questInfoBox .msb_top {
+    background-color: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+    color: var(--accent-color);
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: background-color 0.2s ease;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.questInfoBox .msb_sub {
+    background-color: var(--bg-content);
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+
+.questInfoBox th {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    font-weight: 600;
+    padding: 0.5rem;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.questInfoBox .table {
+    margin-bottom: 0;
+    background-color: var(--bg-tertiary);
+}
+
+.questInfoBox .table td {
+    padding: 0.5rem;
+    color: var(--text-primary);
+    border-top: 1px solid var(--border-light);
+}
+
+.questInfoBox ul {
+    margin: 0.5rem 0;
+    padding-left: 0.5rem;
+    color: var(--text-primary);
+}
+
+.questInfoBox ul li {
+    margin-bottom: 0.25rem;
+    color: var(--text-primary);
+}
+
+/* Quest Description Styles */
+.quest-description {
+    font-size: clamp(0.875rem, 2.5vw, 1rem);
+    line-height: 1.6;
+    width: 100%;
+    color: var(--text-primary);
+}
+
+.quest-description pre {
+    margin: 1rem 0;
+    padding: 1rem;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    border: 1px dashed var(--border-color);
+    border-radius: 4px;
+    font-family: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+    line-height: 1.4;
+    text-wrap: wrap;
+    overflow-x: auto;
+}
+
+.quest-description img {
+    max-width: 100%;
+    height: auto;
+}
+
+.quest-description-header {
+    padding: 0.75rem;
+    text-align: left;
+    font-weight: bold;
+    background-color: var(--bg-secondary);
+    color: var(--accent-color);
+    border-bottom: 1px solid var(--border-color);
+    border-radius: 4px;
+    margin: 0;
+}
+
+.quest-description-content {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    padding: 1rem 0.5rem;
+    color: var(--text-primary);
+}
+
+/* Summary Box */
+.quest-summary {
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    color: var(--text-primary);
+}
+
+.quest-summary i {
+    margin-right: 5px;
+    color: var(--accent-color);
+}
+
+/* Loading Animation */
+.quest-loading {
+    background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--bg-tertiary) 50%, var(--bg-secondary) 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Tooltip - Dark Theme */
+.tooltip-custom {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip-custom:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+.tooltip-text {
+    visibility: hidden;
+    width: 200px;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -100px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+/* Back to Top - Dark Theme */
+.back-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: none;
+    background-color: var(--accent-color);
+    color: var(--bg-dark);
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 14px;
+    border: 1px solid var(--border-color);
+}
+
+.back-to-top:hover {
+    background-color: var(--hover-color);
+    color: var(--text-primary);
+}
+
+/* Focus styles for accessibility - use your theme colors */
+.list-group-item:focus-within {
+    outline: 2px solid var(--accent-color);
+    outline-offset: -2px;
+}
+
+.list-group-item:hover {
+    background-color: var(--bg-content);
+}
+
+/* GitHub-style Task List Styles - Dark Theme */
+.quest-description-content ul li input[type="checkbox"] {
+    margin-right: 0.5em;
+}
+
+.quest-description-content ul li:has(input[type="checkbox"]) {
+    list-style-type: none;
+    padding-left: 0;
+    margin-left: -1.25em;
+}
+
+.quest-description-content ul.task-list li {
+    list-style-type: none;
+    padding-left: 0;
+    margin-left: -1.25em;
+}
+
+.quest-description-content input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+    background-color: var(--bg-tertiary);
+    vertical-align: middle;
+    position: relative;
+    cursor: pointer;
+}
+
+.quest-description-content input[type="checkbox"]:checked {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+.quest-description-content input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 2px;
+    width: 5px;
+    height: 9px;
+    border: solid var(--bg-dark);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.quest-description-content input[type="checkbox"]:focus {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 1px;
+}
+
+.quest-description-content input[type="checkbox"]:hover {
+    border-color: var(--hover-color);
+}
+
+.quest-description-content ul li:has(input[type="checkbox"]) {
+    margin-bottom: 0.5em;
+}
+
+.quest-description-content input[type="checkbox"]:checked + span {
+    text-decoration: line-through;
+    color: var(--text-muted);
+}
+
+/* Responsive Improvements */
+@media (max-width: 768px) {
+    .questInfoBox {
+        width: 100%;
+        box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.5);
+        margin: 0 0 1rem 0;
+    }
+
+    .quest-description {
+        font-size: 0.9rem;
+        line-height: 1.6;
+    }
+
+    .questInfoBox td,
+    .questInfoBox th {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    .questInfoBox ul {
+        padding-left: 1.25rem;
+    }
+
+    .back-to-top {
+        display: block;
+    }
+}
+
+/* Print styles */
+@media print {
+    .back-to-top,
+    .navbar {
+        display: none;
+    }
+
+    .questInfoBox {
+        box-shadow: none;
+        border: 1px solid var(--border-color);
+    }
+}
+
+/* Container padding for notched devices */
+@supports (padding: max(0px)) {
+    .container {
+        padding-left: max(0.75rem, env(safe-area-inset-left));
+        padding-right: max(0.75rem, env(safe-area-inset-right));
+    }
+}
