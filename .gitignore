@@ -244,5 +244,6 @@ fabric.properties
 static/debug_toolbar/
 static/django_tables2/
 static/admin/
+staticfiles/
 
 migrations/
