@@ -186,6 +186,8 @@ cython_debug/
 .idea/**/dynamic.xml
 .idea/**/uiDesigner.xml
 .idea/**/dbnavigator.xml
+.idea/data_source_mapping.xml
+.idea/db-forest-config.xml
 .idea/**/*.iml
 
 # Gradle
