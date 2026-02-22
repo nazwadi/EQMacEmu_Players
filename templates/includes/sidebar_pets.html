@@ -1,9 +1,9 @@
-<nav class="side-nav">
+<nav class="side-nav" id="sideNav" aria-label="Crafting &amp; Pets navigation">
     <div class="side-nav-section">
         <div class="side-nav-title">Crafting &amp; Pets</div>
-        <a href="{% url 'pets:list' %}" class="side-nav-item">Pets</a>
-        <a href="{% url 'recipes:search' %}" class="side-nav-item">Recipe Search</a>
-        <a href="{% url 'spells:search' %}" class="side-nav-item">Spell Search</a>
+        <a href="{% url 'pets:list' %}" class="side-nav-item"{% if request.resolver_match.app_name == 'pets' and request.resolver_match.url_name == 'list' %} aria-current="page"{% endif %}>Pets</a>
+        <a href="{% url 'recipes:search' %}" class="side-nav-item"{% if request.resolver_match.app_name == 'recipes' and request.resolver_match.url_name == 'search' %} aria-current="page"{% endif %}>Recipe Search</a>
+        <a href="{% url 'spells:search' %}" class="side-nav-item"{% if request.resolver_match.app_name == 'spells' and request.resolver_match.url_name == 'search' %} aria-current="page"{% endif %}>Spell Search</a>
     </div>
 </nav>
-<button class="side-nav-toggle" title="Collapse navigation">&#8249;</button>
+<button class="side-nav-toggle" type="button" aria-label="Collapse navigation" aria-expanded="true" aria-controls="sideNav">&#8249;</button>

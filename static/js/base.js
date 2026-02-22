@@ -23,11 +23,15 @@ document.addEventListener('DOMContentLoaded', function () {
             sidebar.classList.add('collapsed');
             toggle.classList.add('collapsed');
             toggle.title = 'Expand navigation';
+            toggle.setAttribute('aria-label', 'Expand navigation');
+            toggle.setAttribute('aria-expanded', 'false');
             toggle.textContent = '\u203A'; // ›
         } else {
             sidebar.classList.remove('collapsed');
             toggle.classList.remove('collapsed');
             toggle.title = 'Collapse navigation';
+            toggle.setAttribute('aria-label', 'Collapse navigation');
+            toggle.setAttribute('aria-expanded', 'true');
             toggle.textContent = '\u2039'; // ‹
         }
         localStorage.setItem(STORAGE_KEY, collapsed);

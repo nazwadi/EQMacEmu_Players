@@ -1,9 +1,9 @@
-<nav class="side-nav">
+<nav class="side-nav" id="sideNav" aria-label="Items &amp; Equipment navigation">
     <div class="side-nav-section">
         <div class="side-nav-title">Items &amp; Equipment</div>
-        <a href="{% url 'items:search' %}" class="side-nav-item">Item Search</a>
-        <a href="{% url 'items:discovered' %}" class="side-nav-item">Recently Discovered</a>
-        <a href="{% url 'items:bis' class_id=0 %}" class="side-nav-item">Best in Slot</a>
+        <a href="{% url 'items:search' %}" class="side-nav-item"{% if request.resolver_match.url_name == 'search' %} aria-current="page"{% endif %}>Item Search</a>
+        <a href="{% url 'items:discovered' %}" class="side-nav-item"{% if request.resolver_match.url_name == 'discovered' %} aria-current="page"{% endif %}>Recently Discovered</a>
+        <a href="{% url 'items:bis' class_id=0 %}" class="side-nav-item"{% if request.resolver_match.url_name == 'bis' %} aria-current="page"{% endif %}>Best in Slot</a>
     </div>
 </nav>
-<button class="side-nav-toggle" title="Collapse navigation">&#8249;</button>
+<button class="side-nav-toggle" type="button" aria-label="Collapse navigation" aria-expanded="true" aria-controls="sideNav">&#8249;</button>

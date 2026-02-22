@@ -27,31 +27,31 @@
                     <div class="dropdown-menu mega-menu p-3" aria-labelledby="databaseMenuLink">
                         <div class="mega-menu-grid">
 
-                            <div class="mega-menu-col">
-                                <div class="mega-menu-heading">Items &amp; Equipment</div>
-                                <a class="dropdown-item" href="{% url 'items:search' %}">Item Search</a>
-                                <a class="dropdown-item" href="{% url 'items:discovered' %}">Recently Discovered</a>
-                                <a class="dropdown-item" href="{% url 'items:bis' class_id=0 %}">Best in Slot</a>
-                            </div>
+                            <ul class="mega-menu-col" role="list">
+                                <li class="mega-menu-heading" aria-hidden="true">Items &amp; Equipment</li>
+                                <li><a class="dropdown-item" href="{% url 'items:search' %}">Item Search</a></li>
+                                <li><a class="dropdown-item" href="{% url 'items:discovered' %}">Recently Discovered</a></li>
+                                <li><a class="dropdown-item" href="{% url 'items:bis' class_id=0 %}">Best in Slot</a></li>
+                            </ul>
 
-                            <div class="mega-menu-col">
-                                <div class="mega-menu-heading">Spells</div>
-                                <a class="dropdown-item" href="{% url 'spells:search' %}">Spell Search</a>
-                                <a class="dropdown-item" href="{% url 'spells:index' %}">Spells by Class</a>
-                            </div>
+                            <ul class="mega-menu-col" role="list">
+                                <li class="mega-menu-heading" aria-hidden="true">Spells</li>
+                                <li><a class="dropdown-item" href="{% url 'spells:search' %}">Spell Search</a></li>
+                                <li><a class="dropdown-item" href="{% url 'spells:index' %}">Spells by Class</a></li>
+                            </ul>
 
-                            <div class="mega-menu-col">
-                                <div class="mega-menu-heading">World</div>
-                                <a class="dropdown-item" href="{% url 'npcs:search' %}">NPC Search</a>
-                                <a class="dropdown-item" href="{% url 'zones:index' %}">Zones</a>
-                                <a class="dropdown-item" href="{% url 'factions:search' %}">Factions</a>
-                            </div>
+                            <ul class="mega-menu-col" role="list">
+                                <li class="mega-menu-heading" aria-hidden="true">World</li>
+                                <li><a class="dropdown-item" href="{% url 'npcs:search' %}">NPC Search</a></li>
+                                <li><a class="dropdown-item" href="{% url 'zones:index' %}">Zones</a></li>
+                                <li><a class="dropdown-item" href="{% url 'factions:search' %}">Factions</a></li>
+                            </ul>
 
-                            <div class="mega-menu-col">
-                                <div class="mega-menu-heading">Crafting &amp; Pets</div>
-                                <a class="dropdown-item" href="{% url 'recipes:search' %}">Recipes</a>
-                                <a class="dropdown-item" href="{% url 'pets:list' %}">Pets</a>
-                            </div>
+                            <ul class="mega-menu-col" role="list">
+                                <li class="mega-menu-heading" aria-hidden="true">Crafting &amp; Pets</li>
+                                <li><a class="dropdown-item" href="{% url 'recipes:search' %}">Recipes</a></li>
+                                <li><a class="dropdown-item" href="{% url 'pets:list' %}">Pets</a></li>
+                            </ul>
 
                         </div>
                     </div>
@@ -66,18 +66,18 @@
                     <div class="dropdown-menu mega-menu p-3" aria-labelledby="toolsMenuLink">
                         <div class="mega-menu-grid">
 
-                            <div class="mega-menu-col">
-                                <div class="mega-menu-heading">Characters</div>
-                                <a class="dropdown-item" href="{% url 'magelo:search' %}">Magelo Profiles</a>
-                                <a class="dropdown-item" href="{% url 'characters:exp' %}">Experience Calculator</a>
-                            </div>
+                            <ul class="mega-menu-col" role="list">
+                                <li class="mega-menu-heading" aria-hidden="true">Characters</li>
+                                <li><a class="dropdown-item" href="{% url 'magelo:search' %}">Magelo Profiles</a></li>
+                                <li><a class="dropdown-item" href="{% url 'characters:exp' %}">Experience Calculator</a></li>
+                            </ul>
 
                             {% if user.is_authenticated %}
-                            <div class="mega-menu-col">
-                                <div class="mega-menu-heading">Account</div>
-                                <a class="dropdown-item" href="{% url 'accounts:inventory_search' %}">Inventory Search</a>
-                                <a class="dropdown-item" href="{% url 'character_transfer:index' %}">Character Transfer</a>
-                            </div>
+                            <ul class="mega-menu-col" role="list">
+                                <li class="mega-menu-heading" aria-hidden="true">Account</li>
+                                <li><a class="dropdown-item" href="{% url 'accounts:inventory_search' %}">Inventory Search</a></li>
+                                <li><a class="dropdown-item" href="{% url 'character_transfer:index' %}">Character Transfer</a></li>
+                            </ul>
                             {% endif %}
 
                         </div>
@@ -99,13 +99,13 @@
 
         <!-- Search + user -->
         <div class="d-flex px-5 text-end">
-            <button class="btn btn-outline-secondary fas fa-search me-2"></button>
+            <button class="btn btn-outline-secondary fas fa-search me-2" type="button" aria-label="Open search"></button>
             <div class="dropdown">
                 {% if user.is_authenticated %}
                     <button class="btn btn-secondary dropdown-toggle d-flex align-items-center" type="button"
                             data-bs-toggle="dropdown" aria-expanded="false" id="userMenuLink">
                         <img class="img-fluid img-responsive rounded-circle me-2"
-                             src="{% gravatar_url user.email 150 %}" width="38" height="38" alt="User gravatar">
+                             src="{% gravatar_url user.email 150 %}" width="38" height="38" alt="{{ user.username }}'s profile picture">
                         <span class="d-none d-sm-inline">{{ user.username }}</span>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenuLink">

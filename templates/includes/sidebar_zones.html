@@ -1,9 +1,9 @@
-<nav class="side-nav">
+<nav class="side-nav" id="sideNav" aria-label="Zones navigation">
     <div class="side-nav-section">
         <div class="side-nav-title">Zones</div>
-        <a href="{% url 'zones:index' %}" class="side-nav-item">Zone Index</a>
-        <a href="{% url 'npcs:search' %}" class="side-nav-item">NPC Search</a>
-        <a href="{% url 'factions:search' %}" class="side-nav-item">Factions</a>
+        <a href="{% url 'zones:index' %}" class="side-nav-item"{% if request.resolver_match.app_name == 'zones' and request.resolver_match.url_name == 'index' %} aria-current="page"{% endif %}>Zone Index</a>
+        <a href="{% url 'npcs:search' %}" class="side-nav-item"{% if request.resolver_match.app_name == 'npcs' and request.resolver_match.url_name == 'search' %} aria-current="page"{% endif %}>NPC Search</a>
+        <a href="{% url 'factions:search' %}" class="side-nav-item"{% if request.resolver_match.app_name == 'factions' and request.resolver_match.url_name == 'search' %} aria-current="page"{% endif %}>Factions</a>
     </div>
 </nav>
-<button class="side-nav-toggle" title="Collapse navigation">&#8249;</button>
+<button class="side-nav-toggle" type="button" aria-label="Collapse navigation" aria-expanded="true" aria-controls="sideNav">&#8249;</button>
