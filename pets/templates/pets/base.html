@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load data_utilities %}
+{% block sidebar %}{% include 'includes/sidebar_pets.html' %}{% endblock %}
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/eq-ui.css' %}">
 {% endblock %}

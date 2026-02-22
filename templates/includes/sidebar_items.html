@@ -1,0 +1,9 @@
+<nav class="side-nav">
+    <div class="side-nav-section">
+        <div class="side-nav-title">Items &amp; Equipment</div>
+        <a href="{% url 'items:search' %}" class="side-nav-item">Item Search</a>
+        <a href="{% url 'items:discovered' %}" class="side-nav-item">Recently Discovered</a>
+        <a href="{% url 'items:bis' class_id=0 %}" class="side-nav-item">Best in Slot</a>
+    </div>
+</nav>
+<button class="side-nav-toggle" title="Collapse navigation">&#8249;</button>

@@ -1,28 +1,54 @@
-function switchSection(section) {
-    // Update main nav active state
-    document.querySelectorAll('.navbar-nav .nav-link').forEach(item => {
-        item.classList.remove('active');
-        if (item.dataset.section === section) {
-            item.classList.add('active');
-        }
-    });
+// base.js - global site JS
 
-    // Hide all side nav sections
-    document.querySelectorAll('.side-nav-section').forEach(section => {
-        section.style.display = 'none';
-    });
+document.addEventListener('DOMContentLoaded', function () {
+    const sidebar = document.querySelector('.side-nav');
+    const toggle = document.querySelector('.side-nav-toggle');
 
-    // Show relevant side nav section
-    const targetSection = document.getElementById(section + '-nav');
-    if (targetSection) {
-        targetSection.style.display = 'block';
+    if (!sidebar || !toggle) return;
+
+    const STORAGE_KEY = 'sideNavCollapsed';
+    const isSmallScreen = window.innerWidth <= 1400;
+
+    // Determine initial state:
+    // - Small screens default to collapsed unless user explicitly opened it
+    // - Large screens default to open unless user explicitly closed it
+    function shouldStartCollapsed() {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored !== null) return stored === 'true';
+        return isSmallScreen;
     }
-}
 
-// Add click handlers for main nav
-document.querySelectorAll('.navbar-nav .nav-link[data-section]').forEach(item => {
-    item.addEventListener('click', (e) => {
-        e.preventDefault();
-        switchSection(item.dataset.section);
+    function setCollapsed(collapsed) {
+        if (collapsed) {
+            sidebar.classList.add('collapsed');
+            toggle.classList.add('collapsed');
+            toggle.title = 'Expand navigation';
+            toggle.textContent = '\u203A'; // ›
+        } else {
+            sidebar.classList.remove('collapsed');
+            toggle.classList.remove('collapsed');
+            toggle.title = 'Collapse navigation';
+            toggle.textContent = '\u2039'; // ‹
+        }
+        localStorage.setItem(STORAGE_KEY, collapsed);
+    }
+
+    // Apply initial state without transition flash
+    sidebar.style.transition = 'none';
+    toggle.style.transition = 'none';
+    setCollapsed(shouldStartCollapsed());
+
+    // Re-enable transitions after initial paint
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            sidebar.style.transition = '';
+            toggle.style.transition = '';
+        });
+    });
+
+    // Toggle on click
+    toggle.addEventListener('click', function () {
+        const isCollapsed = sidebar.classList.contains('collapsed');
+        setCollapsed(!isCollapsed);
     });
 });

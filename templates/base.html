@@ -35,10 +35,8 @@
 
 <!-- Main content wrapper with navigation structure -->
 <div class="layout-container">
-    <!-- Side navigation -->
-    {% block sidebar %}
-        {% include 'includes/sidebar.html' %}
-    {% endblock %}
+    <!-- Side navigation (overridden per-app; empty by default) -->
+    {% block sidebar %}{% endblock %}
 
     <!-- Main content -->
     <main class="main-content">

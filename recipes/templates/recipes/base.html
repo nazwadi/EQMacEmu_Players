@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% load data_utilities %}
+{% block sidebar %}{% include 'includes/sidebar_recipes.html' %}{% endblock %}
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/eq-ui.css' %}">
     <link rel="stylesheet" href="https://cdn.datatables.net/v/bs5/dt-2.0.2/datatables.min.css"
