@@ -40,7 +40,7 @@
                 <div class="col-6">
                     <div class="eq-window-simple">
                         <h3 class="eq-header"><img src="/static/images/icons/{{ spell_data.custom_icon }}.gif"
-                                                   alt="{{ spell_data.custom_icon }}.gif">&nbsp;{{ spell_data.name }}
+                                                   alt="{{ spell_data.name }}">&nbsp;{{ spell_data.name }}
                         </h3>
                         <span style="font-weight: bold; color: #8aa3ff;">Spell ID:</span>&nbsp;{{ spell_data.id }} <br/>
                         <hr/>
@@ -226,7 +226,7 @@
                         {% endif %}
                         <span style="font-weight: bold; color: #8aa3ff;">Expansion:</span>&nbsp;<img
                                     src="/static/images/{{ expansion|expansion_icon }}"
-                                    alt="{{ expansion|expansion_icon|default_if_none:"?" }}"/>
+                                    alt="{{ expansion|expansion_name|capfirst }} expansion"/>
                         <hr/>
                         <span style="font-weight: bold; color: #8aa3ff;">Duration:</span>&nbsp;
                         {% if spell_data.buff_duration == 0 %}

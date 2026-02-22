@@ -39,7 +39,7 @@
                             <td style="text-align: right;">
                                 {% if zone.expansion != 99 %}
                                     <img src="{% static "/images/" %}{{ zone.expansion|expansion_icon }}"
-                                         alt="{{ zone.expansion|expansion_icon }}"/>
+                                         alt="{{ zone.expansion|expansion_name|capfirst }} expansion"/>
                                 {% else %}
                                     Default
                                 {% endif %}

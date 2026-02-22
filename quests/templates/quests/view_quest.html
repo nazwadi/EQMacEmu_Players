@@ -6,7 +6,7 @@
 {% load npc_filters %}
 
 {% block content %}
-    <main class="container py-4">
+    <div class="container py-4">
         {% if quest_exists %}
             <article class="quest-details">
                 <header>
@@ -256,7 +256,7 @@
                 <a href="{% url 'accounts:index' %}" class="btn btn-secondary">Go to Homepage</a>
             </section>
         {% endif %} {# End if quest exists #}
-    </main>
+    </div>
 {% endblock %}
 {% block inline_js %}
     <script>

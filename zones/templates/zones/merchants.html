@@ -25,7 +25,7 @@
                         <td>{{ gender|gender }}</td>
                         <td>({{ y }}, {{ x }}, {{ z }})</td>
                         <td><img src="{% static "/images/" %}{{ min_expansion|expansion_icon }}"
-                                 alt="{{ min_expansion }}"></td>
+                                 alt="{{ min_expansion|expansion_name|capfirst }} expansion"></td>
                     </tr>
                 {% endfor %}
                 </tbody>

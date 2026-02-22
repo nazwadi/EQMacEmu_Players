@@ -644,7 +644,7 @@
                                 </div>
                             </nav>
 
-                            <main class="character-main">
+                            <div class="character-main">
                                 <div class="bags-container" style="width:200px;text-align:right">
                                     {% for bag in inventory_items.bags %}
                                         <div class="BagOuter bagrow{{ bag.rows }}"
@@ -865,7 +865,7 @@
                                                     <table class="StatTable">
                                                         <tr>
                                                             <td><img src="{% static 'magelo/pp.gif' %}"
-                                                                     alt="PP"></td>
+                                                                     alt="Platinum Pieces"></td>
                                                             <td style="text-align:center;width:100%">
                                                                 {% if permissions.coin_inventory %}
                                                                     {{ currency.platinum }}
@@ -880,7 +880,7 @@
                                                     <table class="StatTable">
                                                         <tr>
                                                             <td><img src="{% static 'magelo/gp.gif' %}"
-                                                                     alt="GP"></td>
+                                                                     alt="Gold Pieces"></td>
                                                             <td style="text-align:center;width:100%">
                                                                 {% if permissions.coin_inventory %}
                                                                     {{ currency.gold }}
@@ -895,7 +895,7 @@
                                                     <table class="StatTable">
                                                         <tr>
                                                             <td><img src="{% static 'magelo/sp.gif' %}"
-                                                                     alt="GP"></td>
+                                                                     alt="Silver Pieces"></td>
                                                             <td style="text-align:center;width:100%">
                                                                 {% if permissions.coin_inventory %}
                                                                     {{ currency.silver }}
@@ -910,7 +910,7 @@
                                                     <table class="StatTable">
                                                         <tr>
                                                             <td><img src="{% static 'magelo/cp.gif' %}"
-                                                                     alt="GP"></td>
+                                                                     alt="Copper Pieces"></td>
                                                             <td style="text-align:center;width:100%">
                                                                 {% if permissions.coin_inventory %}
                                                                     {{ currency.copper }}
@@ -1026,7 +1026,7 @@
                                                     <tbody>
                                                     <tr>
                                                         <td><img src="{% static 'magelo/pp.gif' %}"
-                                                                 alt="Bank PP"></td>
+                                                                 alt="Bank Platinum Pieces"></td>
                                                         <td style="text-align:center;width:100%">
                                                             {% if permissions.coin_bank %}
                                                                 {{ currency.platinum_bank }}
@@ -1042,7 +1042,7 @@
                                                 <table class="StatTable">
                                                     <tr>
                                                         <td><img src="{% static 'magelo/gp.gif' %}"
-                                                                 alt="Bank PP"></td>
+                                                                 alt="Bank Gold Pieces"></td>
                                                         <td style="text-align:center;width:100%">
                                                             {% if permissions.coin_bank %}
                                                                 {{ currency.gold_bank }}
@@ -1057,7 +1057,7 @@
                                                 <table class="StatTable">
                                                     <tr>
                                                         <td><img src="{% static 'magelo/sp.gif' %}"
-                                                                 alt="Bank PP"></td>
+                                                                 alt="Bank Silver Pieces"></td>
                                                         <td style="text-align:center;width:100%">
                                                             {% if permissions.coin_bank %}
                                                                 {{ currency.silver_bank }}
@@ -1072,7 +1072,7 @@
                                                 <table class="StatTable">
                                                     <tr>
                                                         <td><img src="{% static 'magelo/cp.gif' %}"
-                                                                 alt="Bank PP"></td>
+                                                                 alt="Bank Copper Pieces"></td>
                                                         <td style="text-align:center;width:100%">
                                                             {% if permissions.coin_bank %}
                                                                 {{ currency.copper_bank }}
@@ -1132,7 +1132,7 @@
                                         {% endfor %}
                                     {% endfor %}
                                 </div>
-                            </main>
+                            </div>
                             <!-- Bank Bags Container -->
                             <div class="bank-bags-container"
                                  style="position: absolute; width:200px;text-align:right; top: 0; right: 0; z-index: 999;">

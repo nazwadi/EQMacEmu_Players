@@ -4,7 +4,7 @@
 {% load static %}
 {% block title %}{% if tradeskill_recipe.name  %}{{ tradeskill_recipe.name }} - EQ Archives{% else %}View Recipe{% endif %}{% endblock %}
 {% block content %}
-    <main class="flex-shrink-0">
+    <div class="flex-shrink-0">
         <div class="container py-4">
             <div class="">
                 <div class="row">
@@ -34,7 +34,7 @@
                                         <dd><img class="no-round"
                                                  style="background:url(/static/images/icons/blank_slot.gif);"
                                                  src="/static/images/items/item_{{ entry.item_id.icon }}.png"
-                                                 alt=""/>
+                                                 alt="{{ entry.item_id.Name }}"/>
                                             <a style="text-decoration: none; color:#00ba00;"
                                                href="/items/view/{{ entry.item_id.id }}" data-url="12003"
                                                class="tooltip-link link"
@@ -55,7 +55,7 @@
                                         <dd><img class="no-round"
                                                  style="background:url(/static/images/icons/blank_slot.gif);"
                                                  src="/static/images/items/item_{{ entry.item_id.icon }}.png"
-                                                 alt=""/>&nbsp;<a style="text-decoration: none; color:#00ba00"
+                                                 alt="{{ entry.item_id.Name }}"/>&nbsp;<a style="text-decoration: none; color:#00ba00"
                                                                   href="/items/view/{{ entry.item_id }}"
                                                                   target="_blank">{{ entry.item_id.Name }}</a></dd>
                                         {% else %}
@@ -65,7 +65,7 @@
                                                         <dd><img class="no-round"
                                                                  style="background:url(/static/images/icons/blank_slot.gif);"
                                                                  src="/static/images/items/{{ container.0|trade_icon_filter }}"
-                                                                 alt=""/>&nbsp;
+                                                                 alt="{{ container_name }}"/>&nbsp;
                                                         {{ container_name }}
                                                     {% endif %}
                                                 {% endwith %}
@@ -105,5 +105,5 @@
             </div>
 
         </div>
-    </main>
+    </div>
 {% endblock %}

@@ -203,7 +203,7 @@
                                 No information
                             {% else %}
                                 <img src="/static/images/{{ expansion|expansion_icon }}"
-                                     alt="{{ expansion|expansion_icon }}"/>
+                                     alt="{{ expansion|expansion_name|capfirst }} expansion"/>
                             {% endif %}
                         </td>
                     </tr>
@@ -263,7 +263,7 @@
                                     <li class="px-1">
                                         <img src="
                                                 {% static "/images/icons/" %}{{ npc_spell_proc_data.custom_icon }}.gif"
-                                             alt="{{ npc_spell_proc_data.custom_icon }}.gif"/>
+                                             alt="{{ npc_spell_proc_data.spell_name }}"/>
                                         <a href="/spells/view/{{ npc_spell_proc_data.proc }}">{{ npc_spell_proc_data.spell_name }}</a>
                                     </li>
                                 {% else %}
@@ -285,7 +285,7 @@
                                 {% for custom_icon, spell_name, spell_id in npc_spells_entries %}
                                     <li>
                                         <img src="{% static "/images/icons/" %}{{ custom_icon }}.gif"
-                                             alt="{{ custom_icon }}.gif"/>
+                                             alt="{{ spell_name }}"/>
                                         <span class="px-1"><a
                                                 href="/spells/view/{{ spell_id }}">{{ spell_name }}</a></span>
                                     </li>
@@ -432,11 +432,11 @@
                                     <thead class="eq-table-floating-header">
                                     <tr>
                                         <th>Item Name</th>
-                                        <th><img src="{% static "/images/icons/Platinum.png" %}" alt="Platinum.png">
+                                        <th><img src="{% static "/images/icons/Platinum.png" %}" alt="Platinum">
                                         </th>
-                                        <th><img src="{% static "/images/icons/Gold.png" %}" alt="Gold.png"></th>
-                                        <th><img src="{% static "/images/icons/Silver.png" %}" alt="Silver.png"></th>
-                                        <th><img src="{% static "/images/icons/Copper.png" %}" alt="Copper.png"></th>
+                                        <th><img src="{% static "/images/icons/Gold.png" %}" alt="Gold"></th>
+                                        <th><img src="{% static "/images/icons/Silver.png" %}" alt="Silver"></th>
+                                        <th><img src="{% static "/images/icons/Copper.png" %}" alt="Copper"></th>
                                         <th>Qty</th>
                                     </tr>
                                     </thead>
@@ -444,7 +444,7 @@
                                     {% for item in merchant_list %}
                                         <tr>
                                             <td><img src="{% static "/images/items/" %}item_{{ item.icon }}.png"
-                                                     alt="{{ item.icon }}.png">&nbsp;<a href="/items/view/{{ item.id }}"
+                                                     alt="{{ item.name }}">&nbsp;<a href="/items/view/{{ item.id }}"
                                                                                         target="_blank">{{ item.name }}</a>
                                             </td>
                                             <td>{{ item.platinum.0 }}</td>
@@ -491,7 +491,7 @@
                                             {% else %}
                                                 <td>
                                                 <img src="{% static "/images/" %}{{ sp.min_expansion|expansion_icon }}"
-                                                     alt="{{ sp.min_expansion|expansion_icon }}">
+                                                     alt="{{ sp.min_expansion|expansion_name|capfirst }} expansion">
                                             {% endif %}
                                             </td>
                                         </tr>
@@ -594,7 +594,7 @@
                                                     <tr>
                                                         <td>
                                                             <img src="/static/images/items/item_{{ ld_entry.item_id.icon }}.png"
-                                                                 alt="item_{{ ld_entry.item_id.icon }}.png">
+                                                                 alt="{{ ld_entry.item_id.Name }}">
                                                             <a class="tooltip-link link"
                                                                data-url="{{ ld_entry.item_id.id }}"
                                                                href="/items/view/{{ ld_entry.item_id.id }}">{{ ld_entry.item_id.Name }}</a>

@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from django.shortcuts import redirect
+from accounts import views as accounts_views
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
@@ -36,7 +37,7 @@ def robots_txt(request):
     return HttpResponse("\n".join(lines), content_type="text/plain")
 
 urlpatterns = [
-    path(r"", lambda request: redirect("/accounts/")),
+    path("", accounts_views.index_request, name="home"),
     path("__debug__/", include("debug_toolbar.urls")),
     path("accounts/", include("accounts.urls")),
     path(settings.ADMIN_URL, admin.site.urls),  # Use the custom admin URL

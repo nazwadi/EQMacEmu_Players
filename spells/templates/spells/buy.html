@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="{% static 'spells/css/eq-ui.css' %}">
 {% endblock %}
 {% block content %}
-    <main class="flex-shrink-0">
+    <div class="flex-shrink-0">
         <div class="container py-4">
             <div class="row eq-window-complex">
                 {% if class_id == '8' %}
@@ -28,7 +28,7 @@
                         </thead>
                         {% for s in spells %}
                             <tr>
-                                <td class="min"><img src="/static/images/icons/{{ s.new_icon }}.gif"> <a
+                                <td class="min"><img src="/static/images/icons/{{ s.new_icon }}.gif" alt="{{ s.name }}"> <a
                                         href="/spells/view/{{ s.id }}"
                                         class="link" target="_blank">{{ s.name }}</a></td>
                                 <td>{{ s.level }}</td>
@@ -62,5 +62,5 @@
                 </div>
             </div>
         </div>
-    </main>
+    </div>
 {% endblock %}

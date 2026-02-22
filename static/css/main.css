@@ -82,6 +82,20 @@
     outline-offset: 2px;
 }
 
+/* Global keyboard focus ring - only appears for keyboard navigation, not mouse clicks */
+*:focus-visible {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 3px;
+    border-radius: 2px;
+}
+
+/* Prevent Bootstrap's light focus background from washing out text in dark dropdowns */
+.dropdown-item:focus,
+.dropdown-item:focus-visible {
+    background-color: rgba(255, 255, 255, 0.07) !important;
+    color: var(--accent-color) !important;
+}
+
 body {
     background-color: var(--bg-primary) !important;
     padding: 0 !important;
@@ -953,7 +967,8 @@ p.text-muted {
     border-left-color: var(--link-color);
 }
 
-.side-nav-item.active {
+.side-nav-item.active,
+.side-nav-item[aria-current="page"] {
     background: rgba(123, 113, 74, 0.2);
     color: var(--accent-color);
     border-left-color: var(--accent-color);

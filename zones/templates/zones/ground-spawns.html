@@ -20,16 +20,16 @@
                 {% for id, max_x, max_y, max_z, min_x, min_y, heading, max_allowed, comment, respawn_timer, item, item_name, icon, min_expansion, max_expansion in ground_spawns %}
                     <tr>
                         <td><img src="{% static '/images/items' %}/item_{{ icon }}.png"
-                                 alt="item_{{ icon }}.png">
+                                 alt="{{ item_name }}">
                             <a href="/items/view/{{ item }}"
                                target="_blank">{{ item_name }}</a>
                         </td>
                         <td>({{ max_y }}, {{ max_x }}, {{ max_z }})</td>
                         <td>{{ comment }}</td>
                         <td><img src="{% if min_expansion == -1 %}{% static "/images/Original.gif" %}{% else %}{% static "/images/" %}{{ min_expansion|expansion_icon }}{% endif %}"
-                                 alt="{{ min_expansion }}"></td>
+                                 alt="{{ min_expansion|expansion_name|capfirst }} expansion"></td>
                         <td>{% if max_expansion == -1 %}All{% elif max_expansion == 99 %}All Remaining{% else %}<img src="{% static "/images/" %}{{ max_expansion|expansion_icon }}"
-                                                                                                                     alt="{{ max_expansion }}">{% endif %}</td>
+                                                                                                                     alt="{{ max_expansion|expansion_name|capfirst }} expansion">{% endif %}</td>
                     </tr>
                 {% endfor %}
                 </tbody>

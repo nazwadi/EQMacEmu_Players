@@ -13,7 +13,7 @@
     {% endif %}
 {% endblock %}
 {% block content %}
-    <main class="flex-shrink-0">
+    <div class="flex-shrink-0">
         <div class="container py-4">
             <div class="row eq-window-complex-fancy">
                 {% if class_id|player_class == 'Bard' %}
@@ -79,7 +79,7 @@
                                                 </td>
                                                 <td><img
                                                         src="/static/images/{{ row.expansion|expansion_icon }}"
-                                                        alt="{{ expansion|expansion_icon|default_if_none:"?" }}"/>
+                                                        alt="{{ row.expansion|expansion_name|capfirst }} expansion"/>
                                                 </td>
                                             </tr>
                                         {% endfor %}
@@ -91,5 +91,5 @@
                 </div>
             </div>
         </div>
-    </main>
+    </div>
 {% endblock %}
