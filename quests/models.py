@@ -369,9 +369,6 @@ class QuestFactionRequired(models.Model):
     def __str__(self):
         return f"{self.name} ({self.id})"
 
-    def __unicode__(self):
-        return f"{self.name} ({self.id})"
-
     class Meta:
         verbose_name = 'Required Faction'
         verbose_name_plural = 'Required Factions'
@@ -385,9 +382,6 @@ class QuestFactionRaised(models.Model):
     def __str__(self):
         return f"{self.name} ({self.id})"
 
-    def __unicode__(self):
-        return f"{self.name} ({self.id})"
-
     class Meta:
         verbose_name = 'Raised Faction'
         verbose_name_plural = 'Raised Factions'
@@ -399,9 +393,6 @@ class QuestFactionLowered(models.Model):
     name = models.CharField(max_length=50, null=False)
 
     def __str__(self):
-        return f"{self.name} ({self.id})"
-
-    def __unicode__(self):
         return f"{self.name} ({self.id})"
 
     class Meta:
@@ -418,9 +409,6 @@ class QuestItem(models.Model):
     Name = models.CharField(max_length=64, null=False, default=0)
 
     def __str__(self):
-        return f"{self.Name} ({self.item_id})"
-
-    def __unicode__(self):
         return f"{self.Name} ({self.item_id})"
 
     class Meta:
@@ -444,9 +432,6 @@ class QuestsRelatedNPC(models.Model):
     def __str__(self):
         return f"{self.name} ({self.npc_id})"
 
-    def __unicode__(self):
-        return f"{self.name} ({self.npc_id})"
-
     class Meta:
         managed = True
         db_table = 'quests_related_npc'
@@ -468,9 +453,6 @@ class QuestsRelatedZone(models.Model):
     short_name = models.CharField(max_length=32, null=True, unique=True)
 
     def __str__(self):
-        return str(self.long_name)
-
-    def __unicode__(self):
         return str(self.long_name)
 
     class Meta:

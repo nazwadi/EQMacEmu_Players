@@ -320,10 +320,19 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'standard': {
+            'format': '{asctime} {levelname} {name} {message}',
+            'style': '{',
+        },
+    },
     'handlers': {
         'logfile': {
-            'class': 'logging.FileHandler',
+            'class': 'logging.handlers.RotatingFileHandler',
             'filename': 'server.log',
+            'maxBytes': 10 * 1024 * 1024,  # 10 MB
+            'backupCount': 5,
+            'formatter': 'standard',
         },
         'null': {
             'class': 'logging.NullHandler',
@@ -332,9 +341,15 @@ LOGGING = {
     'loggers': {
         'django': {
             'handlers': ['logfile'],
+            'level': 'WARNING',
         },
         'django.security.DisallowedHost': {
             'handlers': ['null'],
+            'propagate': False,
+        },
+        'eqmacemu.security': {
+            'handlers': ['logfile'],
+            'level': 'INFO',
             'propagate': False,
         },
     },
@@ -385,7 +400,3 @@ EMAIL_USE_TLS = DJANGO_EMAIL_USE_TLS
 EMAIL_HOST_USER = DJANGO_EMAIL_HOST_USER
 EMAIL_HOST_PASSWORD = DJANGO_EMAIL_HOST_PASSWORD
 DEFAULT_FROM_EMAIL = DJANGO_DEFAULT_FROM_EMAIL
-
-print("=" * 50)
-print("CSP Setting:", SECURE_CONTENT_SECURITY_POLICY)
-print("=" * 50)

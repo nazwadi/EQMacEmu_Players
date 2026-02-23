@@ -1,4 +1,7 @@
+import logging
 from datetime import datetime
+
+logger = logging.getLogger('eqmacemu.security')
 from django.utils import timezone
 from collections import namedtuple
 
@@ -57,11 +60,14 @@ def login_request(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
+                logger.info('LOGIN_SUCCESS user=%s ip=%s', username, get_client_ip(request))
                 messages.success(request, f"Welcome back, {username}!")
                 return redirect("accounts:list_accounts")
             else:
+                logger.warning('LOGIN_FAILED user=%s ip=%s', username, get_client_ip(request))
                 messages.error(request, "Invalid username or password.")
         else:
+            logger.warning('LOGIN_FAILED user=%s ip=%s', form.data.get('username', ''), get_client_ip(request))
             messages.error(request, "Invalid username or password.")
     form = AuthenticationForm()
     return render(request=request, template_name="accounts/login.html", context={"login_form": form})
@@ -80,6 +86,7 @@ def register_request(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
+            logger.info('REGISTER user=%s ip=%s', user.username, get_client_ip(request))
             messages.success(request, "Registration successful! Welcome to EQArchives.")
             return redirect("accounts:index")
         messages.error(request, "Registration unsuccessful. Please check the information and try again.")
@@ -134,6 +141,7 @@ def create_account(request):
             account.Num_IP_Bypass = 1
             account.ForumName = request.user.username
             account.save()
+            logger.info('ACCOUNT_CREATE user=%s ip=%s account=%s', request.user.username, get_client_ip(request), account.AccountName)
             messages.success(request, "Login Account Registration successful.")
             return redirect("accounts:list_accounts")
         messages.error(request, "Unsuccessful registration. Invalid information.")
@@ -148,15 +156,16 @@ def create_account(request):
 @login_required
 def update_account(request, pk):
     """Defines view for https://url.tld/accounts/update/<int:pk>"""
-    queryset = LoginServerAccounts.objects.filter(LoginServerID=pk)
-    data = queryset.values()[0]
-    if queryset.values() and request.user.username == queryset.values().first()['ForumName']:
+    queryset = LoginServerAccounts.objects.filter(LoginServerID=pk, ForumName=request.user.username)
+    if queryset.exists():
+        data = queryset.values()[0]
         if request.method == 'POST':
             form = UpdateLSAccountForm(request.POST)
             if form.is_valid():
                 queryset.update(AccountPassword=sha1_password(form.cleaned_data['AccountPassword']),
                                 AccountEmail=form.cleaned_data['AccountEmail'],
                                 LastIPAddress=get_client_ip(request))
+                logger.info('ACCOUNT_UPDATE user=%s ip=%s pk=%s', request.user.username, get_client_ip(request), pk)
                 messages.success(request, "Update successful for " + data['AccountName'] + ".")
                 return redirect("accounts:list_accounts")
             for key, value in form.errors.items():
@@ -169,16 +178,21 @@ def update_account(request, pk):
                       {'form': form, 'AccountName': queryset.values()[0]["AccountName"]}
                       )
 
+    logger.warning('ACCOUNT_UPDATE_DENIED user=%s ip=%s pk=%s', request.user.username, get_client_ip(request), pk)
+    return redirect("accounts:list_accounts")
+
 
 @login_required
 def delete_account(request, pk):
     """Defines view for https://url.tld/accounts/delete/<int:pk>"""
-    account = LoginServerAccounts.objects.filter(LoginServerID=pk)
-    if account.values() and request.user.username == account.values().first()['ForumName']:
+    account = LoginServerAccounts.objects.filter(LoginServerID=pk, ForumName=request.user.username)
+    if account.exists():
         account.delete()
+        logger.info('ACCOUNT_DELETE user=%s ip=%s pk=%s', request.user.username, get_client_ip(request), pk)
         messages.success(request, "Account deleted successfully.")
         return redirect("accounts:list_accounts")
 
+    logger.warning('ACCOUNT_DELETE_DENIED user=%s ip=%s pk=%s', request.user.username, get_client_ip(request), pk)
     messages.error(request,
                    "Unsuccessful delete attempt. The target account either does not exist or doesn't belong to you.")
     return redirect("accounts:list_accounts")
