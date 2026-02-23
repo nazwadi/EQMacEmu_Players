@@ -2,6 +2,10 @@ import logging
 from datetime import datetime
 
 logger = logging.getLogger('eqmacemu.security')
+
+
+def _rate_limit_key(group, request):
+    return get_client_ip(request)
 from django.utils import timezone
 from collections import namedtuple
 
@@ -24,6 +28,8 @@ from common.constants import (
     PLAYER_RACES,
 )
 from items.utils import build_stat_query, get_class_bitmask, get_item_effect, get_race_bitmask
+
+from django_ratelimit.decorators import ratelimit
 
 from .forms import NewLSAccountForm, NewUserForm, UpdateLSAccountForm
 from .models import Account, LoginServerAccounts, WorldServerRegistration
@@ -51,7 +57,12 @@ def server_list(request):
                                "population": population})
 
 
+@ratelimit(key=_rate_limit_key, rate='10/m', method='POST', block=False)
 def login_request(request):
+    if getattr(request, 'limited', False):
+        logger.warning('RATE_LIMITED_LOGIN ip=%s', get_client_ip(request))
+        messages.error(request, "Too many login attempts. Please try again later.")
+        return render(request=request, template_name="accounts/login.html", context={"login_form": AuthenticationForm()})
     if request.method == "POST":
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
@@ -80,7 +91,12 @@ def logout_request(request):
     return redirect("accounts:index")
 
 
+@ratelimit(key=_rate_limit_key, rate='5/h', method='POST', block=False)
 def register_request(request):
+    if getattr(request, 'limited', False):
+        logger.warning('RATE_LIMITED_REGISTER ip=%s', get_client_ip(request))
+        messages.error(request, "Too many registration attempts. Please try again later.")
+        return render(request, "accounts/register.html", {'form': NewUserForm})
     if request.method == 'POST':
         form = NewUserForm(request.POST)
         if form.is_valid():

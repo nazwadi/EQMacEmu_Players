@@ -66,8 +66,6 @@ def index(request):
                                The target account either does not exist or doesn't belong to you.")
                 return redirect("character_transfer:index")
             cursor = connections['game_database'].cursor()
-            account_id = request.POST.get("account")
-            character_id = request.POST.get("character")
             query = "UPDATE character_data SET account_id = %s WHERE id = %s;"
             cursor.execute(query, [account_id, character_id])
             messages.success(request, "Character transfer successful.")
