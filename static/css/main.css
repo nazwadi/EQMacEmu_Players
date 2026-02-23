@@ -16,6 +16,12 @@
 /*    --text-muted: #999999;*/
 /*    --border-light: rgba(123, 113, 74, 0.3);*/
 /*}*/
+@font-face {
+    font-family: 'menuetto';
+    src: url('../assets/fonts/Menuetto.ttf') format('truetype');
+    font-display: swap;
+}
+
 :root {
     /* Updated Cool Dark Gray Palette with Brown Accents */
     --bg-primary: #0f0f0f;           /* Almost black primary background */
@@ -303,10 +309,6 @@ nav.border {
     padding: 5%;
 }
 
-#logo a {
-    background: url(/static/images/eqalogo.png) right no-repeat;
-    width: 331px;
-}
 
 .expansion-tag span {
     border: 1px solid var(--border-color);
@@ -653,7 +655,6 @@ p.text-muted {
 .navbar {
     background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%) !important;
     border-bottom: 2px solid var(--border-color) !important;
-    min-height: 60px;
     padding: 0 20px !important;
     position: sticky;
     top: 0;
@@ -663,10 +664,8 @@ p.text-muted {
 
 /* Logo/brand styling */
 .navbar-brand {
-    color: var(--accent-color) !important;
-    font-size: 24px !important;
-    font-weight: bold !important;
-    text-shadow: 0px 0px 3px #000, 1px 2px 5px #000 !important;
+    display: flex;
+    align-items: center;
 }
 .navbar-nav {
     display: flex;
@@ -728,7 +727,7 @@ p.text-muted {
 }
 
 .navbar-light .navbar-brand {
-    color: var(--text-primary) !important;
+    color: var(--accent-color) !important;
 }
 
 /* Dropdown menus */
