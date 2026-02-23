@@ -1120,14 +1120,13 @@ p.text-muted {
     /*font-weight: bold !important;*/
 }
 
-/* Footer styling to match navbar */
-.container-fluid.border-top {
-    border-top: 2px solid var(--border-color) !important;
-    background-color: var(--bg-secondary) !important;
-}
-
-.container-fluid.bg-light {
-    background-color: var(--bg-secondary) !important;
+/* Footer wrapper — full-bleed, no border-radius, anchors the page bottom */
+.footer-wrapper {
+    background-color: var(--bg-secondary);
+    border-top: 2px solid var(--border-color);
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    width: 100%;
 }
 
 /* Footer content */
@@ -1135,8 +1134,17 @@ footer {
     color: var(--text-primary) !important;
 }
 
-footer h5 {
+/* Footer headings — EQ serif font with accent left-border for visual rhythm */
+footer h5,
+.footer-heading {
+    font-family: menuetto, serif;
     color: var(--accent-color) !important;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+    padding-left: 0.6rem;
+    border-left: 3px solid var(--accent-color);
+    margin-bottom: 0.75rem;
+    white-space: nowrap;
 }
 
 footer .nav-link {
