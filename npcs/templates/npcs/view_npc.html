@@ -5,6 +5,13 @@
 {% load humanize %}
 {% load expansion_filters %}
 {% load markdown_extras %}
+{% block extra_meta %}
+    <meta name="description" content="{{ npc_data.name|clean_name }} — NPC information on EQ Archives including drops, faction, and stats.">
+    <meta property="og:title" content="{{ npc_data.name|clean_name }} - EQ Archives">
+    <meta property="og:description" content="{{ npc_data.name|clean_name }} — NPC information on EQ Archives including drops, faction, and stats.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
+{% endblock %}
 {% block title %}{{ npc_data.name|clean_name }} - EQ Archives{% endblock %}
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/eq-ui.css' %}">

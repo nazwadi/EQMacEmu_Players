@@ -2,6 +2,13 @@
 {% load static %}
 {% load data_utilities %}
 {% load humanize %}
+{% block extra_meta %}
+    <meta name="description" content="{{ zone_data.long_name }} — zone information on EQ Archives including NPCs, items, and quests.">
+    <meta property="og:title" content="{{ zone_data.long_name }} - EQ Archives">
+    <meta property="og:description" content="{{ zone_data.long_name }} — zone information on EQ Archives including NPCs, items, and quests.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
+{% endblock %}
 {% block title %}{{ zone_data.long_name }} - EQ Archives {% endblock %}
 {% block content %}
     <div class="container-fluid">

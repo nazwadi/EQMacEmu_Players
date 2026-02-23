@@ -1,6 +1,13 @@
 {% extends 'magelo/base.html' %}
 {% load static %}
 {% load data_utilities %}
+{% block extra_meta %}
+    <meta name="description" content="{{ character_name }}'s character profile on EQ Archives — view gear, stats, and progression.">
+    <meta property="og:title" content="{{ character_name }}'s Profile - EQ Archives">
+    <meta property="og:description" content="{{ character_name }}'s character profile on EQ Archives — view gear, stats, and progression.">
+    <meta property="og:type" content="profile">
+    <meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
+{% endblock %}
 {% block title %}EQA Character Browser - {{ character_name }}'s Profile{% endblock %}
 {% block content %}
     <div class="container-fluid container-lg py-4">

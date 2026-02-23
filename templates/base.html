@@ -5,6 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token }}">
+    <!-- Default meta description and OG tags (overridden per-page via extra_meta block) -->
+    <meta name="description" content="{% block meta_description %}EQ Archives — a community database and account portal for the EverQuest Mac emulator server.{% endblock %}">
+    <meta property="og:site_name" content="EQ Archives">
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+    <meta property="og:title" content="{% block og_title %}EQ Archives{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}EQ Archives — a community database and account portal for the EverQuest Mac emulator server.{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% load static %}{% static 'images/eqalogo.png' %}{% endblock %}">
+    <meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
     <!-- App-specific meta tags -->
     {% block extra_meta %}{% endblock %}
 
