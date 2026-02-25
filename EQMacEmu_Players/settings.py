@@ -71,6 +71,7 @@ INSTALLED_APPS = [
     'django_gravatar',
     'django_jsonform',
     'django_tables2',
+    'dkp.apps.DkpConfig',
     'crispy_forms',
     'crispy_bootstrap5',
     'factions.apps.FactionConfig',
