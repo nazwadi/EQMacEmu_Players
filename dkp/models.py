@@ -61,3 +61,14 @@ class CircuitMembership(models.Model):
 
     def __str__(self):
         return f'{self.member.username} ({self.role})'
+
+class Mob(models.Model):
+    """Represents a mob within a RaidCircuit with associated DKP and activity status."""
+    name = models.CharField(max_length=200)
+    dkp = models.DecimalField(max_digits=6, decimal_places=1)
+    circuit = models.ForeignKey(RaidCircuit, on_delete=models.CASCADE)
+    is_active = models.BooleanField(default=True)
+    payout_change_history = models.JSONField(default=list)
+
+    def __str__(self):
+        return self.name
