@@ -72,3 +72,17 @@ class Mob(models.Model):
 
     def __str__(self):
         return self.name
+
+class Raid(models.Model):
+    """Represents a raid event within a RaidCircuit."""
+    date = models.DateField()
+    labels = models.CharField(max_length=200, blank=True)
+    circuit = models.ForeignKey(RaidCircuit, on_delete=models.CASCADE)
+    members = models.ManyToManyField('CircuitMembership', through='RaidAttendance')
+    mobs = models.ManyToManyField('Mob')
+    notes = models.TextField(blank=True)
+    created_by = models.ForeignKey('auth.User', on_delete=models.SET_NULL, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.date}'
