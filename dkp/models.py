@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Model
 
 TIEBREAKER_CHOICES = [
     ('earned_dkp', 'Earned DKP'),
@@ -6,6 +7,12 @@ TIEBREAKER_CHOICES = [
 ]
 STATUS_CHOICES = [('active', 'Active'), ('inactive', 'Inactive'), ('pending', 'Pending Approval')]
 ROLE_CHOICES = [('officer', 'Officer'), ('member', 'Member')]
+ATTENDANCE_CHOICES = [
+    ('present', 'Present'),
+    ('late', 'Late'),
+    ('early_departure', 'Early Departure'),
+    ('absent', 'Absent'),
+]
 
 
 # Create your models here.
@@ -86,3 +93,19 @@ class Raid(models.Model):
 
     def __str__(self):
         return f'{self.date}'
+
+class RaidAttendance(models.Model):
+    """Represents the attendance of a member in a raid event."""
+    member = models.ForeignKey('CircuitMembership', on_delete=models.CASCADE)
+    raid = models.ForeignKey(Raid, on_delete=models.CASCADE)
+    arrived_at = models.DateTimeField(null=True, blank=True)
+    departed_at = models.DateTimeField(null=True, blank=True)
+    partial_hours = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    attendance_status = models.CharField(max_length=20, choices=ATTENDANCE_CHOICES, default='present')
+    attendance_notes = models.TextField(blank=True)
+
+    def __str__(self):
+        return f'{self.member.display_name} in {self.raid.date}'
+
+    class Meta:
+        unique_together = ('member', 'raid')
