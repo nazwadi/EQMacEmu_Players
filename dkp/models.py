@@ -1,5 +1,4 @@
 from django.db import models
-from django.db.models import Model
 
 TIEBREAKER_CHOICES = [
     ('earned_dkp', 'Earned DKP'),
@@ -12,6 +11,11 @@ ATTENDANCE_CHOICES = [
     ('late', 'Late'),
     ('early_departure', 'Early Departure'),
     ('absent', 'Absent'),
+]
+TRANSACTION_TYPE_CHOICES = [
+    ('award', 'Award'),
+    ('spend', 'Spend'),
+    ('adjustment', 'Adjustment')
 ]
 
 
@@ -109,3 +113,20 @@ class RaidAttendance(models.Model):
 
     class Meta:
         unique_together = ('member', 'raid')
+
+class DKPTransaction(models.Model):
+    """Represents a DKP transaction for an item at a Raid"""
+    raid = models.ForeignKey(Raid, null=True, blank=True, on_delete=models.SET_NULL)
+    member = models.ForeignKey(CircuitMembership, on_delete=models.CASCADE)
+    item_name = models.CharField(max_length=200, null=True, blank=True)
+    item_id = models.IntegerField(blank=True, null=True)
+    amount = models.DecimalField(max_digits=6, decimal_places=1)
+    transaction_type = models.CharField(max_length=20, choices=TRANSACTION_TYPE_CHOICES)
+    transaction_date = models.DateTimeField(auto_now_add=True)
+    transaction_notes = models.TextField(blank=True)
+    created_by = models.ForeignKey('auth.User', on_delete=models.SET_NULL, null=True, blank=True)
+
+    def __str__(self):
+        raid_date = self.raid.date if self.raid else 'Manual Adjustment'
+        item = self.item_name or ''
+        return f'{self.member.display_name} - {self.transaction_type} - {self.amount} DKP {item} ({raid_date})'
