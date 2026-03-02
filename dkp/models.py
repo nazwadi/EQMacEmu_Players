@@ -17,6 +17,8 @@ TRANSACTION_TYPE_CHOICES = [
     ('spend', 'Spend'),
     ('adjustment', 'Adjustment')
 ]
+AUCTION_STATUS_CHOICES = [('pending', 'Pending'), ('open', 'Open'), ('closed', 'Closed'), ('awarded', 'Awarded'),
+                          ('disputed', 'Disputed'), ('retracted', 'Retracted')]
 
 
 # Create your models here.
@@ -130,3 +132,20 @@ class DKPTransaction(models.Model):
         raid_date = self.raid.date if self.raid else 'Manual Adjustment'
         item = self.item_name or ''
         return f'{self.member.display_name} - {self.transaction_type} - {self.amount} DKP {item} ({raid_date})'
+
+class Auction(models.Model):
+    """Represents an auction for an item at a Raid"""
+    raid = models.ForeignKey(Raid, null=True, blank=True, on_delete=models.SET_NULL)
+    item_name = models.CharField(max_length=200, null=True, blank=True)
+    item_id = models.IntegerField(null=True, blank=True)
+    status = models.CharField(max_length=20, choices=AUCTION_STATUS_CHOICES, default='pending')
+    opened_at = models.DateTimeField(auto_now_add=True)
+    closed_at = models.DateTimeField(null=True, blank=True)
+    resolution_order = models.JSONField(default=list)
+    admin_override = models.ForeignKey(CircuitMembership, on_delete=models.SET_NULL, null=True, blank=True, related_name='auctioned_overrides')
+    override_reason = models.TextField(blank=True)
+    created_by = models.ForeignKey('auth.User', on_delete=models.SET_NULL, null=True, blank=True)
+
+    def __str__(self):
+        raid_date = self.raid.date if self.raid else 'No Raid'
+        return f'{self.item_name} ({raid_date})'
