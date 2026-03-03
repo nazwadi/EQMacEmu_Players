@@ -19,6 +19,7 @@ TRANSACTION_TYPE_CHOICES = [
 ]
 AUCTION_STATUS_CHOICES = [('pending', 'Pending'), ('open', 'Open'), ('closed', 'Closed'), ('awarded', 'Awarded'),
                           ('disputed', 'Disputed'), ('retracted', 'Retracted')]
+BID_STATUS_CHOICES = [('active', 'Active'), ('retracted', 'Retracted'), ('outbid', 'Outbid'), ('lost', 'Lost'), ('won', 'Won'), ('disputed', 'Disputed')]
 
 
 # Create your models here.
@@ -149,3 +150,17 @@ class Auction(models.Model):
     def __str__(self):
         raid_date = self.raid.date if self.raid else 'No Raid'
         return f'{self.item_name} ({raid_date})'
+
+class Bid(models.Model):
+    """Represents a bid in an auction"""
+    auction = models.ForeignKey(Auction, on_delete=models.CASCADE)
+    member = models.ForeignKey(CircuitMembership, on_delete=models.CASCADE)
+    bid_amount = models.DecimalField(max_digits=6, decimal_places=1)
+    bidder_notes = models.TextField(blank=True)
+    status = models.CharField(max_length=20, choices=BID_STATUS_CHOICES, default='active')
+    submitted_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
+    created_by = models.ForeignKey('auth.User', on_delete=models.SET_NULL, null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.member.display_name} - {self.auction.item_name} - {self.bid_amount} DKP'
