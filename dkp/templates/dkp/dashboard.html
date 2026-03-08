@@ -34,11 +34,9 @@
                         <div style="display:flex; align-items:center; gap:6px;">
                             <span style="color:#aaa; font-size:11px; text-transform:uppercase; letter-spacing:1px;">Circuit:</span>
                             <form method="get" action="{% url 'dkp:dashboard' %}">
-                                <select name="circuit" class="form-select"
-                                        style="width:auto; display:inline-block; cursor:pointer;
-                               background-color:#1a1a2e !important; color:#fcc721 !important;
-                               border:1px solid #444; font-family:menuetto,serif; font-size:16px;
-                               padding:4px 30px 4px 10px;"
+                                <select name="circuit"
+                                        style="background-color:#1a1a2e; color:#fcc721; border:1px solid #555;
+               border-radius:4px; padding:4px 8px; font-size:14px; cursor:pointer;"
                                         onchange="this.form.submit()">
                                     {% for m in all_memberships %}
                                         <option value="{{ m.id }}" {% if m.id == membership.id %}selected{% endif %}>
