@@ -5,15 +5,15 @@
         <div class="side-nav-section">
             <div class="side-nav-title">{{ circuit.name }}</div>
             <a href="{% url 'dkp:standings' circuit.id %}" class="side-nav-item"
-               {% if request.resolver_match.url_name == 'standings' %}aria-current="page"{% endif %}>
+               {% if request.resolver_match.url_name == 'standings' and request.resolver_match.kwargs.circuit_id == circuit.id %}aria-current="page"{% endif %}>
                 Standings
             </a>
             <a href="{% url 'dkp:raid_list' circuit.id %}" class="side-nav-item"
-               {% if request.resolver_match.url_name == 'raid_list' %}aria-current="page"{% endif %}>
+               {% if request.resolver_match.url_name == 'raid_list' and request.resolver_match.kwargs.circuit_id == circuit.id %}aria-current="page"{% endif %}>
                 Raid History
             </a>
             <a href="{% url 'dkp:auction_list' circuit.id %}" class="side-nav-item"
-               {% if request.resolver_match.url_name == 'auction_list' %}aria-current="page"{% endif %}>
+               {% if request.resolver_match.url_name == 'auction_list' and request.resolver_match.kwargs.circuit_id == circuit.id %}aria-current="page"{% endif %}>
                 Auctions
             </a>
         </div>
