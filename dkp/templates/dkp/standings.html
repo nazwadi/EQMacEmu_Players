@@ -1,15 +1,28 @@
 {% extends 'dkp/base.html' %}
 {% block title %}{{ circuit.name }} Standings — EQ Archives{% endblock %}
-
+{% block inline_css %}
+<style>
+@media (max-width: 576px) {
+    #standings-table th:nth-child(4),
+    #standings-table td:nth-child(4),
+    #standings-table th:nth-child(5),
+    #standings-table td:nth-child(5) {
+        display: none;
+    }
+}
+</style>
+{% endblock %}
 {% block content %}
     <div class="container">
         <div class="eq-window mt-4" style="padding-top: 40px;">
             <div class="eq-window-title-bar">DKP Standings</div>
 
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <a href="{% url 'dkp:circuit_list' %}" class="eq-button-fancy">← All Circuits</a>
-                <h4 class="eq-header mb-0">{{ circuit.name }}</h4>
-                <input type="text" id="standings-filter" class="eq-input form-control" style="width: 200px;"
+            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2 mb-3">
+                <a href="{% url 'dkp:circuit_list' %}" class="eq-button-fancy" style="white-space:nowrap;">← All
+                    Circuits</a>
+                <h4 class="eq-header mb-0 text-center" style="font-size:clamp(16px, 4vw, 28px);">{{ circuit.name }}</h4>
+                <input type="text" id="standings-filter" class="eq-input form-control"
+                       style="width:200px; max-width:100%;"
                        placeholder="Filter players...">
             </div>
 
@@ -57,7 +70,7 @@
                 </div>
             {% endif %}
 
-            <div class="WindowNestedTan">
+            <div class="WindowNestedTan" style="overflow-x:auto;">
                 <table class="eq-table eq-highlight-rows" id="standings-table">
                     <thead>
                     <tr>
