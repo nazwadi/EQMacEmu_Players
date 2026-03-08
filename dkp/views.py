@@ -3,6 +3,7 @@ from decimal import Decimal, InvalidOperation
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Max
 from django.http import Http404
+from django.core.cache import cache
 from django.shortcuts import render, redirect
 from dkp.models import CircuitConfig, CircuitMembership, DKPTransaction, Auction, Bid, RaidCircuit, Raid, \
     RaidAttendance, Mob
@@ -849,6 +850,7 @@ def member_list(request, circuit_id):
         if action == 'approve':
             membership.status = 'active'
             membership.save(update_fields=['status'])
+            cache.delete(f'dkp:standings:{circuit_id}')
             messages.success(request, f'{membership.display_name} approved.')
 
         elif action == 'deactivate':
