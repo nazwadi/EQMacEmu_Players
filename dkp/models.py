@@ -1,4 +1,6 @@
 from django.db import models
+from django.utils import timezone
+
 
 TIEBREAKER_CHOICES = [
     ('earned_dkp', 'Earned DKP'),
@@ -87,6 +89,19 @@ class Mob(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        if self.pk:
+            old = Mob.objects.filter(pk=self.pk).values_list('dkp', flat=True).first()
+            if old is not None and old != self.dkp:
+                history = self.payout_change_history or []
+                history.append({
+                    'date': timezone.now().strftime('%Y-%m-%d'),
+                    'old_dkp': str(old),
+                    'new_dkp': str(self.dkp),
+                })
+                self.payout_change_history = history
+        super().save(*args, **kwargs)
 
 class Raid(models.Model):
     """Represents a raid event within a RaidCircuit."""
