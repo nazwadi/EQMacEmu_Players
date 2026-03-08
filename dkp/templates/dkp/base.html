@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/eq-ui.css' %}">
+{% endblock %}
+
+{% block sidebar %}
+    {% include 'includes/sidebar_dkp.html' %}
+{% endblock %}

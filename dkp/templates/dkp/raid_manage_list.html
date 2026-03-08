@@ -1,0 +1,56 @@
+{% extends 'dkp/base.html' %}
+{% block title %}Manage Raids — {{ circuit.name }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="eq-window mt-4" style="padding-top: 40px;">
+        <div class="eq-window-title-bar">Manage Raids</div>
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <a href="{% url 'dkp:raid_list' circuit.id %}" class="eq-button-fancy">← Raid History</a>
+            <h4 class="eq-header mb-0">{{ circuit.name }}</h4>
+            <a href="{% url 'dkp:raid_create' circuit.id %}" class="eq-button-fancy">+ New Raid</a>
+        </div>
+
+        <div class="WindowNestedTan">
+            <table class="eq-table eq-highlight-rows bordered">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Raid</th>
+                        <th>Attendees</th>
+                        <th>Mobs</th>
+                        <th>Visibility</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for raid in raids %}
+                    <tr>
+                        <td style="white-space:nowrap;">{{ raid.date|date:"M d, Y" }}</td>
+                        <td>{{ raid.labels|default:"—" }}</td>
+                        <td>{{ raid.members.count }}</td>
+                        <td>{{ raid.mobs.count }}</td>
+                        <td>
+                            {% if raid.is_private %}
+                                <span style="font-size:10px; color:#ff9; border:1px solid #ff9; border-radius:3px; padding:1px 4px;">Private</span>
+                            {% else %}
+                                <span style="font-size:10px; color:#9f9; border:1px solid #9f9; border-radius:3px; padding:1px 4px;">Public</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'dkp:raid_manage_detail' raid.id %}" class="eq-button-fancy" style="font-size:13px;">Edit</a>
+                            <a href="{% url 'dkp:raid_delete' raid.id %}" class="eq-button-fancy" style="font-size:13px; color:#ff6b6b;">Delete</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" style="text-align:center; padding:20px; color:#aaa;">No raids yet. <a href="{% url 'dkp:raid_create' circuit.id %}" class="eq-button-fancy" style="font-size:14px;">Create one</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

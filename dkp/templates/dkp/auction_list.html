@@ -1,0 +1,132 @@
+{% extends 'dkp/base.html' %}
+{% block title %}Auctions — {{ circuit.name }} — EQ Archives{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="eq-window mt-4" style="padding-top: 40px;">
+            <div class="eq-window-title-bar">Auctions</div>
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <a href="{% url 'dkp:standings' circuit.id %}" class="eq-button-fancy">← Standings</a>
+                <h4 class="eq-header mb-0">{{ circuit.name }}</h4>
+                <div style="width:120px;"></div>
+            </div>
+
+            <nav class="eq-tab-box-fancy">
+                <ul>
+                    <li data-tab="active" class="eq-tab-open">Active ({{ active_auctions.count }})</li>
+                    <li data-tab="closed">Closed ({{ closed_auctions.count }})</li>
+                </ul>
+            </nav>
+
+            {# Active Tab #}
+            <div id="tab-active" class="tab-content" style="display:block;">
+                <div class="WindowNestedTan">
+                    <table class="eq-table eq-highlight-rows bordered">
+                        <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Status</th>
+                            <th>High Bid</th>
+                            <th>Bids</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for auction in active_auctions %}
+                            <tr>
+                                <td>{{ auction.item_name|default:"Unknown" }}</td>
+                                <td>
+                                <span style="font-size:11px; color:{% if auction.status == 'open' %}#6bff9e{% else %}#ff9{% endif %}; border:1px solid currentColor; border-radius:3px; padding:1px 5px;">
+                                    {{ auction.status|capfirst }}
+                                </span>
+                                </td>
+                                <td>
+                                    {% if is_officer or public_bids %}
+                                        {{ auction.high_bid|default:"—" }}
+                                    {% else %}
+                                        —
+                                    {% endif %}
+                                </td>
+                                <td>{{ auction.bid_count }}</td>
+                                <td><a href="{% url 'dkp:auction_detail' auction.id %}" class="eq-button-fancy"
+                                       style="font-size:13px;">View</a></td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="5" style="text-align:center; padding:20px; color:#aaa;">No active
+                                    auctions.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            {# Closed Tab #}
+            <div id="tab-closed" class="tab-content" style="display:none;">
+                <div class="WindowNestedTan">
+                    <table class="eq-table eq-highlight-rows bordered">
+                        <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Status</th>
+                            <th>Winner</th>
+                            <th>Winning Bid</th>
+                            <th>Bids</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for auction in closed_auctions %}
+                            <tr>
+                                <td>{{ auction.item_name|default:"Unknown" }}</td>
+                                <td>
+                                <span style="font-size:11px; color:#aaa; border:1px solid #aaa; border-radius:3px; padding:1px 5px;">
+                                    {{ auction.status|capfirst }}
+                                </span>
+                                </td>
+                                <td>{{ auction.winner.member.display_name|default:"—" }}</td>
+                                <td>{{ auction.winner.bid_amount|default:"—" }}</td>
+                                <td>{{ auction.bid_count }}</td>
+                                <td><a href="{% url 'dkp:auction_detail' auction.id %}" class="eq-button-fancy"
+                                       style="font-size:13px;">View</a></td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="6" style="text-align:center; padding:20px; color:#aaa;">No closed
+                                    auctions.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block inline_js %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.eq-tab-box-fancy li[data-tab]').forEach(tab => {
+                tab.addEventListener('click', function () {
+                    document.querySelectorAll('.eq-tab-box-fancy li').forEach(t => t.classList.remove('eq-tab-open'));
+                    document.querySelectorAll('.tab-content').forEach(c => {
+                        c.style.display = 'none';
+                        c.classList.remove('active');
+                    });
+                    this.classList.add('eq-tab-open');
+                    const content = document.getElementById('tab-' + this.dataset.tab);
+                    if (content) {
+                        content.style.display = 'block';
+                        content.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

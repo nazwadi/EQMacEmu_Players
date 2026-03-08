@@ -1,0 +1,114 @@
+{% extends 'dkp/base.html' %}
+{% block title %}Circuit Settings — {{ circuit.name }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="eq-window mt-4" style="padding-top:40px;">
+        <div class="eq-window-title-bar">Circuit Settings</div>
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <a href="{% url 'dkp:member_list' circuit.id %}" class="eq-button-fancy">← Manage Members</a>
+            <h4 class="eq-header mb-0">{{ circuit.name }}</h4>
+            <div style="width:160px;"></div>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+            <div class="mb-3" style="padding:10px; border-radius:4px;
+                border:1px solid {% if message.tags == 'error' %}#ff6b6b{% else %}#6bff9e{% endif %};
+                color:{% if message.tags == 'error' %}#ff6b6b{% else %}#6bff9e{% endif %};">
+                {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="WindowNestedTan" style="padding:20px;">
+
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <label style="color:#8aa3ff; font-size:11px; text-transform:uppercase; letter-spacing:1px;">DKP Cap</label>
+                        <input type="number" name="dkp_cap" class="form-control mt-1"
+                               value="{{ config.dkp_cap }}"
+                               style="background:#1a1a2e !important; color:#fff !important; border-color:#444;">
+                        <small style="color:#aaa;">Maximum DKP a member can hold.</small>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label style="color:#8aa3ff; font-size:11px; text-transform:uppercase; letter-spacing:1px;">DKP Overcap</label>
+                        <input type="number" name="dkp_overcap" class="form-control mt-1"
+                               value="{{ config.dkp_overcap }}"
+                               style="background:#1a1a2e !important; color:#fff !important; border-color:#444;">
+                        <small style="color:#aaa;">Extra DKP allowed above cap during active raids.</small>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label style="color:#8aa3ff; font-size:11px; text-transform:uppercase; letter-spacing:1px;">Minimum Bid</label>
+                        <input type="number" name="minimum_bid" class="form-control mt-1"
+                               value="{{ config.minimum_bid }}"
+                               style="background:#1a1a2e !important; color:#fff !important; border-color:#444;">
+                        <small style="color:#aaa;">Minimum DKP required to place a bid.</small>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label style="color:#8aa3ff; font-size:11px; text-transform:uppercase; letter-spacing:1px;">New Player Bonus</label>
+                        <input type="number" name="new_player_bonus" class="form-control mt-1"
+                               value="{{ config.new_player_bonus }}"
+                               style="background:#1a1a2e !important; color:#fff !important; border-color:#444;">
+                        <small style="color:#aaa;">Starting DKP bonus for new members.</small>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label style="color:#8aa3ff; font-size:11px; text-transform:uppercase; letter-spacing:1px;">Hourly Rate</label>
+                        <input type="number" name="hourly_rate" class="form-control mt-1"
+                               value="{{ config.hourly_rate }}"
+                               style="background:#1a1a2e !important; color:#fff !important; border-color:#444;">
+                        <small style="color:#aaa;">DKP awarded per hour of raid attendance.</small>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label style="color:#8aa3ff; font-size:11px; text-transform:uppercase; letter-spacing:1px;">Attendance Window (days)</label>
+                        <input type="number" name="attendance_window_days" class="form-control mt-1"
+                               value="{{ config.attendance_window_days }}"
+                               style="background:#1a1a2e !important; color:#fff !important; border-color:#444;">
+                        <small style="color:#aaa;">Rolling window used to calculate attendance %.</small>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label style="color:#8aa3ff; font-size:11px; text-transform:uppercase; letter-spacing:1px;">Tie Breaker Rule</label>
+                        <select name="tie_breaker_rule" class="form-select mt-1"
+                                style="background-color:#1a1a2e !important; color:#fff !important; border-color:#444;">
+                            <option value="oldest_bid" {% if config.tie_breaker_rule == 'oldest_bid' %}selected{% endif %}>Oldest Bid Wins</option>
+                            <option value="highest_attendance" {% if config.tie_breaker_rule == 'highest_attendance' %}selected{% endif %}>Highest Attendance Wins</option>
+                            <option value="lowest_lifetime" {% if config.tie_breaker_rule == 'lowest_lifetime' %}selected{% endif %}>Lowest Lifetime DKP Wins</option>
+                        </select>
+                        <small style="color:#aaa;">How to break ties when bids are equal.</small>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label style="color:#8aa3ff; font-size:11px; text-transform:uppercase; letter-spacing:1px;">Bid Visibility</label>
+                        <div class="d-flex align-items-center gap-2 mt-2">
+                            <input type="checkbox" name="public_bids" id="public-bids"
+                                   class="form-check-input" style="margin:0;"
+                                   {% if config.public_bids %}checked{% endif %}>
+                            <label for="public-bids" style="color:#ccc; font-size:13px; margin:0; cursor:pointer;">
+                                Make bids visible to all members
+                            </label>
+                        </div>
+                        <small style="color:#aaa;">If unchecked, only officers see bid amounts.</small>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="eq-button-fancy" style="font-size:16px;">
+                        Save Settings
+                    </button>
+                </div>
+
+            </div>
+        </form>
+
+    </div>
+</div>
+{% endblock %}

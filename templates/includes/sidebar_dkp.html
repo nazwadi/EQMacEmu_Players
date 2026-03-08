@@ -1,0 +1,72 @@
+{% load static %}
+<nav class="side-nav" id="sideNav" aria-label="DKP navigation">
+
+    {% for circuit in dkp_circuits %}
+        <div class="side-nav-section">
+            <div class="side-nav-title">{{ circuit.name }}</div>
+            <a href="{% url 'dkp:standings' circuit.id %}" class="side-nav-item"
+               {% if request.resolver_match.url_name == 'standings' %}aria-current="page"{% endif %}>
+                Standings
+            </a>
+            <a href="{% url 'dkp:raid_list' circuit.id %}" class="side-nav-item"
+               {% if request.resolver_match.url_name == 'raid_list' %}aria-current="page"{% endif %}>
+                Raid History
+            </a>
+            <a href="{% url 'dkp:auction_list' circuit.id %}" class="side-nav-item"
+               {% if request.resolver_match.url_name == 'auction_list' %}aria-current="page"{% endif %}>
+                Auctions
+            </a>
+        </div>
+    {% empty %}
+        <div class="side-nav-section">
+            <div class="side-nav-title">DKP</div>
+            <a href="{% url 'dkp:circuit_list' %}" class="side-nav-item">Circuits</a>
+        </div>
+    {% endfor %}
+
+    {% if user.is_authenticated %}
+        <div class="side-nav-section">
+            <div class="side-nav-title">My DKP</div>
+            <a href="{% url 'dkp:dashboard' %}" class="side-nav-item"
+               {% if request.resolver_match.url_name == 'dashboard' %}aria-current="page"{% endif %}>
+                Dashboard
+            </a>
+            {% if dkp_membership %}
+                <a href="{% url 'dkp:transaction_history' dkp_membership.id %}" class="side-nav-item"
+                   {% if request.resolver_match.url_name == 'transaction_history' %}aria-current="page"{% endif %}>
+                    Transactions
+                </a>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    {% if dkp_is_officer %}
+        <div class="side-nav-section">
+            <div class="side-nav-title">Officer</div>
+            {% for circuit in dkp_circuits %}
+                {% if circuit.id in officer_circuit_ids %}
+                    <div style="color:#8aa3ff; font-size:11px; text-transform:uppercase; letter-spacing:1px; padding: 6px 16px 2px;">
+                        {{ circuit.name }}
+                    </div>
+                    <a href="{% url 'dkp:raid_manage_list' circuit.id %}" class="side-nav-item"
+                       {% if request.resolver_match.url_name == 'raid_manage_list' %}aria-current="page"{% endif %}>
+                        Manage Raids
+                    </a>
+                    <a href="{% url 'dkp:member_list' circuit.id %}" class="side-nav-item"
+                       {% if request.resolver_match.url_name == 'member_list' %}aria-current="page"{% endif %}>
+                        Manage Members{% if dkp_pending_count %}
+                        <span class="badge bg-warning text-dark">{{ dkp_pending_count }}</span>{% endif %}
+                    </a>
+                    <a href="{% url 'dkp:circuit_config' circuit.id %}" class="side-nav-item"
+                       {% if request.resolver_match.url_name == 'circuit_config' %}aria-current="page"{% endif %}>
+                        Circuit Settings
+                    </a>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+</nav>
+<button class="side-nav-toggle" type="button" aria-label="Collapse navigation"
+        aria-expanded="true" aria-controls="sideNav">&#8249;
+</button>

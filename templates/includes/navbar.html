@@ -6,22 +6,22 @@
             <span class="w-100 d-lg-none d-block"></span>
             <a class="navbar-brand d-none d-lg-inline-block ps-4 pe-3" href="/">
                 <img
-                    src="{% static 'images/eqalogo.svg' %}"
-                    alt="EQ Archives"
-                    height="80"
-                    width="427"
-                    class="img-fluid"
+                        src="{% static 'images/eqalogo.svg' %}"
+                        alt="EQ Archives"
+                        height="80"
+                        width="427"
+                        class="img-fluid"
                 />
             </a>
             <div class="w-100 text-end">
                 <button
-                    class="navbar-toggler"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarText"
-                    aria-controls="navbarText"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation"
+                        class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarText"
+                        aria-controls="navbarText"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation"
                 >
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -34,122 +34,122 @@
                 <!-- Database mega-dropdown -->
                 <li class="nav-item dropdown">
                     <a
-                        class="nav-link dropdown-toggle"
-                        href="#"
-                        id="databaseMenuLink"
-                        role="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
+                            class="nav-link dropdown-toggle"
+                            href="#"
+                            id="databaseMenuLink"
+                            role="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
                     >
                         Database
                     </a>
                     <div
-                        class="dropdown-menu mega-menu p-3"
-                        aria-labelledby="databaseMenuLink"
+                            class="dropdown-menu mega-menu p-3"
+                            aria-labelledby="databaseMenuLink"
                     >
                         <div class="mega-menu-grid">
                             <ul class="mega-menu-col" role="list">
                                 <li
-                                    class="mega-menu-heading"
-                                    aria-hidden="true"
+                                        class="mega-menu-heading"
+                                        aria-hidden="true"
                                 >
                                     Items &amp; Equipment
                                 </li>
                                 <li>
                                     <a
-                                        class="dropdown-item"
-                                        href="{% url 'items:search' %}"
-                                        >Item Search</a
+                                            class="dropdown-item"
+                                            href="{% url 'items:search' %}"
+                                    >Item Search</a
                                     >
                                 </li>
                                 <li>
                                     <a
-                                        class="dropdown-item"
-                                        href="{% url 'items:discovered' %}"
-                                        >Recently Discovered</a
+                                            class="dropdown-item"
+                                            href="{% url 'items:discovered' %}"
+                                    >Recently Discovered</a
                                     >
                                 </li>
                                 <li>
                                     <a
-                                        class="dropdown-item"
-                                        href="{% url 'items:bis' class_id=0 %}"
-                                        >Best in Slot</a
+                                            class="dropdown-item"
+                                            href="{% url 'items:bis' class_id=0 %}"
+                                    >Best in Slot</a
                                     >
                                 </li>
                             </ul>
 
                             <ul class="mega-menu-col" role="list">
                                 <li
-                                    class="mega-menu-heading"
-                                    aria-hidden="true"
+                                        class="mega-menu-heading"
+                                        aria-hidden="true"
                                 >
                                     Spells
                                 </li>
                                 <li>
                                     <a
-                                        class="dropdown-item"
-                                        href="{% url 'spells:search' %}"
-                                        >Spell Search</a
+                                            class="dropdown-item"
+                                            href="{% url 'spells:search' %}"
+                                    >Spell Search</a
                                     >
                                 </li>
                                 <li>
                                     <a
-                                        class="dropdown-item"
-                                        href="{% url 'spells:index' %}"
-                                        >Spells by Class</a
+                                            class="dropdown-item"
+                                            href="{% url 'spells:index' %}"
+                                    >Spells by Class</a
                                     >
                                 </li>
                             </ul>
 
                             <ul class="mega-menu-col" role="list">
                                 <li
-                                    class="mega-menu-heading"
-                                    aria-hidden="true"
+                                        class="mega-menu-heading"
+                                        aria-hidden="true"
                                 >
                                     World
                                 </li>
                                 <li>
                                     <a
-                                        class="dropdown-item"
-                                        href="{% url 'npcs:search' %}"
-                                        >NPC Search</a
+                                            class="dropdown-item"
+                                            href="{% url 'npcs:search' %}"
+                                    >NPC Search</a
                                     >
                                 </li>
                                 <li>
                                     <a
-                                        class="dropdown-item"
-                                        href="{% url 'zones:index' %}"
-                                        >Zones</a
+                                            class="dropdown-item"
+                                            href="{% url 'zones:index' %}"
+                                    >Zones</a
                                     >
                                 </li>
                                 <li>
                                     <a
-                                        class="dropdown-item"
-                                        href="{% url 'factions:search' %}"
-                                        >Factions</a
+                                            class="dropdown-item"
+                                            href="{% url 'factions:search' %}"
+                                    >Factions</a
                                     >
                                 </li>
                             </ul>
 
                             <ul class="mega-menu-col" role="list">
                                 <li
-                                    class="mega-menu-heading"
-                                    aria-hidden="true"
+                                        class="mega-menu-heading"
+                                        aria-hidden="true"
                                 >
                                     Crafting &amp; Pets
                                 </li>
                                 <li>
                                     <a
-                                        class="dropdown-item"
-                                        href="{% url 'recipes:search' %}"
-                                        >Recipes</a
+                                            class="dropdown-item"
+                                            href="{% url 'recipes:search' %}"
+                                    >Recipes</a
                                     >
                                 </li>
                                 <li>
                                     <a
-                                        class="dropdown-item"
-                                        href="{% url 'pets:list' %}"
-                                        >Pets</a
+                                            class="dropdown-item"
+                                            href="{% url 'pets:list' %}"
+                                    >Pets</a
                                     >
                                 </li>
                             </ul>
@@ -160,67 +160,87 @@
                 <!-- Tools mega-dropdown -->
                 <li class="nav-item dropdown">
                     <a
-                        class="nav-link dropdown-toggle"
-                        href="#"
-                        id="toolsMenuLink"
-                        role="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
+                            class="nav-link dropdown-toggle"
+                            href="#"
+                            id="toolsMenuLink"
+                            role="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
                     >
                         Tools
                     </a>
                     <div
-                        class="dropdown-menu mega-menu p-3"
-                        aria-labelledby="toolsMenuLink"
+                            class="dropdown-menu mega-menu p-3"
+                            aria-labelledby="toolsMenuLink"
                     >
                         <div class="mega-menu-grid">
                             <ul class="mega-menu-col" role="list">
                                 <li
-                                    class="mega-menu-heading"
-                                    aria-hidden="true"
+                                        class="mega-menu-heading"
+                                        aria-hidden="true"
                                 >
                                     Characters
                                 </li>
                                 <li>
                                     <a
-                                        class="dropdown-item"
-                                        href="{% url 'magelo:search' %}"
-                                        >Magelo Profiles</a
+                                            class="dropdown-item"
+                                            href="{% url 'magelo:search' %}"
+                                    >Magelo Profiles</a
                                     >
                                 </li>
                                 <li>
                                     <a
-                                        class="dropdown-item"
-                                        href="{% url 'characters:exp' %}"
-                                        >Experience Calculator</a
+                                            class="dropdown-item"
+                                            href="{% url 'characters:exp' %}"
+                                    >Experience Calculator</a
                                     >
                                 </li>
                             </ul>
 
                             {% if user.is_authenticated %}
-                            <ul class="mega-menu-col" role="list">
-                                <li
-                                    class="mega-menu-heading"
-                                    aria-hidden="true"
-                                >
-                                    Account
-                                </li>
-                                <li>
-                                    <a
-                                        class="dropdown-item"
-                                        href="{% url 'accounts:inventory_search' %}"
+                                <ul class="mega-menu-col" role="list">
+                                    <li
+                                            class="mega-menu-heading"
+                                            aria-hidden="true"
+                                    >
+                                        Account
+                                    </li>
+                                    <li>
+                                        <a
+                                                class="dropdown-item"
+                                                href="{% url 'accounts:inventory_search' %}"
                                         >Inventory Search</a
-                                    >
-                                </li>
-                                <li>
-                                    <a
-                                        class="dropdown-item"
-                                        href="{% url 'character_transfer:index' %}"
+                                        >
+                                    </li>
+                                    <li>
+                                        <a
+                                                class="dropdown-item"
+                                                href="{% url 'character_transfer:index' %}"
                                         >Character Transfer</a
-                                    >
-                                </li>
-                            </ul>
+                                        >
+                                    </li>
+                                </ul>
                             {% endif %}
+                            <ul class="mega-menu-col" role="list">
+                                <li class="mega-menu-heading" aria-hidden="true">Raid DKP</li>
+                                {% if user.is_authenticated and dkp_membership %}
+                                    <li><a class="dropdown-item" href="{% url 'dkp:dashboard' %}">My Dashboard</a></li>
+                                {% else %}
+                                    <li><a class="dropdown-item" href="{% url 'dkp:circuit_list' %}">DKP Standings</a>
+                                    </li>
+                                {% endif %}
+                                {% if dkp_circuits %}
+                                    {% with circuit=dkp_circuits.0 %}
+                                        <li><a class="dropdown-item" href="{% url 'dkp:standings' circuit.id %}">Standings</a>
+                                        </li>
+                                        <li><a class="dropdown-item" href="{% url 'dkp:auction_list' circuit.id %}">Auctions</a>
+                                        </li>
+                                        <li><a class="dropdown-item" href="{% url 'dkp:raid_list' circuit.id %}">Raid
+                                            History</a></li>
+                                    {% endwith %}
+                                {% endif %}
+                            </ul>
+
                         </div>
                     </div>
                 </li>
@@ -228,21 +248,21 @@
                 <!-- Standalone links -->
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'patch:index' %}"
-                        >Patch Notes</a
+                    >Patch Notes</a
                     >
                 </li>
                 <li class="nav-item">
                     <a
-                        class="nav-link"
-                        href="https://wiki.eqarchives.com"
-                        target="_blank"
-                        rel="noopener noreferrer"
+                            class="nav-link"
+                            href="https://wiki.eqarchives.com"
+                            target="_blank"
+                            rel="noopener noreferrer"
                     >
                         Wiki
                         <i
-                            class="fas fa-external-link-alt ms-1"
-                            style="font-size: 11px"
-                            aria-hidden="true"
+                                class="fas fa-external-link-alt ms-1"
+                                style="font-size: 11px"
+                                aria-hidden="true"
                         ></i>
                         <span class="visually-hidden">(opens in new tab)</span>
                     </a>
@@ -253,69 +273,71 @@
         <!-- Search + user -->
         <div class="d-flex px-5 text-end">
             <button
-                class="btn btn-outline-secondary fas fa-search me-2"
-                type="button"
-                aria-label="Open search"
+                    class="btn btn-outline-secondary fas fa-search me-2"
+                    type="button"
+                    aria-label="Open search"
             ></button>
             <div class="dropdown">
                 {% if user.is_authenticated %}
-                <button
-                    class="btn btn-secondary dropdown-toggle d-flex align-items-center"
-                    type="button"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                    id="userMenuLink"
-                >
-                    <img
-                        class="img-fluid img-responsive rounded-circle me-2"
-                        src="{% gravatar_url user.email 150 %}"
-                        width="38"
-                        height="38"
-                        alt="{{ user.username }}'s profile picture"
-                    />
-                    <span class="d-none d-sm-inline">{{ user.username }}</span>
-                </button>
-                <ul
-                    class="dropdown-menu dropdown-menu-end"
-                    aria-labelledby="userMenuLink"
-                >
-                    <li>
-                        <a
-                            class="dropdown-item"
-                            href="{% url 'accounts:list_accounts' %}"
+                    <button
+                            class="btn btn-secondary dropdown-toggle d-flex align-items-center"
+                            type="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                            id="userMenuLink"
+                    >
+                        <img
+                                class="img-fluid img-responsive rounded-circle me-2"
+                                src="{% gravatar_url user.email 150 %}"
+                                width="38"
+                                height="38"
+                                alt="{{ user.username }}'s profile picture"
+                        />
+                        <span class="d-none d-sm-inline">{{ user.username }}</span>
+                    </button>
+                    <ul
+                            class="dropdown-menu dropdown-menu-end"
+                            aria-labelledby="userMenuLink"
+                    >
+                        <li>
+                            <a
+                                    class="dropdown-item"
+                                    href="{% url 'accounts:list_accounts' %}"
                             >Accounts</a
-                        >
-                    </li>
-                    <li>
-                        <a
-                            class="dropdown-item"
-                            href="{% url 'character_transfer:index' %}"
+                            >
+                        </li>
+                        <li>
+                            <a
+                                    class="dropdown-item"
+                                    href="{% url 'character_transfer:index' %}"
                             >Character Transfer</a
-                        >
-                    </li>
-                    <li>
-                        <a
-                            class="dropdown-item"
-                            href="{% url 'accounts:inventory_search' %}"
+                            >
+                        </li>
+                        <li>
+                            <a
+                                    class="dropdown-item"
+                                    href="{% url 'accounts:inventory_search' %}"
                             >Inventory Search</a
-                        >
-                    </li>
-                    <li><hr class="dropdown-divider" /></li>
-                    <li>
-                        <a
-                            class="dropdown-item"
-                            href="{% url 'accounts:logout' %}"
+                            >
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider"/>
+                        </li>
+                        <li>
+                            <a
+                                    class="dropdown-item"
+                                    href="{% url 'accounts:logout' %}"
                             >Log Out</a
-                        >
-                    </li>
-                </ul>
+                            >
+                        </li>
+                    </ul>
                 {% else %}
-                <a
-                    class="btn btn-secondary"
-                    href="{% url 'accounts:login' %}"
-                    role="button"
+                    <a
+                            class="btn btn-secondary"
+                            href="{% url 'accounts:login' %}"
+                            role="button"
                     >Login</a
-                >
+                    >
                 {% endif %}
             </div>
         </div>

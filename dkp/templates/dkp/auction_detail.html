@@ -1,0 +1,315 @@
+{% extends 'dkp/base.html' %}
+{% block title %}{{ auction.item_name|default:"Auction" }} — EQ Archives{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="eq-window mt-4" style="padding-top: 40px;">
+        <div class="eq-window-title-bar">Auction Detail</div>
+
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            {% if circuit %}
+                <a href="{% url 'dkp:auction_list' circuit.id %}" class="eq-button-fancy">← Auctions</a>
+            {% else %}
+                <div style="width:80px;"></div>
+            {% endif %}
+            <h4 class="eq-header mb-0">{{ auction.item_name|default:"Unknown Item" }}</h4>
+            <div style="width:80px;"></div>
+        </div>
+
+        <div class="text-center mb-3">
+            <span id="auction-status-badge" style="font-size:12px; color:{% if auction.status == 'open' %}#6bff9e{% elif auction.status == 'awarded' %}#8aa3ff{% else %}#aaa{% endif %}; border:1px solid currentColor; border-radius:3px; padding:2px 8px;">
+                {{ auction.status|capfirst }}
+            </span>
+            {% if auction.raid %}
+                &nbsp;·&nbsp;
+                <a href="{% url 'dkp:raid_detail' auction.raid.id %}" style="color:#8aa3ff;">
+                    {{ auction.raid.labels|default:"Raid" }} — {{ auction.raid.date|date:"M d, Y" }}
+                </a>
+            {% endif %}
+        </div>
+
+        {% if auction.status == 'awarded' and auction.winner %}
+        <div class="text-center mb-3">
+            <div class="WindowNestedTan d-inline-block" style="padding:12px 30px;">
+                <span style="color:#aaa; font-size:12px;">Winner</span><br>
+                <span class="eq-header" style="font-size:22px;">{{ auction.winner.member.display_name }}</span>
+                <span style="color:#6bff9e; font-size:18px; margin-left:10px;">{{ auction.winner.bid_amount }} DKP</span>
+            </div>
+        </div>
+        {% endif %}
+
+        {# Bid form — only show for active members on open auctions #}
+        {% if is_member and auction.status == 'open' %}
+        <div class="WindowNestedTan mb-3" style="padding:15px; max-width:500px; margin:0 auto 15px;">
+            <div class="d-flex gap-2 align-items-center justify-content-center flex-wrap">
+                <div id="my-bid-status" style="color:#aaa; font-size:13px;">
+                    {% if viewer_membership %}Loading...{% endif %}
+                </div>
+            </div>
+            <div class="d-flex gap-2 align-items-center justify-content-center mt-2 flex-wrap">
+                <input type="number" id="bid-amount" class="form-control"
+                       style="width:140px;" placeholder="DKP amount" min="0" step="0.1">
+                <button id="bid-submit-btn" class="eq-button-fancy" style="font-size:15px;">Place Bid</button>
+                <button id="bid-retract-btn" class="eq-button-fancy" style="font-size:15px; color:#ff6b6b; display:none;">Retract Bid</button>
+            </div>
+            <div id="bid-error" style="color:#ff6b6b; font-size:13px; text-align:center; margin-top:5px; display:none;"></div>
+        </div>
+        {% endif %}
+
+        <nav class="eq-tab-box-fancy">
+            <ul>
+                <li data-tab="bids" class="eq-tab-open">Bids (<span id="bid-count">{{ bids.count }}</span>)</li>
+                <li data-tab="details">Details</li>
+            </ul>
+        </nav>
+
+        {# Bids Tab #}
+        <div id="tab-bids" class="tab-content" style="display:block;">
+            <div class="WindowNestedTan">
+                {% if not public_bids and not is_officer %}
+                <p style="color:#aaa; padding:15px; font-size:13px;">
+                    Bids are private.{% if viewer_membership %} Only your own bid is shown.{% endif %}
+                </p>
+                {% endif %}
+                <table class="eq-table eq-highlight-rows bordered">
+                    <thead>
+                        <tr id="bids-header">
+                            {% if is_officer or public_bids %}<th>Bidder</th>{% endif %}
+                            <th>Amount</th>
+                            <th>Status</th>
+                            {% if is_officer or public_bids %}<th>Notes</th>{% endif %}
+                        </tr>
+                    </thead>
+                    <tbody id="bids-tbody">
+                        {% for bid in bids %}
+                        <tr {% if bid == auction.winner %}style="background:rgba(107,255,158,0.08);"{% endif %}>
+                            {% if is_officer or public_bids %}<td>{{ bid.member.display_name }}</td>{% endif %}
+                            <td>{{ bid.bid_amount }}</td>
+                            <td>
+                                <span style="font-size:11px; color:{% if bid.status == 'won' %}#6bff9e{% elif bid.status == 'active' %}#ff9{% else %}#aaa{% endif %}; border:1px solid currentColor; border-radius:3px; padding:1px 5px;">
+                                    {{ bid.status|capfirst }}
+                                </span>
+                            </td>
+                            {% if is_officer or public_bids %}<td style="color:#aaa; font-size:12px;">{{ bid.bidder_notes|default:"—" }}</td>{% endif %}
+                        </tr>
+                        {% empty %}
+                        <tr id="no-bids-row"><td colspan="4" style="text-align:center; padding:20px; color:#aaa;">No bids yet.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        {# Details Tab #}
+        <div id="tab-details" class="tab-content" style="display:none;">
+            <div class="WindowNestedTan" style="padding:20px;">
+                <table class="eq-table">
+                    <tbody>
+                        <tr><td style="color:#8aa3ff; width:160px;">Item</td><td>{{ auction.item_name|default:"Unknown" }}</td></tr>
+                        <tr><td style="color:#8aa3ff;">Status</td><td id="detail-status">{{ auction.status|capfirst }}</td></tr>
+                        <tr><td style="color:#8aa3ff;">Opened</td><td>{{ auction.opened_at|date:"M d, Y g:i a" }}</td></tr>
+                        {% if auction.closed_at %}
+                        <tr><td style="color:#8aa3ff;">Closed</td><td>{{ auction.closed_at|date:"M d, Y g:i a" }}</td></tr>
+                        {% endif %}
+                        {% if auction.raid %}
+                        <tr>
+                            <td style="color:#8aa3ff;">Raid</td>
+                            <td><a href="{% url 'dkp:raid_detail' auction.raid.id %}" style="color:#8aa3ff;">{{ auction.raid.labels|default:"Raid" }} — {{ auction.raid.date|date:"M d, Y" }}</a></td>
+                        </tr>
+                        {% endif %}
+                        {% if auction.admin_override %}
+                        <tr>
+                            <td style="color:#8aa3ff;">Override</td>
+                            <td>{{ auction.admin_override.display_name }}{% if auction.override_reason %} — {{ auction.override_reason }}{% endif %}</td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block inline_js %}
+<script>
+const AUCTION_ID = {{ auction.id }};
+const AUCTION_STATUS = '{{ auction.status }}';
+const STATE_URL = '{% url "dkp:auction_state" auction.id %}';
+const BID_URL = '{% url "dkp:bid_submit" auction.id %}';
+const RETRACT_URL = '{% url "dkp:bid_retract" auction.id %}';
+const CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').content;
+const IS_MEMBER = {{ is_member|yesno:"true,false" }};
+const PUBLIC_BIDS = {{ public_bids|yesno:"true,false" }};
+const IS_OFFICER = {{ is_officer|yesno:"true,false" }};
+
+// ─── Tab switching ───────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.eq-tab-box-fancy li[data-tab]').forEach(tab => {
+        tab.addEventListener('click', function() {
+            document.querySelectorAll('.eq-tab-box-fancy li').forEach(t => t.classList.remove('eq-tab-open'));
+            document.querySelectorAll('.tab-content').forEach(c => {
+                c.style.display = 'none';
+                c.classList.remove('active');
+            });
+            this.classList.add('eq-tab-open');
+            const content = document.getElementById('tab-' + this.dataset.tab);
+            if (content) { content.style.display = 'block'; content.classList.add('active'); }
+        });
+    });
+
+    // ─── Bid form handlers ───────────────────────────────────────
+    const submitBtn = document.getElementById('bid-submit-btn');
+    const retractBtn = document.getElementById('bid-retract-btn');
+    const bidError = document.getElementById('bid-error');
+
+    if (submitBtn) {
+        submitBtn.addEventListener('click', async function() {
+            const amount = document.getElementById('bid-amount').value;
+            bidError.style.display = 'none';
+            try {
+                const res = await fetch(BID_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRFToken': CSRF_TOKEN,
+                    },
+                    body: `amount=${encodeURIComponent(amount)}`
+                });
+                const data = await res.json();
+                if (data.error) {
+                    bidError.textContent = data.error;
+                    bidError.style.display = 'block';
+                } else {
+                    document.getElementById('bid-amount').value = '';
+                    fetchState(); // immediate refresh
+                }
+            } catch(e) {
+                bidError.textContent = 'Network error. Please try again.';
+                bidError.style.display = 'block';
+            }
+        });
+    }
+
+    if (retractBtn) {
+        retractBtn.addEventListener('click', async function() {
+            bidError.style.display = 'none';
+            try {
+                const res = await fetch(RETRACT_URL, {
+                    method: 'POST',
+                    headers: { 'X-CSRFToken': CSRF_TOKEN },
+                });
+                const data = await res.json();
+                if (data.error) {
+                    bidError.textContent = data.error;
+                    bidError.style.display = 'block';
+                } else {
+                    fetchState();
+                }
+            } catch(e) {
+                bidError.textContent = 'Network error. Please try again.';
+                bidError.style.display = 'block';
+            }
+        });
+    }
+
+    // ─── Polling ─────────────────────────────────────────────────
+    // To upgrade to WebSockets later:
+    // 1. Create a Django Channels consumer that emits the same JSON structure as auction_state()
+    // 2. Replace startPolling() with a WebSocket connection
+    // 3. Call updateUI(data) from the WebSocket onmessage handler
+    // The updateUI function below does not need to change.
+
+    if (AUCTION_STATUS === 'open' || AUCTION_STATUS === 'pending') {
+        startPolling();
+    }
+
+    fetchState(); // initial load
+});
+
+let pollInterval = null;
+
+function startPolling() {
+    pollInterval = setInterval(fetchState, 3000);
+}
+
+function stopPolling() {
+    if (pollInterval) {
+        clearInterval(pollInterval);
+        pollInterval = null;
+    }
+}
+
+async function fetchState() {
+    try {
+        const res = await fetch(STATE_URL);
+        const data = await res.json();
+        updateUI(data);
+    } catch(e) {
+        // silent fail on poll — don't disrupt the user
+    }
+}
+
+function updateUI(data) {
+    // Stop polling if auction closed
+    if (data.status !== 'open' && data.status !== 'pending') {
+        stopPolling();
+    }
+
+    // Update bid count in tab
+    const countEl = document.getElementById('bid-count');
+    if (countEl) countEl.textContent = data.bid_count;
+
+    // Update my bid status display
+    const myBidStatus = document.getElementById('my-bid-status');
+    const retractBtn = document.getElementById('bid-retract-btn');
+    if (myBidStatus) {
+        if (data.my_active_bid) {
+            myBidStatus.textContent = `Your current bid: ${data.my_active_bid} DKP`;
+            myBidStatus.style.color = '#ff9';
+            if (retractBtn && data.status === 'open') retractBtn.style.display = 'inline-block';
+        } else {
+            myBidStatus.textContent = data.status === 'open' ? 'No active bid.' : '';
+            myBidStatus.style.color = '#aaa';
+            if (retractBtn) retractBtn.style.display = 'none';
+        }
+    }
+
+    // Hide bid form if auction no longer open
+    const submitBtn = document.getElementById('bid-submit-btn');
+    const bidAmount = document.getElementById('bid-amount');
+    if (submitBtn && data.status !== 'open') {
+        submitBtn.style.display = 'none';
+        if (bidAmount) bidAmount.style.display = 'none';
+        if (retractBtn) retractBtn.style.display = 'none';
+    }
+
+    // Update bids table
+    const tbody = document.getElementById('bids-tbody');
+    if (!tbody) return;
+
+    if (data.bids.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px; color:#aaa;">No bids yet.</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = data.bids.map(bid => {
+        const statusColor = bid.status === 'won' ? '#6bff9e' : bid.status === 'active' ? '#ff9' : '#aaa';
+        const rowStyle = bid.status === 'won' ? 'background:rgba(107,255,158,0.08);' : '';
+        const myStyle = bid.is_mine ? 'font-weight:bold;' : '';
+
+        let cells = '';
+        if (IS_OFFICER || PUBLIC_BIDS) {
+            cells += `<td style="${myStyle}">${bid.bidder}${bid.is_mine ? ' (you)' : ''}</td>`;
+        }
+        cells += `<td style="${myStyle}">${bid.amount}</td>`;
+        cells += `<td><span style="font-size:11px; color:${statusColor}; border:1px solid currentColor; border-radius:3px; padding:1px 5px;">${bid.status.charAt(0).toUpperCase() + bid.status.slice(1)}</span></td>`;
+        if (IS_OFFICER || PUBLIC_BIDS) {
+            cells += `<td style="color:#aaa; font-size:12px;">—</td>`;
+        }
+        return `<tr style="${rowStyle}">${cells}</tr>`;
+    }).join('');
+}
+</script>
+{% endblock %}

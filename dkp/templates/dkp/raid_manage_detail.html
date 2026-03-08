@@ -1,0 +1,293 @@
+{% extends 'dkp/base.html' %}
+{% load dkp_tags %}
+{% block title %}Edit Raid — {{ raid.labels|default:"Raid" }}{% endblock %}
+{% block extra_css %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/eq-ui.css' %}">
+    <style>
+        .status-select:disabled,
+        .notes-input:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="eq-window mt-4" style="padding-top: 40px;">
+            <div class="eq-window-title-bar">Edit Raid</div>
+
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <a href="{% url 'dkp:raid_manage_list' circuit.id %}" class="eq-button-fancy">← Raids</a>
+                <h4 class="eq-header mb-0">{{ raid.labels|default:"Raid" }}</h4>
+                <form method="post" style="margin:0;">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="toggle_private">
+                    <button type="submit" class="eq-button-fancy" style="font-size:13px;">
+                        {% if raid.is_private %}Make Public{% else %}Make Private{% endif %}
+                    </button>
+                </form>
+            </div>
+
+            <div class="text-center mb-3" style="color:#aaa; font-size:13px;">
+                {{ raid.date|date:"l, F j, Y" }}
+                {% if raid.is_private %}
+                    <span style="font-size:10px; color:#ff9; border:1px solid #ff9; border-radius:3px; padding:1px 4px; margin-left:5px;">Private</span>
+                {% endif %}
+            </div>
+
+            {# Tabs #}
+            <nav class="eq-tab-box-fancy">
+                <ul>
+                    <li data-tab="attendees" class="eq-tab-open">Attendees ({{ all_members.count }})</li>
+                    <li data-tab="mobs">Mobs ({{ raid_mobs.count }})</li>
+                    <li data-tab="loot">Loot ({{ auctions.count }})</li>
+                </ul>
+            </nav>
+            {# Attendees Tab #}
+            <div id="tab-attendees" class="tab-content" style="display:block;">
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="save_attendance">
+                    <div class="WindowNestedTan">
+                        <table class="eq-table bordered" id="attendee-table">
+                            <thead>
+                            <tr>
+                                <th style="width:40px;"></th>
+                                <th>Player</th>
+                                <th>Status</th>
+                                <th>Notes</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for member in all_members %}
+                                {% with attendance=attendance_map|get_item:member.id %}
+                                    <tr class="attendee-row {% if attendance %}checked{% endif %}">
+                                        <td>
+                                            <input type="checkbox" name="attendees" value="{{ member.id }}"
+                                                   id="chk_{{ member.id }}"
+                                                   class="attendee-checkbox"
+                                                   {% if attendance %}checked{% endif %}>
+                                        </td>
+                                        <td>
+                                            <label for="chk_{{ member.id }}" style="cursor:pointer; margin:0;">
+                                                {{ member.display_name }}
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <select name="status_{{ member.id }}"
+                                                    class="form-select form-select-sm status-select"
+                                                    {% if not attendance %}disabled{% endif %}
+                                                    style="width:auto; min-width:140px;">
+                                                <option value="present"
+                                                        {% if attendance.attendance_status == 'present' %}selected{% endif %}>
+                                                    Present
+                                                </option>
+                                                <option value="late"
+                                                        {% if attendance.attendance_status == 'late' %}selected{% endif %}>
+                                                    Late
+                                                </option>
+                                                <option value="early_departure"
+                                                        {% if attendance.attendance_status == 'early_departure' %}selected{% endif %}>
+                                                    Early Departure
+                                                </option>
+                                                <option value="absent"
+                                                        {% if attendance.attendance_status == 'absent' %}selected{% endif %}>
+                                                    Absent
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="notes_{{ member.id }}"
+                                                   class="form-control form-control-sm notes-input"
+                                                   value="{{ attendance.attendance_notes|default:'' }}"
+                                                   {% if not attendance %}disabled{% endif %}
+                                                   placeholder="Optional notes..."
+                                                   style="min-width:180px;">
+                                        </td>
+                                    </tr>
+                                {% endwith %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-center mt-3 mb-3">
+                        <button type="submit" class="eq-button-fancy" style="font-size:18px;">Save Attendance</button>
+                    </div>
+                </form>
+            </div>
+
+            {# Mobs Tab #}
+            <div id="tab-mobs" class="tab-content" style="display:none;">
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="save_mobs">
+                    <div class="WindowNestedTan">
+                        <table class="eq-table bordered">
+                            <thead>
+                            <tr>
+                                <th style="width:40px;"></th>
+                                <th>Mob</th>
+                                <th>DKP Value</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for mob in circuit_mobs %}
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" name="mobs" value="{{ mob.id }}"
+                                               {% if mob in raid_mobs %}checked{% endif %}>
+                                    </td>
+                                    <td>{{ mob.name }}</td>
+                                    <td>{{ mob.dkp }}</td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="3" style="text-align:center; color:#aaa; padding:20px;">
+                                        No mobs configured for this circuit yet.
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-center mt-3 mb-3">
+                        <button type="submit" class="eq-button-fancy" style="font-size:18px;">Save Mobs</button>
+                    </div>
+                </form>
+            </div>
+
+            {# Loot Tab #}
+            <div id="tab-loot" class="tab-content" style="display:none;">
+                {# Create auction form #}
+                <form method="post" class="mb-3">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="create_auction">
+                    <div class="d-flex gap-2 align-items-center" style="padding:10px 0;">
+                        <input type="text" name="item_name" class="form-control"
+                               placeholder="Item name..." style="max-width:300px;">
+                        <button type="submit" class="eq-button-fancy" style="font-size:15px;">+ Add Auction</button>
+                    </div>
+                </form>
+
+                <div class="WindowNestedTan">
+                    <table class="eq-table bordered">
+                        <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Status</th>
+                            <th>Bids</th>
+                            <th>Winner</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for auction in auctions %}
+                            <tr>
+                                <td>{{ auction.item_name|default:"Unknown" }}</td>
+                                <td>
+                        <span style="font-size:11px; color:{% if auction.status == 'open' %}#6bff9e{% elif auction.status == 'awarded' %}#8aa3ff{% elif auction.status == 'pending' %}#ff9{% else %}#aaa{% endif %}; border:1px solid currentColor; border-radius:3px; padding:1px 5px;">
+                            {{ auction.status|capfirst }}
+                        </span>
+                                </td>
+                                <td>{{ auction.bid_count }}</td>
+                                <td>{{ auction.winner.member.display_name|default:"—" }}</td>
+                                <td>
+                                    <div class="d-flex gap-1 flex-wrap">
+                                        {% if auction.status == 'pending' %}
+                                            <form method="post" style="margin:0;">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="action" value="open_auction">
+                                                <input type="hidden" name="auction_id" value="{{ auction.id }}">
+                                                <button type="submit" class="eq-button-fancy"
+                                                        style="font-size:12px; color:#6bff9e;">Open
+                                                </button>
+                                            </form>
+                                        {% endif %}
+
+                                        {% if auction.status == 'open' %}
+                                            <form method="post" style="margin:0;">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="action" value="close_auction">
+                                                <input type="hidden" name="auction_id" value="{{ auction.id }}">
+                                                <button type="submit" class="eq-button-fancy"
+                                                        style="font-size:12px; color:#ff9;">Close
+                                                </button>
+                                            </form>
+                                        {% endif %}
+
+                                        {% if auction.status == 'closed' %}
+                                            <form method="post" style="margin:0;">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="action" value="award_auction">
+                                                <input type="hidden" name="auction_id" value="{{ auction.id }}">
+                                                <button type="submit" class="eq-button-fancy"
+                                                        style="font-size:12px; color:#8aa3ff;">Award
+                                                </button>
+                                            </form>
+                                        {% endif %}
+
+                                        <a href="{% url 'dkp:auction_manage' auction.id %}" class="eq-button-fancy"
+                                           style="font-size:12px;">Manage</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="5" style="text-align:center; color:#aaa; padding:20px;">No auctions yet.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block inline_js %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Tab switching
+            document.querySelectorAll('.eq-tab-box-fancy li[data-tab]').forEach(tab => {
+                tab.addEventListener('click', function () {
+                    document.querySelectorAll('.eq-tab-box-fancy li').forEach(t => t.classList.remove('eq-tab-open'));
+                    document.querySelectorAll('.tab-content').forEach(c => {
+                        c.style.display = 'none';
+                        c.classList.remove('active');
+                    });
+                    this.classList.add('eq-tab-open');
+                    const content = document.getElementById('tab-' + this.dataset.tab);
+                    if (content) {
+                        content.style.display = 'block';
+                        content.classList.add('active');
+                    }
+                });
+            });
+            // Set initial disabled state on page load
+            document.querySelectorAll('.attendee-checkbox').forEach(chk => {
+                const row = chk.closest('tr');
+                row.querySelector('.status-select').disabled = !chk.checked;
+                row.querySelector('.notes-input').disabled = !chk.checked;
+            });
+
+            // Enable/disable status+notes when checkbox toggled
+            document.querySelectorAll('.attendee-checkbox').forEach(chk => {
+                chk.addEventListener('change', function () {
+                    const row = this.closest('tr');
+                    const select = row.querySelector('.status-select');
+                    const notes = row.querySelector('.notes-input');
+                    select.disabled = !this.checked;
+                    notes.disabled = !this.checked;
+                    if (!this.checked) {
+                        select.value = 'present';
+                        notes.value = '';
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

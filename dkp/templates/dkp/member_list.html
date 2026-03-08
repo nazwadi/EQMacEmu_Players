@@ -1,0 +1,234 @@
+{% extends 'dkp/base.html' %}
+{% block title %}Manage Members — {{ circuit.name }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="eq-window mt-4" style="padding-top: 40px;">
+        <div class="eq-window-title-bar">Manage Members</div>
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <a href="{% url 'dkp:standings' circuit.id %}" class="eq-button-fancy">← Standings</a>
+            <h4 class="eq-header mb-0">{{ circuit.name }}</h4>
+            <div style="width:120px;"></div>
+        </div>
+
+        <nav class="eq-tab-box-fancy">
+            <ul>
+                <li data-tab="active" class="eq-tab-open">
+                    Active ({{ active_with_attendance|length }})
+                </li>
+                <li data-tab="pending">
+                    Pending
+                    {% if pending_count %}
+                        <span class="badge bg-warning text-dark ms-1">{{ pending_count }}</span>
+                    {% else %}
+                        (0)
+                    {% endif %}
+                </li>
+                <li data-tab="inactive">Inactive ({{ inactive_members.count }})</li>
+            </ul>
+        </nav>
+
+        {# Active Tab #}
+        <div id="tab-active" class="tab-content" style="display:block;">
+            <div class="WindowNestedTan">
+                <table class="eq-table eq-highlight-rows bordered">
+                    <thead>
+                        <tr>
+                            <th>Display Name</th>
+                            <th>Role</th>
+                            <th>Current DKP</th>
+                            <th>Attendance</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for member, attendance in active_with_attendance %}
+                        <tr>
+                            <td>{{ member.display_name }}</td>
+                            <td>
+                                <form method="post" style="margin:0;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="set_role">
+                                    <input type="hidden" name="member_id" value="{{ member.id }}">
+                                    <select name="role" class="form-select form-select-sm"
+                                            style="width:auto;" onchange="this.form.submit()">
+                                        <option value="member" {% if member.role == 'member' %}selected{% endif %}>Member</option>
+                                        <option value="officer" {% if member.role == 'officer' %}selected{% endif %}>Officer</option>
+                                    </select>
+                                </form>
+                            </td>
+                            <td>{{ member.current_dkp }}</td>
+                            <td>{{ attendance }}%</td>
+                            <td>
+                                <div class="d-flex gap-1 flex-wrap">
+                                    {# Display name edit #}
+                                    <button class="eq-button-fancy" style="font-size:12px;"
+                                            onclick="toggleNameEdit({{ member.id }})">
+                                        Rename
+                                    </button>
+
+                                    {# Deactivate #}
+                                    <form method="post" style="margin:0;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="deactivate">
+                                        <input type="hidden" name="member_id" value="{{ member.id }}">
+                                        <button type="submit" class="eq-button-fancy"
+                                                style="font-size:12px; color:#ff9;">
+                                            Deactivate
+                                        </button>
+                                    </form>
+
+                                    {# Remove #}
+                                    <form method="post" style="margin:0;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="remove">
+                                        <input type="hidden" name="member_id" value="{{ member.id }}">
+                                        <button type="submit" class="eq-button-fancy"
+                                                style="font-size:12px; color:#ff6b6b;"
+                                                onclick="return confirm('Permanently remove {{ member.display_name }}?')">
+                                            Remove
+                                        </button>
+                                    </form>
+                                </div>
+
+                                {# Inline rename form #}
+                                <div id="name-edit-{{ member.id }}" style="display:none; margin-top:6px;">
+                                    <form method="post" class="d-flex gap-1">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="set_display_name">
+                                        <input type="hidden" name="member_id" value="{{ member.id }}">
+                                        <input type="text" name="display_name"
+                                               class="form-control form-control-sm"
+                                               value="{{ member.display_name }}"
+                                               style="width:160px;">
+                                        <button type="submit" class="eq-button-fancy" style="font-size:12px;">Save</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="5" style="text-align:center; color:#aaa; padding:20px;">No active members.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        {# Pending Tab #}
+        <div id="tab-pending" class="tab-content" style="display:none;">
+            <div class="WindowNestedTan">
+                <table class="eq-table eq-highlight-rows bordered">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Display Name</th>
+                            <th>Requested</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for member in pending_members %}
+                        <tr>
+                            <td>{{ member.member.username }}</td>
+                            <td>{{ member.display_name }}</td>
+                            <td style="color:#aaa; font-size:12px;">{{ member.joined_at|date:"M d, Y" }}</td>
+                            <td>
+                                <div class="d-flex gap-1">
+                                    <form method="post" style="margin:0;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="approve">
+                                        <input type="hidden" name="member_id" value="{{ member.id }}">
+                                        <button type="submit" class="eq-button-fancy"
+                                                style="font-size:12px; color:#6bff9e;">Approve</button>
+                                    </form>
+                                    <form method="post" style="margin:0;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="remove">
+                                        <input type="hidden" name="member_id" value="{{ member.id }}">
+                                        <button type="submit" class="eq-button-fancy"
+                                                style="font-size:12px; color:#ff6b6b;"
+                                                onclick="return confirm('Deny and remove this request?')">Deny</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="4" style="text-align:center; color:#aaa; padding:20px;">No pending requests.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        {# Inactive Tab #}
+        <div id="tab-inactive" class="tab-content" style="display:none;">
+            <div class="WindowNestedTan">
+                <table class="eq-table eq-highlight-rows bordered">
+                    <thead>
+                        <tr>
+                            <th>Display Name</th>
+                            <th>Current DKP</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for member in inactive_members %}
+                        <tr>
+                            <td>{{ member.display_name }}</td>
+                            <td>{{ member.current_dkp }}</td>
+                            <td>
+                                <div class="d-flex gap-1">
+                                    <form method="post" style="margin:0;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="reactivate">
+                                        <input type="hidden" name="member_id" value="{{ member.id }}">
+                                        <button type="submit" class="eq-button-fancy"
+                                                style="font-size:12px; color:#6bff9e;">Reactivate</button>
+                                    </form>
+                                    <form method="post" style="margin:0;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="remove">
+                                        <input type="hidden" name="member_id" value="{{ member.id }}">
+                                        <button type="submit" class="eq-button-fancy"
+                                                style="font-size:12px; color:#ff6b6b;"
+                                                onclick="return confirm('Permanently remove {{ member.display_name }}?')">Remove</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="3" style="text-align:center; color:#aaa; padding:20px;">No inactive members.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block inline_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.eq-tab-box-fancy li[data-tab]').forEach(tab => {
+        tab.addEventListener('click', function() {
+            document.querySelectorAll('.eq-tab-box-fancy li').forEach(t => t.classList.remove('eq-tab-open'));
+            document.querySelectorAll('.tab-content').forEach(c => {
+                c.style.display = 'none';
+                c.classList.remove('active');
+            });
+            this.classList.add('eq-tab-open');
+            const content = document.getElementById('tab-' + this.dataset.tab);
+            if (content) { content.style.display = 'block'; content.classList.add('active'); }
+        });
+    });
+});
+
+function toggleNameEdit(memberId) {
+    const el = document.getElementById('name-edit-' + memberId);
+    el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+</script>
+{% endblock %}

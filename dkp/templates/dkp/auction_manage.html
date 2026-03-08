@@ -1,0 +1,144 @@
+{% extends 'dkp/base.html' %}
+{% block title %}Manage Auction — {{ auction.item_name|default:"Auction" }}{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="eq-window mt-4" style="padding-top: 40px;">
+            <div class="eq-window-title-bar">Manage Auction</div>
+
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                {% if auction.raid %}
+                    <a href="{% url 'dkp:raid_manage_detail' auction.raid.id %}" class="eq-button-fancy">← Raid</a>
+                {% else %}
+                    <div style="width:80px;"></div>
+                {% endif %}
+                <h4 class="eq-header mb-0">{{ auction.item_name|default:"Unknown Item" }}</h4>
+                <span style="font-size:12px; color:{% if auction.status == 'open' %}#6bff9e{% elif auction.status == 'awarded' %}#8aa3ff{% elif auction.status == 'pending' %}#ff9{% else %}#aaa{% endif %}; border:1px solid currentColor; border-radius:3px; padding:3px 10px;">
+                {{ auction.status|capfirst }}
+            </span>
+            </div>
+
+            <div class="row mt-3">
+                {# Bids panel #}
+                <div class="col-md-7">
+                    <div class="WindowNestedTan" style="padding:15px;">
+                        <h5 class="eq-header mb-3">Bids</h5>
+                        <table class="eq-table bordered">
+                            <thead>
+                            <tr>
+                                <th>Bidder</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Notes</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for bid in bids %}
+                                <tr {% if bid == auction.winner %}style="background:rgba(107,255,158,0.08);"{% endif %}>
+                                    <td>{{ bid.member.display_name }}</td>
+                                    <td>{{ bid.bid_amount }}</td>
+                                    <td>
+                                    <span style="font-size:11px; color:{% if bid.status == 'won' %}#6bff9e{% elif bid.status == 'active' %}#ff9{% else %}#aaa{% endif %}; border:1px solid currentColor; border-radius:3px; padding:1px 5px;">
+                                        {{ bid.status|capfirst }}
+                                    </span>
+                                    </td>
+                                    <td style="color:#aaa; font-size:12px;">{{ bid.bidder_notes|default:"—" }}</td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="4" style="text-align:center; color:#aaa; padding:15px;">No bids.</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                {# Actions panel #}
+                <div class="col-md-5">
+
+                    {# Override winner #}
+                    <div class="WindowNestedTan mb-3" style="padding:15px;">
+                        <h5 class="eq-header mb-3">Override Winner</h5>
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="override_winner">
+                            <div class="mb-2">
+                                <select name="member_id" class="form-select">
+                                    <option value="">— Select member —</option>
+                                    {% for member in members %}
+                                        <option value="{{ member.id }}"
+                                                {% if auction.admin_override_id == member.id %}selected{% endif %}>
+                                            {{ member.display_name }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="mb-2">
+                                <input type="number" name="override_amount" class="form-control"
+                                       placeholder="DKP cost (default 0)" value="0" min="0" step="0.1">
+                            </div>
+                            <div class="mb-2">
+                                <input type="text" name="override_reason" class="form-control"
+                                       placeholder="Reason (optional)"
+                                       value="{{ auction.override_reason|default:'' }}">
+                            </div>
+                            <button type="submit" class="eq-button-fancy" style="font-size:14px; width:100%;">Set
+                                Override
+                            </button>
+                        </form>
+                    </div>
+                    {% if auction.status == 'disputed' %}
+                        <form method="post" class="mb-2">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="resolve_dispute">
+                            <button type="submit" class="eq-button-fancy"
+                                    style="font-size:14px; color:#6bff9e; width:100%;">
+                                Resolve Dispute (Re-open for Award)
+                            </button>
+                        </form>
+                    {% endif %}
+
+                    {# Danger zone #}
+                    <div class="WindowNestedTan" style="padding:15px;">
+                        <h5 class="eq-header mb-3" style="color:#ff6b6b;">Danger Zone</h5>
+
+                        {% if auction.status == 'awarded' %}
+                            <form method="post" class="mb-2">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="retract">
+                                <button type="submit" class="eq-button-fancy"
+                                        style="font-size:14px; color:#ff9; width:100%;"
+                                        onclick="return confirm('Retract this auction and refund DKP?')">
+                                    Retract &amp; Refund DKP
+                                </button>
+                            </form>
+                        {% endif %}
+
+                        {% if auction.status == 'closed' %}
+                            <form method="post" class="mb-2">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="dispute">
+                                <button type="submit" class="eq-button-fancy"
+                                        style="font-size:14px; color:#ff9; width:100%;">
+                                    Mark Disputed
+                                </button>
+                            </form>
+                        {% endif %}
+
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="delete">
+                            <button type="submit" class="eq-button-fancy"
+                                    style="font-size:14px; color:#ff6b6b; width:100%;"
+                                    onclick="return confirm('Permanently delete this auction?')">
+                                Delete Auction
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

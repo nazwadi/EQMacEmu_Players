@@ -1,3 +1,4 @@
+from django.core.cache import cache
 from django.db import transaction
 from django.utils import timezone
 from datetime import timedelta
@@ -11,6 +12,58 @@ from dkp.models import (
     Raid,
     RaidAttendance,
 )
+
+@transaction.atomic
+def place_bid(auction, member, amount):
+    """Place or update a bid. Returns (bid, created, error_message)."""
+    from dkp.models import Bid
+    from django.utils import timezone
+
+    if auction.status != 'open':
+        return None, False, 'Auction is not open for bidding.'
+
+    config = getattr(auction.raid.circuit, 'circuitconfig', None) if auction.raid else None
+    minimum_bid = config.minimum_bid if config else 0
+
+    if amount < minimum_bid:
+        return None, False, f'Minimum bid is {minimum_bid} DKP.'
+
+    if amount > member.current_dkp:
+        return None, False, f'Insufficient DKP. You have {member.current_dkp}.'
+
+    # Update existing active bid or create new one
+    existing = Bid.objects.filter(auction=auction, member=member, status='active').first()
+    if existing:
+        existing.bid_amount = amount
+        existing.modified_at = timezone.now()
+        existing.save(update_fields=['bid_amount', 'modified_at'])
+        return existing, False, None
+    else:
+        bid = Bid.objects.create(
+            auction=auction,
+            member=member,
+            bid_amount=amount,
+            status='active',
+            created_by=member.member,
+        )
+        return bid, True, None
+
+
+@transaction.atomic
+def retract_bid(auction, member):
+    """Retract an active bid. Returns (success, error_message)."""
+    from dkp.models import Bid
+
+    if auction.status != 'open':
+        return False, 'Bids can only be retracted while the auction is open.'
+
+    updated = Bid.objects.filter(
+        auction=auction, member=member, status='active'
+    ).update(status='retracted')
+
+    if updated:
+        return True, None
+    return False, 'No active bid found to retract.'
 
 
 def attendance_calculation(member: CircuitMembership):
@@ -57,6 +110,7 @@ def award_dkp(raid: Raid, mob: Mob):
         dkp_transaction = DKPTransaction(raid=raid, member=member, amount=dkp_payout,
                                      transaction_type='award',created_by=None)
         dkp_transaction.save()
+    cache.delete(f'dkp:standings:{raid.circuit_id}')
 
 @transaction.atomic
 def resolve_auction(auction: Auction):
@@ -82,6 +136,8 @@ def resolve_auction(auction: Auction):
     auction.status = 'closed'
     auction.closed_at = timezone.now()
     auction.save()
+    if auction.raid:
+        cache.delete(f'dkp:standings:{auction.raid.circuit_id}')
 
 @transaction.atomic
 def award_auction(auction: Auction, created_by: 'auth.User'):
@@ -104,3 +160,27 @@ def award_auction(auction: Auction, created_by: 'auth.User'):
     winning_bid.member.save()
     auction.status = 'awarded'
     auction.save()
+
+def join_circuit(circuit, user, display_name=None):
+    """Request to join a circuit. Returns (membership, created, error)."""
+    from dkp.models import CircuitMembership
+
+    existing = CircuitMembership.objects.filter(circuit=circuit, member=user).first()
+    if existing:
+        if existing.status == 'pending':
+            return existing, False, 'You already have a pending request for this circuit.'
+        elif existing.status == 'active':
+            return existing, False, 'You are already a member of this circuit.'
+        elif existing.status == 'inactive':
+            return existing, False, 'Your membership is inactive. Contact an officer.'
+
+    display_name = display_name.strip() if display_name else user.username
+
+    membership = CircuitMembership.objects.create(
+        circuit=circuit,
+        member=user,
+        display_name=display_name,
+        role='member',
+        status='pending',
+    )
+    return membership, True, None

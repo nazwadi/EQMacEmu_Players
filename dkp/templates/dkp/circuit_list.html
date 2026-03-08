@@ -1,0 +1,33 @@
+{% extends 'dkp/base.html' %}
+{% block title %}DKP Circuits — EQ Archives{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="eq-window mt-4" style="padding-top: 40px;">
+        <div class="eq-window-title-bar">DKP Circuits</div>
+        <div class="row mt-3">
+            {% for circuit in circuits %}
+            <div class="col-md-4 mb-3">
+                <div class="WindowNestedTan d-flex flex-column" style="height: 100%; padding: 15px;">
+                    <h5 class="eq-header text-center mb-2">{{ circuit.name }}</h5>
+                    <div style="flex-grow: 1;">
+                        {% if circuit.description %}
+                            <p>{{ circuit.description }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="text-center mt-2">
+                        <a href="{% url 'dkp:standings' circuit.id %}" class="eq-button-fancy">
+                            View Standings
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col" style="padding: 20px;">
+                <p>No active raid circuits found.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

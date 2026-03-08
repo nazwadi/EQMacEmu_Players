@@ -141,6 +141,7 @@ TEMPLATES = [
                 'django.template.context_processors.static',
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
+                'dkp.context_processors.dkp_context',
                 'EQMacEmu_Players.context_processors.navigation_context',
             ],
         },

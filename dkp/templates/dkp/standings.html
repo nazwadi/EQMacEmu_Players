@@ -1,0 +1,136 @@
+{% extends 'dkp/base.html' %}
+{% block title %}{{ circuit.name }} Standings — EQ Archives{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="eq-window mt-4" style="padding-top: 40px;">
+            <div class="eq-window-title-bar">DKP Standings</div>
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <a href="{% url 'dkp:circuit_list' %}" class="eq-button-fancy">← All Circuits</a>
+                <h4 class="eq-header mb-0">{{ circuit.name }}</h4>
+                <input type="text" id="standings-filter" class="eq-input form-control" style="width: 200px;"
+                       placeholder="Filter players...">
+            </div>
+
+            {# Join banner #}
+            {% if user.is_authenticated %}
+                {% if join_status == 'pending' %}
+                    <div class="text-center mb-3" style="padding:12px; border:1px solid #ff9; border-radius:4px;">
+                        <span style="color:#ff9;">⏳ Your request to join this circuit is pending officer approval.</span>
+                    </div>
+                {% elif join_status == 'inactive' %}
+                    <div class="text-center mb-3" style="padding:12px; border:1px solid #ff6b6b; border-radius:4px;">
+                        <span style="color:#ff6b6b;">Your membership is inactive. Contact an officer.</span>
+                    </div>
+                {% elif join_status == 'none' %}
+                    <div class="WindowNestedTan mb-3" style="padding:15px;">
+                        <form method="post" action="{% url 'dkp:circuit_join' circuit.id %}" id="join-form">
+                            {% csrf_token %}
+                            <div class="d-flex gap-3 align-items-center flex-wrap justify-content-center">
+                                <input type="text" name="display_name" id="display-name-input"
+                                       class="form-control" value="{{ request.user.username }}"
+                                       disabled
+                                       style="width:200px; background:#1a1a2e !important; color:#aaa !important; border-color:#444 !important;">
+                                <div class="d-flex align-items-center gap-2" style="flex-shrink:0;">
+                                    <input type="checkbox" id="custom-name-chk" class="form-check-input"
+                                           style="margin:0;">
+                                    <label for="custom-name-chk"
+                                           style="color:#ccc; font-size:13px; margin:0; cursor:pointer; white-space:nowrap;">
+                                        Use a different display name
+                                    </label>
+                                </div>
+                                <div style="flex-shrink:0;">
+                                    <button type="submit" class="eq-button-fancy" style="font-size:15px;">
+                                        Request to Join
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                {% endif %}
+            {% else %}
+                <div class="text-center mb-3">
+                    <a href="{% url 'accounts:login' %}" class="eq-button-fancy" style="font-size:14px;">
+                        Log in to join this circuit
+                    </a>
+                </div>
+            {% endif %}
+
+            <div class="WindowNestedTan">
+                <table class="eq-table eq-highlight-rows" id="standings-table">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Player</th>
+                        <th>Current DKP</th>
+                        <th>Lifetime Earned</th>
+                        <th>Lifetime Spent</th>
+                        <th>Attendance %</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for player in standings %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ player.display_name }}</td>
+                            <td>{{ player.current_dkp }}</td>
+                            <td>{{ player.lifetime_earned_dkp }}</td>
+                            <td>{{ player.lifetime_spent_dkp }}</td>
+                            <td>{{ player.attendance }}%</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="6" style="text-align:center;">No members found.</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block inline_js %}
+    <script>
+        $(document).ready(function () {
+            $("#standings-filter").on("keyup", function () {
+                let value = $(this).val().toLowerCase();
+                $("#standings-table tbody>tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                });
+            });
+        });
+
+        localStorage.setItem('dkp_circuit_id', '{{ circuit.id }}');
+
+        const chk = document.getElementById('custom-name-chk');
+        const nameInput = document.getElementById('display-name-input');
+        const joinForm = document.getElementById('join-form');
+
+        if (chk && nameInput) {
+            chk.addEventListener('change', function () {
+                nameInput.disabled = !this.checked;
+                if (!this.checked) {
+                    nameInput.value = '{{ request.user.username }}';
+                    nameInput.style.cssText = 'width:200px; background:#1a1a2e !important; color:#aaa !important; border-color:#444 !important;';
+                } else {
+                    nameInput.style.cssText = 'width:200px;';
+                    nameInput.focus();
+                }
+            });
+        }
+
+        if (joinForm) {
+            joinForm.addEventListener('submit', function (e) {
+                const name = nameInput.value.trim();
+                if (name === '{{ request.user.username }}') {
+                    if (!confirm('Your display name will be visible to other members and will match your username. Continue?')) {
+                        e.preventDefault();
+                    }
+                }
+            });
+        }
+    </script>
+{% endblock %}

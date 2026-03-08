@@ -1,0 +1,151 @@
+{% extends 'dkp/base.html' %}
+{% block title %}{{ raid.labels|default:"Raid" }} — {{ raid.date|date:"M d, Y" }} — EQ Archives{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="eq-window mt-4" style="padding-top: 40px;">
+        <div class="eq-window-title-bar">Raid Detail</div>
+
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <a href="{% url 'dkp:raid_list' circuit.id %}" class="eq-button-fancy">← Raid History</a>
+            <h4 class="eq-header mb-0">{{ raid.labels|default:"Raid" }}</h4>
+            <div style="width:120px;"></div>
+        </div>
+
+        <div class="text-center mb-3" style="color:#aaa; font-size:13px;">
+            {{ raid.date|date:"l, F j, Y" }}
+            {% if raid.is_private %}
+                <span style="font-size:10px; color:#ff9; border:1px solid #ff9; border-radius:3px; padding:1px 4px; margin-left:5px;">Private</span>
+            {% endif %}
+        </div>
+
+        {% if raid.notes %}
+        <div class="WindowNestedTan mb-3" style="padding:12px; color:#ccc; font-size:13px;">
+            {{ raid.notes }}
+        </div>
+        {% endif %}
+
+        {# Tabs #}
+        <nav class="eq-tab-box-fancy">
+            <ul>
+                <li data-tab="attendees" class="eq-tab-open">Attendees ({{ attendees.count }})</li>
+                <li data-tab="mobs">Mobs & DKP ({{ mobs.count }})</li>
+                <li data-tab="loot">Loot ({{ auctions.count }})</li>
+            </ul>
+        </nav>
+
+        {# Attendees Tab #}
+        <div id="tab-attendees" class="tab-content" style="display:block;">
+            <div class="WindowNestedTan">
+                <table class="eq-table eq-highlight-rows bordered">
+                    <thead>
+                        <tr>
+                            <th>Player</th>
+                            <th>Status</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for a in attendees %}
+                        <tr>
+                            <td>{{ a.member.display_name }}</td>
+                            <td>{{ a.get_attendance_status_display }}</td>
+                            <td style="color:#aaa; font-size:12px;">{{ a.attendance_notes|default:"—" }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="3" style="text-align:center; color:#aaa;">No attendees recorded.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        {# Mobs Tab #}
+        <div id="tab-mobs" class="tab-content" style="display:none;">
+            <div class="WindowNestedTan">
+                <table class="eq-table eq-highlight-rows bordered">
+                    <thead>
+                        <tr>
+                            <th>Mob</th>
+                            <th>DKP Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for mob in mobs %}
+                        <tr>
+                            <td>{{ mob.name }}</td>
+                            <td>{{ mob.dkp }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="2" style="text-align:center; color:#aaa;">No mobs recorded.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        {# Loot Tab #}
+        <div id="tab-loot" class="tab-content" style="display:none;">
+            <div class="WindowNestedTan">
+                <table class="eq-table eq-highlight-rows bordered">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Winner</th>
+                            <th>DKP Spent</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for auction in auctions %}
+                        <tr>
+                            <td>{{ auction.item_name|default:"Unknown" }}</td>
+                            <td>
+                                {% if auction.winner %}
+                                    {{ auction.winner.member.display_name }}
+                                {% else %}
+                                    —
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if auction.winner %}
+                                    {{ auction.winner.bid_amount }}
+                                {% else %}
+                                    —
+                                {% endif %}
+                            </td>
+                            <td>{{ auction.status }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="4" style="text-align:center; color:#aaa;">No auctions recorded.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block inline_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.eq-tab-box-fancy li[data-tab]').forEach(tab => {
+        tab.addEventListener('click', function() {
+            document.querySelectorAll('.eq-tab-box-fancy li').forEach(t => t.classList.remove('eq-tab-open'));
+            document.querySelectorAll('.tab-content').forEach(c => {
+                c.style.display = 'none';
+                c.classList.remove('active');
+            });
+            this.classList.add('eq-tab-open');
+            const content = document.getElementById('tab-' + this.dataset.tab);
+            if (content) {
+                content.style.display = 'block';
+                content.classList.add('active');
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

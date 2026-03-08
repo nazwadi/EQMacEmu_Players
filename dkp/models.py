@@ -4,7 +4,7 @@ TIEBREAKER_CHOICES = [
     ('earned_dkp', 'Earned DKP'),
     ('attendance', 'Attendance'),
 ]
-STATUS_CHOICES = [('active', 'Active'), ('inactive', 'Inactive'), ('pending', 'Pending Approval')]
+CIRCUIT_MEMBERSHIP_STATUS_CHOICES = [('active', 'Active'), ('inactive', 'Inactive'), ('pending', 'Pending Approval')]
 ROLE_CHOICES = [('officer', 'Officer'), ('member', 'Member')]
 ATTENDANCE_CHOICES = [
     ('present', 'Present'),
@@ -62,13 +62,14 @@ class CircuitMembership(models.Model):
     circuit = models.ForeignKey(RaidCircuit, on_delete=models.CASCADE)
     member = models.ForeignKey('auth.User', on_delete=models.CASCADE)
     role = models.CharField(max_length=20, choices=ROLE_CHOICES)
-    status = models.CharField(max_length=20, default='pending', choices=STATUS_CHOICES)
+    status = models.CharField(max_length=20, default='pending', choices=CIRCUIT_MEMBERSHIP_STATUS_CHOICES)
     joined_at = models.DateTimeField(auto_now_add=True)
     display_name = models.CharField(max_length=200, blank=True)
     current_dkp = models.DecimalField(default=0, max_digits=6, decimal_places=1)
     lifetime_earned_dkp = models.DecimalField(default=0, max_digits=6, decimal_places=1)
     lifetime_spent_dkp = models.DecimalField(default=0, max_digits=6, decimal_places=1)
     hourly_redistribution = models.DecimalField(default=0, max_digits=6, decimal_places=1)
+    hide_dashboard = models.BooleanField(default=False)
 
     class Meta:
         unique_together = ('circuit', 'member')
@@ -97,6 +98,7 @@ class Raid(models.Model):
     notes = models.TextField(blank=True)
     created_by = models.ForeignKey('auth.User', on_delete=models.SET_NULL, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    is_private = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.date}'
@@ -137,6 +139,7 @@ class DKPTransaction(models.Model):
 class Auction(models.Model):
     """Represents an auction for an item at a Raid"""
     raid = models.ForeignKey(Raid, null=True, blank=True, on_delete=models.SET_NULL)
+    circuit = models.ForeignKey(RaidCircuit, on_delete=models.CASCADE, null=True, blank=True, related_name='auctions')
     item_name = models.CharField(max_length=200, null=True, blank=True)
     item_id = models.IntegerField(null=True, blank=True)
     status = models.CharField(max_length=20, choices=AUCTION_STATUS_CHOICES, default='pending')
