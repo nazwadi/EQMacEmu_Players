@@ -146,6 +146,13 @@ class Auction(models.Model):
     admin_override = models.ForeignKey(CircuitMembership, on_delete=models.SET_NULL, null=True, blank=True, related_name='auctioned_overrides')
     override_reason = models.TextField(blank=True)
     created_by = models.ForeignKey('auth.User', on_delete=models.SET_NULL, null=True, blank=True)
+    winner = models.ForeignKey(
+        'Bid',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='won_auctions'
+    )
 
     def __str__(self):
         raid_date = self.raid.date if self.raid else 'No Raid'

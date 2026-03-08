@@ -21,7 +21,7 @@ class RaidCircuitAdmin(admin.ModelAdmin):
 
 
 class CircuitConfigAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['circuit', 'dkp_cap', 'dkp_overcap', 'minimum_bid']
 
 
 class CircuitMembershipAdmin(admin.ModelAdmin):
@@ -38,19 +38,19 @@ class RaidAdmin(admin.ModelAdmin):
 
 
 class RaidAttendanceAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['raid', 'member']
 
 
 class DKPTransactionAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['member', 'transaction_type', 'amount', 'transaction_date']
 
 
 class AuctionAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['raid', 'item_name']
 
 
 class BidAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['member', 'auction', 'bid_amount', 'status']
 
 
 admin.site.register(RaidCircuit, RaidCircuitAdmin)
