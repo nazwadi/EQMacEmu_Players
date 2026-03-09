@@ -1,7 +1,7 @@
 from decimal import Decimal, InvalidOperation
 
+from django.db.models import Count, Max, Sum, Q
 from django.contrib.auth.decorators import login_required
-from django.db.models import Count, Max
 from django.http import Http404
 from django.utils import timezone
 from datetime import timedelta
@@ -530,7 +530,14 @@ def raid_manage_list(request, circuit_id):
     if not circuit:
         raise Http404
 
-    raids = Raid.objects.filter(circuit=circuit).order_by('-date').prefetch_related('members', 'mobs')
+    raids = Raid.objects.filter(circuit=circuit).order_by('-date').annotate(
+        attendee_count=Count('raidattendance', distinct=True),
+        mob_count=Count('mobs', distinct=True),
+        dkp_awarded=Sum('dkptransaction__amount',
+                        filter=Q(dkptransaction__transaction_type='award')),
+        items_awarded=Count('auction',
+                            filter=Q(auction__status='awarded'), distinct=True),
+    )
     return render(request, 'dkp/raid_manage_list.html', {
         'circuit': circuit,
         'raids': raids,
@@ -796,7 +803,6 @@ def standings(request, circuit_id):
         'join_status': join_status,
     })
 
-
 def raid_list(request, circuit_id):
     circuit = RaidCircuit.objects.filter(id=circuit_id).first()
     if not circuit:
@@ -806,18 +812,22 @@ def raid_list(request, circuit_id):
         circuit=circuit, member=request.user, status='active'
     ).exists()
 
-    raids = Raid.objects.filter(circuit=circuit).order_by('-date')
+    raids = Raid.objects.filter(circuit=circuit).order_by('-date').annotate(
+        attendee_count=Count('raidattendance', distinct=True),
+        mob_count=Count('mobs', distinct=True),
+        dkp_awarded=Sum('dkptransaction__amount',
+                        filter=Q(dkptransaction__transaction_type='award')),
+        items_awarded=Count('auction',
+                           filter=Q(auction__status='awarded'), distinct=True),
+    )
     if not is_member:
         raids = raids.filter(is_private=False)
-
-    raids = raids.prefetch_related('members', 'mobs')
 
     return render(request, 'dkp/raid_list.html', {
         'circuit': circuit,
         'raids': raids,
         'is_member': is_member,
     })
-
 
 def raid_detail(request, raid_id):
     raid = Raid.objects.filter(id=raid_id).prefetch_related(
