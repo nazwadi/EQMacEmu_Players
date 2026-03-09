@@ -3,6 +3,8 @@ from decimal import Decimal, InvalidOperation
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Max
 from django.http import Http404
+from django.utils import timezone
+from datetime import timedelta
 from django.core.cache import cache
 from django.shortcuts import render, redirect
 from dkp.models import CircuitConfig, CircuitMembership, DKPTransaction, Auction, Bid, RaidCircuit, Raid, \
@@ -53,6 +55,55 @@ def officer_required(view_func):
         return view_func(request, *args, **kwargs)
 
     return wrapper
+
+def attendance_history(request, membership_id):
+    membership = CircuitMembership.objects.filter(id=membership_id).select_related('circuit', 'member').first()
+    if not membership:
+        raise Http404
+
+    viewer_membership = None
+    is_officer = False
+    if request.user.is_authenticated:
+        viewer_membership = CircuitMembership.objects.filter(
+            circuit=membership.circuit, member=request.user
+        ).first()
+        is_officer = bool(viewer_membership and viewer_membership.role == 'officer')
+
+    is_own = request.user.is_authenticated and membership.member == request.user
+
+    if not is_own and not is_officer:
+        raise Http404
+
+    cutoff = timezone.now() - timedelta(days=90)
+    raids = Raid.objects.filter(
+        circuit=membership.circuit,
+        date__gte=cutoff
+    ).order_by('-date')
+
+    attendance_map = {
+        a.raid_id: a for a in RaidAttendance.objects.filter(
+            member=membership,
+            raid__in=raids
+        ).select_related('raid')
+    }
+
+    raid_rows = []
+    for raid in raids:
+        att = attendance_map.get(raid.id)
+        raid_rows.append({
+            'raid': raid,
+            'attendance': att,
+            'status': att.attendance_status if att else 'not_attended',
+            'notes': att.attendance_notes if att else '',
+        })
+
+    return render(request, 'dkp/attendance_history.html', {
+        'membership': membership,
+        'circuit': membership.circuit,
+        'raid_rows': raid_rows,
+        'is_own': is_own,
+        'is_officer': is_officer,
+    })
 
 
 @login_required

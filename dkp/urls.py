@@ -24,4 +24,5 @@ urlpatterns = [
     path("manage/<int:circuit_id>/members/", views.member_list, name="member_list"),
     path("circuit/<int:circuit_id>/join/", views.circuit_join, name="circuit_join"),
     path("manage/<int:circuit_id>/config/", views.circuit_config, name="circuit_config"),
+    path('attendance/<int:membership_id>/', views.attendance_history, name='attendance_history'),
 ]
