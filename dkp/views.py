@@ -97,14 +97,22 @@ def attendance_history(request, membership_id):
             'notes': att.attendance_notes if att else '',
         })
 
+    config = getattr(membership.circuit, 'circuitconfig', None)
+    attended_count = sum(1 for row in raid_rows if row['status'] in ('present', 'late'))
+    total_count = len(raid_rows)
+    attendance_pct = round((attended_count / total_count) * 100, 1) if total_count > 0 else 0
+
     return render(request, 'dkp/attendance_history.html', {
         'membership': membership,
         'circuit': membership.circuit,
         'raid_rows': raid_rows,
         'is_own': is_own,
         'is_officer': is_officer,
+        'config': config,
+        'attended_count': attended_count,
+        'total_count': total_count,
+        'attendance_pct': attendance_pct,
     })
-
 
 @login_required
 @require_POST
