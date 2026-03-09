@@ -1,16 +1,16 @@
 {% extends 'dkp/base.html' %}
 {% block title %}{{ circuit.name }} Standings — EQ Archives{% endblock %}
 {% block inline_css %}
-<style>
-@media (max-width: 576px) {
-    #standings-table th:nth-child(4),
-    #standings-table td:nth-child(4),
-    #standings-table th:nth-child(5),
-    #standings-table td:nth-child(5) {
-        display: none;
-    }
-}
-</style>
+    <style>
+        @media (max-width: 576px) {
+            #standings-table th:nth-child(4),
+            #standings-table td:nth-child(4),
+            #standings-table th:nth-child(5),
+            #standings-table td:nth-child(5) {
+                display: none;
+            }
+        }
+    </style>
 {% endblock %}
 {% block content %}
     <div class="container">
@@ -71,26 +71,26 @@
             {% endif %}
 
             <div class="WindowNestedTan" style="overflow-x:auto;">
-                <table class="eq-table eq-highlight-rows" id="standings-table">
+                <table class="eq-table eq-highlight-rows" data-sortable id="standings-table">
                     <thead>
                     <tr>
-                        <th>#</th>
-                        <th>Player</th>
-                        <th>Current DKP</th>
-                        <th>Lifetime Earned</th>
-                        <th>Lifetime Spent</th>
-                        <th>Attendance %</th>
+                        <th data-sort="rank" data-type="number">#</th>
+                        <th data-sort="player">Player</th>
+                        <th data-sort="current_dkp" data-type="number">Current DKP</th>
+                        <th data-sort="lifetime_earned" data-type="number">Lifetime Earned</th>
+                        <th data-sort="lifetime_spent" data-type="number">Lifetime Spent</th>
+                        <th data-sort="attendance" data-type="number">Attendance %</th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for player in standings %}
                         <tr>
-                            <td>{{ forloop.counter }}</td>
-                            <td>{{ player.display_name }}</td>
-                            <td>{{ player.current_dkp }}</td>
-                            <td>{{ player.lifetime_earned_dkp }}</td>
-                            <td>{{ player.lifetime_spent_dkp }}</td>
-                            <td>{{ player.attendance }}%</td>
+                            <td data-col="rank">{{ forloop.counter }}</td>
+                            <td data-col="player">{{ player.display_name }}</td>
+                            <td data-col="current_dkp">{{ player.current_dkp }}</td>
+                            <td data-col="lifetime_earned">{{ player.lifetime_earned_dkp }}</td>
+                            <td data-col="lifetime_spent">{{ player.lifetime_spent_dkp }}</td>
+                            <td data-col="attendance" data-value="{{ player.attendance }}">{{ player.attendance }}%</td>
                         </tr>
                     {% empty %}
                         <tr>

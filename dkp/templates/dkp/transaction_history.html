@@ -2,101 +2,114 @@
 {% block title %}Transaction History — {{ membership.display_name }}{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="eq-window mt-4" style="padding-top: 40px;">
-        <div class="eq-window-title-bar">Transaction History</div>
+    <div class="container">
+        <div class="eq-window mt-4" style="padding-top: 40px;">
+            <div class="eq-window-title-bar">Transaction History</div>
 
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <a href="{% url 'dkp:dashboard' %}" class="eq-button-fancy">← Dashboard</a>
-            <h4 class="eq-header mb-0">{{ membership.display_name }}</h4>
-            <div style="width:120px;">
-                <input type="text" id="tx-filter" class="form-control form-control-sm"
-                       placeholder="Filter...">
-            </div>
-        </div>
-
-        {# Summary row #}
-        <div class="row mb-4">
-            <div class="col-md-4">
-                <div class="WindowNestedTan text-center" style="padding:12px;">
-                    <div style="color:#8aa3ff; font-size:11px; text-transform:uppercase; letter-spacing:1px;">Current DKP</div>
-                    <div class="eq-header" style="font-size:28px;">{{ membership.current_dkp }}</div>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <a href="{% url 'dkp:dashboard' %}" class="eq-button-fancy">← Dashboard</a>
+                <h4 class="eq-header mb-0">{{ membership.display_name }}</h4>
+                <div style="width:120px;">
+                    <input type="text" id="tx-filter" class="form-control form-control-sm"
+                           placeholder="Filter...">
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="WindowNestedTan text-center" style="padding:12px;">
-                    <div style="color:#8aa3ff; font-size:11px; text-transform:uppercase; letter-spacing:1px;">Lifetime Earned</div>
-                    <div class="eq-header" style="font-size:28px;">{{ membership.lifetime_earned_dkp }}</div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="WindowNestedTan text-center" style="padding:12px;">
-                    <div style="color:#8aa3ff; font-size:11px; text-transform:uppercase; letter-spacing:1px;">Lifetime Spent</div>
-                    <div class="eq-header" style="font-size:28px;">{{ membership.lifetime_spent_dkp }}</div>
-                </div>
-            </div>
-        </div>
 
-        <div class="WindowNestedTan">
-            <table class="eq-table eq-highlight-rows bordered" id="tx-table">
-                <thead>
+            {# Summary row #}
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <div class="WindowNestedTan text-center" style="padding:12px;">
+                        <div style="color:#8aa3ff; font-size:11px; text-transform:uppercase; letter-spacing:1px;">
+                            Current DKP
+                        </div>
+                        <div class="eq-header" style="font-size:28px;">{{ membership.current_dkp }}</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="WindowNestedTan text-center" style="padding:12px;">
+                        <div style="color:#8aa3ff; font-size:11px; text-transform:uppercase; letter-spacing:1px;">
+                            Lifetime Earned
+                        </div>
+                        <div class="eq-header" style="font-size:28px;">{{ membership.lifetime_earned_dkp }}</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="WindowNestedTan text-center" style="padding:12px;">
+                        <div style="color:#8aa3ff; font-size:11px; text-transform:uppercase; letter-spacing:1px;">
+                            Lifetime Spent
+                        </div>
+                        <div class="eq-header" style="font-size:28px;">{{ membership.lifetime_spent_dkp }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="WindowNestedTan">
+                <table class="eq-table eq-highlight-rows bordered" id="tx-table" data-sortable>
+                    <thead>
                     <tr>
-                        <th>Date</th>
-                        <th>Type</th>
-                        <th>Item</th>
-                        <th>Amount</th>
-                        <th>Raid</th>
+                        <th data-sort="date" data-type="date">Date</th>
+                        <th data-sort="type">Type</th>
+                        <th data-sort="item">Item</th>
+                        <th data-sort="amount" data-type="number">Amount</th>
+                        <th data-sort="raid">Raid</th>
                         <th>Notes</th>
                     </tr>
-                </thead>
-                <tbody>
+                    </thead>
+                    <tbody>
                     {% for tx in transactions %}
-                    <tr>
-                        <td style="white-space:nowrap;">{{ tx.transaction_date|date:"M d, Y" }}</td>
-                        <td>
-                            <span style="font-size:11px;
-                                color:{% if tx.transaction_type == 'award' %}#6bff9e{% elif tx.transaction_type == 'spend' %}#ff6b6b{% else %}#ff9{% endif %};
-                                border:1px solid currentColor; border-radius:3px; padding:1px 5px;">
-                                {{ tx.get_transaction_type_display }}
-                            </span>
-                        </td>
-                        <td>{{ tx.item_name|default:"—" }}</td>
-                        <td style="color:{% if tx.transaction_type == 'spend' %}#ff6b6b{% elif tx.transaction_type == 'award' %}#6bff9e{% else %}#ff9{% endif %}; font-weight:bold;">
-                            {% if tx.transaction_type == 'spend' %}−{% elif tx.transaction_type == 'award' %}+{% endif %}{{ tx.amount }}
-                        </td>
-                        <td>
-                            {% if tx.raid %}
-                                <a href="{% url 'dkp:raid_detail' tx.raid.id %}" style="color:#8aa3ff; font-size:12px;">
-                                    {{ tx.raid.labels|default:"Raid" }}
-                                </a>
-                            {% else %}
-                                <span style="color:#aaa;">—</span>
-                            {% endif %}
-                        </td>
-                        <td style="color:#aaa; font-size:12px;">{{ tx.transaction_notes|default:"—" }}</td>
-                    </tr>
+                        <tr>
+                            <td data-col="date" data-value="{{ tx.transaction_date|date:'Y-m-d' }}"
+                                style="white-space:nowrap;">{{ tx.transaction_date|date:"M d, Y" }}</td>
+                            <td data-col="type">
+    <span style="font-size:11px;
+            color:{% if tx.transaction_type == 'award' %}#6bff9e{% elif tx.transaction_type == 'spend' %}#ff6b6b{% else %}#ff9{% endif %};
+            border:1px solid currentColor; border-radius:3px; padding:1px 5px;">
+        {{ tx.get_transaction_type_display }}
+    </span>
+                            </td>
+                            <td data-col="item">{{ tx.item_name|default:"—" }}</td>
+                            <td data-col="amount" data-value="{{ tx.amount }}"
+                                style="color:{% if tx.transaction_type == 'spend' %}#ff6b6b{% elif tx.transaction_type == 'award' %}#6bff9e{% else %}#ff9{% endif %}; font-weight:bold;">
+                                {% if tx.transaction_type == 'spend' %}−{% elif tx.transaction_type == 'award' %}
+                                    +{% endif %}{{ tx.amount }}
+                            </td>
+                            <td data-col="raid">
+                                {% if tx.raid %}
+                                    <a href="{% url 'dkp:raid_detail' tx.raid.id %}"
+                                       style="color:#8aa3ff; font-size:12px;">
+                                        {{ tx.raid.labels|default:"Raid" }}
+                                    </a>
+                                {% else %}
+                                    <span style="color:#aaa;">—</span>
+                                {% endif %}
+                            </td>
+                            <td data-col="notes"
+                                style="color:#aaa; font-size:12px;">{{ tx.transaction_notes|default:"—" }}</td>
+                        </tr>
                     {% empty %}
-                    <tr>
-                        <td colspan="6" style="text-align:center; padding:20px; color:#aaa;">No transactions yet.</td>
-                    </tr>
+                        <tr>
+                            <td colspan="6" style="text-align:center; padding:20px; color:#aaa;">No transactions
+                                yet.
+                            </td>
+                        </tr>
                     {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                    </tbody>
+                </table>
+            </div>
 
+        </div>
     </div>
-</div>
 {% endblock %}
 
 {% block inline_js %}
-<script>
-$(document).ready(function() {
-    $("#tx-filter").on("keyup", function() {
-        let value = $(this).val().toLowerCase();
-        $("#tx-table tbody>tr").filter(function() {
-            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+    <script>
+        $(document).ready(function () {
+            $("#tx-filter").on("keyup", function () {
+                let value = $(this).val().toLowerCase();
+                $("#tx-table tbody>tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                });
+            });
         });
-    });
-});
-</script>
+    </script>
 {% endblock %}

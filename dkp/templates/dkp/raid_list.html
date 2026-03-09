@@ -13,32 +13,34 @@
             </div>
 
             <div class="WindowNestedTan" style="overflow-x:auto;">
-                <table class="eq-table eq-highlight-rows bordered" id="raid-table">
+                <table class="eq-table eq-highlight-rows bordered" data-sortable id="raid-table">
                     <thead>
                     <tr>
-                        <th>Date</th>
-                        <th>Raid</th>
-                        <th>Attendees</th>
-                        <th>Mobs</th>
-                        <th>DKP Awarded</th>
-                        <th>Items</th>
+                        <th data-sort="date" data-type="date">Date</th>
+                        <th data-sort="raid">Raid</th>
+                        <th data-sort="attendees" data-type="number">Attendees</th>
+                        <th data-sort="mobs" data-type="number">Mobs</th>
+                        <th data-sort="dkp" data-type="number">DKP Awarded</th>
+                        <th data-sort="items" data-type="number">Items</th>
                         <th></th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for raid in raids %}
                         <tr>
-                            <td style="white-space:nowrap;">{{ raid.date|date:"M d, Y" }}</td>
-                            <td>
+                            <td data-col="date" data-value="{{ raid.date|date:'Y-m-d' }}"
+                                style="white-space:nowrap;">{{ raid.date|date:"M d, Y" }}</td>
+                            <td data-col="raid">
                                 {{ raid.labels|default:"—" }}
                                 {% if raid.is_private %}
                                     <span style="font-size:10px; color:#ff9; border:1px solid #ff9; border-radius:3px; padding:1px 4px; margin-left:5px;">Private</span>
                                 {% endif %}
                             </td>
-                            <td>{{ raid.attendee_count }}</td>
-                            <td>{{ raid.mob_count }}</td>
-                            <td style="color:#6bff9e;">{{ raid.dkp_awarded|floatformat:0|default:"—" }}</td>
-                            <td>{{ raid.items_awarded }}</td>
+                            <td data-col="attendees">{{ raid.attendee_count }}</td>
+                            <td data-col="mobs">{{ raid.mob_count }}</td>
+                            <td data-col="dkp" data-value="{{ raid.dkp_awarded|default:0 }}"
+                                style="color:#6bff9e;">{{ raid.dkp_awarded|floatformat:0|default:"—" }}</td>
+                            <td data-col="items">{{ raid.items_awarded }}</td>
                             <td><a href="{% url 'dkp:raid_detail' raid.id %}" class="eq-button-fancy"
                                    style="font-size:14px;">View</a></td>
                         </tr>

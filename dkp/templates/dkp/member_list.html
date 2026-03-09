@@ -32,13 +32,13 @@
             {# Active Tab #}
             <div id="tab-active" class="tab-content" style="display:block;">
                 <div class="WindowNestedTan">
-                    <table class="eq-table eq-highlight-rows bordered">
+                    <table class="eq-table eq-highlight-rows bordered" id="member-table" data-sortable>
                         <thead>
                         <tr>
                             <th>Display Name</th>
                             <th>Role</th>
                             <th>Current DKP</th>
-                            <th>Attendance</th>
+                            <th data-sort="attendance" data-type="number">Attendance</th>
                             <th>Actions</th>
                         </tr>
                         </thead>
@@ -63,7 +63,7 @@
                                     </form>
                                 </td>
                                 <td>{{ member.current_dkp }}</td>
-                                <td>{{ attendance }}%</td>
+                                <td data-col="attendance" data-value="{{ attendance }}">{{ attendance }}%</td>
                                 <td>
                                     <div class="d-flex gap-1 flex-wrap">
                                         {# Display name edit #}
