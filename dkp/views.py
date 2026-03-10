@@ -626,6 +626,9 @@ def raid_manage_detail(request, raid_id):
         elif action == 'save_mobs':
             mob_ids = set(int(x) for x in request.POST.getlist('mobs'))
             raid.mobs.set(mob_ids)
+            snapshot = {str(m.id): str(m.dkp) for m in Mob.objects.filter(id__in=mob_ids)}
+            raid.mob_dkp_snapshot = snapshot
+            raid.save(update_fields=['mob_dkp_snapshot'])
             messages.success(request, 'Mobs updated.')
             return redirect('dkp:raid_manage_detail', raid_id=raid.id)
 

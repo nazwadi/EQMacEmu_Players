@@ -114,6 +114,7 @@ class Raid(models.Model):
     created_by = models.ForeignKey('auth.User', on_delete=models.SET_NULL, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     is_private = models.BooleanField(default=False)
+    mob_dkp_snapshot = models.JSONField(default=dict, blank=True)
 
     def __str__(self):
         return f'{self.date}'
