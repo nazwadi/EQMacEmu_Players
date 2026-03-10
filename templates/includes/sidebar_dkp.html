@@ -61,6 +61,10 @@
                        {% if request.resolver_match.url_name == 'circuit_config' %}aria-current="page"{% endif %}>
                         Circuit Settings
                     </a>
+                    <a href="{% url 'dkp:mob_manage' circuit.id %}" class="side-nav-item"
+                       {% if request.resolver_match.url_name == 'mob_manage' %}aria-current="page"{% endif %}>
+                        Manage Mobs
+                    </a>
                 {% endif %}
             {% endfor %}
         </div>

@@ -980,3 +980,63 @@ def member_list(request, circuit_id):
         'pending_members': pending_members,
         'pending_count': pending_members.count(),
     })
+
+@officer_required
+def mob_manage(request, circuit_id):
+    circuit = RaidCircuit.objects.filter(id=circuit_id).first()
+    if not circuit:
+        raise Http404
+
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        mob_id = request.POST.get('mob_id')
+
+        if action == 'add':
+            name = request.POST.get('name', '').strip()
+            dkp = request.POST.get('dkp', '0')
+            try:
+                dkp = Decimal(dkp)
+            except InvalidOperation:
+                messages.error(request, 'Invalid DKP value.')
+                return redirect('dkp:mob_manage', circuit_id=circuit_id)
+            if name:
+                Mob.objects.create(circuit=circuit, name=name, dkp=dkp)
+                messages.success(request, f'{name} added.')
+            else:
+                messages.error(request, 'Mob name is required.')
+
+        elif action == 'edit':
+            mob = Mob.objects.filter(id=mob_id, circuit=circuit).first()
+            if mob:
+                try:
+                    mob.dkp = Decimal(request.POST.get('dkp', mob.dkp))
+                    mob.name = request.POST.get('name', mob.name).strip()
+                    mob.save()
+                    messages.success(request, f'{mob.name} updated.')
+                except InvalidOperation:
+                    messages.error(request, 'Invalid DKP value.')
+
+        elif action == 'deactivate':
+            mob = Mob.objects.filter(id=mob_id, circuit=circuit).first()
+            if mob:
+                mob.is_active = False
+                mob.save(update_fields=['is_active'])
+                messages.success(request, f'{mob.name} deactivated.')
+
+        elif action == 'reactivate':
+            mob = Mob.objects.filter(id=mob_id, circuit=circuit).first()
+            if mob:
+                mob.is_active = True
+                mob.save(update_fields=['is_active'])
+                messages.success(request, f'{mob.name} reactivated.')
+
+        return redirect('dkp:mob_manage', circuit_id=circuit_id)
+
+    active_mobs = Mob.objects.filter(circuit=circuit, is_active=True).order_by('name')
+    inactive_mobs = Mob.objects.filter(circuit=circuit, is_active=False).order_by('name')
+
+    return render(request, 'dkp/mob_manage.html', {
+        'circuit': circuit,
+        'active_mobs': active_mobs,
+        'inactive_mobs': inactive_mobs,
+    })

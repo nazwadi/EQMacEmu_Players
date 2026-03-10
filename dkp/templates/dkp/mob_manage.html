@@ -1,0 +1,165 @@
+{% extends 'dkp/base.html' %}
+{% block title %}Manage Mobs — {{ circuit.name }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="eq-window mt-4" style="padding-top:40px;">
+        <div class="eq-window-title-bar">Manage Mobs</div>
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <a href="{% url 'dkp:circuit_config' circuit.id %}" class="eq-button-fancy">← Circuit Settings</a>
+            <h4 class="eq-header mb-0">{{ circuit.name }}</h4>
+            <div style="width:160px;"></div>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+            <div class="mb-3" style="padding:10px; border-radius:4px;
+                border:1px solid {% if message.tags == 'error' %}#ff6b6b{% else %}#6bff9e{% endif %};
+                color:{% if message.tags == 'error' %}#ff6b6b{% else %}#6bff9e{% endif %};">
+                {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %}
+
+        {# Add new mob #}
+        <div class="WindowNestedTan mb-4" style="padding:15px;">
+            <div style="color:#8aa3ff; font-size:11px; text-transform:uppercase; letter-spacing:1px; margin-bottom:10px;">Add Mob</div>
+            <form method="post" class="d-flex gap-2 align-items-end flex-wrap">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="add">
+                <div>
+                    <label style="color:#aaa; font-size:12px;">Name</label>
+                    <input type="text" name="name" class="form-control mt-1"
+                           style="background:#1a1a2e !important; color:#fff !important; border-color:#444; width:220px;"
+                           placeholder="Mob name">
+                </div>
+                <div>
+                    <label style="color:#aaa; font-size:12px;">DKP Value</label>
+                    <input type="number" name="dkp" step="0.5" class="form-control mt-1"
+                           style="background:#1a1a2e !important; color:#fff !important; border-color:#444; width:100px;"
+                           placeholder="0">
+                </div>
+                <button type="submit" class="eq-button-fancy">Add Mob</button>
+            </form>
+        </div>
+
+        {# Active mobs #}
+        <div class="WindowNestedTan mb-4" style="padding:15px;">
+            <div style="color:#8aa3ff; font-size:11px; text-transform:uppercase; letter-spacing:1px; margin-bottom:10px;">
+                Active Mobs
+            </div>
+            <table class="eq-table eq-highlight-rows bordered">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>DKP Value</th>
+                        <th>Payout History</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for mob in active_mobs %}
+                    <tr>
+                        <td>{{ mob.name }}</td>
+                        <td style="color:#fcc721;">{{ mob.dkp }}</td>
+                        <td style="font-size:12px; color:#aaa;">
+                            {% if mob.payout_change_history %}
+                                {% for entry in mob.payout_change_history %}
+                                    <div>{{ entry.date }}: {{ entry.old_dkp }} → {{ entry.new_dkp }}</div>
+                                {% endfor %}
+                            {% else %}
+                                —
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="d-flex gap-1 flex-wrap">
+                                <button class="eq-button-fancy" style="font-size:12px;"
+                                        onclick="toggleMobEdit({{ mob.id }})">Edit</button>
+                                <form method="post" style="margin:0;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="deactivate">
+                                    <input type="hidden" name="mob_id" value="{{ mob.id }}">
+                                    <button type="submit" class="eq-button-fancy"
+                                            style="font-size:12px; color:#ff9;"
+                                            onclick="return confirm('Deactivate {{ mob.name }}?')">
+                                        Deactivate
+                                    </button>
+                                </form>
+                            </div>
+                            <div id="mob-edit-{{ mob.id }}" style="display:none; margin-top:8px;">
+                                <form method="post" class="d-flex gap-2 align-items-end flex-wrap">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="edit">
+                                    <input type="hidden" name="mob_id" value="{{ mob.id }}">
+                                    <div>
+                                        <label style="color:#aaa; font-size:12px;">Name</label>
+                                        <input type="text" name="name" value="{{ mob.name }}"
+                                               class="form-control form-control-sm mt-1"
+                                               style="background:#1a1a2e !important; color:#fff !important; border-color:#444; width:180px;">
+                                    </div>
+                                    <div>
+                                        <label style="color:#aaa; font-size:12px;">DKP</label>
+                                        <input type="number" name="dkp" value="{{ mob.dkp }}" step="0.5"
+                                               class="form-control form-control-sm mt-1"
+                                               style="background:#1a1a2e !important; color:#fff !important; border-color:#444; width:90px;">
+                                    </div>
+                                    <button type="submit" class="eq-button-fancy" style="font-size:12px;">Save</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="4" style="text-align:center; color:#aaa; padding:20px;">No active mobs.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {# Inactive mobs #}
+        {% if inactive_mobs %}
+        <div class="WindowNestedTan" style="padding:15px;">
+            <div style="color:#8aa3ff; font-size:11px; text-transform:uppercase; letter-spacing:1px; margin-bottom:10px;">
+                Inactive Mobs
+            </div>
+            <table class="eq-table eq-highlight-rows bordered">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>DKP Value</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for mob in inactive_mobs %}
+                    <tr>
+                        <td style="color:#aaa;">{{ mob.name }}</td>
+                        <td style="color:#aaa;">{{ mob.dkp }}</td>
+                        <td>
+                            <form method="post" style="margin:0;">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="reactivate">
+                                <input type="hidden" name="mob_id" value="{{ mob.id }}">
+                                <button type="submit" class="eq-button-fancy"
+                                        style="font-size:12px; color:#6bff9e;">Reactivate</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+{% endblock %}
+
+{% block inline_js %}
+<script>
+function toggleMobEdit(mobId) {
+    const el = document.getElementById('mob-edit-' + mobId);
+    el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+</script>
+{% endblock %}
