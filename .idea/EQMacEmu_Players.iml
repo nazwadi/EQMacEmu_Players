@@ -48,6 +48,7 @@
         <option value="$MODULE_DIR$/quests/templates" />
         <option value="$MODULE_DIR$/patch/templates" />
         <option value="$MODULE_DIR$/magelo/templates" />
+        <option value="$MODULE_DIR$/dkp/templates" />
       </list>
     </option>
   </component>
