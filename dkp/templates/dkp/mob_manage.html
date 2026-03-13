@@ -40,6 +40,12 @@
                            style="background:#1a1a2e !important; color:#fff !important; border-color:#444; width:100px;"
                            placeholder="0">
                 </div>
+                <div>
+                    <label style="color:#aaa; font-size:12px;">Count</label>
+                    <input type="number" name="count" min="1" max="5" value="1" class="form-control mt-1"
+                           style="background:#1a1a2e !important; color:#fff !important; border-color:#444; width:70px;"
+                           title="Add multiple copies (e.g. 2 for TVX #1 and TVX #2)">
+                </div>
                 <button type="submit" class="eq-button-fancy">Add Mob</button>
             </form>
         </div>
@@ -54,6 +60,7 @@
                     <tr>
                         <th>Name</th>
                         <th>DKP Value</th>
+                        <th>Loot Table</th>
                         <th>Payout History</th>
                         <th>Actions</th>
                     </tr>
@@ -63,6 +70,32 @@
                     <tr>
                         <td>{{ mob.name }}</td>
                         <td style="color:#fcc721;">{{ mob.dkp }}</td>
+                        <td style="font-size:12px;">
+                            {% if mob.npc_id %}
+                                <span style="color:#6bff9e;">✓ {{ mob.npc_name }}</span>
+                                <button class="eq-button-fancy" style="font-size:11px; margin-left:6px;"
+                                        onclick="toggleNpcLink({{ mob.id }})">Change</button>
+                            {% else %}
+                                <span style="color:#aaa;">Not linked</span>
+                                <button class="eq-button-fancy" style="font-size:11px; margin-left:6px;"
+                                        onclick="toggleNpcLink({{ mob.id }})">Link NPC</button>
+                            {% endif %}
+                            <div id="npc-link-{{ mob.id }}" style="display:none; margin-top:8px;">
+                                <div class="d-flex gap-2 align-items-center flex-wrap">
+                                    <input type="text" id="npc-search-{{ mob.id }}"
+                                           class="form-control form-control-sm"
+                                           style="background:#1a1a2e !important; color:#fff !important; border-color:#444; width:200px;"
+                                           placeholder="Search NPC name..."
+                                           oninput="searchNpc({{ mob.id }}, this.value)">
+                                    {% if mob.npc_id %}
+                                    <button type="button" class="eq-button-fancy"
+                                            style="font-size:11px; color:#ff9;"
+                                            onclick="unlinkNpc({{ mob.id }})">Remove Link</button>
+                                    {% endif %}
+                                </div>
+                                <div id="npc-results-{{ mob.id }}" style="margin-top:6px;"></div>
+                            </div>
+                        </td>
                         <td style="font-size:12px; color:#aaa;">
                             {% if mob.payout_change_history %}
                                 {% for entry in mob.payout_change_history %}
@@ -110,7 +143,7 @@
                         </td>
                     </tr>
                 {% empty %}
-                    <tr><td colspan="4" style="text-align:center; color:#aaa; padding:20px;">No active mobs.</td></tr>
+                    <tr><td colspan="5" style="text-align:center; color:#aaa; padding:20px;">No active mobs.</td></tr>
                 {% endfor %}
                 </tbody>
             </table>
@@ -157,9 +190,85 @@
 
 {% block inline_js %}
 <script>
+const NPC_SEARCH_URL = "{% url 'dkp:npc_search' circuit.id %}";
+const CSRF_TOKEN = "{{ csrf_token }}";
+const MOB_MANAGE_URL = "{% url 'dkp:mob_manage' circuit.id %}";
+let npcSearchTimers = {};
+
 function toggleMobEdit(mobId) {
     const el = document.getElementById('mob-edit-' + mobId);
     el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+
+function toggleNpcLink(mobId) {
+    const el = document.getElementById('npc-link-' + mobId);
+    el.style.display = el.style.display === 'none' ? 'block' : 'none';
+    if (el.style.display === 'block') {
+        document.getElementById('npc-search-' + mobId).focus();
+    }
+}
+
+function setResultsMessage(resultsEl, text, color) {
+    resultsEl.textContent = '';
+    const span = document.createElement('span');
+    span.style.cssText = 'font-size:12px; color:' + color + ';';
+    span.textContent = text;
+    resultsEl.appendChild(span);
+}
+
+function searchNpc(mobId, query) {
+    clearTimeout(npcSearchTimers[mobId]);
+    const resultsEl = document.getElementById('npc-results-' + mobId);
+    if (query.length < 2) {
+        resultsEl.textContent = '';
+        return;
+    }
+    setResultsMessage(resultsEl, 'Searching...', '#aaa');
+    npcSearchTimers[mobId] = setTimeout(() => {
+        fetch(NPC_SEARCH_URL + '?q=' + encodeURIComponent(query))
+            .then(r => r.json())
+            .then(data => {
+                resultsEl.textContent = '';
+                if (data.results.length === 0) {
+                    setResultsMessage(resultsEl, 'No results found.', '#aaa');
+                    return;
+                }
+                data.results.forEach(npc => {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'eq-button-fancy';
+                    btn.style.cssText = 'font-size:12px; margin:2px;';
+                    btn.textContent = npc.name;
+                    btn.onclick = () => linkNpc(mobId, npc.id, npc.name);
+                    resultsEl.appendChild(btn);
+                });
+            })
+            .catch(() => setResultsMessage(resultsEl, 'Search failed. Try again.', '#ff6b6b'));
+    }, 300);
+}
+
+function linkNpc(mobId, npcId, npcName) {
+    const body = new URLSearchParams({
+        csrfmiddlewaretoken: CSRF_TOKEN,
+        action: 'link_npc',
+        mob_id: mobId,
+        npc_id: npcId,
+        npc_name: npcName,
+    });
+    fetch(MOB_MANAGE_URL, {method: 'POST', body})
+        .then(() => window.location.reload());
+}
+
+function unlinkNpc(mobId) {
+    const body = new URLSearchParams({
+        csrfmiddlewaretoken: CSRF_TOKEN,
+        action: 'link_npc',
+        mob_id: mobId,
+        npc_id: '',
+        npc_name: '',
+    });
+    fetch(MOB_MANAGE_URL, {method: 'POST', body})
+        .then(() => window.location.reload());
 }
 </script>
 {% endblock %}

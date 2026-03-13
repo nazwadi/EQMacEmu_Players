@@ -86,6 +86,8 @@ class Mob(models.Model):
     circuit = models.ForeignKey(RaidCircuit, on_delete=models.CASCADE)
     is_active = models.BooleanField(default=True)
     payout_change_history = models.JSONField(default=list)
+    npc_id = models.IntegerField(null=True, blank=True)
+    npc_name = models.CharField(max_length=200, blank=True)
 
     def __str__(self):
         return self.name

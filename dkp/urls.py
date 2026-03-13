@@ -26,4 +26,7 @@ urlpatterns = [
     path("manage/<int:circuit_id>/config/", views.circuit_config, name="circuit_config"),
     path('attendance/<int:membership_id>/', views.attendance_history, name='attendance_history'),
     path('manage/<int:circuit_id>/mobs/', views.mob_manage, name='mob_manage'),
+    path('manage/<int:circuit_id>/npc-search/', views.npc_search, name='npc_search'),
+    path('manage/<int:circuit_id>/mob/<int:mob_id>/loot/', views.mob_loot_items, name='mob_loot_items'),
+    path('manage/raid/<int:raid_id>/direct-award/', views.direct_award_view, name='direct_award'),
 ]

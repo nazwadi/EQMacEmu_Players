@@ -161,6 +161,44 @@ def award_auction(auction: Auction, created_by: 'auth.User'):
     auction.status = 'awarded'
     auction.save()
 
+@transaction.atomic
+def direct_award(raid, circuit, item_name, item_id, member, amount, created_by):
+    """Award an item directly to a member without the bidding flow."""
+    auction = Auction.objects.create(
+        raid=raid,
+        circuit=circuit,
+        item_name=item_name,
+        item_id=item_id,
+        status='awarded',
+        closed_at=timezone.now(),
+        created_by=created_by,
+    )
+    bid = Bid.objects.create(
+        auction=auction,
+        member=member,
+        bid_amount=amount,
+        status='won',
+        created_by=created_by,
+    )
+    auction.winner = bid
+    auction.save(update_fields=['winner'])
+
+    member.current_dkp -= amount
+    member.lifetime_spent_dkp += amount
+    member.save(update_fields=['current_dkp', 'lifetime_spent_dkp'])
+
+    DKPTransaction.objects.create(
+        raid=raid,
+        member=member,
+        item_name=item_name,
+        item_id=item_id,
+        amount=amount,
+        transaction_type='spend',
+        created_by=created_by,
+    )
+    cache.delete(f'dkp:standings:{circuit.id}')
+
+
 def join_circuit(circuit, user, display_name=None):
     """Request to join a circuit. Returns (membership, created, error)."""
     from dkp.models import CircuitMembership

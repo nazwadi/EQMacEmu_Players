@@ -1003,8 +1003,11 @@ def mob_manage(request, circuit_id):
                 messages.error(request, 'Invalid DKP value.')
                 return redirect('dkp:mob_manage', circuit_id=circuit_id)
             if name:
-                Mob.objects.create(circuit=circuit, name=name, dkp=dkp)
-                messages.success(request, f'{name} added.')
+                count = min(max(int(request.POST.get('count', 1) or 1), 1), 5)
+                for i in range(count):
+                    mob_name = name if i == 0 else f'{name} #{i + 1}'
+                    Mob.objects.create(circuit=circuit, name=mob_name, dkp=dkp)
+                messages.success(request, f'Added {count} mob(s): {name}.')
             else:
                 messages.error(request, 'Mob name is required.')
 
@@ -1033,6 +1036,20 @@ def mob_manage(request, circuit_id):
                 mob.save(update_fields=['is_active'])
                 messages.success(request, f'{mob.name} reactivated.')
 
+        elif action == 'link_npc':
+            mob = Mob.objects.filter(id=mob_id, circuit=circuit).first()
+            if mob:
+                npc_id = request.POST.get('npc_id', '').strip()
+                npc_name = request.POST.get('npc_name', '').strip()
+                mob.npc_id = int(npc_id) if npc_id else None
+                mob.npc_name = npc_name if npc_id else ''
+                mob.save(update_fields=['npc_id', 'npc_name'])
+                if npc_id:
+                    messages.success(request, f'{mob.name} linked to {npc_name}.')
+                else:
+                    messages.success(request, f'{mob.name} NPC link removed.')
+            return JsonResponse({'ok': True})
+
         return redirect('dkp:mob_manage', circuit_id=circuit_id)
 
     active_mobs = Mob.objects.filter(circuit=circuit, is_active=True).order_by('name')
@@ -1043,3 +1060,84 @@ def mob_manage(request, circuit_id):
         'active_mobs': active_mobs,
         'inactive_mobs': inactive_mobs,
     })
+
+
+@officer_required
+def npc_search(request, circuit_id):
+    q = request.GET.get('q', '').strip()
+    if len(q) < 2:
+        return JsonResponse({'results': []})
+    from common.models.npcs import NPCTypes
+    npcs = NPCTypes.objects.using('game_database').filter(
+        name__icontains=q, loottable_id__gt=0
+    ).values('id', 'name')[:20]
+    return JsonResponse({'results': list(npcs)})
+
+
+@officer_required
+def mob_loot_items(request, circuit_id, mob_id):
+    mob = Mob.objects.filter(id=mob_id, circuit_id=circuit_id).first()
+    if not mob or not mob.npc_id:
+        return JsonResponse({'items': []})
+    from django.db import connections
+    with connections['game_database'].cursor() as cursor:
+        cursor.execute("""
+            SELECT DISTINCT i.id, i.Name
+            FROM npc_types npc
+            JOIN loottable_entries lte ON lte.loottable_id = npc.loottable_id
+            JOIN lootdrop_entries lde ON lde.lootdrop_id = lte.lootdrop_id
+            JOIN items i ON i.id = lde.item_id
+            WHERE npc.id = %s
+            ORDER BY i.Name
+        """, [mob.npc_id])
+        rows = cursor.fetchall()
+    return JsonResponse({'items': [{'id': r[0], 'name': r[1]} for r in rows]})
+
+
+@officer_required
+@require_POST
+def direct_award_view(request, raid_id):
+    from dkp.services import direct_award as _direct_award
+    raid = Raid.objects.filter(id=raid_id).select_related('circuit').first()
+    if not raid:
+        raise Http404
+    item_name = request.POST.get('item_name', '').strip()
+    item_id_str = request.POST.get('item_id', '').strip()
+    member_id = request.POST.get('member_id', '').strip()
+    amount_str = request.POST.get('amount', '0').strip()
+
+    loot_redirect = f'/dkp/manage/raid/{raid_id}/?tab=loot'
+
+    if not item_name:
+        messages.error(request, 'Item name is required.')
+        return redirect(loot_redirect)
+
+    try:
+        amount = Decimal(amount_str)
+    except InvalidOperation:
+        messages.error(request, 'Invalid DKP amount.')
+        return redirect(loot_redirect)
+
+    member = CircuitMembership.objects.filter(
+        id=member_id, circuit=raid.circuit, status='active'
+    ).first()
+    if not member:
+        messages.error(request, 'Member not found.')
+        return redirect(loot_redirect)
+
+    if amount > member.current_dkp:
+        messages.error(request, f'{member.display_name} only has {member.current_dkp} DKP.')
+        return redirect(loot_redirect)
+
+    item_id = int(item_id_str) if item_id_str.isdigit() else None
+    _direct_award(
+        raid=raid,
+        circuit=raid.circuit,
+        item_name=item_name,
+        item_id=item_id,
+        member=member,
+        amount=amount,
+        created_by=request.user,
+    )
+    messages.success(request, f'{item_name} awarded to {member.display_name} for {amount} DKP.')
+    return redirect(loot_redirect)
