@@ -691,33 +691,132 @@ def raid_manage_detail(request, raid_id):
                 if mob.id in awarded:
                     messages.error(request, f'DKP already awarded for {mob.name}.')
                 else:
+                    # Handle late arrivals — create their base RaidAttendance first
+                    late_arrival_ids = [int(x) for x in request.POST.getlist('late_arrival')]
+                    newly_added_ids = []
+                    for mid in late_arrival_ids:
+                        status = request.POST.get(f'mob_status_{mid}', 'late')
+                        notes = request.POST.get(f'mob_notes_{mid}', '')
+                        _, created = RaidAttendance.objects.get_or_create(
+                            raid=raid, member_id=mid,
+                            defaults={'attendance_status': status, 'attendance_notes': notes},
+                        )
+                        if created:
+                            newly_added_ids.append(mid)
+
                     member_ids = [int(x) for x in request.POST.getlist('kill_attendees')]
                     for mid in member_ids:
-                        RaidMobAttendance.objects.get_or_create(
-                            raid=raid, mob=mob, member_id=mid,
-                        )
-                    from dkp.services import award_dkp, derive_attendance_status
-                    award_dkp(raid, mob, member_ids=member_ids)
+                        RaidMobAttendance.objects.get_or_create(raid=raid, mob=mob, member_id=mid)
+
+                    from dkp.services import award_dkp
+                    txn_ids = award_dkp(raid, mob, member_ids=member_ids)
+
                     awarded.append(mob.id)
                     raid.mobs_awarded = awarded
                     raid.save(update_fields=['mobs_awarded'])
-                    # Re-derive base attendance status for each attendee
-                    for attendance in raid.raidattendance_set.select_related('member').all():
-                        new_status = derive_attendance_status(raid, attendance.member)
-                        if new_status and new_status != attendance.attendance_status:
-                            attendance.attendance_status = new_status
-                            attendance.save(update_fields=['attendance_status'])
+
+                    # Save status/notes for members unchecked from this kill
+                    kill_attendee_ids = set(member_ids)
+                    for attendance in raid.raidattendance_set.exclude(attendance_status='absent').all():
+                        if attendance.member_id not in kill_attendee_ids and attendance.member_id not in late_arrival_ids:
+                            new_status = request.POST.get(f'mob_status_{attendance.member_id}')
+                            new_notes = request.POST.get(f'mob_notes_{attendance.member_id}', attendance.attendance_notes)
+                            if new_status:
+                                attendance.attendance_status = new_status
+                                attendance.attendance_notes = new_notes
+                                attendance.save(update_fields=['attendance_status', 'attendance_notes'])
+
+                    # Store undo data in session for this page load
+                    request.session[f'undo_mob_{raid.id}_{mob.id}'] = {
+                        'txn_ids': txn_ids,
+                        'new_attendance_ids': newly_added_ids,
+                        'mob_name': mob.name,
+                    }
                     messages.success(request, f'DKP awarded to {len(member_ids)} members for {mob.name}.')
+            from django.urls import reverse
+            undo_param = f'&undo={mob.id}' if mob else ''
+            return redirect(reverse('dkp:raid_manage_detail', kwargs={'raid_id': raid.id}) + f'?tab=mobs{undo_param}')
+
+        elif action == 'undo_mob_award':
+            mob_id = request.POST.get('mob_id')
+            mob = Mob.objects.filter(id=mob_id, circuit=raid.circuit).first()
+            if mob:
+                session_key = f'undo_mob_{raid.id}_{mob.id}'
+                undo_data = request.session.pop(session_key, None)
+                if undo_data:
+                    from django.db import transaction as db_transaction
+                    with db_transaction.atomic():
+                        for txn in DKPTransaction.objects.filter(id__in=undo_data['txn_ids']).select_related('member'):
+                            txn.member.current_dkp -= txn.amount
+                            txn.member.lifetime_earned_dkp -= txn.amount
+                            txn.member.save(update_fields=['current_dkp', 'lifetime_earned_dkp'])
+                        DKPTransaction.objects.filter(id__in=undo_data['txn_ids']).delete()
+                        RaidMobAttendance.objects.filter(raid=raid, mob=mob).delete()
+                        if undo_data.get('new_attendance_ids'):
+                            RaidAttendance.objects.filter(
+                                raid=raid, member_id__in=undo_data['new_attendance_ids']
+                            ).delete()
+                        awarded = list(raid.mobs_awarded or [])
+                        if mob.id in awarded:
+                            awarded.remove(mob.id)
+                        raid.mobs_awarded = awarded
+                        raid.save(update_fields=['mobs_awarded'])
+                        cache.delete(f'dkp:standings:{raid.circuit_id}')
+                    messages.success(request, f'DKP award for {mob.name} has been undone.')
+                else:
+                    messages.error(request, 'Undo is no longer available for this award.')
+            from django.urls import reverse
+            return redirect(reverse('dkp:raid_manage_detail', kwargs={'raid_id': raid.id}) + '?tab=mobs')
+
+        elif action == 'add_mob_credits':
+            mob_id = request.POST.get('mob_id')
+            mob = Mob.objects.filter(id=mob_id, circuit=raid.circuit).first()
+            if mob:
+                credit_ids = [int(x) for x in request.POST.getlist('credit_members')]
+                added = 0
+                for mid in credit_ids:
+                    _, created = RaidMobAttendance.objects.get_or_create(raid=raid, mob=mob, member_id=mid)
+                    if created:
+                        added += 1
+                messages.success(request, f'Added kill credit for {added} member(s) on {mob.name}.')
             from django.urls import reverse
             return redirect(reverse('dkp:raid_manage_detail', kwargs={'raid_id': raid.id}) + '?tab=mobs')
 
     mobs_awarded = list(raid.mobs_awarded or [])
     total_awarded = len(mobs_awarded)
     mob_kill_counts = {}
+    mob_credited = {}
+    mob_uncredited = {}
     if total_awarded:
         from django.db.models import Count as _Count
         kill_qs = RaidMobAttendance.objects.filter(raid=raid).values('member_id').annotate(kills=_Count('mob'))
         mob_kill_counts = {str(row['member_id']): row['kills'] for row in kill_qs}
+        for rma in RaidMobAttendance.objects.filter(raid=raid, mob_id__in=mobs_awarded):
+            mob_credited.setdefault(str(rma.mob_id), set()).add(rma.member_id)
+        attending_ids = set(
+            raid.raidattendance_set.exclude(attendance_status='absent').values_list('member_id', flat=True)
+        )
+        for mid in mobs_awarded:
+            credited_ids = mob_credited.get(str(mid), set())
+            uncredited_ids = attending_ids - credited_ids
+            if uncredited_ids:
+                mob_uncredited[str(mid)] = list(
+                    CircuitMembership.objects.filter(id__in=uncredited_ids).order_by('display_name')
+                )
+
+    # Check if undo is available for the most recently awarded mob
+    undo_mob_id = None
+    undo_mob_name = None
+    undo_param = request.GET.get('undo')
+    if undo_param:
+        try:
+            undo_mid = int(undo_param)
+            session_key = f'undo_mob_{raid.id}_{undo_mid}'
+            if session_key in request.session:
+                undo_mob_id = undo_mid
+                undo_mob_name = request.session[session_key].get('mob_name', '')
+        except (ValueError, TypeError):
+            pass
 
     return render(request, 'dkp/raid_manage_detail.html', {
         'raid': raid,
@@ -730,6 +829,10 @@ def raid_manage_detail(request, raid_id):
         'mobs_awarded': mobs_awarded,
         'total_awarded': total_awarded,
         'mob_kill_counts': mob_kill_counts,
+        'mob_credited': mob_credited,
+        'mob_uncredited': mob_uncredited,
+        'undo_mob_id': undo_mob_id,
+        'undo_mob_name': undo_mob_name,
     })
 
 

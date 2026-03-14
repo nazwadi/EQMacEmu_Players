@@ -194,6 +194,24 @@
                     </div>
                 </form>
 
+                {# Undo notice #}
+                {% if undo_mob_id %}
+                <div class="WindowNestedTan mt-3" style="padding:12px; border-color:#ff9 !important;">
+                    <div class="d-flex align-items-center gap-3">
+                        <span style="color:#ff9; font-size:13px;">DKP awarded for {{ undo_mob_name }}.</span>
+                        <form method="post" style="margin:0;">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="undo_mob_award">
+                            <input type="hidden" name="mob_id" value="{{ undo_mob_id }}">
+                            <button type="submit" class="eq-button-fancy" style="color:#ff6b6b; font-size:12px;"
+                                    onclick="return confirm('Undo DKP award for {{ undo_mob_name }}? This will reverse all DKP transactions for this kill.')">
+                                Undo
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                {% endif %}
+
                 {% if raid_mobs %}
                 <div class="WindowNestedTan mt-3" style="padding:15px;">
                     <div style="color:#8aa3ff; font-size:11px; text-transform:uppercase; letter-spacing:1px; margin-bottom:10px;">
@@ -211,6 +229,9 @@
                             <span style="color:#fcc721; font-size:13px; min-width:60px;">{{ mob.dkp }} DKP</span>
                             {% if mob.id in mobs_awarded %}
                                 <span style="color:#6bff9e; font-size:12px;">✓ Awarded</span>
+                                <button type="button" class="eq-button-fancy"
+                                        style="font-size:11px; color:#aaa;"
+                                        onclick="toggleEditCredits({{ mob.id }})">Edit Credits</button>
                             {% else %}
                                 <button type="button" class="eq-button-fancy"
                                         style="font-size:12px; color:#6bff9e;"
@@ -221,6 +242,7 @@
                             {% endif %}
                         </div>
 
+                        {# Award confirm panel #}
                         {% if mob.id not in mobs_awarded %}
                         <div id="mob-award-{{ mob.id }}" style="display:none; margin-top:12px;">
                             <div style="color:#aaa; font-size:11px; margin-bottom:8px; text-transform:uppercase; letter-spacing:1px;">
@@ -234,17 +256,60 @@
                                     {% for member in all_members %}
                                         {% with attendance=attendance_map|get_item:member.id %}
                                         {% if attendance and attendance.attendance_status != 'absent' %}
-                                        <label style="display:flex; align-items:center; gap:5px; font-size:13px; color:#ccc; cursor:pointer;
-                                                      background:#1a1a2e; border:1px solid #444; border-radius:3px; padding:3px 8px; white-space:nowrap;">
-                                            <input type="checkbox" name="kill_attendees" value="{{ member.id }}" checked>
-                                            {{ member.display_name }}
-                                        </label>
+                                        <div style="display:flex; flex-direction:column; gap:3px;">
+                                            <label style="display:flex; align-items:center; gap:5px; font-size:13px; color:#ccc; cursor:pointer;
+                                                          background:#1a1a2e; border:1px solid #444; border-radius:3px; padding:3px 8px; white-space:nowrap;">
+                                                <input type="checkbox" name="kill_attendees" value="{{ member.id }}" checked
+                                                       class="kill-chk" onchange="toggleKillStatus(this)">
+                                                {{ member.display_name }}
+                                            </label>
+                                            <div class="kill-status-row" style="display:none; flex-direction:column; gap:3px; padding-left:4px;">
+                                                <select name="mob_status_{{ member.id }}"
+                                                        class="form-select form-select-sm"
+                                                        style="background:#1a1a2e !important; color:#fff !important; border-color:#555; font-size:12px;">
+                                                    <option value="present" {% if attendance.attendance_status == 'present' %}selected{% endif %}>Present</option>
+                                                    <option value="late" {% if attendance.attendance_status == 'late' %}selected{% endif %}>Late</option>
+                                                    <option value="early_departure" {% if attendance.attendance_status == 'early_departure' %}selected{% endif %}>Early Departure</option>
+                                                    <option value="partial" {% if attendance.attendance_status == 'partial' %}selected{% endif %}>Partial</option>
+                                                    <option value="absent" {% if attendance.attendance_status == 'absent' %}selected{% endif %}>Absent</option>
+                                                </select>
+                                                <input type="text" name="mob_notes_{{ member.id }}"
+                                                       value="{{ attendance.attendance_notes }}"
+                                                       class="form-control form-control-sm"
+                                                       placeholder="Notes..."
+                                                       style="background:#1a1a2e !important; color:#fff !important; border-color:#555; font-size:12px;">
+                                            </div>
+                                        </div>
                                         {% endif %}
                                         {% endwith %}
                                     {% endfor %}
                                 </div>
+
+                                {# Late arrival section #}
+                                <div class="mb-3" style="border-top:1px solid #333; padding-top:10px;">
+                                    <button type="button" class="eq-button-fancy" style="font-size:11px; color:#aaa;"
+                                            onclick="toggleLateArrival({{ mob.id }})">+ Add Late Arrival</button>
+                                    <div id="late-arrival-{{ mob.id }}" style="display:none; margin-top:8px;">
+                                        <select class="form-select form-select-sm late-arrival-select"
+                                                data-mob="{{ mob.id }}"
+                                                style="background:#1a1a2e !important; color:#fff !important; border-color:#444; max-width:220px;"
+                                                onchange="addLateArrival(this, {{ mob.id }})">
+                                            <option value="">— Select player —</option>
+                                            {% for member in all_members %}
+                                                {% with att=attendance_map|get_item:member.id %}
+                                                {% if not att %}
+                                                <option value="{{ member.id }}">{{ member.display_name }}</option>
+                                                {% endif %}
+                                                {% endwith %}
+                                            {% endfor %}
+                                        </select>
+                                        <div id="late-arrivals-list-{{ mob.id }}" class="mt-2 d-flex flex-column gap-2"></div>
+                                    </div>
+                                </div>
+
                                 <div class="d-flex gap-2">
-                                    <button type="submit" class="eq-button-fancy" style="color:#6bff9e;">
+                                    <button type="submit" class="eq-button-fancy" style="color:#6bff9e;"
+                                            onclick="return confirm('Award {{ mob.dkp }} DKP to checked members for {{ mob.name }}?')">
                                         Confirm &amp; Award DKP
                                     </button>
                                     <button type="button" class="eq-button-fancy" style="color:#aaa;"
@@ -253,6 +318,41 @@
                             </form>
                         </div>
                         {% endif %}
+
+                        {# Edit credits panel (awarded mobs only) #}
+                        {% if mob.id in mobs_awarded %}
+                        {% with uncredited=mob_uncredited|get_item:mob.id %}
+                        <div id="edit-credits-{{ mob.id }}" style="display:none; margin-top:12px;">
+                            <div style="color:#aaa; font-size:11px; margin-bottom:8px; text-transform:uppercase; letter-spacing:1px;">
+                                Add kill credit — attendance record only, no DKP:
+                            </div>
+                            {% if uncredited %}
+                            <form method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="add_mob_credits">
+                                <input type="hidden" name="mob_id" value="{{ mob.id }}">
+                                <div class="d-flex flex-wrap gap-2 mb-3">
+                                    {% for member in uncredited %}
+                                    <label style="display:flex; align-items:center; gap:5px; font-size:13px; color:#ccc; cursor:pointer;
+                                                  background:#1a1a2e; border:1px solid #444; border-radius:3px; padding:3px 8px; white-space:nowrap;">
+                                        <input type="checkbox" name="credit_members" value="{{ member.id }}">
+                                        {{ member.display_name }}
+                                    </label>
+                                    {% endfor %}
+                                </div>
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="eq-button-fancy" style="color:#8aa3ff; font-size:12px;">Save Credits</button>
+                                    <button type="button" class="eq-button-fancy" style="color:#aaa; font-size:12px;"
+                                            onclick="toggleEditCredits({{ mob.id }})">Cancel</button>
+                                </div>
+                            </form>
+                            {% else %}
+                            <div style="color:#aaa; font-size:12px;">All current attendees already have credit for this kill.</div>
+                            {% endif %}
+                        </div>
+                        {% endwith %}
+                        {% endif %}
+
                     </div>
                     {% endfor %}
                 </div>
@@ -583,6 +683,89 @@
             const el = document.getElementById('mob-award-' + mobId);
             if (!el) return;
             el.style.display = el.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function toggleKillStatus(chk) {
+            const row = chk.closest('div').querySelector('.kill-status-row');
+            if (!row) return;
+            row.style.display = chk.checked ? 'none' : 'flex';
+        }
+
+        function toggleEditCredits(mobId) {
+            const el = document.getElementById('edit-credits-' + mobId);
+            if (!el) return;
+            el.style.display = el.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function toggleLateArrival(mobId) {
+            const el = document.getElementById('late-arrival-' + mobId);
+            if (!el) return;
+            el.style.display = el.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function addLateArrival(select, mobId) {
+            const memberId = select.value;
+            if (!memberId) return;
+            const memberName = select.options[select.selectedIndex].text;
+            select.options[select.selectedIndex].remove();
+            select.value = '';
+
+            const list = document.getElementById('late-arrivals-list-' + mobId);
+            const card = document.createElement('div');
+            card.id = 'late-card-' + memberId;
+            card.style.cssText = 'display:flex; flex-direction:column; gap:3px;';
+
+            const killInput = document.createElement('input');
+            killInput.type = 'hidden'; killInput.name = 'kill_attendees'; killInput.value = memberId;
+
+            const lateInput = document.createElement('input');
+            lateInput.type = 'hidden'; lateInput.name = 'late_arrival'; lateInput.value = memberId;
+
+            const labelRow = document.createElement('div');
+            labelRow.style.cssText = 'display:flex; align-items:center; gap:8px; background:#1a1a2e; border:1px solid #6bff9e; border-radius:3px; padding:3px 8px; font-size:13px; color:#6bff9e;';
+            const nameSpan = document.createElement('span');
+            nameSpan.textContent = memberName;
+            const removeBtn = document.createElement('button');
+            removeBtn.type = 'button';
+            removeBtn.textContent = '×';
+            removeBtn.style.cssText = 'background:none; border:none; color:#ff6b6b; cursor:pointer; font-size:16px; padding:0; margin-left:auto; line-height:1;';
+            removeBtn.onclick = () => removeLateArrival(memberId, memberName, mobId);
+            labelRow.appendChild(nameSpan);
+            labelRow.appendChild(removeBtn);
+
+            const statusSelect = document.createElement('select');
+            statusSelect.name = 'mob_status_' + memberId;
+            statusSelect.className = 'form-select form-select-sm';
+            statusSelect.style.cssText = 'background:#1a1a2e !important; color:#fff !important; border-color:#555; font-size:12px;';
+            [['present','Present'],['late','Late'],['early_departure','Early Departure'],['partial','Partial'],['absent','Absent']].forEach(([val, label]) => {
+                const opt = document.createElement('option');
+                opt.value = val; opt.textContent = label;
+                if (val === 'late') opt.selected = true;
+                statusSelect.appendChild(opt);
+            });
+
+            const notesInput = document.createElement('input');
+            notesInput.type = 'text'; notesInput.name = 'mob_notes_' + memberId;
+            notesInput.placeholder = 'Notes...'; notesInput.className = 'form-control form-control-sm';
+            notesInput.style.cssText = 'background:#1a1a2e !important; color:#fff !important; border-color:#555; font-size:12px;';
+
+            card.appendChild(killInput);
+            card.appendChild(lateInput);
+            card.appendChild(labelRow);
+            card.appendChild(statusSelect);
+            card.appendChild(notesInput);
+            list.appendChild(card);
+        }
+
+        function removeLateArrival(memberId, memberName, mobId) {
+            const card = document.getElementById('late-card-' + memberId);
+            if (card) card.remove();
+            const select = document.querySelector('.late-arrival-select[data-mob="' + mobId + '"]');
+            if (select) {
+                const opt = document.createElement('option');
+                opt.value = memberId; opt.textContent = memberName;
+                select.appendChild(opt);
+            }
         }
     </script>
 {% endblock %}
