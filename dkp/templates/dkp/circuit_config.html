@@ -9,7 +9,7 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <a href="{% url 'dkp:member_list' circuit.id %}" class="eq-button-fancy">← Manage Members</a>
             <h4 class="eq-header mb-0">{{ circuit.name }}</h4>
-            <div style="width:160px;"></div>
+            <a href="{% url 'dkp:circuit_adjustments' circuit.id %}" class="eq-button-fancy">DKP Adjustments →</a>
         </div>
 
         {% if messages %}

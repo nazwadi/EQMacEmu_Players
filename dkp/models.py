@@ -117,6 +117,7 @@ class Raid(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     is_private = models.BooleanField(default=False)
     mob_dkp_snapshot = models.JSONField(default=dict, blank=True)
+    mobs_awarded = models.JSONField(default=list, blank=True)
 
     def __str__(self):
         return f'{self.date}'

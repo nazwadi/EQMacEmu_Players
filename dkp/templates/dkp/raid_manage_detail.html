@@ -181,6 +181,47 @@
                         <button type="submit" class="eq-button-fancy" style="font-size:18px;">Save Mobs</button>
                     </div>
                 </form>
+
+                {% if raid_mobs %}
+                <div class="WindowNestedTan mt-3" style="padding:15px;">
+                    <div style="color:#8aa3ff; font-size:11px; text-transform:uppercase; letter-spacing:1px; margin-bottom:10px;">
+                        Award DKP for Kills
+                    </div>
+                    <table class="eq-table bordered">
+                        <thead>
+                            <tr>
+                                <th>Mob</th>
+                                <th>DKP Value</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for mob in raid_mobs %}
+                            <tr>
+                                <td>{{ mob.name }}</td>
+                                <td style="color:#fcc721;">{{ mob.dkp }}</td>
+                                <td>
+                                    {% if mob.id in mobs_awarded %}
+                                        <span style="color:#aaa; font-size:12px;">✓ Awarded</span>
+                                    {% else %}
+                                        <form method="post" style="margin:0;">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="action" value="award_mob_dkp">
+                                            <input type="hidden" name="mob_id" value="{{ mob.id }}">
+                                            <button type="submit" class="eq-button-fancy"
+                                                    style="font-size:12px; color:#6bff9e;"
+                                                    onclick="return confirm('Award {{ mob.dkp }} DKP to all attendees for killing {{ mob.name }}?')">
+                                                Award {{ mob.dkp }} DKP
+                                            </button>
+                                        </form>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
             </div>
 
             {# Loot Tab #}

@@ -29,4 +29,5 @@ urlpatterns = [
     path('manage/<int:circuit_id>/npc-search/', views.npc_search, name='npc_search'),
     path('manage/<int:circuit_id>/mob/<int:mob_id>/loot/', views.mob_loot_items, name='mob_loot_items'),
     path('manage/raid/<int:raid_id>/direct-award/', views.direct_award_view, name='direct_award'),
+    path('manage/<int:circuit_id>/adjustments/', views.circuit_adjustments, name='circuit_adjustments'),
 ]

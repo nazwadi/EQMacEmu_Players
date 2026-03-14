@@ -680,6 +680,22 @@ def raid_manage_detail(request, raid_id):
                     messages.error(request, str(e))
             return redirect('dkp:raid_manage_detail', raid_id=raid.id)
 
+        elif action == 'award_mob_dkp':
+            mob_id = request.POST.get('mob_id')
+            mob = Mob.objects.filter(id=mob_id, circuit=raid.circuit).first()
+            if mob:
+                awarded = list(raid.mobs_awarded or [])
+                if mob.id in awarded:
+                    messages.error(request, f'DKP already awarded for {mob.name}.')
+                else:
+                    from dkp.services import award_dkp
+                    award_dkp(raid, mob)
+                    awarded.append(mob.id)
+                    raid.mobs_awarded = awarded
+                    raid.save(update_fields=['mobs_awarded'])
+                    messages.success(request, f'DKP awarded to all attendees for {mob.name}.')
+            return redirect('dkp:raid_manage_detail', raid_id=raid.id)
+
     return render(request, 'dkp/raid_manage_detail.html', {
         'raid': raid,
         'circuit': raid.circuit,
@@ -688,6 +704,7 @@ def raid_manage_detail(request, raid_id):
         'circuit_mobs': circuit_mobs,
         'raid_mobs': raid_mobs,
         'auctions': auctions,
+        'mobs_awarded': list(raid.mobs_awarded or []),
     })
 
 
@@ -1141,3 +1158,82 @@ def direct_award_view(request, raid_id):
     )
     messages.success(request, f'{item_name} awarded to {member.display_name} for {amount} DKP.')
     return redirect(loot_redirect)
+
+
+@officer_required
+def circuit_adjustments(request, circuit_id):
+    circuit = RaidCircuit.objects.filter(id=circuit_id).first()
+    if not circuit:
+        raise Http404
+
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        amount_str = request.POST.get('amount', '0').strip()
+        note = request.POST.get('note', '').strip()
+
+        if not note:
+            messages.error(request, 'A reason is required for all adjustments.')
+            return redirect('dkp:circuit_adjustments', circuit_id=circuit_id)
+
+        try:
+            amount = Decimal(amount_str)
+        except InvalidOperation:
+            messages.error(request, 'Invalid amount.')
+            return redirect('dkp:circuit_adjustments', circuit_id=circuit_id)
+
+        if action == 'individual':
+            member = CircuitMembership.objects.filter(
+                id=request.POST.get('member_id'), circuit=circuit, status='active'
+            ).first()
+            if not member:
+                messages.error(request, 'Member not found.')
+                return redirect('dkp:circuit_adjustments', circuit_id=circuit_id)
+            member.current_dkp += amount
+            member.save(update_fields=['current_dkp'])
+            DKPTransaction.objects.create(
+                member=member,
+                amount=amount,
+                transaction_type='adjustment',
+                transaction_notes=note,
+                created_by=request.user,
+            )
+            cache.delete(f'dkp:standings:{circuit_id}')
+            messages.success(request, f'Adjusted {member.display_name} by {amount:+g} DKP.')
+
+        elif action == 'raid':
+            raid = Raid.objects.filter(id=request.POST.get('raid_id'), circuit=circuit).first()
+            if not raid:
+                messages.error(request, 'Raid not found.')
+                return redirect('dkp:circuit_adjustments', circuit_id=circuit_id)
+            attendances = RaidAttendance.objects.filter(
+                raid=raid
+            ).exclude(attendance_status='absent').select_related('member')
+            count = 0
+            for attendance in attendances:
+                member = attendance.member
+                member.current_dkp += amount
+                member.save(update_fields=['current_dkp'])
+                DKPTransaction.objects.create(
+                    raid=raid,
+                    member=member,
+                    amount=amount,
+                    transaction_type='adjustment',
+                    transaction_notes=note,
+                    created_by=request.user,
+                )
+                count += 1
+            cache.delete(f'dkp:standings:{circuit_id}')
+            messages.success(request, f'Adjusted {count} attendees by {amount:+g} DKP.')
+
+        return redirect('dkp:circuit_adjustments', circuit_id=circuit_id)
+
+    members = CircuitMembership.objects.filter(
+        circuit=circuit, status='active'
+    ).order_by('display_name')
+    raids = Raid.objects.filter(circuit=circuit).order_by('-date')[:50]
+
+    return render(request, 'dkp/circuit_adjustments.html', {
+        'circuit': circuit,
+        'members': members,
+        'raids': raids,
+    })

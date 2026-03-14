@@ -65,6 +65,10 @@
                        {% if request.resolver_match.url_name == 'mob_manage' %}aria-current="page"{% endif %}>
                         Manage Mobs
                     </a>
+                    <a href="{% url 'dkp:circuit_adjustments' circuit.id %}" class="side-nav-item"
+                       {% if request.resolver_match.url_name == 'circuit_adjustments' %}aria-current="page"{% endif %}>
+                        DKP Adjustments
+                    </a>
                 {% endif %}
             {% endfor %}
         </div>

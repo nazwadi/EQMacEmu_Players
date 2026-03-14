@@ -1,0 +1,103 @@
+{% extends 'dkp/base.html' %}
+{% block title %}DKP Adjustments — {{ circuit.name }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="eq-window mt-4" style="padding-top:40px;">
+        <div class="eq-window-title-bar">DKP Adjustments</div>
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <a href="{% url 'dkp:circuit_config' circuit.id %}" class="eq-button-fancy">← Circuit Settings</a>
+            <h4 class="eq-header mb-0">{{ circuit.name }}</h4>
+            <div style="width:160px;"></div>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+            <div class="mb-3" style="padding:10px; border-radius:4px;
+                border:1px solid {% if message.tags == 'error' %}#ff6b6b{% else %}#6bff9e{% endif %};
+                color:{% if message.tags == 'error' %}#ff6b6b{% else %}#6bff9e{% endif %};">
+                {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %}
+
+        {# Individual adjustment #}
+        <div class="WindowNestedTan mb-4" style="padding:20px;">
+            <div style="color:#8aa3ff; font-size:11px; text-transform:uppercase; letter-spacing:1px; margin-bottom:12px;">
+                Individual Adjustment
+            </div>
+            <form method="post" class="d-flex gap-3 align-items-end flex-wrap">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="individual">
+                <div>
+                    <label style="color:#aaa; font-size:12px;">Member</label>
+                    <select name="member_id" class="form-select form-select-sm mt-1"
+                            style="background:#1a1a2e !important; color:#fff !important; border-color:#444; min-width:180px;">
+                        {% for member in members %}
+                        <option value="{{ member.id }}">{{ member.display_name }} ({{ member.current_dkp }} DKP)</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label style="color:#aaa; font-size:12px;">Amount <span style="color:#555;">(+5 bonus, -3 penalty)</span></label>
+                    <input type="number" name="amount" step="0.5" value="0"
+                           class="form-control form-control-sm mt-1"
+                           style="background:#1a1a2e !important; color:#fff !important; border-color:#444; width:100px;">
+                </div>
+                <div style="flex:1; min-width:200px;">
+                    <label style="color:#aaa; font-size:12px;">Reason <span style="color:#ff6b6b;">*</span></label>
+                    <input type="text" name="note" required
+                           class="form-control form-control-sm mt-1"
+                           placeholder="Required — explain the adjustment"
+                           style="background:#1a1a2e !important; color:#fff !important; border-color:#444;">
+                </div>
+                <button type="submit" class="eq-button-fancy">Apply</button>
+            </form>
+        </div>
+
+        {# Raid-wide adjustment #}
+        <div class="WindowNestedTan" style="padding:20px;">
+            <div style="color:#8aa3ff; font-size:11px; text-transform:uppercase; letter-spacing:1px; margin-bottom:12px;">
+                Raid-Wide Adjustment
+            </div>
+            <div style="color:#aaa; font-size:12px; margin-bottom:12px;">
+                Applies to all non-absent attendees of the selected raid.
+            </div>
+            <form method="post" class="d-flex gap-3 align-items-end flex-wrap">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="raid">
+                <div>
+                    <label style="color:#aaa; font-size:12px;">Raid</label>
+                    <select name="raid_id" class="form-select form-select-sm mt-1"
+                            style="background:#1a1a2e !important; color:#fff !important; border-color:#444; min-width:220px;">
+                        {% for raid in raids %}
+                        <option value="{{ raid.id }}">{{ raid.date|date:"M j, Y" }}{% if raid.labels %} — {{ raid.labels }}{% endif %}</option>
+                        {% empty %}
+                        <option disabled>No raids yet</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label style="color:#aaa; font-size:12px;">Amount <span style="color:#555;">(+5 bonus, -3 penalty)</span></label>
+                    <input type="number" name="amount" step="0.5" value="0"
+                           class="form-control form-control-sm mt-1"
+                           style="background:#1a1a2e !important; color:#fff !important; border-color:#444; width:100px;">
+                </div>
+                <div style="flex:1; min-width:200px;">
+                    <label style="color:#aaa; font-size:12px;">Reason <span style="color:#ff6b6b;">*</span></label>
+                    <input type="text" name="note" required
+                           class="form-control form-control-sm mt-1"
+                           placeholder="Required — explain the adjustment"
+                           style="background:#1a1a2e !important; color:#fff !important; border-color:#444;">
+                </div>
+                <button type="submit" class="eq-button-fancy"
+                        onclick="return confirm('Apply this adjustment to all non-absent attendees of the selected raid?')">
+                    Apply to Raid
+                </button>
+            </form>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
