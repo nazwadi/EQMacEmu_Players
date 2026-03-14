@@ -1,6 +1,23 @@
 {% extends 'dkp/base.html' %}
 {% block title %}DKP Adjustments — {{ circuit.name }}{% endblock %}
 
+{% block help_content %}
+<div class="help-section">Individual Adjustment</div>
+<p>Add or subtract DKP for a single member. Use this for corrections, bonuses, or penalties.</p>
+<ul>
+    <li>Enter a <strong style="color:#6bff9e;">positive number</strong> to add DKP, a <strong style="color:#ff6b6b;">negative number</strong> to deduct.</li>
+    <li>A reason is required and will appear in the member's transaction history.</li>
+</ul>
+
+<div class="help-section">Raid-Wide Adjustment</div>
+<p>Applies the same adjustment to every <strong style="color:#ccc;">non-absent</strong> attendee of the selected raid. Useful for blanket bonuses (e.g., +2 DKP for an unusually long night) or corrections that affect the whole group.</p>
+<ul>
+    <li>Absent members are excluded automatically.</li>
+    <li>A reason is required and appears in each affected member's transaction history.</li>
+    <li>Use Individual Adjustment if only some attendees should be affected.</li>
+</ul>
+{% endblock %}
+
 {% block content %}
 <div class="container">
     <div class="eq-window mt-4" style="padding-top:40px;">

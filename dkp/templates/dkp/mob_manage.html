@@ -1,6 +1,28 @@
 {% extends 'dkp/base.html' %}
 {% block title %}Manage Mobs — {{ circuit.name }}{% endblock %}
 
+{% block help_content %}
+<div class="help-section">Mob Roster</div>
+<p>Mobs here are the circuit's permanent roster. Add each raid boss once — they'll be available to select on every future raid.</p>
+
+<div class="help-section">Adding Mobs</div>
+<ul>
+    <li><strong style="color:#ccc;">Count</strong> — adds multiple copies with auto-numbered names. Use this when two instances of the same mob exist with different loot tables (e.g., TVX #1, TVX #2).</li>
+    <li><strong style="color:#ccc;">DKP Value</strong> — how much DKP members earn when this mob is killed. Can be changed later; the change history is recorded.</li>
+</ul>
+
+<div class="help-section">Linking an NPC</div>
+<p>Linking a mob to a game database NPC enables the <strong style="color:#ccc;">Quick Award from Drops</strong> feature in the raid Loot tab — it pulls the mob's actual drop table so you can award loot with one click.</p>
+<ul>
+    <li>Search by partial NPC name. Only NPCs with a configured loot table will appear.</li>
+    <li>If a mob doesn't show up, it may not have a loot table set up in the game database.</li>
+    <li>Linking is optional — mobs without an NPC link still work for DKP awarding.</li>
+</ul>
+
+<div class="help-section">Deactivating</div>
+<p>Deactivating a mob hides it from future raids but preserves all historical data. You can reactivate it at any time.</p>
+{% endblock %}
+
 {% block content %}
 <div class="container">
     <div class="eq-window mt-4" style="padding-top:40px;">

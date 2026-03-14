@@ -1,6 +1,28 @@
 {% extends 'dkp/base.html' %}
 {% block title %}Circuit Settings — {{ circuit.name }}{% endblock %}
 
+{% block help_content %}
+<div class="help-section">DKP Limits</div>
+<ul>
+    <li><strong style="color:#ccc;">DKP Cap</strong> — the maximum DKP any member can hold. Earnings above this are lost unless the overcap applies.</li>
+    <li><strong style="color:#ccc;">DKP Overcap</strong> — extra DKP allowed above the cap during active raids, so members near the cap aren't penalized for attending. DKP above cap + overcap is lost.</li>
+    <li><strong style="color:#ccc;">Minimum Bid</strong> — players can't bid below this amount in auctions. Prevents trivial bids.</li>
+    <li><strong style="color:#ccc;">New Player Bonus</strong> — starting DKP given to new members when their application is approved.</li>
+</ul>
+
+<div class="help-section">Attendance</div>
+<ul>
+    <li><strong style="color:#ccc;">Hourly Rate</strong> — DKP awarded per hour of attendance if you use time-based awarding (separate from mob-based DKP).</li>
+    <li><strong style="color:#ccc;">Attendance Window</strong> — how many days back to count when calculating a member's attendance percentage on the Standings page. 90 days is a common default.</li>
+</ul>
+
+<div class="help-section">Auctions</div>
+<ul>
+    <li><strong style="color:#ccc;">Tie Breaker</strong> — how to resolve equal bids. "Oldest Bid" rewards players who bid early. "Highest Attendance" rewards consistent raiders. "Lowest Lifetime DKP" favors newer members.</li>
+    <li><strong style="color:#ccc;">Bid Visibility</strong> — if checked, all members can see each other's bid amounts in real time. If unchecked, only officers see the amounts.</li>
+</ul>
+{% endblock %}
+
 {% block content %}
 <div class="container">
     <div class="eq-window mt-4" style="padding-top:40px;">

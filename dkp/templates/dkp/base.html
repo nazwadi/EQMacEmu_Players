@@ -12,3 +12,158 @@
 {% block extra_js %}
     <script src="{% static 'dkp/js/sortable_tables.js' %}"></script>
 {% endblock %}
+
+{% block help_drawer %}
+<style>
+    #help-btn {
+        position: fixed;
+        bottom: 28px;
+        right: 28px;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: #2a2a4a;
+        border: 1px solid #8aa3ff;
+        color: #8aa3ff;
+        font-size: 17px;
+        font-weight: bold;
+        cursor: pointer;
+        z-index: 1050;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.15s, color 0.15s;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
+    #help-btn:hover { background: #8aa3ff; color: #1a1a2e; }
+    #help-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.45);
+        z-index: 1060;
+    }
+    #help-overlay.open { display: block; }
+    #help-drawer {
+        position: fixed;
+        top: 0;
+        right: -360px;
+        width: 340px;
+        height: 100vh;
+        background: #1a1a2e;
+        border-left: 1px solid #444;
+        z-index: 1070;
+        display: flex;
+        flex-direction: column;
+        transition: right 0.22s ease;
+    }
+    #help-drawer.open { right: 0; }
+    #help-drawer-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 18px;
+        border-bottom: 1px solid #333;
+        background: #12122a;
+        flex-shrink: 0;
+    }
+    #help-drawer-header span {
+        color: #8aa3ff;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    #help-close {
+        background: none;
+        border: none;
+        color: #aaa;
+        font-size: 22px;
+        cursor: pointer;
+        padding: 0;
+        line-height: 1;
+    }
+    #help-close:hover { color: #fff; }
+    #help-drawer-body {
+        padding: 18px 20px;
+        overflow-y: auto;
+        flex: 1;
+        font-size: 13px;
+        color: #ccc;
+        line-height: 1.7;
+    }
+    .help-section {
+        color: #8aa3ff;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin: 16px 0 6px;
+        border-bottom: 1px solid #2a2a4a;
+        padding-bottom: 4px;
+    }
+    .help-section:first-child { margin-top: 0; }
+    #help-drawer-body p { margin: 0 0 8px; }
+    #help-drawer-body ul { margin: 0 0 8px; padding-left: 16px; }
+    #help-drawer-body li { margin-bottom: 4px; }
+    .help-key {
+        display: inline-block;
+        background: #2a2a4a;
+        border: 1px solid #555;
+        border-radius: 3px;
+        padding: 0 5px;
+        font-size: 11px;
+        color: #aaa;
+    }
+</style>
+
+<button id="help-btn" type="button" aria-label="Help" title="Help (press ?)">?</button>
+<div id="help-overlay"></div>
+<div id="help-drawer" role="complementary" aria-label="Page help">
+    <div id="help-drawer-header">
+        <span>Help</span>
+        <button id="help-close" aria-label="Close help" title="Close (Esc)">&#x2715;</button>
+    </div>
+    <div id="help-drawer-body">
+        {% block help_content %}
+        <p style="color:#aaa;">No additional help available for this page.</p>
+        {% endblock %}
+        <p style="color:#555; font-size:11px; margin-top:24px;">Press <span class="help-key">?</span> to toggle this panel.</p>
+    </div>
+</div>
+
+<script>
+(function () {
+    const btn = document.getElementById('help-btn');
+    const drawer = document.getElementById('help-drawer');
+    const overlay = document.getElementById('help-overlay');
+    const closeBtn = document.getElementById('help-close');
+
+    function openHelp() {
+        drawer.classList.add('open');
+        overlay.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+    }
+    function closeHelp() {
+        drawer.classList.remove('open');
+        overlay.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+    }
+
+    btn.addEventListener('click', function () {
+        drawer.classList.contains('open') ? closeHelp() : openHelp();
+    });
+    closeBtn.addEventListener('click', closeHelp);
+    overlay.addEventListener('click', closeHelp);
+
+    document.addEventListener('keydown', function (e) {
+        const tag = document.activeElement.tagName;
+        if (e.key === '?' && !['INPUT', 'TEXTAREA', 'SELECT'].includes(tag)) {
+            e.preventDefault();
+            drawer.classList.contains('open') ? closeHelp() : openHelp();
+        }
+        if (e.key === 'Escape' && drawer.classList.contains('open')) {
+            closeHelp();
+        }
+    });
+}());
+</script>
+{% endblock %}

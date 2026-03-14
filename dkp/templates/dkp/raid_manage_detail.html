@@ -1,6 +1,43 @@
 {% extends 'dkp/base.html' %}
 {% load dkp_tags %}
 {% block title %}Edit Raid — {{ raid.labels|default:"Raid" }}{% endblock %}
+
+{% block help_content %}
+<div class="help-section">Attendees Tab</div>
+<p>Check in everyone present at the start of the raid. Unchecked players are treated as Absent.</p>
+<ul>
+    <li>Status updates automatically as you award mob DKP based on each player's kill pattern.</li>
+    <li>You can always override a status manually here after the raid.</li>
+    <li><strong style="color:#ccc;">Partial</strong> means they were present for some kills but the pattern doesn't cleanly fit Late or Early Departure.</li>
+</ul>
+
+<div class="help-section">Mobs Tab</div>
+<p>Select which mobs are in scope for this raid, then <em>Save Mobs</em>.</p>
+<ul>
+    <li>Click <strong style="color:#6bff9e;">Award DKP</strong> on each mob as it's killed to confirm attendance and distribute DKP.</li>
+    <li><strong>Uncheck</strong> anyone not present for that specific kill — a status dropdown appears so you can note why (Late, Left Early, etc.).</li>
+    <li>Use <strong style="color:#aaa;">+ Add Late Arrival</strong> for someone who joined mid-raid.</li>
+    <li><strong style="color:#aaa;">Edit Credits</strong> on a greyed-out mob lets you add kill credit without re-awarding DKP — useful if you forgot someone.</li>
+    <li>A yellow <strong style="color:#ff9;">Undo</strong> notice appears immediately after each award. Navigate away and it's gone.</li>
+</ul>
+
+<div class="help-section">Loot Tab</div>
+<p>Use <strong style="color:#ccc;">Quick Award from Drops</strong> if the mob is linked to an NPC in the game database — click the mob, click the item, set the recipient and DKP paid.</p>
+<ul>
+    <li><strong style="color:#aaa;">Add Non-Raid Target Loot</strong> — for trash drops or global loot. Zero DKP is valid.</li>
+    <li><strong style="color:#aaa;">Open Item for Player Bidding</strong> — creates an auction players can bid on through the website.</li>
+    <li>DKP Cost in the Loot Record shows what each winner actually paid.</li>
+</ul>
+
+<div class="help-section">Status Reference</div>
+<ul>
+    <li><strong style="color:#ccc;">Present</strong> — attended every kill</li>
+    <li><strong style="color:#ccc;">Late</strong> — missed early kills, stayed to the end</li>
+    <li><strong style="color:#ccc;">Early Departure</strong> — present from the start, left before the end</li>
+    <li><strong style="color:#ccc;">Partial</strong> — present for some kills, pattern is mixed</li>
+    <li><strong style="color:#ccc;">Absent</strong> — did not attend the raid</li>
+</ul>
+{% endblock %}
 {% block extra_css %}
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/eq-ui.css' %}">
