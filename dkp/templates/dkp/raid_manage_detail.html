@@ -259,6 +259,7 @@
                             <th>Status</th>
                             <th>Bids</th>
                             <th>Winner</th>
+                            <th>DKP Cost</th>
                             <th>Actions</th>
                         </tr>
                         </thead>
@@ -273,6 +274,7 @@
                                 </td>
                                 <td>{{ auction.bid_count }}</td>
                                 <td>{{ auction.winner.member.display_name|default:"—" }}</td>
+                                <td style="color:#fcc721;">{% if auction.winner %}{{ auction.winner.bid_amount }}{% else %}—{% endif %}</td>
                                 <td>
                                     <div class="d-flex gap-1 flex-wrap">
                                         {% if auction.status == 'pending' %}
@@ -315,11 +317,45 @@
                             </tr>
                         {% empty %}
                             <tr>
-                                <td colspan="5" style="text-align:center; color:#aaa; padding:20px;">No loot recorded yet.</td>
+                                <td colspan="6" style="text-align:center; color:#aaa; padding:20px;">No loot recorded yet.</td>
                             </tr>
                         {% endfor %}
                         </tbody>
                     </table>
+                </div>
+
+                {# Non-raid target loot (trash / global drops, always 0 DKP) #}
+                <div class="WindowNestedTan mb-3" style="padding:15px;">
+                    <button type="button" class="eq-button-fancy" style="font-size:12px; color:#aaa;"
+                            onclick="toggleTrashForm()">+ Add Non-Raid Target Loot</button>
+                    <div id="trash-form" style="display:none; margin-top:12px;">
+                        <div style="color:#aaa; font-size:12px; margin-bottom:10px;">For items that drop from trash mobs or random global loot.</div>
+                        <form method="post" action="{% url 'dkp:direct_award' raid.id %}" class="d-flex gap-3 align-items-end flex-wrap">
+                            {% csrf_token %}
+                            <div>
+                                <label style="color:#aaa; font-size:12px;">Item Name</label>
+                                <input type="text" name="item_name" class="form-control form-control-sm mt-1"
+                                       placeholder="Item name..."
+                                       style="background:#1a1a2e !important; color:#fff !important; border-color:#444; width:240px;">
+                            </div>
+                            <div>
+                                <label style="color:#aaa; font-size:12px;">Who got it?</label>
+                                <select name="member_id" class="form-select form-select-sm mt-1"
+                                        style="background:#1a1a2e !important; color:#fff !important; border-color:#444; min-width:160px;">
+                                    {% for member in all_members %}
+                                    <option value="{{ member.id }}">{{ member.display_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div>
+                                <label style="color:#aaa; font-size:12px;">DKP</label>
+                                <input type="number" name="amount" step="0.5" min="0" value="0"
+                                       class="form-control form-control-sm mt-1"
+                                       style="background:#1a1a2e !important; color:#fff !important; border-color:#444; width:80px;">
+                            </div>
+                            <button type="submit" class="eq-button-fancy" style="font-size:13px;">Record</button>
+                        </form>
+                    </div>
                 </div>
 
                 {# Open for bidding (secondary flow) #}
@@ -455,6 +491,11 @@
 
         function cancelAward() {
             document.getElementById('loot-award-panel').style.display = 'none';
+        }
+
+        function toggleTrashForm() {
+            const el = document.getElementById('trash-form');
+            el.style.display = el.style.display === 'none' ? 'block' : 'none';
         }
 
         function toggleBiddingForm() {

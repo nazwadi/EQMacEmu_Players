@@ -35,7 +35,7 @@ def get_circuit_from_kwargs(kwargs):
 def get_officer_membership(user, circuit):
     """Returns membership if user is an officer in circuit, else None."""
     m = CircuitMembership.objects.filter(circuit=circuit, member=user).first()
-    if m and m.role == 'officer':
+    if m and (m.role == 'officer' or user.is_superuser):
         return m
     return None
 
