@@ -64,7 +64,7 @@
             {# Tabs #}
             <nav class="eq-tab-box-fancy">
                 <ul>
-                    <li data-tab="attendees" class="eq-tab-open">Attendees ({{ all_members.count }})</li>
+                    <li data-tab="attendees" class="eq-tab-open">Attendees ({{ attendance_map|length }} of {{ all_members.count }})</li>
                     <li data-tab="mobs">Mobs ({{ raid_mobs.count }})</li>
                     <li data-tab="loot">Loot ({{ auctions.count }})</li>
                 </ul>
@@ -118,7 +118,7 @@
                                                     Early Departure
                                                 </option>
                                                 <option value="absent"
-                                                        {% if attendance.attendance_status == 'absent' %}selected{% endif %}>
+                                                        {% if attendance.attendance_status == 'absent' or not attendance %}selected{% endif %}>
                                                     Absent
                                                 </option>
                                             </select>
