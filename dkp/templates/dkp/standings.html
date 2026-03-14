@@ -2,6 +2,14 @@
 {% block title %}{{ circuit.name }} Standings — EQ Archives{% endblock %}
 {% block inline_css %}
     <style>
+        .standings-member-link {
+            color: #8aa3ff;
+            text-decoration: none;
+        }
+        .standings-member-link:hover {
+            text-decoration: underline;
+            color: #aabfff;
+        }
         @media (max-width: 576px) {
             #standings-table th:nth-child(4),
             #standings-table td:nth-child(4),
@@ -86,7 +94,13 @@
                     {% for player in standings %}
                         <tr>
                             <td data-col="rank">{{ forloop.counter }}</td>
-                            <td data-col="player">{{ player.display_name }}</td>
+                            <td data-col="player">
+                                {% if is_officer or not player.hide_dashboard %}
+                                    <a href="{% url 'dkp:dashboard_member' player.id %}" class="standings-member-link">{{ player.display_name }}</a>
+                                {% else %}
+                                    {{ player.display_name }}
+                                {% endif %}
+                            </td>
                             <td data-col="current_dkp">{{ player.current_dkp }}</td>
                             <td data-col="lifetime_earned">{{ player.lifetime_earned_dkp }}</td>
                             <td data-col="lifetime_spent">{{ player.lifetime_spent_dkp }}</td>

@@ -7,8 +7,12 @@
             <div class="eq-window-title-bar">Transaction History</div>
 
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <a href="{% url 'dkp:dashboard' %}" class="eq-button-fancy">← Dashboard</a>
-                <h4 class="eq-header mb-0">{{ membership.display_name }}</h4>
+                <a href="{% if is_own %}{% url 'dkp:dashboard' %}{% else %}{% url 'dkp:dashboard_member' membership.id %}{% endif %}"
+                   class="eq-button-fancy">← Dashboard</a>
+                <h4 class="eq-header mb-0">
+                    {{ membership.display_name }}
+                    {% if not is_own %}<small style="color:#aaa; font-size:13px; font-weight:normal;"> — Officer View</small>{% endif %}
+                </h4>
                 <div style="width:120px;">
                     <input type="text" id="tx-filter" class="form-control form-control-sm"
                            placeholder="Filter...">

@@ -22,12 +22,14 @@ def get_standings(circuit_id):
     standings = []
     for membership in memberships:
         standings.append({
+            'id': membership.id,
             'display_name': membership.display_name if membership.display_name else membership.member.username,  # use display_name if set, else username
-        'current_dkp': membership.current_dkp,
-        'lifetime_earned_dkp': membership.lifetime_earned_dkp,
-        'lifetime_spent_dkp': membership.lifetime_spent_dkp,
-        'attendance': attendance_calculation(membership),  # call attendance_calculation here
-        'status': membership.status,
+            'current_dkp': membership.current_dkp,
+            'lifetime_earned_dkp': membership.lifetime_earned_dkp,
+            'lifetime_spent_dkp': membership.lifetime_spent_dkp,
+            'attendance': attendance_calculation(membership),  # call attendance_calculation here
+            'status': membership.status,
+            'hide_dashboard': membership.hide_dashboard,
         })
 
     # Store in cache

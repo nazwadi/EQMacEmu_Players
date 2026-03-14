@@ -136,7 +136,8 @@
         {% endif %}
 
         <div class="mt-3 d-flex gap-3">
-            <a href="{% url 'dkp:dashboard' %}" style="font-size:12px; color:#8aa3ff;">← Back to Dashboard</a>
+            <a href="{% if is_own %}{% url 'dkp:dashboard' %}{% else %}{% url 'dkp:dashboard_member' membership.id %}{% endif %}"
+               style="font-size:12px; color:#8aa3ff;">← Back to Dashboard</a>
             <a href="{% url 'dkp:transaction_history' membership.id %}" style="font-size:12px; color:#8aa3ff;">View Transactions →</a>
         </div>
     </div>

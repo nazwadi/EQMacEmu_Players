@@ -958,11 +958,19 @@ def standings(request, circuit_id):
     if join_status == 'active':
         join_status = 'member'
 
+    is_officer = False
+    if request.user.is_authenticated:
+        viewer = CircuitMembership.objects.filter(
+            circuit=circuit, member=request.user
+        ).first()
+        is_officer = bool(viewer and viewer.role == 'officer')
+
     standings_data = get_standings(circuit_id)
     return render(request, 'dkp/standings.html', {
         'circuit': circuit,
         'standings': standings_data,
         'join_status': join_status,
+        'is_officer': is_officer,
     })
 
 def raid_list(request, circuit_id):

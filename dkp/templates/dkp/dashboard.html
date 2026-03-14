@@ -4,7 +4,9 @@
 {% block content %}
     <div class="container">
         <div class="eq-window mt-4" style="padding-top: 40px;">
-            <div class="eq-window-title-bar">DKP Dashboard</div>
+            <div class="eq-window-title-bar">
+                {% if not is_own %}{{ membership.display_name }}'s Dashboard{% else %}DKP Dashboard{% endif %}
+            </div>
 
             {% if no_membership %}
                 <div style="padding: 20px;">
@@ -13,14 +15,28 @@
                 </div>
             {% else %}
 
-                {# Header row: name + circuit selector #}
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <div class="d-flex align-items-center gap-2">
-                        <h4 class="eq-header mb-0">
-                            {{ membership.display_name }}
-                            {% if not is_own %}<small style="font-size:14px; color:#aaa;"> (viewing)</small>{% endif %}
-                        </h4>
-                        {% if is_own %}
+                {% if not is_own %}
+                    {# Officer audit banner #}
+                    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2"
+                         style="padding:10px 14px; background:rgba(140,100,20,0.15); border:1px solid #6b5010; border-radius:6px;">
+                        <div>
+                            <span style="color:#fcc721; font-size:11px; text-transform:uppercase; letter-spacing:1px;">Officer View</span>
+                            <div style="color:#ccc; font-size:14px; margin-top:2px;">{{ membership.display_name }} &mdash; {{ membership.circuit.name }}</div>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <a href="{% url 'dkp:transaction_history' membership.id %}" class="eq-button-fancy"
+                               style="font-size:12px;">Full Transaction History</a>
+                            <a href="{% url 'dkp:attendance_history' membership.id %}" class="eq-button-fancy"
+                               style="font-size:12px;">Attendance History</a>
+                            <a href="{% url 'dkp:standings' membership.circuit.id %}" class="eq-button-fancy"
+                               style="font-size:12px;">← Standings</a>
+                        </div>
+                    </div>
+                {% else %}
+                    {# Header row: name + circuit selector (own view only) #}
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <h4 class="eq-header mb-0">{{ membership.display_name }}</h4>
                             {% if membership.hide_dashboard %}
                                 <a href="?show_dashboard=1" title="Dashboard hidden from others — click to make visible"
                                    style="color:#ff9; font-size:12px; text-decoration:none;">🔒 Hidden</a>
@@ -28,28 +44,28 @@
                                 <a href="?hide_dashboard=1" title="Dashboard visible to others — click to hide"
                                    style="color:#aaa; font-size:12px; text-decoration:none;">👁 Visible</a>
                             {% endif %}
+                        </div>
+                        {% if all_memberships.count > 1 %}
+                            <div style="display:flex; align-items:center; gap:6px;">
+                                <span style="color:#aaa; font-size:11px; text-transform:uppercase; letter-spacing:1px;">Circuit:</span>
+                                <form method="get" action="{% url 'dkp:dashboard' %}">
+                                    <select name="circuit"
+                                            style="background-color:#1a1a2e; color:#fcc721; border:1px solid #555;
+                   border-radius:4px; padding:4px 8px; font-size:14px; cursor:pointer;"
+                                            onchange="this.form.submit()">
+                                        {% for m in all_memberships %}
+                                            <option value="{{ m.id }}" {% if m.id == membership.id %}selected{% endif %}>
+                                                {{ m.circuit.name }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </form>
+                            </div>
+                        {% else %}
+                            <span class="eq-header" style="font-size:18px;">{{ membership.circuit.name }}</span>
                         {% endif %}
                     </div>
-                    {% if all_memberships.count > 1 or not is_own %}
-                        <div style="display:flex; align-items:center; gap:6px;">
-                            <span style="color:#aaa; font-size:11px; text-transform:uppercase; letter-spacing:1px;">Circuit:</span>
-                            <form method="get" action="{% url 'dkp:dashboard' %}">
-                                <select name="circuit"
-                                        style="background-color:#1a1a2e; color:#fcc721; border:1px solid #555;
-               border-radius:4px; padding:4px 8px; font-size:14px; cursor:pointer;"
-                                        onchange="this.form.submit()">
-                                    {% for m in all_memberships %}
-                                        <option value="{{ m.id }}" {% if m.id == membership.id %}selected{% endif %}>
-                                            {{ m.circuit.name }}
-                                        </option>
-                                    {% endfor %}
-                                </select>
-                            </form>
-                        </div>
-                    {% else %}
-                        <span class="eq-header" style="font-size:18px;">{{ membership.circuit.name }}</span>
-                    {% endif %}
-                </div>
+                {% endif %}
 
                 {# Stats row #}
                 <div class="row mb-4">
@@ -136,6 +152,7 @@
                                     your first raid.</p>
                             {% endif %}
                         </div>
+                        {% if is_own %}
                         <div class="text-end mt-2">
                             <a href="{% url 'dkp:transaction_history' membership.id %}"
                                style="font-size:12px; color:#8aa3ff;">View All Transactions →</a>
@@ -143,6 +160,7 @@
                             <a href="{% url 'dkp:attendance_history' membership.id %}"
                                style="font-size:12px; color:#8aa3ff;">View Attendance →</a>
                         </div>
+                        {% endif %}
                     </div>
 
                     {# Active Auctions + Bids #}
@@ -176,7 +194,7 @@
                             <div style="border-top:1px solid #ffffff1c; margin:12px 0;"></div>
 
                             <div style="color:#8aa3ff; font-size:11px; text-transform:uppercase; letter-spacing:1px; margin-bottom:10px;">
-                                My Bids
+                                {% if is_own %}My Bids{% else %}{{ membership.display_name }}'s Bids{% endif %}
                             </div>
                             {% for bid in active_bids %}
                                 <div class="d-flex justify-content-between align-items-center mb-2"
