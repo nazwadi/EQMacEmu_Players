@@ -12,6 +12,7 @@ ATTENDANCE_CHOICES = [
     ('present', 'Present'),
     ('late', 'Late'),
     ('early_departure', 'Early Departure'),
+    ('partial', 'Partial'),
     ('absent', 'Absent'),
 ]
 TRANSACTION_TYPE_CHOICES = [
@@ -193,3 +194,16 @@ class Bid(models.Model):
 
     def __str__(self):
         return f'{self.member.display_name} - {self.auction.item_name} - {self.bid_amount} DKP'
+
+
+class RaidMobAttendance(models.Model):
+    """Records which members were present for each mob kill at a raid."""
+    raid = models.ForeignKey(Raid, on_delete=models.CASCADE)
+    mob = models.ForeignKey(Mob, on_delete=models.CASCADE)
+    member = models.ForeignKey(CircuitMembership, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('raid', 'mob', 'member')
+
+    def __str__(self):
+        return f'{self.member.display_name} — {self.mob.name} ({self.raid.date})'

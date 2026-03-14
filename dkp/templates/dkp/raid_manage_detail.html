@@ -82,6 +82,7 @@
                                 <th style="width:40px;"></th>
                                 <th>Player</th>
                                 <th>Status</th>
+                                {% if total_awarded %}<th style="white-space:nowrap;">Kills</th>{% endif %}
                                 <th>Notes</th>
                             </tr>
                             </thead>
@@ -104,7 +105,7 @@
                                             <select name="status_{{ member.id }}"
                                                     class="form-select form-select-sm status-select"
                                                     {% if not attendance %}disabled{% endif %}
-                                                    style="width:auto; min-width:140px;">
+                                                    style="width:auto; min-width:150px;">
                                                 <option value="present"
                                                         {% if attendance.attendance_status == 'present' %}selected{% endif %}>
                                                     Present
@@ -117,12 +118,23 @@
                                                         {% if attendance.attendance_status == 'early_departure' %}selected{% endif %}>
                                                     Early Departure
                                                 </option>
+                                                <option value="partial"
+                                                        {% if attendance.attendance_status == 'partial' %}selected{% endif %}>
+                                                    Partial
+                                                </option>
                                                 <option value="absent"
                                                         {% if attendance.attendance_status == 'absent' or not attendance %}selected{% endif %}>
                                                     Absent
                                                 </option>
                                             </select>
                                         </td>
+                                        {% if total_awarded %}
+                                        <td style="color:#aaa; font-size:12px; text-align:center;">
+                                            {% with kills=mob_kill_counts|get_item:member.id %}
+                                                {{ kills|default:"0" }}/{{ total_awarded }}
+                                            {% endwith %}
+                                        </td>
+                                        {% endif %}
                                         <td>
                                             <input type="text" name="notes_{{ member.id }}"
                                                    class="form-control form-control-sm notes-input"
@@ -187,39 +199,62 @@
                     <div style="color:#8aa3ff; font-size:11px; text-transform:uppercase; letter-spacing:1px; margin-bottom:10px;">
                         Award DKP for Kills
                     </div>
-                    <table class="eq-table bordered">
-                        <thead>
-                            <tr>
-                                <th>Mob</th>
-                                <th>DKP Value</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        {% for mob in raid_mobs %}
-                            <tr>
-                                <td>{{ mob.name }}</td>
-                                <td style="color:#fcc721;">{{ mob.dkp }}</td>
-                                <td>
-                                    {% if mob.id in mobs_awarded %}
-                                        <span style="color:#aaa; font-size:12px;">✓ Awarded</span>
-                                    {% else %}
-                                        <form method="post" style="margin:0;">
-                                            {% csrf_token %}
-                                            <input type="hidden" name="action" value="award_mob_dkp">
-                                            <input type="hidden" name="mob_id" value="{{ mob.id }}">
-                                            <button type="submit" class="eq-button-fancy"
-                                                    style="font-size:12px; color:#6bff9e;"
-                                                    onclick="return confirm('Award {{ mob.dkp }} DKP to all attendees for killing {{ mob.name }}?')">
-                                                Award {{ mob.dkp }} DKP
-                                            </button>
-                                        </form>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
+                    {% if not attendance_map %}
+                    <div style="color:#ff9; font-size:12px; margin-bottom:10px;">
+                        Save attendance first before awarding mob DKP.
+                    </div>
+                    {% endif %}
+                    {% for mob in raid_mobs %}
+                    <div class="mb-3" style="border:1px solid #333; border-radius:4px; padding:12px;">
+                        <div class="d-flex align-items-center gap-3 mb-0">
+                            <span style="font-size:14px; color:#ccc; min-width:160px;">{{ mob.name }}</span>
+                            <span style="color:#fcc721; font-size:13px; min-width:60px;">{{ mob.dkp }} DKP</span>
+                            {% if mob.id in mobs_awarded %}
+                                <span style="color:#6bff9e; font-size:12px;">✓ Awarded</span>
+                            {% else %}
+                                <button type="button" class="eq-button-fancy"
+                                        style="font-size:12px; color:#6bff9e;"
+                                        {% if not attendance_map %}disabled{% endif %}
+                                        onclick="toggleMobAward({{ mob.id }})">
+                                    Award {{ mob.dkp }} DKP
+                                </button>
+                            {% endif %}
+                        </div>
+
+                        {% if mob.id not in mobs_awarded %}
+                        <div id="mob-award-{{ mob.id }}" style="display:none; margin-top:12px;">
+                            <div style="color:#aaa; font-size:11px; margin-bottom:8px; text-transform:uppercase; letter-spacing:1px;">
+                                Confirm attendance for this kill — uncheck anyone who wasn't there:
+                            </div>
+                            <form method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="confirm_mob_award">
+                                <input type="hidden" name="mob_id" value="{{ mob.id }}">
+                                <div class="d-flex flex-wrap gap-2 mb-3">
+                                    {% for member in all_members %}
+                                        {% with attendance=attendance_map|get_item:member.id %}
+                                        {% if attendance and attendance.attendance_status != 'absent' %}
+                                        <label style="display:flex; align-items:center; gap:5px; font-size:13px; color:#ccc; cursor:pointer;
+                                                      background:#1a1a2e; border:1px solid #444; border-radius:3px; padding:3px 8px; white-space:nowrap;">
+                                            <input type="checkbox" name="kill_attendees" value="{{ member.id }}" checked>
+                                            {{ member.display_name }}
+                                        </label>
+                                        {% endif %}
+                                        {% endwith %}
+                                    {% endfor %}
+                                </div>
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="eq-button-fancy" style="color:#6bff9e;">
+                                        Confirm &amp; Award DKP
+                                    </button>
+                                    <button type="button" class="eq-button-fancy" style="color:#aaa;"
+                                            onclick="toggleMobAward({{ mob.id }})">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
                 </div>
                 {% endif %}
             </div>
@@ -541,6 +576,12 @@
 
         function toggleBiddingForm() {
             const el = document.getElementById('bidding-form');
+            el.style.display = el.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function toggleMobAward(mobId) {
+            const el = document.getElementById('mob-award-' + mobId);
+            if (!el) return;
             el.style.display = el.style.display === 'none' ? 'block' : 'none';
         }
     </script>

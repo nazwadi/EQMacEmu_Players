@@ -8,7 +8,7 @@ from datetime import timedelta
 from django.core.cache import cache
 from django.shortcuts import render, redirect
 from dkp.models import CircuitConfig, CircuitMembership, DKPTransaction, Auction, Bid, RaidCircuit, Raid, \
-    RaidAttendance, Mob
+    RaidAttendance, Mob, RaidMobAttendance
 from dkp.utils import get_standings
 from dkp.services import attendance_calculation
 
@@ -683,7 +683,7 @@ def raid_manage_detail(request, raid_id):
                     messages.error(request, str(e))
             return redirect('dkp:raid_manage_detail', raid_id=raid.id)
 
-        elif action == 'award_mob_dkp':
+        elif action == 'confirm_mob_award':
             mob_id = request.POST.get('mob_id')
             mob = Mob.objects.filter(id=mob_id, circuit=raid.circuit).first()
             if mob:
@@ -691,13 +691,33 @@ def raid_manage_detail(request, raid_id):
                 if mob.id in awarded:
                     messages.error(request, f'DKP already awarded for {mob.name}.')
                 else:
-                    from dkp.services import award_dkp
-                    award_dkp(raid, mob)
+                    member_ids = [int(x) for x in request.POST.getlist('kill_attendees')]
+                    for mid in member_ids:
+                        RaidMobAttendance.objects.get_or_create(
+                            raid=raid, mob=mob, member_id=mid,
+                        )
+                    from dkp.services import award_dkp, derive_attendance_status
+                    award_dkp(raid, mob, member_ids=member_ids)
                     awarded.append(mob.id)
                     raid.mobs_awarded = awarded
                     raid.save(update_fields=['mobs_awarded'])
-                    messages.success(request, f'DKP awarded to all attendees for {mob.name}.')
-            return redirect('dkp:raid_manage_detail', raid_id=raid.id)
+                    # Re-derive base attendance status for each attendee
+                    for attendance in raid.raidattendance_set.select_related('member').all():
+                        new_status = derive_attendance_status(raid, attendance.member)
+                        if new_status and new_status != attendance.attendance_status:
+                            attendance.attendance_status = new_status
+                            attendance.save(update_fields=['attendance_status'])
+                    messages.success(request, f'DKP awarded to {len(member_ids)} members for {mob.name}.')
+            from django.urls import reverse
+            return redirect(reverse('dkp:raid_manage_detail', kwargs={'raid_id': raid.id}) + '?tab=mobs')
+
+    mobs_awarded = list(raid.mobs_awarded or [])
+    total_awarded = len(mobs_awarded)
+    mob_kill_counts = {}
+    if total_awarded:
+        from django.db.models import Count as _Count
+        kill_qs = RaidMobAttendance.objects.filter(raid=raid).values('member_id').annotate(kills=_Count('mob'))
+        mob_kill_counts = {str(row['member_id']): row['kills'] for row in kill_qs}
 
     return render(request, 'dkp/raid_manage_detail.html', {
         'raid': raid,
@@ -707,7 +727,9 @@ def raid_manage_detail(request, raid_id):
         'circuit_mobs': circuit_mobs,
         'raid_mobs': raid_mobs,
         'auctions': auctions,
-        'mobs_awarded': list(raid.mobs_awarded or []),
+        'mobs_awarded': mobs_awarded,
+        'total_awarded': total_awarded,
+        'mob_kill_counts': mob_kill_counts,
     })
 
 

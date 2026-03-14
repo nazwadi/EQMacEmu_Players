@@ -85,18 +85,24 @@ def attendance_calculation(member: CircuitMembership):
 
 
 @transaction.atomic
-def award_dkp(raid: Raid, mob: Mob):
+def award_dkp(raid: Raid, mob: Mob, member_ids=None):
     """
-    Award DKP to members for attendance at a raid.
+    Award DKP to members for a mob kill at a raid.
 
     :param raid: Raid instance
     :param mob: Mob instance
+    :param member_ids: Optional list of CircuitMembership IDs to award. If None, awards all non-absent attendees.
     :return: None
     """
     dkp_payout = mob.dkp
-    attendances = RaidAttendance.objects.filter(
-        raid=raid
-    ).exclude(attendance_status='absent').select_related('member')
+    if member_ids is not None:
+        attendances = RaidAttendance.objects.filter(
+            raid=raid, member_id__in=member_ids
+        ).select_related('member')
+    else:
+        attendances = RaidAttendance.objects.filter(
+            raid=raid
+        ).exclude(attendance_status='absent').select_related('member')
     config = raid.circuit.circuitconfig
     max_dkp = config.dkp_cap + config.dkp_overcap
     for attendance in attendances:
@@ -107,10 +113,51 @@ def award_dkp(raid: Raid, mob: Mob):
             member.current_dkp = max_dkp
         member.lifetime_earned_dkp += dkp_payout
         member.save()
-        dkp_transaction = DKPTransaction(raid=raid, member=member, amount=dkp_payout,
-                                     transaction_type='award',created_by=None)
-        dkp_transaction.save()
+        DKPTransaction.objects.create(
+            raid=raid, member=member, amount=dkp_payout,
+            transaction_type='award', created_by=None,
+        )
     cache.delete(f'dkp:standings:{raid.circuit_id}')
+
+
+def derive_attendance_status(raid: Raid, member):
+    """
+    Derive the base RaidAttendance status from per-mob attendance records.
+    Returns a status string or None if no mobs have been awarded yet.
+    """
+    from dkp.models import RaidMobAttendance
+    mobs_awarded = list(raid.mobs_awarded or [])
+    if not mobs_awarded:
+        return None
+
+    attended_mob_ids = set(
+        RaidMobAttendance.objects.filter(
+            raid=raid, member=member
+        ).values_list('mob_id', flat=True)
+    )
+
+    total = len(mobs_awarded)
+    if total == 0:
+        return None
+
+    attended_indices = {i for i, mid in enumerate(mobs_awarded) if mid in attended_mob_ids}
+    attended = len(attended_indices)
+
+    if attended == 0:
+        return 'absent'
+    if attended == total:
+        return 'present'
+
+    first_idx = min(attended_indices)
+    last_idx = max(attended_indices)
+    expected_continuous = set(range(first_idx, last_idx + 1))
+
+    if attended_indices == expected_continuous:
+        if first_idx == 0:
+            return 'early_departure'  # Present from start, left before the end
+        if last_idx == total - 1:
+            return 'late'  # Arrived late, stayed to the end
+    return 'partial'
 
 @transaction.atomic
 def resolve_auction(auction: Auction):
