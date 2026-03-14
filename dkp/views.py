@@ -530,11 +530,14 @@ def raid_manage_list(request, circuit_id):
     if not circuit:
         raise Http404
 
+    from django.db.models import OuterRef, Subquery
+    dkp_subq = DKPTransaction.objects.filter(
+        raid=OuterRef('pk'), transaction_type='award'
+    ).values('raid').annotate(total=Sum('amount')).values('total')
     raids = Raid.objects.filter(circuit=circuit).order_by('-date').annotate(
         attendee_count=Count('raidattendance', distinct=True),
         mob_count=Count('mobs', distinct=True),
-        dkp_awarded=Sum('dkptransaction__amount',
-                        filter=Q(dkptransaction__transaction_type='award')),
+        dkp_awarded=Subquery(dkp_subq),
         items_awarded=Count('auction',
                             filter=Q(auction__status='awarded'), distinct=True),
     )
@@ -832,11 +835,14 @@ def raid_list(request, circuit_id):
         circuit=circuit, member=request.user, status='active'
     ).exists()
 
+    from django.db.models import OuterRef, Subquery
+    dkp_subq = DKPTransaction.objects.filter(
+        raid=OuterRef('pk'), transaction_type='award'
+    ).values('raid').annotate(total=Sum('amount')).values('total')
     raids = Raid.objects.filter(circuit=circuit).order_by('-date').annotate(
         attendee_count=Count('raidattendance', distinct=True),
         mob_count=Count('mobs', distinct=True),
-        dkp_awarded=Sum('dkptransaction__amount',
-                        filter=Q(dkptransaction__transaction_type='award')),
+        dkp_awarded=Subquery(dkp_subq),
         items_awarded=Count('auction',
                            filter=Q(auction__status='awarded'), distinct=True),
     )
