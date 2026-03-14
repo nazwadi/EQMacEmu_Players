@@ -590,7 +590,7 @@ def raid_manage_detail(request, raid_id):
     ).order_by('display_name')
 
     attendance_map = {
-        a.member_id: a for a in raid.raidattendance_set.all()
+        str(a.member_id): a for a in raid.raidattendance_set.all()
     }
 
     circuit_mobs = Mob.objects.filter(circuit=raid.circuit, is_active=True).order_by('name')
