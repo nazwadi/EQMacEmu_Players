@@ -61,30 +61,44 @@ def attendance_history(request, membership_id):
     if not membership:
         raise Http404
 
-    viewer_membership = None
-    is_officer = False
-    if request.user.is_authenticated:
-        viewer_membership = CircuitMembership.objects.filter(
-            circuit=membership.circuit, member=request.user
-        ).first()
-        is_officer = bool(viewer_membership and viewer_membership.role == 'officer')
-
+    is_officer = bool(get_officer_membership(request.user, membership.circuit))
     is_own = request.user.is_authenticated and membership.member == request.user
 
     if not is_own and not is_officer:
         raise Http404
 
-    cutoff = timezone.now() - timedelta(days=90)
+    config = getattr(membership.circuit, 'circuitconfig', None)
+    window = config.attendance_window_days if config else 90
+    cutoff = timezone.now() - timedelta(days=window)
     raids = Raid.objects.filter(
         circuit=membership.circuit,
         date__gte=cutoff
     ).order_by('-date')
 
+    if request.method == 'POST' and is_officer:
+        checked_ids = set(int(x) for x in request.POST.getlist('raid_ids'))
+        existing = {a.raid_id: a for a in RaidAttendance.objects.filter(member=membership, raid__in=raids)}
+        for raid in raids:
+            att = existing.get(raid.id)
+            if raid.id in checked_ids:
+                if att is None:
+                    RaidAttendance.objects.create(
+                        raid=raid, member=membership, attendance_status='present'
+                    )
+                elif att.attendance_status == 'absent':
+                    att.attendance_status = 'present'
+                    att.save(update_fields=['attendance_status'])
+                # non-absent record already exists — leave status untouched
+            else:
+                if att and att.attendance_status != 'absent':
+                    att.delete()
+        messages.success(request, f'Attendance updated for {membership.display_name}.')
+        return redirect('dkp:attendance_history', membership_id=membership.id)
+
     attendance_map = {
         a.raid_id: a for a in RaidAttendance.objects.filter(
-            member=membership,
-            raid__in=raids
-        ).select_related('raid')
+            member=membership, raid__in=raids
+        )
     }
 
     raid_rows = []
@@ -95,10 +109,10 @@ def attendance_history(request, membership_id):
             'attendance': att,
             'status': att.attendance_status if att else 'not_attended',
             'notes': att.attendance_notes if att else '',
+            'checked': bool(att and att.attendance_status != 'absent'),
         })
 
-    config = getattr(membership.circuit, 'circuitconfig', None)
-    attended_count = sum(1 for row in raid_rows if row['status'] in ('present', 'late'))
+    attended_count = sum(1 for row in raid_rows if row['status'] not in ('absent', 'not_attended'))
     total_count = len(raid_rows)
     attendance_pct = round((attended_count / total_count) * 100, 1) if total_count > 0 else 0
 

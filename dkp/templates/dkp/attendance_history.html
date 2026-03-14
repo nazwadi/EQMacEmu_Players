@@ -1,38 +1,83 @@
 {% extends 'dkp/base.html' %}
-{% block title %}Attendance History — EQ Archives{% endblock %}
+{% block title %}Attendance History — {{ membership.display_name }}{% endblock %}
+
+{% block help_content %}
+<div class="help-section">Bulk Attendance</div>
+<p>Check each raid the member attended and hit <strong style="color:#ccc;">Save Attendance</strong>. Unchecked raids are treated as Not Attended.</p>
+<ul>
+    <li>Checking a raid with no record creates a <strong style="color:#ccc;">Present</strong> record.</li>
+    <li>Unchecking a raid removes the attendance record entirely.</li>
+    <li>If a member already has a detailed status (Late, Partial, etc.) on a raid, checking it again here won't overwrite that status.</li>
+    <li>To set status, notes, or kill credits, use <strong style="color:#ccc;">Edit Raid</strong> for that specific raid.</li>
+</ul>
+<div class="help-section">Select All</div>
+<p>Use the checkbox in the table header to select or deselect all raids at once.</p>
+{% endblock %}
 
 {% block content %}
-    <div class="container">
-        <div class="eq-window mt-4" style="padding-top:40px;">
-            <div class="eq-window-title-bar">Attendance History</div>
+<div class="container">
+    <div class="eq-window mt-4" style="padding-top:40px;">
+        <div class="eq-window-title-bar">Attendance History</div>
 
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h4 class="eq-header mb-0">{{ membership.display_name }}</h4>
+            <span style="color:#aaa; font-size:13px;">
+                {{ circuit.name }} — Last {% if config %}{{ config.attendance_window_days }}{% else %}90{% endif %} Days
+            </span>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+            <div class="mb-2" style="padding:8px 12px; border-radius:4px;
+                border:1px solid {% if message.tags == 'error' %}#ff6b6b{% else %}#6bff9e{% endif %};
+                color:{% if message.tags == 'error' %}#ff6b6b{% else %}#6bff9e{% endif %}; font-size:13px;">
+                {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %}
+
+        {# Summary #}
+        <div class="mb-3" style="font-size:13px; color:#ccc;">
+            Attended <span style="color:#6bff9e;">{{ attended_count }}</span> of
+            <span style="color:#fcc721;">{{ total_count }}</span> raids
+            &nbsp;·&nbsp;
+            <span style="color:#fcc721;">{{ attendance_pct }}%</span>
+        </div>
+
+        {# Legend #}
+        <div class="d-flex gap-3 mb-3" style="font-size:12px;">
+            <span><span style="color:#6bff9e;">●</span> Present</span>
+            <span><span style="color:#ff9;">●</span> Late</span>
+            <span><span style="color:#8aa3ff;">●</span> Early Departure</span>
+            <span><span style="color:#ffaa55;">●</span> Partial</span>
+            <span><span style="color:#ff6b6b;">●</span> Absent</span>
+            <span><span style="color:#666;">●</span> Not Attended</span>
+        </div>
+
+        {% if is_officer %}
+        <form method="post" id="attendance-form">
+            {% csrf_token %}
+        {% endif %}
+
+            {% if is_officer %}
             <div class="d-flex justify-content-between align-items-center mb-2">
-                <h4 class="eq-header mb-0">{{ membership.display_name }}</h4>
-                <span style="color:#aaa; font-size:13px;">
-        {{ circuit.name }} — Last {% if config %}{{ config.attendance_window_days }}{% else %}90{% endif %} Days
-    </span>
+                <span style="color:#aaa; font-size:12px;">Check raids attended, then save.</span>
+                <button type="submit" form="attendance-form" class="eq-button-fancy" style="color:#6bff9e;">
+                    Save Attendance
+                </button>
             </div>
-
-            {# Summary #}
-            <div class="mb-3" style="font-size:13px; color:#ccc;">
-                Attended <span style="color:#6bff9e;">{{ attended_count }}</span> of
-                <span style="color:#fcc721;">{{ total_count }}</span> raids
-                &nbsp;·&nbsp;
-                <span style="color:#fcc721;">{{ attendance_pct }}%</span>
-            </div>
-
-            {# Legend #}
-            <div class="d-flex gap-3 mb-3" style="font-size:12px;">
-                <span><span style="color:#6bff9e;">●</span> Present</span>
-                <span><span style="color:#ff9;">●</span> Late</span>
-                <span><span style="color:#ff6b6b;">●</span> Absent</span>
-                <span><span style="color:#666;">●</span> Not Attended</span>
-            </div>
+            {% endif %}
 
             <div class="WindowNestedTan" style="overflow-x:auto;">
                 <table class="eq-table eq-highlight-rows">
                     <thead>
                     <tr>
+                        {% if is_officer %}
+                        <th style="width:36px; text-align:center;">
+                            <input type="checkbox" id="select-all" title="Select / deselect all"
+                                   style="cursor:pointer;">
+                        </th>
+                        {% endif %}
                         <th>Date</th>
                         <th>Raid</th>
                         <th>Status</th>
@@ -41,18 +86,26 @@
                     <tbody>
                     {% for row in raid_rows %}
                         <tr>
+                            {% if is_officer %}
+                            <td style="text-align:center;">
+                                <input type="checkbox" name="raid_ids" value="{{ row.raid.id }}"
+                                       class="raid-chk"
+                                       {% if row.checked %}checked{% endif %}>
+                            </td>
+                            {% endif %}
                             <td>{{ row.raid.date|date:"M d, Y" }}</td>
                             <td>{{ row.raid.labels|default:"Raid" }}</td>
                             <td>
                                 {% if row.status == 'present' %}
-                                    <span style="color:#6bff9e;" {% if row.notes %}title="{{ row.notes }}"{% endif %}>● Present
-                                        {% if row.notes %} ℹ{% endif %}</span>
+                                    <span style="color:#6bff9e;" {% if row.notes %}title="{{ row.notes }}"{% endif %}>● Present{% if row.notes %} ℹ{% endif %}</span>
                                 {% elif row.status == 'late' %}
-                                    <span style="color:#ff9;" {% if row.notes %}title="{{ row.notes }}"{% endif %}>● Late
-                                        {% if row.notes %} ℹ{% endif %}</span>
+                                    <span style="color:#ff9;" {% if row.notes %}title="{{ row.notes }}"{% endif %}>● Late{% if row.notes %} ℹ{% endif %}</span>
+                                {% elif row.status == 'early_departure' %}
+                                    <span style="color:#8aa3ff;" {% if row.notes %}title="{{ row.notes }}"{% endif %}>● Early Departure{% if row.notes %} ℹ{% endif %}</span>
+                                {% elif row.status == 'partial' %}
+                                    <span style="color:#ffaa55;" {% if row.notes %}title="{{ row.notes }}"{% endif %}>● Partial{% if row.notes %} ℹ{% endif %}</span>
                                 {% elif row.status == 'absent' %}
-                                    <span style="color:#ff6b6b;" {% if row.notes %}title="{{ row.notes }}"{% endif %}>● Absent
-                                        {% if row.notes %} ℹ{% endif %}</span>
+                                    <span style="color:#ff6b6b;" {% if row.notes %}title="{{ row.notes }}"{% endif %}>● Absent{% if row.notes %} ℹ{% endif %}</span>
                                 {% else %}
                                     <span style="color:#666;">● Not Attended</span>
                                 {% endif %}
@@ -60,8 +113,9 @@
                         </tr>
                     {% empty %}
                         <tr>
-                            <td colspan="3" style="text-align:center; color:#aaa;">No raids in the last
-                                {% if config %}{{ config.attendance_window_days }}{% else %}90{% endif %} days.
+                            <td colspan="{% if is_officer %}4{% else %}3{% endif %}"
+                                style="text-align:center; color:#aaa;">
+                                No raids in the last {% if config %}{{ config.attendance_window_days }}{% else %}90{% endif %} days.
                             </td>
                         </tr>
                     {% endfor %}
@@ -69,11 +123,47 @@
                 </table>
             </div>
 
-            <div class="mt-3 d-flex gap-3">
-                <a href="{% url 'dkp:dashboard' %}" style="font-size:12px; color:#8aa3ff;">← Back to Dashboard</a>
-                <a href="{% url 'dkp:transaction_history' membership.id %}" style="font-size:12px; color:#8aa3ff;">View
-                    Transactions →</a>
+            {% if is_officer %}
+            <div class="text-center mt-3">
+                <button type="submit" form="attendance-form" class="eq-button-fancy" style="font-size:16px; color:#6bff9e;">
+                    Save Attendance
+                </button>
             </div>
+            {% endif %}
+
+        {% if is_officer %}
+        </form>
+        {% endif %}
+
+        <div class="mt-3 d-flex gap-3">
+            <a href="{% url 'dkp:dashboard' %}" style="font-size:12px; color:#8aa3ff;">← Back to Dashboard</a>
+            <a href="{% url 'dkp:transaction_history' membership.id %}" style="font-size:12px; color:#8aa3ff;">View Transactions →</a>
         </div>
     </div>
+</div>
+{% endblock %}
+
+{% block inline_js %}
+<script>
+    const selectAll = document.getElementById('select-all');
+    if (selectAll) {
+        const boxes = document.querySelectorAll('.raid-chk');
+        selectAll.addEventListener('change', function () {
+            boxes.forEach(chk => { chk.checked = this.checked; });
+        });
+        boxes.forEach(chk => {
+            chk.addEventListener('change', function () {
+                selectAll.checked = [...boxes].every(c => c.checked);
+                selectAll.indeterminate = !selectAll.checked && [...boxes].some(c => c.checked);
+            });
+        });
+        // Set initial indeterminate state if partially checked
+        const checkedCount = [...boxes].filter(c => c.checked).length;
+        if (checkedCount > 0 && checkedCount < boxes.length) {
+            selectAll.indeterminate = true;
+        } else {
+            selectAll.checked = checkedCount === boxes.length && boxes.length > 0;
+        }
+    }
+</script>
 {% endblock %}
