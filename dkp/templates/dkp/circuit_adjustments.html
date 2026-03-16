@@ -32,8 +32,8 @@
         {% if messages %}
             {% for message in messages %}
             <div class="mb-3" style="padding:10px; border-radius:4px;
-                border:1px solid {% if message.tags == 'error' %}#ff6b6b{% else %}#6bff9e{% endif %};
-                color:{% if message.tags == 'error' %}#ff6b6b{% else %}#6bff9e{% endif %};">
+                border:1px solid {% if message.tags == 'error' %}#ff6b6b{% elif message.tags == 'warning' %}#ff9{% else %}#6bff9e{% endif %};
+                color:{% if message.tags == 'error' %}#ff6b6b{% elif message.tags == 'warning' %}#ff9{% else %}#6bff9e{% endif %};">
                 {{ message }}
             </div>
             {% endfor %}
@@ -44,21 +44,21 @@
             <div style="color:#8aa3ff; font-size:11px; text-transform:uppercase; letter-spacing:1px; margin-bottom:12px;">
                 Individual Adjustment
             </div>
-            <form method="post" class="d-flex gap-3 align-items-end flex-wrap">
+            <form method="post" class="d-flex gap-3 align-items-end flex-wrap" id="individual-adj-form">
                 {% csrf_token %}
                 <input type="hidden" name="action" value="individual">
                 <div>
                     <label style="color:#aaa; font-size:12px;">Member</label>
-                    <select name="member_id" class="form-select form-select-sm mt-1"
+                    <select name="member_id" id="adj-member" class="form-select form-select-sm mt-1"
                             style="background:#1a1a2e !important; color:#fff !important; border-color:#444; min-width:180px;">
                         {% for member in members %}
-                        <option value="{{ member.id }}">{{ member.display_name }} ({{ member.current_dkp }} DKP)</option>
+                        <option value="{{ member.id }}" data-dkp="{{ member.current_dkp }}">{{ member.display_name }} ({{ member.current_dkp }} DKP)</option>
                         {% endfor %}
                     </select>
                 </div>
                 <div>
                     <label style="color:#aaa; font-size:12px;">Amount <span style="color:#555;">(+5 bonus, -3 penalty)</span></label>
-                    <input type="number" name="amount" step="0.5" value="0"
+                    <input type="number" name="amount" id="adj-amount" step="0.5" value="0"
                            class="form-control form-control-sm mt-1"
                            style="background:#1a1a2e !important; color:#fff !important; border-color:#444; width:100px;">
                 </div>
@@ -118,3 +118,24 @@
     </div>
 </div>
 {% endblock %}
+
+{% if config %}
+{% block inline_js %}
+<script>
+    document.getElementById('individual-adj-form').addEventListener('submit', function (e) {
+        const select = document.getElementById('adj-member');
+        const selectedOption = select.options[select.selectedIndex];
+        const currentDkp = parseFloat(selectedOption.dataset.dkp);
+        const amount = parseFloat(document.getElementById('adj-amount').value) || 0;
+        const cap = {{ config.dkp_cap }} + {{ config.dkp_overcap }};
+        const newTotal = currentDkp + amount;
+        if (newTotal > cap) {
+            const name = selectedOption.text.split(' (')[0];
+            if (!confirm(name + ' is currently at ' + currentDkp + ' DKP.\nThis adjustment would bring them to ' + newTotal + ' DKP, exceeding the cap of ' + cap + '.\n\nProceed anyway?')) {
+                e.preventDefault();
+            }
+        }
+    });
+</script>
+{% endblock %}
+{% endif %}

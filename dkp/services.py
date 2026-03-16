@@ -117,6 +117,7 @@ def award_dkp(raid: Raid, mob: Mob, member_ids=None):
         txn = DKPTransaction.objects.create(
             raid=raid, member=member, amount=dkp_payout,
             transaction_type='award', created_by=None,
+            transaction_notes=f'Kill: {mob.name}',
         )
         txn_ids.append(txn.id)
     cache.delete(f'dkp:standings:{raid.circuit_id}')

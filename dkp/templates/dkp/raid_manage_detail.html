@@ -345,7 +345,7 @@
                                             <option value="">— Select player —</option>
                                             {% for member in all_members %}
                                                 {% with att=attendance_map|get_item:member.id %}
-                                                {% if not att %}
+                                                {% if not att or att.attendance_status == 'absent' %}
                                                 <option value="{{ member.id }}">{{ member.display_name }}</option>
                                                 {% endif %}
                                                 {% endwith %}

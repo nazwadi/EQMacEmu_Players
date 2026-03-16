@@ -4,9 +4,7 @@
 {% block content %}
     <div class="container">
         <div class="eq-window mt-4" style="padding-top: 40px;">
-            <div class="eq-window-title-bar">
-                {% if not is_own %}{{ membership.display_name }}'s Dashboard{% else %}DKP Dashboard{% endif %}
-            </div>
+            <div class="eq-window-title-bar">DKP Dashboard</div>
 
             {% if no_membership %}
                 <div style="padding: 20px;">
@@ -127,11 +125,17 @@
                                     <tbody>
                                     {% for tx in transactions %}
                                         <tr>
-                                            <td>{{ tx.transaction_date|date:"M d, Y" }}</td>
-                                            <td>{{ tx.get_transaction_type_display }}</td>
+                                            <td style="white-space:nowrap;">{{ tx.transaction_date|date:"M d, Y" }}</td>
+                                            <td>
+                                                <span style="font-size:11px;
+                                                    color:{% if tx.transaction_type == 'award' %}#6bff9e{% elif tx.transaction_type == 'spend' %}#ff6b6b{% else %}#ff9{% endif %};
+                                                    border:1px solid currentColor; border-radius:3px; padding:1px 5px;">
+                                                    {{ tx.get_transaction_type_display }}
+                                                </span>
+                                            </td>
                                             <td>{{ tx.item_name|default:"—" }}</td>
-                                            <td style="color:{% if tx.transaction_type == 'spend' %}#ff6b6b{% else %}#6bff9e{% endif %};">
-                                                {% if tx.transaction_type == 'spend' %}-{% endif %}{{ tx.amount }}
+                                            <td style="color:{% if tx.transaction_type == 'spend' or tx.amount < 0 %}#ff6b6b{% elif tx.amount == 0 %}#aaa{% else %}#6bff9e{% endif %}; font-weight:bold;">
+                                                {% if tx.transaction_type == 'spend' %}−{% elif tx.transaction_type == 'award' or tx.amount > 0 %}+{% endif %}{{ tx.amount }}
                                             </td>
                                             <td style="color:#aaa; font-size:12px; max-width:150px;">
                                                 {% if tx.transaction_notes %}

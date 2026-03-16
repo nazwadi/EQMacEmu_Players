@@ -1361,7 +1361,10 @@ def circuit_adjustments(request, circuit_id):
             if not member:
                 messages.error(request, 'Member not found.')
                 return redirect('dkp:circuit_adjustments', circuit_id=circuit_id)
-            member.current_dkp += amount
+            new_dkp = member.current_dkp + amount
+            config = getattr(circuit, 'circuitconfig', None)
+            max_dkp = (config.dkp_cap + config.dkp_overcap) if config else None
+            member.current_dkp = new_dkp
             member.save(update_fields=['current_dkp'])
             DKPTransaction.objects.create(
                 member=member,
@@ -1371,7 +1374,10 @@ def circuit_adjustments(request, circuit_id):
                 created_by=request.user,
             )
             cache.delete(f'dkp:standings:{circuit_id}')
-            messages.success(request, f'Adjusted {member.display_name} by {amount:+g} DKP.')
+            if max_dkp is not None and new_dkp > max_dkp:
+                messages.warning(request, f'Adjusted {member.display_name} by {amount:+g} DKP — new total {new_dkp} exceeds the cap ({config.dkp_cap} + {config.dkp_overcap} overcap = {max_dkp}).')
+            else:
+                messages.success(request, f'Adjusted {member.display_name} by {amount:+g} DKP.')
 
         elif action == 'raid':
             raid = Raid.objects.filter(id=request.POST.get('raid_id'), circuit=circuit).first()
@@ -1405,8 +1411,10 @@ def circuit_adjustments(request, circuit_id):
     ).order_by('display_name')
     raids = Raid.objects.filter(circuit=circuit).order_by('-date')[:50]
 
+    config = getattr(circuit, 'circuitconfig', None)
     return render(request, 'dkp/circuit_adjustments.html', {
         'circuit': circuit,
         'members': members,
         'raids': raids,
+        'config': config,
     })

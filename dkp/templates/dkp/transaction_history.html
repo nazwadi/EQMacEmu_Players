@@ -72,10 +72,10 @@
     </span>
                             </td>
                             <td data-col="item">{{ tx.item_name|default:"—" }}</td>
-                            <td data-col="amount" data-value="{{ tx.amount }}"
-                                style="color:{% if tx.transaction_type == 'spend' %}#ff6b6b{% elif tx.transaction_type == 'award' %}#6bff9e{% else %}#ff9{% endif %}; font-weight:bold;">
-                                {% if tx.transaction_type == 'spend' %}−{% elif tx.transaction_type == 'award' %}
-                                    +{% endif %}{{ tx.amount }}
+                            <td data-col="amount"
+                                data-value="{% if tx.transaction_type == 'spend' %}-{% endif %}{{ tx.amount }}"
+                                style="color:{% if tx.transaction_type == 'spend' or tx.amount < 0 %}#ff6b6b{% elif tx.amount == 0 %}#aaa{% else %}#6bff9e{% endif %}; font-weight:bold;">
+                                {% if tx.transaction_type == 'spend' %}−{% elif tx.transaction_type == 'award' or tx.amount > 0 %}+{% endif %}{{ tx.amount }}
                             </td>
                             <td data-col="raid">
                                 {% if tx.raid %}
