@@ -963,7 +963,7 @@ def dashboard(request, membership_id=None):
             _bal -= float(tx.amount)
     _points.reverse()  # chronological; _bal is now the pre-all-time balance
 
-    _chart_cutoff = timezone.now() - timedelta(days=60)
+    _chart_cutoff = _att_cutoff
     _pre_window_bal = round(_bal, 1)
     for _d, _b in _points:
         if _d < _chart_cutoff:
