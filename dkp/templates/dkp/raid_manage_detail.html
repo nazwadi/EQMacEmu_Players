@@ -104,15 +104,15 @@
 
             {# Tabs #}
             <nav class="eq-tab-box-fancy">
-                <ul>
-                    <li data-tab="attendees" class="eq-tab-open">Attendees ({{ attendance_map|length }} of {{ all_members.count }})</li>
-                    <li data-tab="mobs">Mobs ({{ raid_mobs.count }})</li>
-                    <li data-tab="loot">Loot ({{ auctions.count }})</li>
+                <ul role="tablist">
+                    <li role="tab" aria-selected="true" aria-controls="tab-attendees" id="tab-btn-attendees" data-tab="attendees" class="eq-tab-open">Attendees ({{ attendance_map|length }} of {{ all_members.count }})</li>
+                    <li role="tab" aria-selected="false" aria-controls="tab-mobs" id="tab-btn-mobs" data-tab="mobs">Mobs ({{ raid_mobs.count }})</li>
+                    <li role="tab" aria-selected="false" aria-controls="tab-loot" id="tab-btn-loot" data-tab="loot">Loot ({{ auctions.count }})</li>
                 </ul>
             </nav>
 
             {# Attendees Tab #}
-            <div id="tab-attendees" class="tab-content" style="display:block;">
+            <div id="tab-attendees" role="tabpanel" aria-labelledby="tab-btn-attendees" class="tab-content" style="display:block;">
                 <form method="post">
                     {% csrf_token %}
                     <input type="hidden" name="action" value="save_attendance">
@@ -121,7 +121,7 @@
                         <button type="button" id="sort-alpha" class="eq-button-fancy sort-btn active-sort" style="font-size:12px; padding:3px 10px;">A–Z</button>
                         <button type="button" id="sort-ra" class="eq-button-fancy sort-btn" style="font-size:12px; padding:3px 10px;">RA %</button>
                     </div>
-                    <div class="WindowNestedTan">
+                    <div class="WindowNestedTan" style="overflow-x:auto;">
                         <table class="eq-table bordered" id="attendee-table">
                             <thead>
                             <tr>
@@ -189,7 +189,7 @@
                                                    value="{{ attendance.attendance_notes|default:'' }}"
                                                    {% if not attendance %}disabled{% endif %}
                                                    placeholder="Optional notes..."
-                                                   style="min-width:180px;">
+                                                   style="min-width:120px; max-width:100%;">
                                         </td>
                                     </tr>
                                 {% endwith %}
@@ -204,7 +204,7 @@
             </div>
 
             {# Mobs Tab #}
-            <div id="tab-mobs" class="tab-content" style="display:none;">
+            <div id="tab-mobs" role="tabpanel" aria-labelledby="tab-btn-mobs" class="tab-content" style="display:none;">
                 <form method="post">
                     {% csrf_token %}
                     <input type="hidden" name="action" value="save_mobs">
@@ -408,7 +408,7 @@
             </div>
 
             {# Loot Tab #}
-            <div id="tab-loot" class="tab-content" style="display:none;">
+            <div id="tab-loot" role="tabpanel" aria-labelledby="tab-btn-loot" class="tab-content" style="display:none;">
 
                 {# Quick Award panel — only shown if any raid mob has a linked NPC #}
                 {% with linked_mobs=raid_mobs|dictsort:"name" %}
@@ -472,7 +472,7 @@
                 {% endwith %}
 
                 {# Loot record table #}
-                <div class="WindowNestedTan mb-3" style="padding:15px;">
+                <div class="WindowNestedTan mb-3" style="padding:15px; overflow-x:auto;">
                     <div style="color:#8aa3ff; font-size:11px; text-transform:uppercase; letter-spacing:1px; margin-bottom:10px;">
                         Loot Record
                     </div>
@@ -610,12 +610,16 @@
             // Tab switching
             document.querySelectorAll('.eq-tab-box-fancy li[data-tab]').forEach(tab => {
                 tab.addEventListener('click', function () {
-                    document.querySelectorAll('.eq-tab-box-fancy li').forEach(t => t.classList.remove('eq-tab-open'));
+                    document.querySelectorAll('.eq-tab-box-fancy li').forEach(t => {
+                        t.classList.remove('eq-tab-open');
+                        t.setAttribute('aria-selected', 'false');
+                    });
                     document.querySelectorAll('.tab-content').forEach(c => {
                         c.style.display = 'none';
                         c.classList.remove('active');
                     });
                     this.classList.add('eq-tab-open');
+                    this.setAttribute('aria-selected', 'true');
                     const content = document.getElementById('tab-' + this.dataset.tab);
                     if (content) {
                         content.style.display = 'block';

@@ -13,11 +13,11 @@
             </div>
 
             <nav class="eq-tab-box-fancy">
-                <ul>
-                    <li data-tab="active" class="eq-tab-open">
+                <ul role="tablist">
+                    <li role="tab" aria-selected="true" aria-controls="tab-active" id="tab-btn-active" data-tab="active" class="eq-tab-open">
                         Active ({{ active_with_attendance|length }})
                     </li>
-                    <li data-tab="pending">
+                    <li role="tab" aria-selected="false" aria-controls="tab-pending" id="tab-btn-pending" data-tab="pending">
                         Pending
                         {% if pending_count %}
                             <span class="badge bg-warning text-dark ms-1">{{ pending_count }}</span>
@@ -25,13 +25,13 @@
                             (0)
                         {% endif %}
                     </li>
-                    <li data-tab="inactive">Inactive ({{ inactive_members.count }})</li>
+                    <li role="tab" aria-selected="false" aria-controls="tab-inactive" id="tab-btn-inactive" data-tab="inactive">Inactive ({{ inactive_members.count }})</li>
                 </ul>
             </nav>
 
             {# Active Tab #}
-            <div id="tab-active" class="tab-content" style="display:block;">
-                <div class="WindowNestedTan">
+            <div id="tab-active" role="tabpanel" aria-labelledby="tab-btn-active" class="tab-content" style="display:block;">
+                <div class="WindowNestedTan" style="overflow-x:auto;">
                     <table class="eq-table eq-highlight-rows bordered" id="member-table" data-sortable>
                         <thead>
                         <tr>
@@ -68,7 +68,9 @@
                                     <div class="d-flex gap-1 flex-wrap">
                                         {# Display name edit #}
                                         <button class="eq-button-fancy" style="font-size:12px;"
-                                                onclick="toggleNameEdit({{ member.id }})">
+                                                aria-expanded="false"
+                                                aria-controls="name-edit-{{ member.id }}"
+                                                onclick="toggleNameEdit(this, {{ member.id }})">
                                             Rename
                                         </button>
                                         <a href="{% url 'dkp:attendance_history' member.id %}"
@@ -127,8 +129,8 @@
             </div>
 
             {# Pending Tab #}
-            <div id="tab-pending" class="tab-content" style="display:none;">
-                <div class="WindowNestedTan">
+            <div id="tab-pending" role="tabpanel" aria-labelledby="tab-btn-pending" class="tab-content" style="display:none;">
+                <div class="WindowNestedTan" style="overflow-x:auto;">
                     <table class="eq-table eq-highlight-rows bordered">
                         <thead>
                         <tr>
@@ -179,8 +181,8 @@
             </div>
 
             {# Inactive Tab #}
-            <div id="tab-inactive" class="tab-content" style="display:none;">
-                <div class="WindowNestedTan">
+            <div id="tab-inactive" role="tabpanel" aria-labelledby="tab-btn-inactive" class="tab-content" style="display:none;">
+                <div class="WindowNestedTan" style="overflow-x:auto;">
                     <table class="eq-table eq-highlight-rows bordered">
                         <thead>
                         <tr>
@@ -238,12 +240,16 @@
         document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('.eq-tab-box-fancy li[data-tab]').forEach(tab => {
                 tab.addEventListener('click', function () {
-                    document.querySelectorAll('.eq-tab-box-fancy li').forEach(t => t.classList.remove('eq-tab-open'));
+                    document.querySelectorAll('.eq-tab-box-fancy li').forEach(t => {
+                        t.classList.remove('eq-tab-open');
+                        t.setAttribute('aria-selected', 'false');
+                    });
                     document.querySelectorAll('.tab-content').forEach(c => {
                         c.style.display = 'none';
                         c.classList.remove('active');
                     });
                     this.classList.add('eq-tab-open');
+                    this.setAttribute('aria-selected', 'true');
                     const content = document.getElementById('tab-' + this.dataset.tab);
                     if (content) {
                         content.style.display = 'block';
@@ -253,9 +259,11 @@
             });
         });
 
-        function toggleNameEdit(memberId) {
+        function toggleNameEdit(btn, memberId) {
             const el = document.getElementById('name-edit-' + memberId);
-            el.style.display = el.style.display === 'none' ? 'block' : 'none';
+            const expanded = el.style.display !== 'none';
+            el.style.display = expanded ? 'none' : 'block';
+            btn.setAttribute('aria-expanded', expanded ? 'false' : 'true');
         }
     </script>
 {% endblock %}

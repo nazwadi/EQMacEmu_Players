@@ -53,7 +53,7 @@
                 <div>
                     <label style="color:#aaa; font-size:12px;">Name</label>
                     <input type="text" name="name" class="form-control mt-1"
-                           style="background:#1a1a2e !important; color:#fff !important; border-color:#444; width:220px;"
+                           style="background:#1a1a2e !important; color:#fff !important; border-color:#444; width:220px; max-width:100%;"
                            placeholder="Mob name">
                 </div>
                 <div>
@@ -77,6 +77,7 @@
             <div style="color:#8aa3ff; font-size:11px; text-transform:uppercase; letter-spacing:1px; margin-bottom:10px;">
                 Active Mobs
             </div>
+            <div style="overflow-x:auto;">
             <table class="eq-table eq-highlight-rows bordered">
                 <thead>
                     <tr>
@@ -96,17 +97,19 @@
                             {% if mob.npc_id %}
                                 <span style="color:#6bff9e;">✓ {{ mob.npc_name }}</span>
                                 <button class="eq-button-fancy" style="font-size:11px; margin-left:6px;"
-                                        onclick="toggleNpcLink({{ mob.id }})">Change</button>
+                                        aria-expanded="false" aria-controls="npc-link-{{ mob.id }}"
+                                        onclick="toggleNpcLink(this, {{ mob.id }})">Change</button>
                             {% else %}
                                 <span style="color:#aaa;">Not linked</span>
                                 <button class="eq-button-fancy" style="font-size:11px; margin-left:6px;"
-                                        onclick="toggleNpcLink({{ mob.id }})">Link NPC</button>
+                                        aria-expanded="false" aria-controls="npc-link-{{ mob.id }}"
+                                        onclick="toggleNpcLink(this, {{ mob.id }})">Link NPC</button>
                             {% endif %}
                             <div id="npc-link-{{ mob.id }}" style="display:none; margin-top:8px;">
                                 <div class="d-flex gap-2 align-items-center flex-wrap">
                                     <input type="text" id="npc-search-{{ mob.id }}"
                                            class="form-control form-control-sm"
-                                           style="background:#1a1a2e !important; color:#fff !important; border-color:#444; width:200px;"
+                                           style="background:#1a1a2e !important; color:#fff !important; border-color:#444; width:200px; max-width:100%;"
                                            placeholder="Search NPC name..."
                                            oninput="searchNpc({{ mob.id }}, this.value)">
                                     {% if mob.npc_id %}
@@ -130,7 +133,8 @@
                         <td>
                             <div class="d-flex gap-1 flex-wrap">
                                 <button class="eq-button-fancy" style="font-size:12px;"
-                                        onclick="toggleMobEdit({{ mob.id }})">Edit</button>
+                                        aria-expanded="false" aria-controls="mob-edit-{{ mob.id }}"
+                                        onclick="toggleMobEdit(this, {{ mob.id }})">Edit</button>
                                 <form method="post" style="margin:0;">
                                     {% csrf_token %}
                                     <input type="hidden" name="action" value="deactivate">
@@ -169,6 +173,7 @@
                 {% endfor %}
                 </tbody>
             </table>
+            </div>
         </div>
 
         {# Inactive mobs #}
@@ -177,6 +182,7 @@
             <div style="color:#8aa3ff; font-size:11px; text-transform:uppercase; letter-spacing:1px; margin-bottom:10px;">
                 Inactive Mobs
             </div>
+            <div style="overflow-x:auto;">
             <table class="eq-table eq-highlight-rows bordered">
                 <thead>
                     <tr>
@@ -203,6 +209,7 @@
                 {% endfor %}
                 </tbody>
             </table>
+            </div>
         </div>
         {% endif %}
 
@@ -217,15 +224,19 @@ const CSRF_TOKEN = "{{ csrf_token }}";
 const MOB_MANAGE_URL = "{% url 'dkp:mob_manage' circuit.id %}";
 let npcSearchTimers = {};
 
-function toggleMobEdit(mobId) {
+function toggleMobEdit(btn, mobId) {
     const el = document.getElementById('mob-edit-' + mobId);
-    el.style.display = el.style.display === 'none' ? 'block' : 'none';
+    const expanded = el.style.display !== 'none';
+    el.style.display = expanded ? 'none' : 'block';
+    btn.setAttribute('aria-expanded', expanded ? 'false' : 'true');
 }
 
-function toggleNpcLink(mobId) {
+function toggleNpcLink(btn, mobId) {
     const el = document.getElementById('npc-link-' + mobId);
-    el.style.display = el.style.display === 'none' ? 'block' : 'none';
-    if (el.style.display === 'block') {
+    const expanded = el.style.display !== 'none';
+    el.style.display = expanded ? 'none' : 'block';
+    btn.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+    if (!expanded) {
         document.getElementById('npc-search-' + mobId).focus();
     }
 }

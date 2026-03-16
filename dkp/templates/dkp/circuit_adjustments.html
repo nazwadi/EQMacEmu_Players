@@ -50,7 +50,7 @@
                 <div>
                     <label style="color:#aaa; font-size:12px;">Member</label>
                     <select name="member_id" id="adj-member" class="form-select form-select-sm mt-1"
-                            style="background:#1a1a2e !important; color:#fff !important; border-color:#444; min-width:180px;">
+                            style="background:#1a1a2e !important; color:#fff !important; border-color:#444; max-width:100%;">
                         {% for member in members %}
                         <option value="{{ member.id }}" data-dkp="{{ member.current_dkp }}">{{ member.display_name }} ({{ member.current_dkp }} DKP)</option>
                         {% endfor %}
@@ -62,7 +62,7 @@
                            class="form-control form-control-sm mt-1"
                            style="background:#1a1a2e !important; color:#fff !important; border-color:#444; width:100px;">
                 </div>
-                <div style="flex:1; min-width:200px;">
+                <div style="flex:1; min-width:160px; max-width:100%;">
                     <label style="color:#aaa; font-size:12px;">Reason <span style="color:#ff6b6b;">*</span></label>
                     <input type="text" name="note" required
                            class="form-control form-control-sm mt-1"
@@ -87,7 +87,7 @@
                 <div>
                     <label style="color:#aaa; font-size:12px;">Raid</label>
                     <select name="raid_id" class="form-select form-select-sm mt-1"
-                            style="background:#1a1a2e !important; color:#fff !important; border-color:#444; min-width:220px;">
+                            style="background:#1a1a2e !important; color:#fff !important; border-color:#444; max-width:100%;">
                         {% for raid in raids %}
                         <option value="{{ raid.id }}">{{ raid.date|date:"M j, Y" }}{% if raid.labels %} — {{ raid.labels }}{% endif %}</option>
                         {% empty %}
@@ -101,7 +101,7 @@
                            class="form-control form-control-sm mt-1"
                            style="background:#1a1a2e !important; color:#fff !important; border-color:#444; width:100px;">
                 </div>
-                <div style="flex:1; min-width:200px;">
+                <div style="flex:1; min-width:160px; max-width:100%;">
                     <label style="color:#aaa; font-size:12px;">Reason <span style="color:#ff6b6b;">*</span></label>
                     <input type="text" name="note" required
                            class="form-control form-control-sm mt-1"

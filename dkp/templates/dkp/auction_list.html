@@ -13,15 +13,15 @@
             </div>
 
             <nav class="eq-tab-box-fancy">
-                <ul>
-                    <li data-tab="active" class="eq-tab-open">Active ({{ active_auctions.count }})</li>
-                    <li data-tab="closed">Closed ({{ closed_auctions.count }})</li>
+                <ul role="tablist">
+                    <li role="tab" aria-selected="true" aria-controls="tab-active" id="tab-btn-active" data-tab="active" class="eq-tab-open">Active ({{ active_auctions.count }})</li>
+                    <li role="tab" aria-selected="false" aria-controls="tab-closed" id="tab-btn-closed" data-tab="closed">Closed ({{ closed_auctions.count }})</li>
                 </ul>
             </nav>
 
             {# Active Tab #}
-            <div id="tab-active" class="tab-content" style="display:block;">
-                <div class="WindowNestedTan">
+            <div id="tab-active" role="tabpanel" aria-labelledby="tab-btn-active" class="tab-content" style="display:block;">
+                <div class="WindowNestedTan" style="overflow-x:auto;">
                     <table class="eq-table eq-highlight-rows bordered">
                         <thead>
                         <tr>
@@ -65,8 +65,8 @@
             </div>
 
             {# Closed Tab #}
-            <div id="tab-closed" class="tab-content" style="display:none;">
-                <div class="WindowNestedTan">
+            <div id="tab-closed" role="tabpanel" aria-labelledby="tab-btn-closed" class="tab-content" style="display:none;">
+                <div class="WindowNestedTan" style="overflow-x:auto;">
                     <table class="eq-table eq-highlight-rows bordered">
                         <thead>
                         <tr>
@@ -114,12 +114,16 @@
         document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('.eq-tab-box-fancy li[data-tab]').forEach(tab => {
                 tab.addEventListener('click', function () {
-                    document.querySelectorAll('.eq-tab-box-fancy li').forEach(t => t.classList.remove('eq-tab-open'));
+                    document.querySelectorAll('.eq-tab-box-fancy li').forEach(t => {
+                        t.classList.remove('eq-tab-open');
+                        t.setAttribute('aria-selected', 'false');
+                    });
                     document.querySelectorAll('.tab-content').forEach(c => {
                         c.style.display = 'none';
                         c.classList.remove('active');
                     });
                     this.classList.add('eq-tab-open');
+                    this.setAttribute('aria-selected', 'true');
                     const content = document.getElementById('tab-' + this.dataset.tab);
                     if (content) {
                         content.style.display = 'block';

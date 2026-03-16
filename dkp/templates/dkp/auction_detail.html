@@ -57,15 +57,15 @@
         {% endif %}
 
         <nav class="eq-tab-box-fancy">
-            <ul>
-                <li data-tab="bids" class="eq-tab-open">Bids (<span id="bid-count">{{ bids.count }}</span>)</li>
-                <li data-tab="details">Details</li>
+            <ul role="tablist">
+                <li role="tab" aria-selected="true" aria-controls="tab-bids" id="tab-btn-bids" data-tab="bids" class="eq-tab-open">Bids (<span id="bid-count">{{ bids.count }}</span>)</li>
+                <li role="tab" aria-selected="false" aria-controls="tab-details" id="tab-btn-details" data-tab="details">Details</li>
             </ul>
         </nav>
 
         {# Bids Tab #}
-        <div id="tab-bids" class="tab-content" style="display:block;">
-            <div class="WindowNestedTan">
+        <div id="tab-bids" role="tabpanel" aria-labelledby="tab-btn-bids" class="tab-content" style="display:block;">
+            <div class="WindowNestedTan" style="overflow-x:auto;">
                 {% if not public_bids and not is_officer %}
                 <p style="color:#aaa; padding:15px; font-size:13px;">
                     Bids are private.{% if viewer_membership %} Only your own bid is shown.{% endif %}
@@ -101,7 +101,7 @@
         </div>
 
         {# Details Tab #}
-        <div id="tab-details" class="tab-content" style="display:none;">
+        <div id="tab-details" role="tabpanel" aria-labelledby="tab-btn-details" class="tab-content" style="display:none;">
             <div class="WindowNestedTan" style="padding:20px;">
                 <table class="eq-table">
                     <tbody>
@@ -148,12 +148,16 @@ const IS_OFFICER = {{ is_officer|yesno:"true,false" }};
 document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.eq-tab-box-fancy li[data-tab]').forEach(tab => {
         tab.addEventListener('click', function() {
-            document.querySelectorAll('.eq-tab-box-fancy li').forEach(t => t.classList.remove('eq-tab-open'));
+            document.querySelectorAll('.eq-tab-box-fancy li').forEach(t => {
+                t.classList.remove('eq-tab-open');
+                t.setAttribute('aria-selected', 'false');
+            });
             document.querySelectorAll('.tab-content').forEach(c => {
                 c.style.display = 'none';
                 c.classList.remove('active');
             });
             this.classList.add('eq-tab-open');
+            this.setAttribute('aria-selected', 'true');
             const content = document.getElementById('tab-' + this.dataset.tab);
             if (content) { content.style.display = 'block'; content.classList.add('active'); }
         });
