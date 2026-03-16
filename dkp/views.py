@@ -963,6 +963,11 @@ def dashboard(request, membership_id=None):
             _bal -= float(tx.amount)
     _points.reverse()  # chronological; _bal is now the pre-all-time balance
 
+    _circuit_config = getattr(membership.circuit, 'circuitconfig', None)
+    dkp_cap = float(_circuit_config.dkp_cap) if _circuit_config else None
+    _att_window = _circuit_config.attendance_window_days if _circuit_config else 90
+    _att_cutoff = timezone.now() - timedelta(days=_att_window)
+
     _chart_cutoff = _att_cutoff
     _pre_window_bal = round(_bal, 1)
     for _d, _b in _points:
@@ -976,12 +981,7 @@ def dashboard(request, membership_id=None):
         + [{'x': timezone.now().strftime('%Y-%m-%d'), 'y': float(membership.current_dkp)}]
     )
 
-    _circuit_config = getattr(membership.circuit, 'circuitconfig', None)
-    dkp_cap = float(_circuit_config.dkp_cap) if _circuit_config else None
-
     # --- Attendance dots (one per raid in window, green=attended, grey=missed) ---
-    _att_window = _circuit_config.attendance_window_days if _circuit_config else 90
-    _att_cutoff = timezone.now() - timedelta(days=_att_window)
     _window_raids = list(Raid.objects.filter(
         circuit=membership.circuit, date__gte=_att_cutoff
     ).order_by('date'))
