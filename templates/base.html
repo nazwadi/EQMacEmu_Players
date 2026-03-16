@@ -35,8 +35,24 @@
 
     <!-- App-specific head content -->
     {% block extra_head %}{% endblock %}
+
+    <!-- Page progress bar -->
+    <style>
+        #page-progress {
+            position: fixed;
+            top: 0; left: 0;
+            height: 3px;
+            width: 0;
+            background: #8aa3ff;
+            z-index: 99999;
+            opacity: 0;
+            pointer-events: none;
+            transition: none;
+        }
+    </style>
 </head>
 <body class="{% block body_class %}{% endblock %}">
+<div id="page-progress"></div>
 
 <a href="#main-content" class="skip-to-content">Skip to main content</a>
 
@@ -79,6 +95,88 @@
 
 <!-- Help drawer (populated per-app) -->
 {% block help_drawer %}{% endblock %}
+
+<script>
+(function () {
+    var bar = document.getElementById('page-progress');
+    var progressTimer = null;
+
+    function setBar(width, opacity, transitionWidth, transitionOpacity) {
+        bar.style.transition = 'none';
+        bar.style.width = width;
+        bar.style.opacity = opacity;
+        // Force reflow so transition applies after reset
+        bar.offsetHeight;
+        bar.style.transition = 'width ' + transitionWidth + ', opacity ' + transitionOpacity;
+    }
+
+    function startProgress() {
+        clearTimeout(progressTimer);
+        setBar('0', '1', '0s', '0s');
+        bar.offsetHeight;
+        bar.style.transition = 'width 0.4s ease';
+        bar.style.width = '70%';
+        progressTimer = setTimeout(function () {
+            bar.style.transition = 'width 8s linear';
+            bar.style.width = '92%';
+        }, 450);
+    }
+
+    function completeProgress() {
+        clearTimeout(progressTimer);
+        bar.style.transition = 'width 0.15s ease';
+        bar.style.width = '100%';
+        progressTimer = setTimeout(function () {
+            bar.style.transition = 'opacity 0.3s ease';
+            bar.style.opacity = '0';
+            progressTimer = setTimeout(function () { bar.style.width = '0'; }, 350);
+        }, 150);
+    }
+
+    // Complete bar when this page finishes loading
+    if (document.readyState === 'complete') {
+        completeProgress();
+    } else {
+        window.addEventListener('load', completeProgress);
+    }
+
+    // Start bar on internal link navigation
+    document.addEventListener('click', function (e) {
+        var link = e.target.closest('a[href]');
+        if (!link || e.ctrlKey || e.metaKey || e.shiftKey) return;
+        var href = link.getAttribute('href');
+        if (!href || href.charAt(0) === '#' || link.target === '_blank') return;
+        try {
+            var url = new URL(href, location.href);
+            if (url.hostname !== location.hostname) return;
+        } catch (err) { return; }
+        startProgress();
+    });
+
+    // Restore buttons if user navigates back (bfcache)
+    window.addEventListener('pageshow', function (e) {
+        if (e.persisted) {
+            document.querySelectorAll('button[data-loading-text]').forEach(function (btn) {
+                btn.disabled = false;
+                btn.textContent = btn.getAttribute('data-original-text');
+            });
+        }
+    });
+
+    // Button loading states — fires on form submit so confirm() dialogs run first
+    document.addEventListener('submit', function (e) {
+        var form = e.target;
+        // Find the submit button that triggered this (last focused, or first submit btn)
+        var btn = form.querySelector('button[type="submit"]:focus') ||
+                  form.querySelector('button[type="submit"]');
+        if (!btn || btn.dataset.noLoading) return;
+        btn.setAttribute('data-original-text', btn.textContent);
+        btn.setAttribute('data-loading-text', 'true');
+        btn.disabled = true;
+        btn.textContent = btn.getAttribute('data-saving-label') || 'Saving…';
+    });
+}());
+</script>
 
 </body>
 </html>
