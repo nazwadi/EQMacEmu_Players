@@ -60,6 +60,10 @@
             border-color: #fcc721 !important;
             color: #fcc721 !important;
         }
+        .sort-btn.active-sort {
+            border-color: #8aa3ff !important;
+            color: #8aa3ff !important;
+        }
     </style>
 {% endblock %}
 
@@ -112,6 +116,11 @@
                 <form method="post">
                     {% csrf_token %}
                     <input type="hidden" name="action" value="save_attendance">
+                    <div class="d-flex justify-content-end mb-2" style="gap:6px;">
+                        <span style="color:#aaa; font-size:11px; align-self:center; text-transform:uppercase; letter-spacing:1px;">Sort:</span>
+                        <button type="button" id="sort-alpha" class="eq-button-fancy sort-btn active-sort" style="font-size:12px; padding:3px 10px;">A–Z</button>
+                        <button type="button" id="sort-ra" class="eq-button-fancy sort-btn" style="font-size:12px; padding:3px 10px;">RA %</button>
+                    </div>
                     <div class="WindowNestedTan">
                         <table class="eq-table bordered" id="attendee-table">
                             <thead>
@@ -126,7 +135,9 @@
                             <tbody>
                             {% for member in all_members %}
                                 {% with attendance=attendance_map|get_item:member.id %}
-                                    <tr class="attendee-row {% if attendance %}checked{% endif %}">
+                                    <tr class="attendee-row {% if attendance %}checked{% endif %}"
+                                        data-name="{{ member.display_name|lower }}"
+                                        data-ra="{{ member_ra|get_item:member.id|default:0 }}">
                                         <td>
                                             <input type="checkbox" name="attendees" value="{{ member.id }}"
                                                    id="chk_{{ member.id }}"
@@ -635,8 +646,10 @@
                     const notes = row.querySelector('.notes-input');
                     select.disabled = !this.checked;
                     notes.disabled = !this.checked;
-                    if (!this.checked) {
+                    if (this.checked) {
                         select.value = 'present';
+                    } else {
+                        select.value = 'absent';
                         notes.value = '';
                     }
                 });
@@ -804,5 +817,28 @@
                 select.appendChild(opt);
             }
         }
+
+        // Attendee sort
+        const SORT_KEY = 'dkp_attendee_sort';
+        function applyAttendeeSort(mode) {
+            const tbody = document.querySelector('#attendee-table tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            if (mode === 'ra') {
+                rows.sort((a, b) => parseFloat(b.dataset.ra) - parseFloat(a.dataset.ra));
+            } else {
+                rows.sort((a, b) => a.dataset.name.localeCompare(b.dataset.name));
+            }
+            rows.forEach(r => tbody.appendChild(r));
+            document.querySelectorAll('.sort-btn').forEach(btn => btn.classList.remove('active-sort'));
+            document.getElementById(mode === 'ra' ? 'sort-ra' : 'sort-alpha').classList.add('active-sort');
+            localStorage.setItem(SORT_KEY, mode);
+        }
+
+        document.getElementById('sort-alpha').addEventListener('click', () => applyAttendeeSort('alpha'));
+        document.getElementById('sort-ra').addEventListener('click', () => applyAttendeeSort('ra'));
+
+        // Restore saved sort preference
+        const savedSort = localStorage.getItem(SORT_KEY);
+        if (savedSort === 'ra') applyAttendeeSort('ra');
     </script>
 {% endblock %}

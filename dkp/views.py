@@ -603,6 +603,25 @@ def raid_manage_detail(request, raid_id):
         circuit=raid.circuit, status='active'
     ).order_by('display_name')
 
+    # Bulk-compute RA% for all members (2 queries)
+    _config = getattr(raid.circuit, 'circuitconfig', None)
+    _window = _config.attendance_window_days if _config else 90
+    _cutoff = timezone.now() - timedelta(days=_window)
+    _total_raids = Raid.objects.filter(circuit=raid.circuit, date__gte=_cutoff).count()
+    _attended = dict(
+        RaidAttendance.objects.filter(
+            member__in=all_members,
+            raid__date__gte=_cutoff,
+            raid__circuit=raid.circuit,
+        ).exclude(attendance_status='absent').values('member_id').annotate(
+            n=Count('id')
+        ).values_list('member_id', 'n')
+    )
+    member_ra = {
+        m.id: round(_attended.get(m.id, 0) / _total_raids * 100, 1) if _total_raids else 0.0
+        for m in all_members
+    }
+
     attendance_map = {
         str(a.member_id): a for a in raid.raidattendance_set.all()
     }
@@ -847,6 +866,7 @@ def raid_manage_detail(request, raid_id):
         'mob_uncredited': mob_uncredited,
         'undo_mob_id': undo_mob_id,
         'undo_mob_name': undo_mob_name,
+        'member_ra': member_ra,
     })
 
 
