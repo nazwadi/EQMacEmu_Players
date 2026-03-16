@@ -1,3 +1,4 @@
+import json
 from decimal import Decimal, InvalidOperation
 
 from django.db.models import Count, Max, Sum, Q
@@ -948,6 +949,50 @@ def dashboard(request, membership_id=None):
 
     attendance = attendance_calculation(membership)
 
+    # --- DKP balance chart (reconstruct history backwards from current_dkp) ---
+    _all_txns = list(DKPTransaction.objects.filter(
+        member=membership
+    ).order_by('transaction_date', 'id'))
+    _bal = float(membership.current_dkp)
+    _points = []
+    for tx in reversed(_all_txns):
+        _points.append((tx.transaction_date, round(_bal, 1)))
+        if tx.transaction_type == 'spend':
+            _bal += float(tx.amount)
+        else:
+            _bal -= float(tx.amount)
+    _points.reverse()  # chronological; _bal is now the pre-all-time balance
+
+    _chart_cutoff = timezone.now() - timedelta(days=60)
+    _pre_window_bal = round(_bal, 1)
+    for _d, _b in _points:
+        if _d < _chart_cutoff:
+            _pre_window_bal = _b
+
+    _in_window = [{'x': _d.strftime('%Y-%m-%d'), 'y': _b} for _d, _b in _points if _d >= _chart_cutoff]
+    dkp_chart_json = json.dumps(
+        [{'x': _chart_cutoff.strftime('%Y-%m-%d'), 'y': _pre_window_bal}]
+        + _in_window
+        + [{'x': timezone.now().strftime('%Y-%m-%d'), 'y': float(membership.current_dkp)}]
+    )
+
+    _circuit_config = getattr(membership.circuit, 'circuitconfig', None)
+    dkp_cap = float(_circuit_config.dkp_cap) if _circuit_config else None
+
+    # --- Attendance dots (one per raid in window, green=attended, grey=missed) ---
+    _att_window = _circuit_config.attendance_window_days if _circuit_config else 90
+    _att_cutoff = timezone.now() - timedelta(days=_att_window)
+    _window_raids = list(Raid.objects.filter(
+        circuit=membership.circuit, date__gte=_att_cutoff
+    ).order_by('date'))
+    _attended_ids = set(RaidAttendance.objects.filter(
+        member=membership, raid__in=_window_raids
+    ).exclude(attendance_status='absent').values_list('raid_id', flat=True))
+    attendance_dots = [
+        {'date': r.date.strftime('%b %d'), 'attended': r.id in _attended_ids}
+        for r in _window_raids
+    ]
+
     context = {
         'membership': membership,
         'all_memberships': all_memberships,
@@ -955,6 +1000,9 @@ def dashboard(request, membership_id=None):
         'active_auctions': active_auctions,
         'active_bids': active_bids,
         'attendance': attendance,
+        'attendance_dots': attendance_dots,
+        'dkp_chart_json': dkp_chart_json,
+        'dkp_cap': dkp_cap,
         'is_officer': is_officer,
         'is_own': is_own,
     }

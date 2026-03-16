@@ -1,6 +1,14 @@
 {% extends 'dkp/base.html' %}
 {% block title %}DKP Dashboard — EQ Archives{% endblock %}
 
+{% block extra_js %}
+{{ block.super }}
+{% if not no_membership %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+{% endif %}
+{% endblock %}
+
 {% block content %}
     <div class="container">
         <div class="eq-window mt-4" style="padding-top: 40px;">
@@ -66,41 +74,61 @@
                 {% endif %}
 
                 {# Stats row #}
-                <div class="row mb-4">
-                    <div class="col-md-3">
+                <div class="row mb-3">
+                    <div class="col-md-3 mb-2">
                         <div class="WindowNestedTan text-center" style="padding:15px;">
                             <div style="color:#8aa3ff; font-size:11px; text-transform:uppercase; letter-spacing:1px;">
                                 Current DKP
                             </div>
-                            <div class="eq-header"
-                                 style="font-size:36px;">{{ membership.current_dkp|floatformat:0 }}</div>
+                            <div class="eq-header" style="font-size:36px;">{{ membership.current_dkp|floatformat:0 }}</div>
+                            {% if dkp_cap %}
+                            <div style="color:#555; font-size:11px; margin-top:2px;">cap {{ dkp_cap|floatformat:0 }}</div>
+                            {% endif %}
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3 mb-2">
                         <div class="WindowNestedTan text-center" style="padding:15px;">
                             <div style="color:#8aa3ff; font-size:11px; text-transform:uppercase; letter-spacing:1px;">
                                 Lifetime Earned
                             </div>
-                            <div class="eq-header"
-                                 style="font-size:36px;">{{ membership.lifetime_earned_dkp|floatformat:0 }}</div>
+                            <div class="eq-header" style="font-size:36px;">{{ membership.lifetime_earned_dkp|floatformat:0 }}</div>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3 mb-2">
                         <div class="WindowNestedTan text-center" style="padding:15px;">
                             <div style="color:#8aa3ff; font-size:11px; text-transform:uppercase; letter-spacing:1px;">
                                 Lifetime Spent
                             </div>
-                            <div class="eq-header"
-                                 style="font-size:36px;">{{ membership.lifetime_spent_dkp|floatformat:0 }}</div>
+                            <div class="eq-header" style="font-size:36px;">{{ membership.lifetime_spent_dkp|floatformat:0 }}</div>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3 mb-2">
                         <div class="WindowNestedTan text-center" style="padding:15px;">
                             <div style="color:#8aa3ff; font-size:11px; text-transform:uppercase; letter-spacing:1px;">
                                 Attendance
                             </div>
                             <div class="eq-header" style="font-size:36px;">{{ attendance|floatformat:1 }}%</div>
+                            {% if attendance_dots %}
+                            <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:3px; margin-top:8px;">
+                                {% for dot in attendance_dots %}
+                                <span title="{{ dot.date }}"
+                                      style="display:inline-block; width:8px; height:8px; border-radius:2px;
+                                             background:{% if dot.attended %}#6bff9e{% else %}#333{% endif %};
+                                             cursor:default; flex-shrink:0;"></span>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
                         </div>
+                    </div>
+                </div>
+
+                {# DKP Trend chart #}
+                <div class="WindowNestedTan mb-3" style="padding:15px;">
+                    <div style="color:#8aa3ff; font-size:11px; text-transform:uppercase; letter-spacing:1px; margin-bottom:10px;">
+                        DKP Trend — Last 60 Days
+                    </div>
+                    <div style="position:relative; height:160px;">
+                        <canvas id="dkp-chart"></canvas>
                     </div>
                 </div>
 
@@ -167,7 +195,6 @@
                         {% endif %}
                     </div>
 
-                    {# Active Auctions + Bids #}
                     {# Active Auctions + Bids — combined panel #}
                     <div class="col-md-5">
                         <div class="WindowNestedTan" style="padding:15px;">
@@ -222,4 +249,86 @@
             {% endif %}
         </div>
     </div>
+{% endblock %}
+
+{% block inline_js %}
+{% if not no_membership %}
+<script>
+(function () {
+    var points = {{ dkp_chart_json|safe }};
+    var cap = {{ dkp_cap|default:"null" }};
+
+    var ctx = document.getElementById('dkp-chart');
+    if (!ctx || points.length < 2) return;
+
+    var datasets = [{
+        data: points,
+        borderColor: '#8aa3ff',
+        backgroundColor: 'rgba(138,163,255,0.08)',
+        borderWidth: 2,
+        pointRadius: points.length <= 15 ? 3 : 0,
+        pointHoverRadius: 5,
+        pointBackgroundColor: '#8aa3ff',
+        fill: true,
+        tension: 0.3,
+    }];
+
+    if (cap !== null) {
+        datasets.push({
+            data: [
+                {x: points[0].x, y: cap},
+                {x: points[points.length - 1].x, y: cap}
+            ],
+            borderColor: 'rgba(255,153,0,0.45)',
+            borderWidth: 1,
+            borderDash: [6, 4],
+            pointRadius: 0,
+            fill: false,
+            label: 'Cap',
+        });
+    }
+
+    new Chart(ctx, {
+        type: 'line',
+        data: { datasets: datasets },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#12122a',
+                    borderColor: '#333',
+                    borderWidth: 1,
+                    titleColor: '#8aa3ff',
+                    bodyColor: '#ccc',
+                    callbacks: {
+                        title: function(items) { return items[0].label; },
+                        label: function(item) {
+                            if (item.datasetIndex === 1) return 'Cap: ' + cap;
+                            return 'DKP: ' + item.parsed.y;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    type: 'time',
+                    time: { unit: 'day', tooltipFormat: 'MMM d', displayFormats: { day: 'MMM d' } },
+                    grid: { color: 'rgba(255,255,255,0.04)' },
+                    ticks: { color: '#666', maxTicksLimit: 8, font: { size: 11 } },
+                    border: { color: '#333' }
+                },
+                y: {
+                    grid: { color: 'rgba(255,255,255,0.04)' },
+                    ticks: { color: '#666', font: { size: 11 } },
+                    border: { color: '#333' }
+                }
+            }
+        }
+    });
+}());
+</script>
+{% endif %}
 {% endblock %}
