@@ -1,13 +1,14 @@
 import calendar
 import json
 from datetime import date, datetime, time, timedelta
+from datetime import timezone as dt_timezone
 
 from django.core.paginator import Paginator
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
@@ -448,6 +449,116 @@ def event_detail(request, pk):
 
 
 # ── raid history ──────────────────────────────────────────────────────────────
+
+# ── iCalendar (.ics) export ────────────────────────────────────────────────────
+
+def _ics_escape(text):
+    text = str(text).replace('\\', '\\\\').replace(';', '\\;').replace(',', '\\,')
+    text = text.replace('\r\n', '\\n').replace('\n', '\\n').replace('\r', '\\n')
+    return text
+
+
+def _build_ics(events, request, cal_name='EQ Archives Raid Schedule'):
+    now_utc = datetime.utcnow().strftime('%Y%m%dT%H%M%SZ')
+
+    lines = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//EQ Archives//Raid Scheduler//EN',
+        'CALSCALE:GREGORIAN',
+        'METHOD:PUBLISH',
+        f'X-WR-CALNAME:{_ics_escape(cal_name)}',
+        'X-WR-CALDESC:EverQuest Mac raid schedule',
+    ]
+
+    for event in events:
+        start_naive = datetime.combine(event.date, event.start_time)
+        end_naive = start_naive + timedelta(hours=2)
+        aware_start = timezone.make_aware(start_naive)
+        aware_end = timezone.make_aware(end_naive)
+        dtstart = aware_start.astimezone(dt_timezone.utc).strftime('%Y%m%dT%H%M%SZ')
+        dtend = aware_end.astimezone(dt_timezone.utc).strftime('%Y%m%dT%H%M%SZ')
+
+        uid = f'raidevent-{event.pk}@eqarchives'
+        summary = _ics_escape(event.title)
+
+        desc_parts = []
+        circuit_name = event.circuit_display
+        if circuit_name != '—':
+            desc_parts.append(f'Circuit: {circuit_name}')
+        targets = [t.name for t in event.targets.all()]
+        if targets:
+            desc_parts.append(f'Targets: {", ".join(targets)}')
+        if event.notes:
+            desc_parts.append(event.notes)
+        description = _ics_escape('\n'.join(desc_parts))
+
+        url = request.build_absolute_uri(
+            reverse('raid_scheduler:event_detail', kwargs={'pk': event.pk})
+        )
+
+        vevent_status = 'CANCELLED' if event.status == RaidEvent.STATUS_CANCELLED else 'CONFIRMED'
+
+        lines += [
+            'BEGIN:VEVENT',
+            f'UID:{uid}',
+            f'DTSTAMP:{now_utc}',
+            f'DTSTART:{dtstart}',
+            f'DTEND:{dtend}',
+            f'SUMMARY:{summary}',
+        ]
+        if description:
+            lines.append(f'DESCRIPTION:{description}')
+        lines += [
+            f'URL:{url}',
+            f'STATUS:{vevent_status}',
+            'END:VEVENT',
+        ]
+
+    lines.append('END:VCALENDAR')
+    return '\r\n'.join(lines)
+
+
+def event_ics(request, pk):
+    """Download a single raid event as an .ics file."""
+    event = get_object_or_404(
+        RaidEvent.objects.select_related('circuit').prefetch_related('targets'),
+        pk=pk,
+    )
+    if not event.is_public:
+        if not request.user.is_authenticated:
+            from django.http import Http404
+            raise Http404
+        if not request.user.is_superuser:
+            has_access = False
+            if event.circuit:
+                has_access = CircuitMembership.objects.filter(
+                    circuit=event.circuit, member=request.user, status='active',
+                ).exists()
+            if not has_access:
+                has_access = event.signups.filter(member__member=request.user).exists()
+            if not has_access:
+                from django.http import Http404
+                raise Http404
+
+    content = _build_ics([event], request, cal_name=event.title)
+    response = HttpResponse(content, content_type='text/calendar; charset=utf-8')
+    response['Content-Disposition'] = f'attachment; filename="raid-{event.pk}.ics"'
+    return response
+
+
+def calendar_feed(request):
+    """Subscribable .ics feed of all upcoming public events."""
+    events = (
+        RaidEvent.objects.select_related('circuit').prefetch_related('targets')
+        .filter(is_public=True, status__in=(RaidEvent.STATUS_SCHEDULED, RaidEvent.STATUS_ACTIVE))
+        .order_by('date', 'start_time')
+    )
+    content = _build_ics(events, request, cal_name='EQ Archives — Raid Schedule')
+    response = HttpResponse(content, content_type='text/calendar; charset=utf-8')
+    response['Content-Disposition'] = 'inline; filename="eq-raids.ics"'
+    return response
+
 
 _HISTORY_STATUSES = (RaidEvent.STATUS_CLOSED, RaidEvent.STATUS_EXPIRED, RaidEvent.STATUS_CANCELLED)
 

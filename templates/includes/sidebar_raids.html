@@ -18,6 +18,10 @@
            {% if request.resolver_match.url_name == 'history' %}aria-current="page"{% endif %}>
             History
         </a>
+        <a href="{% url 'raid_scheduler:calendar_feed' %}"
+           class="rs-subscribe-link" title="Subscribe in Apple Calendar, Google Calendar, Outlook, etc.">
+            <i class="far fa-calendar-alt" aria-hidden="true"></i> Subscribe to Calendar
+        </a>
     </div>
 
     {% if filter_circuits or filter_has_writein %}
@@ -82,3 +86,19 @@
 <button class="side-nav-toggle" type="button" aria-label="Collapse navigation"
         aria-expanded="true" aria-controls="sideNav">&#8249;
 </button>
+
+<style>
+.rs-subscribe-link {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.2rem 0.6rem 0.1rem;
+    margin: 0.25rem 8px 0;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    opacity: 0.6;
+    transition: opacity 0.12s, color 0.12s;
+}
+.rs-subscribe-link:hover { opacity: 1; color: var(--link-color); }
+</style>

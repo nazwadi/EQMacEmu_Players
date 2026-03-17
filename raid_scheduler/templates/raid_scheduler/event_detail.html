@@ -141,6 +141,21 @@
 }
 .rs-signups-table tr:last-child td { border-bottom: none; }
 
+/* Add to Calendar */
+.rs-ics-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    margin-top: 0.6rem;
+    opacity: 0.65;
+    transition: opacity 0.15s, color 0.15s;
+}
+.rs-ics-btn:hover { opacity: 1; color: var(--link-color); }
+.rs-ics-btn i { font-size: 0.8rem; }
+
 /* Action row */
 .rs-actions {
     display: flex;
@@ -287,6 +302,11 @@
             </span>
             {% endif %}
         </div>
+
+        <a href="{% url 'raid_scheduler:event_ics' event.pk %}"
+           class="rs-ics-btn" title="Download .ics file to add to Apple Calendar, Google Calendar, Outlook, etc.">
+            <i class="far fa-calendar-plus" aria-hidden="true"></i> Add to Calendar
+        </a>
     </div>
 
     <!-- Raid targets -->
