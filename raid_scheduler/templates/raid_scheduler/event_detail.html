@@ -119,10 +119,12 @@
 }
 
 /* Signups table */
+.rs-signups-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 .rs-signups-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.83rem;
+    min-width: 320px;
 }
 .rs-signups-table th {
     font-size: 0.65rem;
@@ -146,15 +148,17 @@
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
-    font-size: 0.75rem;
+    font-size: 0.82rem;
     color: var(--text-muted);
     text-decoration: none;
     margin-top: 0.6rem;
     opacity: 0.65;
     transition: opacity 0.15s, color 0.15s;
+    min-height: 2.75rem;
+    padding: 0.4rem 0;
 }
 .rs-ics-btn:hover { opacity: 1; color: var(--link-color); }
-.rs-ics-btn i { font-size: 0.8rem; }
+.rs-ics-btn i { font-size: 0.85rem; }
 
 /* Action row */
 .rs-actions {
@@ -247,10 +251,11 @@
 .rs-rsvp-remove-btn {
     background: none;
     border: none;
-    font-size: 0.75rem;
+    font-size: 0.82rem;
     color: var(--text-muted);
     cursor: pointer;
-    padding: 0;
+    padding: 0.55rem 0;
+    min-height: 2.75rem;
     text-decoration: underline;
     text-underline-offset: 2px;
     transition: color 0.12s;
@@ -410,6 +415,7 @@
     {% if signups %}
     <div class="rs-section">
         <div class="rs-section-title">Signups ({{ signups|length }})</div>
+        <div class="rs-signups-scroll">
         <table class="rs-signups-table">
             <thead>
                 <tr>
@@ -428,6 +434,7 @@
                 {% endfor %}
             </tbody>
         </table>
+        </div>
     </div>
     {% endif %}
     {% endwith %}

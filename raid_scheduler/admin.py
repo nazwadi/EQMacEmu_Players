@@ -46,7 +46,8 @@ class RaidEventAdmin(admin.ModelAdmin):
     list_display = ('title', 'date', 'start_time', 'circuit_display', 'is_public', 'status', 'created_by', 'created_at')
     list_filter = ('status', 'is_public', 'date', 'targets')
     search_fields = ('title', 'targets__name', 'circuit__name', 'circuit_name', 'created_by__username')
-    readonly_fields = ('created_by', 'created_at')
+    readonly_fields = ('created_at',)
+    autocomplete_fields = ('created_by',)
     inlines = [RaidSignupInline, GMOverrideLogInline]
     fieldsets = (
         (None, {
@@ -70,7 +71,7 @@ class RaidEventAdmin(admin.ModelAdmin):
     circuit_display.short_description = 'Circuit'
 
     def save_model(self, request, obj, form, change):
-        if not obj.pk:
+        if not obj.pk and not obj.created_by_id:
             obj.created_by = request.user
         super().save_model(request, obj, form, change)
 

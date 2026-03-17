@@ -259,8 +259,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 2rem;
-    height: 2rem;
+    min-width: 2.75rem;
+    height: 2.75rem;
     padding: 0 0.5rem;
     border-radius: 0.35rem;
     font-size: 0.8rem;
@@ -297,6 +297,8 @@
     .rsh-date-day { font-size: 1.1rem; }
     .rsh-date-year { display: none; }
     .rsh-event-title { font-size: 0.87rem; }
+    /* Stack date inputs vertically on small screens */
+    .rsh-date-input { width: 100%; flex: 1 1 auto; }
 }
 </style>
 {% endblock %}

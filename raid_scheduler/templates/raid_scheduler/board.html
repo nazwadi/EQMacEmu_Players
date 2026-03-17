@@ -523,6 +523,15 @@
 }
 .rs-card:hover .rs-close-btn { opacity: 1; }
 .rs-close-btn:hover { color: #ff6b6b; }
+/* On touch devices hover never fires — always show the close button */
+@media (hover: none) {
+    .rs-close-btn {
+        opacity: 1;
+        padding: 0.6rem 0.65rem;
+        top: 0;
+        right: 0;
+    }
+}
 
 /* ── Sidebar calendar filter ──────────────────────────────────────────── */
 .side-nav-divider {
@@ -549,6 +558,7 @@
     border-radius: 0.2rem;
     font-weight: 500;
     transition: color 0.12s, background 0.12s;
+    min-height: 2rem;
 }
 .rs-filter-allnone button:hover {
     color: var(--text-primary);
