@@ -300,10 +300,10 @@
                 <i class="fas fa-users" aria-hidden="true"></i>
                 {{ event.circuit_display }}
             </span>
-            {% if event.created_by %}
+            {% if event.created_by or event.posted_by_name %}
             <span>
                 <i class="fas fa-user" aria-hidden="true"></i>
-                Posted by {{ event.created_by.username }}
+                Posted by {{ event.posted_by_display }}
             </span>
             {% endif %}
         </div>

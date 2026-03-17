@@ -56,7 +56,19 @@ class RaidEvent(models.Model):
         User, on_delete=models.SET_NULL, null=True,
         related_name='created_raid_events',
     )
+    posted_by_name = models.CharField(
+        max_length=100, blank=True,
+        help_text='Display name override for the poster. Leave blank to use their account username.',
+    )
     created_at = models.DateTimeField(auto_now_add=True)
+
+    @property
+    def posted_by_display(self):
+        if self.posted_by_name:
+            return self.posted_by_name
+        if self.created_by:
+            return self.created_by.username
+        return '—'
 
     class Meta:
         ordering = ['date', 'start_time']

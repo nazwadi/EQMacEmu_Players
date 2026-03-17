@@ -54,7 +54,7 @@ class RaidEventAdmin(admin.ModelAdmin):
             'fields': ('title', 'targets', 'date', 'start_time', 'circuit', 'circuit_name', 'is_public', 'status', 'notes'),
         }),
         ('Audit', {
-            'fields': ('created_by', 'created_at'),
+            'fields': ('created_by', 'posted_by_name', 'created_at'),
             'classes': ('collapse',),
         }),
         ('GM Override', {
