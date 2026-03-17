@@ -30,4 +30,8 @@ urlpatterns = [
     path('manage/<int:circuit_id>/mob/<int:mob_id>/loot/', views.mob_loot_items, name='mob_loot_items'),
     path('manage/raid/<int:raid_id>/direct-award/', views.direct_award_view, name='direct_award'),
     path('manage/<int:circuit_id>/adjustments/', views.circuit_adjustments, name='circuit_adjustments'),
+    path('circuit-request/', views.circuit_request_create, name='circuit_request_create'),
+    path('circuit-requests/', views.circuit_request_list, name='circuit_request_list'),
+    path('circuit-requests/<int:pk>/review/', views.circuit_request_review, name='circuit_request_review'),
+    path('membership/<int:membership_id>/display-name/', views.update_display_name, name='update_display_name'),
 ]

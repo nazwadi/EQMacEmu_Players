@@ -8,11 +8,11 @@
         <div class="row mt-3">
             {% for circuit in circuits %}
             <div class="col-md-4 mb-3">
-                <div class="WindowNestedTan d-flex flex-column" style="height: 100%; padding: 15px;">
+                <div class="WindowNestedTan d-flex flex-column" style="height: 100%; padding: 15px; border: 1px solid rgba(255,215,0,0.15); border-radius: 6px;">
                     <h5 class="eq-header text-center mb-2">{{ circuit.name }}</h5>
-                    <div style="flex-grow: 1;">
+                    <div style="flex-grow: 1; text-align: center;">
                         {% if circuit.description %}
-                            <p>{{ circuit.description }}</p>
+                            <p style="margin: 0;">{{ circuit.description }}</p>
                         {% endif %}
                     </div>
                     <div class="text-center mt-2">
@@ -25,9 +25,24 @@
             {% empty %}
             <div class="col" style="padding: 20px;">
                 <p>No active raid circuits found.</p>
+                {% if user.is_authenticated %}
+                <p style="font-size:0.8rem; color:#888; margin-top:0.5rem;">
+                    Looking to start one?
+                    <a href="{% url 'dkp:circuit_request_create' %}" style="color:#8aa3ff;">Submit a circuit request</a>
+                    for admin review.
+                </p>
+                {% endif %}
             </div>
             {% endfor %}
         </div>
+        {% if user.is_authenticated and circuits %}
+        <div style="text-align:center; padding: 12px 0 18px; border-top: 1px solid rgba(255,255,255,0.06); margin-top: 8px;">
+            <a href="{% url 'dkp:circuit_request_create' %}"
+               style="font-size:0.75rem; color:#666; text-decoration:none;">
+                Need a different circuit? Submit a request →
+            </a>
+        </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

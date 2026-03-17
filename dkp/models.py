@@ -196,6 +196,42 @@ class Bid(models.Model):
         return f'{self.member.display_name} - {self.auction.item_name} - {self.bid_amount} DKP'
 
 
+CIRCUIT_REQUEST_STATUS_CHOICES = [
+    ('pending', 'Pending'),
+    ('approved', 'Approved'),
+    ('rejected', 'Rejected'),
+]
+
+
+class CircuitRequest(models.Model):
+    """A request from a user to have a new RaidCircuit created and approved by an admin."""
+    requested_by = models.ForeignKey(
+        'auth.User', on_delete=models.SET_NULL, null=True, blank=True,
+        related_name='circuit_requests',
+    )
+    name = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+    is_public_requested = models.BooleanField(default=False)
+    status = models.CharField(max_length=20, choices=CIRCUIT_REQUEST_STATUS_CHOICES, default='pending')
+    review_note = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    reviewed_by = models.ForeignKey(
+        'auth.User', on_delete=models.SET_NULL, null=True, blank=True,
+        related_name='reviewed_circuit_requests',
+    )
+    reviewed_at = models.DateTimeField(null=True, blank=True)
+    circuit = models.OneToOneField(
+        RaidCircuit, on_delete=models.SET_NULL, null=True, blank=True,
+        related_name='circuit_request',
+    )
+
+    class Meta:
+        permissions = [('approve_circuit_request', 'Can approve circuit requests')]
+
+    def __str__(self):
+        return f'CircuitRequest: {self.name} ({self.status})'
+
+
 class RaidMobAttendance(models.Model):
     """Records which members were present for each mob kill at a raid."""
     raid = models.ForeignKey(Raid, on_delete=models.CASCADE)

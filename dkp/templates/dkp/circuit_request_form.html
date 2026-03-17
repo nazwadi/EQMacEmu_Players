@@ -1,0 +1,250 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Request a Raid Circuit — EQ Archives{% endblock %}
+
+{% block extra_css %}
+<style>
+.crf-wrap {
+    max-width: 600px;
+    margin: 1.5rem auto;
+    padding: 0 1rem 4rem;
+}
+.crf-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    margin-bottom: 1.25rem;
+    transition: color 0.12s;
+}
+.crf-back:hover { color: var(--text-primary); }
+.crf-heading {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 0.3rem;
+}
+.crf-sub {
+    font-size: 0.83rem;
+    color: var(--text-muted);
+    margin: 0 0 1.5rem;
+    line-height: 1.5;
+}
+.crf-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-light);
+    border-radius: 0.6rem;
+    padding: 1.4rem 1.5rem;
+    margin-bottom: 1.5rem;
+}
+.crf-field { margin-bottom: 1.1rem; }
+.crf-field:last-child { margin-bottom: 0; }
+.crf-label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 0.3rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.crf-label-note {
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--text-muted);
+    margin-left: 0.3rem;
+}
+.crf-input {
+    width: 100%;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-light);
+    border-radius: 0.4rem;
+    padding: 0.45rem 0.7rem;
+    font-size: 0.87rem;
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color 0.15s;
+    box-sizing: border-box;
+}
+.crf-input:focus { border-color: var(--link-color); }
+.crf-input::placeholder { color: var(--text-muted); }
+textarea.crf-input { resize: vertical; min-height: 80px; }
+.crf-helptext {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 0.3rem;
+    line-height: 1.4;
+}
+.crf-checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+.crf-checkbox-row input[type="checkbox"] { accent-color: var(--accent-color); width: 14px; height: 14px; cursor: pointer; }
+.crf-checkbox-label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+.crf-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+}
+.crf-submit {
+    padding: 0.5rem 1.25rem;
+    background: var(--accent-color);
+    border: none;
+    border-radius: 0.4rem;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #0f0f0f;
+    cursor: pointer;
+    transition: opacity 0.15s;
+}
+.crf-submit:hover { opacity: 0.88; }
+.crf-cancel {
+    font-size: 0.83rem;
+    color: var(--text-muted);
+    text-decoration: none;
+}
+.crf-cancel:hover { color: var(--text-primary); }
+
+/* ── My requests history ──────────────────────────────────────────────── */
+.crf-history-title {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin: 0 0 0.6rem;
+}
+.crf-history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+.crf-history-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.55rem 0.8rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-light);
+    border-radius: 0.4rem;
+    font-size: 0.83rem;
+}
+.crf-history-name { color: var(--text-primary); font-weight: 600; flex: 1; min-width: 0; }
+.crf-history-meta { font-size: 0.75rem; color: var(--text-muted); white-space: nowrap; }
+.crf-status-badge {
+    display: inline-block;
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.1rem 0.35rem;
+    border-radius: 0.2rem;
+    white-space: nowrap;
+}
+.crf-status-badge--pending  { background: rgba(255,196,102,0.15); color: #ffc466; }
+.crf-status-badge--approved { background: rgba(77,187,95,0.15);   color: #4dbb5f; }
+.crf-status-badge--rejected { background: rgba(255,107,107,0.15); color: #ff6b6b; }
+.crf-history-note {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    margin-top: 0.15rem;
+    font-style: italic;
+}
+</style>
+{% endblock %}
+
+{% block sidebar %}{% include "includes/sidebar_dkp.html" %}{% endblock %}
+
+{% block content %}
+<div class="crf-wrap">
+
+    <a href="{% url 'raid_scheduler:schedule' %}" class="crf-back">
+        <i class="fas fa-chevron-left" aria-hidden="true"></i> Back to Raid Schedule
+    </a>
+
+    <h1 class="crf-heading">Request a Raid Circuit</h1>
+    <p class="crf-sub">
+        Circuits are the guilds and fellowships that use DKP tracking. Submitting a request
+        notifies an admin, who will review and create the circuit. You'll be able to see the
+        status of your request below.
+    </p>
+
+    {% if messages %}
+    {% for msg in messages %}
+    <div class="alert alert-{{ msg.tags }} mb-3" role="alert" style="font-size:0.85rem;">{{ msg }}</div>
+    {% endfor %}
+    {% endif %}
+
+    <div class="crf-card">
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="crf-field">
+                <label class="crf-label" for="crf-name">Circuit Name <span style="color:#ff6b6b">*</span></label>
+                <input type="text" id="crf-name" name="name" class="crf-input"
+                       maxlength="200" autocomplete="off" required
+                       placeholder="e.g. Fires of Heaven, Legacy of Ykesha…"
+                       value="{{ request.POST.name|default:'' }}">
+            </div>
+
+            <div class="crf-field">
+                <label class="crf-label" for="crf-desc">
+                    Description <span class="crf-label-note">(optional)</span>
+                </label>
+                <textarea id="crf-desc" name="description" class="crf-input"
+                          maxlength="1000"
+                          placeholder="Brief description of the group — who plays, what you raid, etc.">{{ request.POST.description|default:'' }}</textarea>
+            </div>
+
+            <div class="crf-field">
+                <label class="crf-checkbox-row">
+                    <input type="checkbox" name="is_public_requested"
+                           {% if request.POST.is_public_requested %}checked{% endif %}>
+                    <span class="crf-checkbox-label">Request this circuit be publicly visible</span>
+                </label>
+                <div class="crf-helptext">
+                    Public circuits appear on the open DKP standings page. The final decision
+                    is up to the admin reviewing your request.
+                </div>
+            </div>
+
+            <div class="crf-actions">
+                <button type="submit" class="crf-submit">Submit Request</button>
+                <a href="{% url 'raid_scheduler:board' %}" class="crf-cancel">Cancel</a>
+            </div>
+        </form>
+    </div>
+
+    {% if my_requests %}
+    <p class="crf-history-title">Your Previous Requests</p>
+    <div class="crf-history-list">
+        {% for cr in my_requests %}
+        <div class="crf-history-row">
+            <div style="flex:1;min-width:0;">
+                <div style="display:flex;align-items:baseline;gap:0.5rem;flex-wrap:wrap;">
+                    <span class="crf-history-name">{{ cr.name }}</span>
+                    <span class="crf-status-badge crf-status-badge--{{ cr.status }}">{{ cr.get_status_display }}</span>
+                </div>
+                {% if cr.review_note %}
+                <div class="crf-history-note">{{ cr.review_note }}</div>
+                {% endif %}
+            </div>
+            <span class="crf-history-meta">{{ cr.created_at|date:"M j, Y" }}</span>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

@@ -85,6 +85,7 @@ INSTALLED_APPS = [
     'recipes.apps.RecipesConfig',
     'spells.apps.SpellsConfig',
     'zones.apps.ZonesConfig',
+    'raid_scheduler.apps.RaidSchedulerConfig',
 ]
 
 MESSAGE_TAGS = {

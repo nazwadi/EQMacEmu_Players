@@ -9,7 +9,7 @@ from datetime import timedelta
 from django.core.cache import cache
 from django.shortcuts import render, redirect
 from dkp.models import CircuitConfig, CircuitMembership, DKPTransaction, Auction, Bid, RaidCircuit, Raid, \
-    RaidAttendance, Mob, RaidMobAttendance
+    RaidAttendance, Mob, RaidMobAttendance, CircuitRequest
 from dkp.utils import get_standings
 from dkp.services import attendance_calculation
 
@@ -1293,10 +1293,20 @@ def mob_manage(request, circuit_id):
     active_mobs = Mob.objects.filter(circuit=circuit, is_active=True).order_by('name')
     inactive_mobs = Mob.objects.filter(circuit=circuit, is_active=False).order_by('name')
 
+    # Shared canonical target list for autocomplete — gracefully absent if app not installed
+    try:
+        from raid_scheduler.models import RaidTarget
+        raid_target_names = list(
+            RaidTarget.objects.filter(is_active=True).order_by('name').values_list('name', flat=True)
+        )
+    except Exception:
+        raid_target_names = []
+
     return render(request, 'dkp/mob_manage.html', {
         'circuit': circuit,
         'active_mobs': active_mobs,
         'inactive_mobs': inactive_mobs,
+        'raid_target_names': raid_target_names,
     })
 
 
@@ -1466,3 +1476,116 @@ def circuit_adjustments(request, circuit_id):
         'raids': raids,
         'config': config,
     })
+
+
+# ── Circuit request flow ──────────────────────────────────────────────────────
+
+def _can_approve_circuits(user):
+    return user.is_authenticated and (
+        user.is_superuser or user.has_perm('dkp.approve_circuit_request')
+    )
+
+
+@login_required
+def circuit_request_create(request):
+    if request.method == 'POST':
+        name = request.POST.get('name', '').strip()
+        description = request.POST.get('description', '').strip()
+        is_public_requested = request.POST.get('is_public_requested') == 'on'
+        if not name:
+            messages.error(request, 'Circuit name is required.')
+        else:
+            CircuitRequest.objects.create(
+                requested_by=request.user,
+                name=name,
+                description=description,
+                is_public_requested=is_public_requested,
+            )
+            messages.success(request, 'Your circuit request has been submitted. An administrator will review it shortly.')
+            return redirect('dkp:circuit_request_create')
+    # Show the user their own previous requests for context
+    my_requests = CircuitRequest.objects.filter(
+        requested_by=request.user
+    ).order_by('-created_at')[:10]
+    return render(request, 'dkp/circuit_request_form.html', {'my_requests': my_requests})
+
+
+@login_required
+def circuit_request_list(request):
+    if not _can_approve_circuits(request.user):
+        messages.error(request, 'You do not have permission to review circuit requests.')
+        return redirect('dkp:circuit_list')
+    pending = CircuitRequest.objects.filter(status='pending').select_related('requested_by').order_by('created_at')
+    reviewed = CircuitRequest.objects.exclude(status='pending').select_related(
+        'requested_by', 'reviewed_by', 'circuit'
+    ).order_by('-reviewed_at')[:50]
+    return render(request, 'dkp/circuit_request_list.html', {
+        'pending': pending,
+        'reviewed': reviewed,
+    })
+
+
+@login_required
+@require_POST
+def circuit_request_review(request, pk):
+    if not _can_approve_circuits(request.user):
+        messages.error(request, 'You do not have permission to review circuit requests.')
+        return redirect('dkp:circuit_list')
+    cr = CircuitRequest.objects.filter(pk=pk, status='pending').first()
+    if not cr:
+        messages.error(request, 'Request not found or already reviewed.')
+        return redirect('dkp:circuit_request_list')
+    action = request.POST.get('action')
+    if action == 'approve':
+        name = request.POST.get('name', '').strip() or cr.name
+        description = request.POST.get('description', cr.description).strip()
+        is_public = request.POST.get('is_public') == 'on'
+        review_note = request.POST.get('review_note', '').strip()
+        circuit = RaidCircuit.objects.create(
+            name=name,
+            description=description,
+            is_public=is_public,
+            is_active=True,
+            created_by=request.user,
+        )
+        cr.circuit = circuit
+        cr.status = 'approved'
+        cr.reviewed_by = request.user
+        cr.reviewed_at = timezone.now()
+        cr.review_note = review_note
+        cr.save()
+        CircuitConfig.objects.get_or_create(circuit=circuit)
+        if cr.requested_by:
+            display_name = cr.requested_by.username
+            CircuitMembership.objects.get_or_create(
+                circuit=circuit,
+                member=cr.requested_by,
+                defaults={'role': 'officer', 'status': 'active', 'display_name': display_name},
+            )
+        messages.success(request, f'Circuit "{circuit.name}" approved and created. {cr.requested_by.username if cr.requested_by else "Requester"} enrolled as officer.')
+    elif action == 'reject':
+        review_note = request.POST.get('review_note', '').strip()
+        cr.status = 'rejected'
+        cr.reviewed_by = request.user
+        cr.reviewed_at = timezone.now()
+        cr.review_note = review_note
+        cr.save()
+        messages.success(request, 'Circuit request rejected.')
+    else:
+        messages.error(request, 'Invalid action.')
+    return redirect('dkp:circuit_request_list')
+
+
+@login_required
+@require_POST
+def update_display_name(request, membership_id):
+    membership = CircuitMembership.objects.filter(
+        id=membership_id, member=request.user, status='active'
+    ).first()
+    if not membership:
+        raise Http404
+    name = request.POST.get('display_name', '').strip()[:200]
+    if name:
+        membership.display_name = name
+        membership.save(update_fields=['display_name'])
+    return redirect('dkp:dashboard_member', membership_id=membership_id)

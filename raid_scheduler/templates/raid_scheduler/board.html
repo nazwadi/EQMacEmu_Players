@@ -1,0 +1,995 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Raid Schedule — EQ Archives{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ════════════════════════════════════════════════════════════════════════════
+   RAID CALENDAR — shared tokens
+   Uses site CSS variables: --bg-primary/secondary/tertiary/content,
+   --accent-color (#fcc721 gold), --link-color (#8aa3ff blue),
+   --border-color, --border-light, --text-primary/secondary/muted
+════════════════════════════════════════════════════════════════════════════ */
+
+/* ── outer shell ─────────────────────────────────────────────────────────── */
+.rs-cal {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 56px);   /* fill viewport below navbar */
+    background: var(--bg-primary);
+    overflow: hidden;
+}
+
+/* ── top navigation bar ──────────────────────────────────────────────────── */
+.rs-nav {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.55rem 1rem;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-light);
+    flex-shrink: 0;
+    flex-wrap: wrap;
+}
+/* Today button */
+.rs-btn-today {
+    padding: 0.3rem 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.4rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-decoration: none;
+    background: none;
+    white-space: nowrap;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+.rs-btn-today:hover {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+}
+/* Prev / Next arrows */
+.rs-nav-arrows { display: flex; gap: 0.1rem; }
+.rs-nav-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.9rem;
+    height: 1.9rem;
+    border-radius: 0.35rem;
+    border: 1px solid transparent;
+    font-size: 1rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: background 0.15s, color 0.15s;
+}
+.rs-nav-arrow:hover { background: var(--bg-tertiary); color: var(--text-primary); }
+/* Period label */
+.rs-period {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: 0.01em;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+/* View switcher — segmented control */
+.rs-switcher {
+    display: flex;
+    border: 1px solid var(--border-light);
+    border-radius: 0.4rem;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+.rs-switcher a {
+    padding: 0.3rem 0.7rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-decoration: none;
+    border-right: 1px solid var(--border-light);
+    transition: background 0.15s, color 0.15s;
+    white-space: nowrap;
+}
+.rs-switcher a:last-child { border-right: none; }
+.rs-switcher a.active {
+    background: var(--accent-color);
+    color: #0f0f0f;
+}
+.rs-switcher a:hover:not(.active) {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+/* Schedule button (desktop only) */
+.rs-btn-schedule {
+    display: none;
+    padding: 0.32rem 0.9rem;
+    border-radius: 0.4rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    background: var(--accent-color);
+    color: #0f0f0f;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: opacity 0.15s;
+    flex-shrink: 0;
+}
+.rs-btn-schedule:hover { opacity: 0.88; color: #0f0f0f; }
+@media (min-width: 600px) {
+    .rs-btn-schedule { display: inline-flex; align-items: center; gap: 0.35rem; }
+}
+
+/* ── scrollable body (below nav) ─────────────────────────────────────────── */
+.rs-body {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   MONTH VIEW
+════════════════════════════════════════════════════════════════════════════ */
+.rs-month {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+}
+/* Day-of-week header row */
+.rs-month-headers {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    border-bottom: 1px solid var(--border-light);
+    flex-shrink: 0;
+}
+.rs-month-headers div {
+    padding: 0.4rem 0;
+    text-align: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-muted);
+}
+/* Grid body */
+.rs-month-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+.rs-month-row {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    flex: 1;
+    border-bottom: 1px solid var(--border-light);
+    min-height: 80px;
+}
+.rs-month-row:last-child { border-bottom: none; }
+/* Individual cell */
+.rs-month-cell {
+    border-right: 1px solid var(--border-light);
+    padding: 0.35rem 0.4rem 0.4rem;
+    min-height: 80px;
+    overflow: hidden;
+    cursor: default;
+    transition: background 0.12s;
+}
+.rs-month-cell:last-child { border-right: none; }
+.rs-month-cell.today { background: rgba(252,199,33,0.04); }
+.rs-month-cell.out-month { opacity: 0.38; }
+.rs-month-cell:hover { background: rgba(255,255,255,0.025); }
+/* Date number */
+.rs-date-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.55rem;
+    height: 1.55rem;
+    border-radius: 50%;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: background 0.12s, color 0.12s;
+    line-height: 1;
+    margin-bottom: 0.2rem;
+}
+.rs-date-num:hover { background: var(--bg-tertiary); color: var(--text-primary); }
+.rs-month-cell.today .rs-date-num {
+    background: var(--accent-color);
+    color: #0f0f0f;
+    font-weight: 700;
+}
+/* Event chips in month cells */
+.rs-month-chip {
+    display: block;
+    border-left: 2px solid var(--link-color);
+    background: rgba(138,163,255,0.1);
+    color: var(--text-secondary);
+    font-size: 0.68rem;
+    padding: 0.1rem 0.3rem;
+    border-radius: 0.2rem;
+    margin-bottom: 0.15rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-decoration: none;
+    transition: background 0.12s;
+}
+.rs-month-chip:hover { background: rgba(138,163,255,0.2); color: var(--text-primary); }
+.rs-month-chip.private {
+    border-left-color: var(--accent-color);
+    background: rgba(252,199,33,0.08);
+}
+.rs-month-chip.active {
+    border-left-color: #4dbb5f;
+    background: rgba(77,187,95,0.08);
+}
+.rs-month-more {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    padding: 0.05rem 0.3rem;
+    cursor: pointer;
+}
+/* Mobile month: dots only, no chips */
+@media (max-width: 600px) {
+    .rs-month-chip { display: none; }
+    .rs-month-more { display: none; }
+    .rs-month-cell { min-height: 44px; padding: 0.3rem; }
+    .rs-month-headers div { font-size: 0.62rem; padding: 0.3rem 0; }
+    .rs-date-num { font-size: 0.75rem; width: 1.35rem; height: 1.35rem; }
+    /* Show dots for cells with events */
+    .rs-month-cell.has-events::after {
+        content: '';
+        display: block;
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: var(--accent-color);
+        margin: 0.15rem auto 0;
+    }
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   WEEK VIEW
+════════════════════════════════════════════════════════════════════════════ */
+.rs-week {
+    height: 100%;
+}
+/* Day-of-week column headers */
+.rs-week-headers {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    border-bottom: 2px solid var(--border-light);
+    position: sticky;
+    top: 0;
+    background: var(--bg-secondary);
+    z-index: 10;
+}
+.rs-week-hcell {
+    padding: 0.5rem 0.6rem 0.4rem;
+    border-right: 1px solid var(--border-light);
+    text-align: center;
+}
+.rs-week-hcell:last-child { border-right: none; }
+.rs-week-hcell.today { background: rgba(252,199,33,0.06); }
+.rs-hday-abbr {
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-muted);
+    margin-bottom: 0.2rem;
+}
+.rs-hday-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.7rem;
+    height: 1.7rem;
+    border-radius: 50%;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: background 0.12s;
+}
+.rs-hday-num:hover { background: var(--bg-tertiary); }
+.rs-week-hcell.today .rs-hday-num {
+    background: var(--accent-color);
+    color: #0f0f0f;
+}
+/* Week columns */
+.rs-week-cols {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    align-items: start;
+}
+.rs-week-col {
+    border-right: 1px solid var(--border-light);
+    padding: 0.5rem 0.5rem 1rem;
+    min-height: 120px;
+}
+.rs-week-col:last-child { border-right: none; }
+.rs-week-col.today { background: rgba(252,199,33,0.03); }
+/* Mobile week: hidden grid, show strip + stacked sections */
+.rs-week-mobile { display: none; }
+@media (max-width: 768px) {
+    .rs-week-headers { display: none; }
+    .rs-week-cols { display: none; }
+    .rs-week-mobile { display: block; }
+}
+
+/* Mobile day strip (week view) */
+.rs-strip {
+    display: flex;
+    overflow-x: auto;
+    gap: 0.3rem;
+    padding: 0.55rem 0.75rem;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-light);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    scrollbar-width: none;
+}
+.rs-strip::-webkit-scrollbar { display: none; }
+.rs-strip-pill {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.1rem;
+    padding: 0.3rem 0.6rem 0.25rem;
+    border-radius: 0.45rem;
+    border: 1px solid transparent;
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: 0.68rem;
+    transition: background 0.15s, color 0.15s;
+}
+.rs-strip-pill:hover { background: var(--bg-tertiary); color: var(--text-primary); }
+.rs-strip-pill.today {
+    background: rgba(252,199,33,0.1);
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+}
+.rs-strip-pill .rs-snum {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: inherit;
+}
+.rs-strip-dot {
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--accent-color);
+}
+/* Mobile stacked sections */
+.rs-mobile-days { padding: 0; }
+.rs-mobile-day {
+    border-bottom: 1px solid var(--border-light);
+    padding: 0.7rem 0.9rem 0.75rem;
+}
+.rs-mobile-day:last-child { border-bottom: none; }
+.rs-mobile-day-hdr {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    margin-bottom: 0.55rem;
+}
+.rs-mobile-day-hdr .abbr {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-muted);
+}
+.rs-mobile-day-hdr .num {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+}
+.rs-mobile-day.today .rs-mobile-day-hdr .num { color: var(--accent-color); }
+
+/* ════════════════════════════════════════════════════════════════════════════
+   DAY VIEW
+════════════════════════════════════════════════════════════════════════════ */
+.rs-day {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 1rem 1rem 4rem;
+}
+.rs-day-empty {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+.rs-day-empty a { color: var(--link-color); }
+
+/* ════════════════════════════════════════════════════════════════════════════
+   EVENT CARD — shared across views
+════════════════════════════════════════════════════════════════════════════ */
+.rs-card {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-light);
+    border-left: 3px solid var(--link-color);
+    border-radius: 0.4rem;
+    padding: 0.45rem 0.6rem 0.45rem 0.6rem;
+    margin-bottom: 0.4rem;
+    position: relative;
+    transition: background 0.12s, border-color 0.12s;
+}
+.rs-card:hover { background: var(--bg-content); }
+.rs-card--private { border-left-color: var(--accent-color); background: rgba(252,199,33,0.025); }
+.rs-card--private:hover { background: rgba(252,199,33,0.05); }
+.rs-card--active  { border-left-color: #4dbb5f; }
+/* Day view card: a bit more spacious */
+.rs-day .rs-card { padding: 0.65rem 0.75rem; margin-bottom: 0.6rem; }
+
+.rs-card-target {
+    font-weight: 700;
+    font-size: 0.83rem;
+    color: var(--text-primary);
+    line-height: 1.3;
+    padding-right: 1.1rem;  /* room for close btn */
+    margin-bottom: 0.12rem;
+}
+.rs-card-meta {
+    font-size: 0.71rem;
+    color: var(--text-muted);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.28rem;
+    align-items: center;
+}
+.rs-card-meta .sep { opacity: 0.3; }
+.rs-card-notes {
+    font-size: 0.69rem;
+    color: var(--text-muted);
+    margin-top: 0.28rem;
+    opacity: 0.65;
+}
+
+/* badges */
+.rs-badge {
+    display: inline-block;
+    font-size: 0.59rem;
+    font-weight: 700;
+    padding: 0.08rem 0.3rem;
+    border-radius: 0.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    vertical-align: middle;
+}
+.rs-badge--private   { background: rgba(252,199,33,0.15);  color: var(--accent-color); }
+.rs-badge--active    { background: rgba(77,187,95,0.15);   color: #4dbb5f; }
+.rs-badge--scheduled { background: rgba(138,163,255,0.15); color: var(--link-color); }
+
+/* ── Card clickable overlay ──────────────────────────────────────────────── */
+.rs-card { position: relative; }
+.rs-card-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    border-radius: inherit;
+}
+/* Everything interactive inside the card sits above the overlay */
+.rs-card-title-link,
+.rs-card .rs-close-btn,
+.rs-card form {
+    position: relative;
+    z-index: 1;
+}
+.rs-card-title-link { text-decoration: none; display: block; }
+/* Target tags */
+.rs-card-targets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin-top: 0.3rem;
+    position: relative;
+    z-index: 1;
+}
+.rs-target-tag {
+    font-size: 0.62rem;
+    padding: 0.08rem 0.35rem;
+    border-radius: 0.2rem;
+    background: rgba(255,255,255,0.07);
+    color: var(--text-muted);
+    border: 1px solid rgba(255,255,255,0.08);
+    white-space: nowrap;
+}
+
+/* ── close button — fades in on card hover ───────────────────────────────── */
+.rs-close-btn {
+    position: absolute;
+    top: 0.35rem;
+    right: 0.4rem;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 0.68rem;
+    padding: 0.15rem;
+    line-height: 1;
+    opacity: 0;
+    transition: color 0.12s, opacity 0.12s;
+}
+.rs-card:hover .rs-close-btn { opacity: 1; }
+.rs-close-btn:hover { color: #ff6b6b; }
+
+/* ── Sidebar calendar filter ──────────────────────────────────────────── */
+.side-nav-divider {
+    border: none;
+    border-top: 1px solid var(--border-light);
+    margin: 0.5rem 0.6rem;
+}
+/* Group header: title + All/None buttons */
+.rs-filter-hdr {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.35rem 0.75rem 0.2rem;
+}
+.rs-filter-hdr .side-nav-title { margin: 0; }
+.rs-filter-allnone { display: flex; gap: 0.1rem; }
+.rs-filter-allnone button {
+    background: none;
+    border: none;
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 0.1rem 0.3rem;
+    border-radius: 0.2rem;
+    font-weight: 500;
+    transition: color 0.12s, background 0.12s;
+}
+.rs-filter-allnone button:hover {
+    color: var(--text-primary);
+    background: rgba(255,255,255,0.06);
+}
+.rs-filter-allnone .rs-sep {
+    color: var(--border-light);
+    font-size: 0.68rem;
+    line-height: 1.8;
+    user-select: none;
+}
+/* Filter row */
+.rs-cal-filter {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.22rem 0.75rem;
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    user-select: none;
+    border-radius: 0.3rem;
+    transition: color 0.12s, background 0.12s;
+}
+.rs-cal-filter:hover {
+    background: rgba(255,255,255,0.04);
+    color: var(--text-primary);
+}
+.rs-cal-filter input { display: none; }
+/* Checkbox indicator — colored filled square + white checkmark */
+.rs-cal-check {
+    width: 14px;
+    min-width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    border: 2px solid var(--cal-color, #888);
+    background: var(--cal-color, #888);
+    position: relative;
+    flex-shrink: 0;
+    transition: background 0.15s;
+}
+.rs-cal-check::after {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: -1px;
+    width: 5px;
+    height: 8px;
+    border: 2px solid #0f0f0f;
+    border-top: none;
+    border-left: none;
+    transform: rotate(45deg);
+    transition: opacity 0.1s;
+}
+/* Unchecked: hollow outline, no fill, no checkmark */
+.rs-cal-filter.rs-unchecked { color: var(--text-muted); }
+.rs-cal-filter.rs-unchecked .rs-cal-check { background: transparent; }
+.rs-cal-filter.rs-unchecked .rs-cal-check::after { opacity: 0; }
+/* Separator between Visibility and Circuits groups */
+.rs-filter-group-gap { height: 0.5rem; }
+
+/* ── RSVP badge on calendar cards ────────────────────────────────────── */
+.rs-rsvp-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    font-size: 0.58rem;
+    font-weight: 700;
+    padding: 0.06rem 0.3rem;
+    border-radius: 0.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    vertical-align: middle;
+    flex-shrink: 0;
+}
+.rs-rsvp-badge--confirmed { background: rgba(77,187,95,0.15); color: #4dbb5f; }
+.rs-rsvp-badge--tentative  { background: rgba(252,199,33,0.15); color: var(--accent-color); }
+.rs-rsvp-badge--declined   { background: rgba(150,150,150,0.12); color: var(--text-muted); }
+
+/* ── Circuit dot on event cards ───────────────────────────────────────── */
+.rs-circuit-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+.rs-circuit-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--circuit-color, var(--text-muted));
+    flex-shrink: 0;
+    opacity: 0.85;
+}
+
+/* empty placeholder */
+.rs-empty {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    opacity: 0.35;
+    padding: 0.25rem 0;
+    text-align: center;
+    user-select: none;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   MOBILE FAB
+════════════════════════════════════════════════════════════════════════════ */
+.rs-fab { display: none; }
+@media (max-width: 599px) {
+    .rs-fab {
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        position: fixed;
+        bottom: 1.25rem;
+        right: 1.25rem;
+        z-index: 300;
+        padding: 0.7rem 1.15rem;
+        border-radius: 2rem;
+        font-weight: 700;
+        font-size: 0.88rem;
+        background: var(--accent-color);
+        color: #0f0f0f;
+        border: none;
+        box-shadow: 0 4px 18px rgba(252,199,33,0.35);
+        text-decoration: none;
+        transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .rs-fab:hover { transform: translateY(-2px); box-shadow: 0 6px 22px rgba(252,199,33,0.5); color: #0f0f0f; }
+    .rs-fab:active { transform: translateY(0); }
+}
+</style>
+{% endblock %}
+
+{% block sidebar %}{% include "includes/sidebar_raids.html" %}{% endblock %}
+
+{% block content %}
+<div class="rs-cal">
+
+    <!-- ── Navigation bar ─────────────────────────────────────────────── -->
+    <nav class="rs-nav" aria-label="Calendar navigation">
+        <a href="{% url 'raid_scheduler:board' %}?view={{ view_mode }}&date={{ today|date:'Y-m-d' }}"
+           class="rs-btn-today">Today</a>
+
+        <div class="rs-nav-arrows">
+            <a href="?view={{ view_mode }}&date={{ prev_anchor|date:'Y-m-d' }}"
+               class="rs-nav-arrow" aria-label="Previous">&#8249;</a>
+            <a href="?view={{ view_mode }}&date={{ next_anchor|date:'Y-m-d' }}"
+               class="rs-nav-arrow" aria-label="Next">&#8250;</a>
+        </div>
+
+        <span class="rs-period">{{ period_label }}</span>
+
+        <div class="rs-switcher" role="group" aria-label="View mode">
+            <a href="?view=day&date={{ anchor|date:'Y-m-d' }}"
+               class="{% if view_mode == 'day' %}active{% endif %}">Day</a>
+            <a href="?view=week&date={{ anchor|date:'Y-m-d' }}"
+               class="{% if view_mode == 'week' %}active{% endif %}">Week</a>
+            <a href="?view=month&date={{ anchor|date:'Y-m-d' }}"
+               class="{% if view_mode == 'month' %}active{% endif %}">Month</a>
+        </div>
+
+        {% if can_schedule %}
+        <a href="{% url 'raid_scheduler:schedule' %}" class="rs-btn-schedule">
+            + Schedule a Raid
+        </a>
+        {% endif %}
+    </nav>
+
+    <!-- ── Scrollable body ────────────────────────────────────────────── -->
+    <div class="rs-body">
+
+    {# ════════════════════════ MONTH VIEW ════════════════════════ #}
+    {% if view_mode == 'month' %}
+    <div class="rs-month">
+        <div class="rs-month-headers" aria-hidden="true">
+            <div>Mon</div><div>Tue</div><div>Wed</div>
+            <div>Thu</div><div>Fri</div><div>Sat</div><div>Sun</div>
+        </div>
+        <div class="rs-month-body">
+            {% for week in weeks %}
+            <div class="rs-month-row">
+                {% for cell in week %}
+                <div class="rs-month-cell
+                            {% if cell.is_today %}today{% endif %}
+                            {% if not cell.in_month %}out-month{% endif %}
+                            {% if cell.events %}has-events{% endif %}">
+                    <a href="?view=day&date={{ cell.date|date:'Y-m-d' }}"
+                       class="rs-date-num"
+                       aria-label="{{ cell.date|date:'l, F j' }}">{{ cell.date.day }}</a>
+
+                    {% for event in cell.events|slice:":3" %}
+                    <a href="{% url 'raid_scheduler:event_detail' event.pk %}"
+                       class="rs-month-chip
+                              {% if not event.is_public %}private{% elif event.status == 'active' %}active{% endif %}"
+                       data-circuit-id="{{ event.circuit_id|default:'' }}"
+                       data-is-public="{{ event.is_public|yesno:'true,false' }}"
+                       title="{{ event.title }} — {{ event.start_time|date:'g:i A' }} — {{ event.circuit_display }}">
+                        {{ event.start_time|date:'g:iA' }} {{ event.title }}
+                    </a>
+                    {% endfor %}
+                    {% if cell.events|length > 3 %}
+                    <a href="?view=day&date={{ cell.date|date:'Y-m-d' }}" class="rs-month-more">
+                        +{{ cell.events|length|add:"-3" }} more
+                    </a>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {# ════════════════════════ WEEK VIEW ═════════════════════════ #}
+    {% elif view_mode == 'week' %}
+    <div class="rs-week">
+
+        <!-- Desktop: column header row -->
+        <div class="rs-week-headers" aria-hidden="true">
+            {% for day, events in days_with_events %}
+            <div class="rs-week-hcell {% if day == today %}today{% endif %}">
+                <span class="rs-hday-abbr">{{ day|date:'D' }}</span>
+                <a href="?view=day&date={{ day|date:'Y-m-d' }}" class="rs-hday-num">{{ day|date:'j' }}</a>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Desktop: event columns -->
+        <div class="rs-week-cols">
+            {% for day, events in days_with_events %}
+            <div class="rs-week-col {% if day == today %}today{% endif %}">
+                {% for event in events %}{% include "raid_scheduler/_event_card.html" %}
+                {% empty %}<div class="rs-empty">—</div>{% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Mobile: strip + stacked sections -->
+        <div class="rs-week-mobile">
+            <div class="rs-strip" aria-label="Day navigation">
+                {% for day, events in days_with_events %}
+                <a class="rs-strip-pill {% if day == today %}today{% endif %}"
+                   href="#mob-{{ day|date:'Y-m-d' }}"
+                   aria-label="{{ day|date:'l, F j' }}">
+                    <span style="font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;">{{ day|date:'D' }}</span>
+                    <span class="rs-snum">{{ day|date:'j' }}</span>
+                    {% if events %}<span class="rs-strip-dot" aria-hidden="true"></span>{% endif %}
+                </a>
+                {% endfor %}
+            </div>
+            <div class="rs-mobile-days">
+                {% for day, events in days_with_events %}
+                <div class="rs-mobile-day {% if day == today %}today{% endif %}"
+                     id="mob-{{ day|date:'Y-m-d' }}">
+                    <div class="rs-mobile-day-hdr">
+                        <span class="abbr">{{ day|date:'D' }}</span>
+                        <span class="num">{{ day|date:'M j' }}</span>
+                    </div>
+                    {% for event in events %}{% include "raid_scheduler/_event_card.html" %}
+                    {% empty %}<div class="rs-empty">—</div>{% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+
+    {# ════════════════════════ DAY VIEW ══════════════════════════ #}
+    {% else %}
+    <div class="rs-day">
+        {% if day_events %}
+            {% for event in day_events %}
+            {% include "raid_scheduler/_event_card.html" %}
+            {% endfor %}
+        {% else %}
+        <div class="rs-day-empty">
+            <p>No raids scheduled for {{ anchor|date:'l, F j' }}.</p>
+            {% if can_schedule %}
+            <a href="{% url 'raid_scheduler:schedule' %}">Schedule one</a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    </div>{# end rs-body #}
+</div>{# end rs-cal #}
+
+{% if can_schedule %}
+<a href="{% url 'raid_scheduler:schedule' %}" class="rs-fab" aria-label="Schedule a raid">
+    <i class="fas fa-plus" aria-hidden="true"></i> Schedule
+</a>
+{% endif %}
+{% endblock %}
+
+{% block inline_js %}
+<script>
+(function () {
+    'use strict';
+
+    // ── Mobile week strip smooth-scroll ──────────────────────────────────
+    document.querySelectorAll('.rs-strip-pill').forEach(function (pill) {
+        pill.addEventListener('click', function (e) {
+            var href = pill.getAttribute('href');
+            if (!href || href.charAt(0) !== '#') return;
+            var target = document.getElementById(href.slice(1));
+            if (!target) return;
+            e.preventDefault();
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    });
+
+    // Scroll today's pill into view on load (mobile week)
+    var todayPill = document.querySelector('.rs-strip-pill.today');
+    if (todayPill) todayPill.scrollIntoView({ behavior: 'instant', inline: 'center', block: 'nearest' });
+
+    // ── Month: make cells clickable on mobile ─────────────────────────────
+    // (Desktop uses the anchor on the date number; mobile taps the whole cell)
+    document.querySelectorAll('.rs-month-cell').forEach(function (cell) {
+        cell.addEventListener('click', function (e) {
+            if (e.target.closest('a')) return; // let links handle themselves
+            var link = cell.querySelector('.rs-date-num');
+            if (link) window.location.href = link.getAttribute('href');
+        });
+    });
+
+    // ── Circuit color indicators ──────────────────────────────────────────
+    (function () {
+        var COLOR_MAP = {{ circuit_color_map_json|safe }};
+        // Persist so the history page can use the same colors without a server roundtrip
+        try { localStorage.setItem('rs_circuit_colors', JSON.stringify(COLOR_MAP)); } catch (e) {}
+
+        // Week/Day cards — set CSS custom property so the dot picks it up
+        document.querySelectorAll('.rs-card[data-circuit-id]').forEach(function (card) {
+            var color = COLOR_MAP[card.getAttribute('data-circuit-id')];
+            if (color) card.style.setProperty('--circuit-color', color);
+        });
+
+        // Month chips — color the left-bar accent to match sidebar
+        document.querySelectorAll('.rs-month-chip[data-circuit-id]').forEach(function (chip) {
+            var color = COLOR_MAP[chip.getAttribute('data-circuit-id')];
+            if (color) chip.style.borderLeftColor = color;
+        });
+    }());
+
+    // ── RSVP badges on cards ──────────────────────────────────────────────
+    (function () {
+        var RSVP_MAP = {{ user_rsvp_map_json|safe }};
+        var LABELS = { confirmed: '✓ Going', tentative: '~ Maybe', declined: '✗ Declined' };
+        Object.keys(RSVP_MAP).forEach(function (eid) {
+            var status = RSVP_MAP[eid];
+            var card = document.querySelector('.rs-card[data-event-id="' + eid + '"]');
+            if (!card) return;
+            var meta = card.querySelector('.rs-card-meta');
+            if (!meta) return;
+            var badge = document.createElement('span');
+            badge.className = 'rs-rsvp-badge rs-rsvp-badge--' + status;
+            badge.textContent = LABELS[status] || status;
+            meta.appendChild(badge);
+        });
+    }());
+
+    // ── Calendar filter (visibility + circuit — AND logic) ────────────────
+    (function () {
+        var STORAGE_KEY = 'rs_cal_filters_v2';
+        var allCbs = document.querySelectorAll('.rs-cal-cb');
+        if (!allCbs.length) return;
+
+        // Load persisted state: {hiddenVis: [...], hiddenCir: [...]}
+        var saved = {};
+        try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch (e) {}
+        var hiddenVis = Array.isArray(saved.hiddenVis) ? saved.hiddenVis : [];
+        var hiddenCir = Array.isArray(saved.hiddenCir) ? saved.hiddenCir : [];
+
+        // Restore checkbox state from saved data
+        allCbs.forEach(function (cb) {
+            var group = cb.getAttribute('data-group');
+            var isHidden = group === 'vis'
+                ? hiddenVis.indexOf(cb.value) !== -1
+                : hiddenCir.indexOf(cb.value) !== -1;
+            cb.checked = !isHidden;
+            cb.closest('label').classList.toggle('rs-unchecked', !cb.checked);
+        });
+
+        function collect() {
+            hiddenVis = [];
+            hiddenCir = [];
+            allCbs.forEach(function (cb) {
+                cb.closest('label').classList.toggle('rs-unchecked', !cb.checked);
+                if (!cb.checked) {
+                    if (cb.getAttribute('data-group') === 'vis') {
+                        hiddenVis.push(cb.value);
+                    } else {
+                        hiddenCir.push(cb.value);
+                    }
+                }
+            });
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify({ hiddenVis: hiddenVis, hiddenCir: hiddenCir }));
+            } catch (e) {}
+        }
+
+        function applyFilter() {
+            // An event is visible only if BOTH its visibility type AND circuit are checked
+            document.querySelectorAll('[data-circuit-id]').forEach(function (el) {
+                var isPublic = el.getAttribute('data-is-public') === 'true';
+                var cid = el.getAttribute('data-circuit-id');
+                var visHidden = hiddenVis.indexOf(isPublic ? 'public' : 'private') !== -1;
+                var cirHidden = hiddenCir.indexOf(cid) !== -1;
+                el.style.display = (visHidden || cirHidden) ? 'none' : '';
+            });
+
+            // Refresh month cell dot (mobile)
+            document.querySelectorAll('.rs-month-cell').forEach(function (cell) {
+                var chips = cell.querySelectorAll('.rs-month-chip');
+                var any = false;
+                chips.forEach(function (c) { if (c.style.display !== 'none') any = true; });
+                cell.classList.toggle('has-events', any);
+            });
+        }
+
+        allCbs.forEach(function (cb) {
+            cb.addEventListener('change', function () { collect(); applyFilter(); });
+        });
+
+        // All / None group buttons
+        document.querySelectorAll('.rs-filter-all, .rs-filter-none').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var group = btn.getAttribute('data-group');
+                var check = btn.classList.contains('rs-filter-all');
+                document.querySelectorAll('.rs-cal-cb[data-group="' + group + '"]').forEach(function (cb) {
+                    cb.checked = check;
+                });
+                collect();
+                applyFilter();
+            });
+        });
+
+        applyFilter();
+    }());
+}());
+</script>
+{% endblock %}

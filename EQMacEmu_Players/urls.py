@@ -57,6 +57,7 @@ urlpatterns = [
     path("spells/", include("spells.urls")),
     path("zones/", include("zones.urls")),
     path("mdeditor/", include('mdeditor.urls')),
+    path("raids/", include("raid_scheduler.urls")),
     path('robots.txt', robots_txt),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

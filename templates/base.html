@@ -169,7 +169,7 @@
         // Find the submit button that triggered this (last focused, or first submit btn)
         var btn = form.querySelector('button[type="submit"]:focus') ||
                   form.querySelector('button[type="submit"]');
-        if (!btn || btn.dataset.noLoading) return;
+        if (!btn || btn.hasAttribute('data-no-loading')) return;
         btn.setAttribute('data-original-text', btn.textContent);
         btn.setAttribute('data-loading-text', 'true');
         btn.disabled = true;

@@ -1,80 +1,185 @@
 {% load static %}
 <nav class="side-nav" id="sideNav" aria-label="DKP navigation">
+{% include "includes/sidebar_app_strip.html" %}
 
-    {% for circuit in dkp_circuits %}
+    {% if dkp_circuits %}
+
+        {% if dkp_circuits|length > 1 %}
+        <!-- Circuit switcher — stays on same page type when switching -->
         <div class="side-nav-section">
-            <div class="side-nav-title">{{ circuit.name }}</div>
-            <a href="{% url 'dkp:standings' circuit.id %}" class="side-nav-item"
-               {% if request.resolver_match.url_name == 'standings' and request.resolver_match.kwargs.circuit_id == circuit.id %}aria-current="page"{% endif %}>
-                Standings
-            </a>
-            <a href="{% url 'dkp:raid_list' circuit.id %}" class="side-nav-item"
-               {% if request.resolver_match.url_name == 'raid_list' and request.resolver_match.kwargs.circuit_id == circuit.id %}aria-current="page"{% endif %}>
-                Raid History
-            </a>
-            <a href="{% url 'dkp:auction_list' circuit.id %}" class="side-nav-item"
-               {% if request.resolver_match.url_name == 'auction_list' and request.resolver_match.kwargs.circuit_id == circuit.id %}aria-current="page"{% endif %}>
-                Auctions
+            <div class="side-nav-title">Circuit</div>
+            <div class="dkp-circuit-switcher">
+
+                {% for item in dkp_circuits_with_membership %}
+                {% with c=item.circuit m=item.membership url_name=request.resolver_match.url_name %}
+                <a href="{% if url_name == 'dashboard' or url_name == 'dashboard_member' %}{% url 'dkp:dashboard_member' m.id %}{% elif url_name == 'transaction_history' %}{% url 'dkp:transaction_history' m.id %}{% elif url_name == 'attendance_history' %}{% url 'dkp:attendance_history' m.id %}{% elif url_name == 'raid_list' %}{% url 'dkp:raid_list' c.id %}{% elif url_name == 'auction_list' %}{% url 'dkp:auction_list' c.id %}{% elif url_name == 'raid_manage_list' and c.id in officer_circuit_ids %}{% url 'dkp:raid_manage_list' c.id %}{% elif url_name == 'member_list' and c.id in officer_circuit_ids %}{% url 'dkp:member_list' c.id %}{% elif url_name == 'circuit_config' and c.id in officer_circuit_ids %}{% url 'dkp:circuit_config' c.id %}{% elif url_name == 'mob_manage' and c.id in officer_circuit_ids %}{% url 'dkp:mob_manage' c.id %}{% elif url_name == 'circuit_adjustments' and c.id in officer_circuit_ids %}{% url 'dkp:circuit_adjustments' c.id %}{% else %}{% url 'dkp:standings' c.id %}{% endif %}"
+                   class="dkp-circuit-opt {% if c.id == active_circuit.id %}active{% endif %}">
+                    {{ c.name }}
+                </a>
+                {% endwith %}
+                {% endfor %}
+            </div>
+            <a href="{% url 'dkp:circuit_list' %}" class="dkp-browse-link"
+               {% if request.resolver_match.url_name == 'circuit_list' %}aria-current="page"{% endif %}>
+                Browse all circuits
             </a>
         </div>
-    {% empty %}
+        {% endif %}
+
+        {% if dkp_circuits|length == 1 %}
+        <div style="padding: 0 16px 0.5rem;">
+            <a href="{% url 'dkp:circuit_list' %}" class="dkp-browse-link"
+               style="margin:0;padding:0;"
+               {% if request.resolver_match.url_name == 'circuit_list' %}aria-current="page"{% endif %}>
+                Browse all circuits
+            </a>
+        </div>
+        {% endif %}
+
+        <!-- Circuit nav + personal links — all scoped to active circuit -->
+        {% if active_circuit %}
+        <div class="side-nav-section">
+            <div class="side-nav-title">
+                {% if dkp_circuits|length > 1 %}
+                My DKP
+                <span class="dkp-ctx-label">{{ active_circuit.name }}</span>
+                {% else %}
+                {{ active_circuit.name }}
+                {% endif %}
+            </div>
+            {% if active_circuit_membership %}
+            <a href="{% url 'dkp:dashboard_member' active_circuit_membership.id %}" class="side-nav-item"
+               {% if request.resolver_match.url_name == 'dashboard' or request.resolver_match.url_name == 'dashboard_member' %}aria-current="page"{% endif %}>
+                Dashboard
+            </a>
+            {% endif %}
+            <a href="{% url 'dkp:standings' active_circuit.id %}" class="side-nav-item"
+               {% if request.resolver_match.url_name == 'standings' and request.resolver_match.kwargs.circuit_id == active_circuit.id %}aria-current="page"{% endif %}>
+                Standings
+            </a>
+            <a href="{% url 'dkp:raid_list' active_circuit.id %}" class="side-nav-item"
+               {% if request.resolver_match.url_name == 'raid_list' and request.resolver_match.kwargs.circuit_id == active_circuit.id %}aria-current="page"{% endif %}>
+                Raid History
+            </a>
+            <a href="{% url 'dkp:auction_list' active_circuit.id %}" class="side-nav-item"
+               {% if request.resolver_match.url_name == 'auction_list' and request.resolver_match.kwargs.circuit_id == active_circuit.id %}aria-current="page"{% endif %}>
+                Auctions
+            </a>
+            {% if active_circuit_membership %}
+            <a href="{% url 'dkp:transaction_history' active_circuit_membership.id %}" class="side-nav-item"
+               {% if request.resolver_match.url_name == 'transaction_history' %}aria-current="page"{% endif %}>
+                Transactions
+            </a>
+            {% endif %}
+        </div>
+        {% endif %}
+
+
+        <!-- Officer tools -->
+        {% if active_circuit.id in officer_circuit_ids %}
+        <div class="side-nav-section">
+            <div class="side-nav-title">
+                Officer
+                {% if dkp_circuits|length > 1 %}
+                <span class="dkp-ctx-label">{{ active_circuit.name }}</span>
+                {% endif %}
+            </div>
+            <a href="{% url 'dkp:raid_manage_list' active_circuit.id %}" class="side-nav-item"
+               {% if request.resolver_match.url_name == 'raid_manage_list' %}aria-current="page"{% endif %}>
+                Manage Raids
+            </a>
+            <a href="{% url 'dkp:member_list' active_circuit.id %}" class="side-nav-item"
+               {% if request.resolver_match.url_name == 'member_list' %}aria-current="page"{% endif %}>
+                Manage Members
+                {% if dkp_pending_count %}<span class="badge bg-warning text-dark ms-1">{{ dkp_pending_count }}</span>{% endif %}
+            </a>
+            <a href="{% url 'dkp:circuit_config' active_circuit.id %}" class="side-nav-item"
+               {% if request.resolver_match.url_name == 'circuit_config' %}aria-current="page"{% endif %}>
+                Circuit Settings
+            </a>
+            <a href="{% url 'dkp:mob_manage' active_circuit.id %}" class="side-nav-item"
+               {% if request.resolver_match.url_name == 'mob_manage' %}aria-current="page"{% endif %}>
+                Manage Mobs
+            </a>
+            <a href="{% url 'dkp:circuit_adjustments' active_circuit.id %}" class="side-nav-item"
+               {% if request.resolver_match.url_name == 'circuit_adjustments' %}aria-current="page"{% endif %}>
+                DKP Adjustments
+            </a>
+        </div>
+        {% endif %}
+
+    {% else %}
         <div class="side-nav-section">
             <div class="side-nav-title">DKP</div>
             <a href="{% url 'dkp:circuit_list' %}" class="side-nav-item">Circuits</a>
         </div>
-    {% endfor %}
+    {% endif %}
 
-    {% if user.is_authenticated %}
-        <div class="side-nav-section">
-            <div class="side-nav-title">My DKP</div>
-            <a href="{% url 'dkp:dashboard' %}" class="side-nav-item"
-               {% if request.resolver_match.url_name == 'dashboard' %}aria-current="page"{% endif %}>
-                Dashboard
-            </a>
-            {% if dkp_membership %}
-                <a href="{% url 'dkp:transaction_history' dkp_membership.id %}" class="side-nav-item"
-                   {% if request.resolver_match.url_name == 'transaction_history' %}aria-current="page"{% endif %}>
-                    Transactions
-                </a>
+    {% if can_approve_circuits %}
+    <hr class="side-nav-divider">
+    <div class="side-nav-section">
+        <div class="side-nav-title">Admin</div>
+        <a href="{% url 'dkp:circuit_request_list' %}" class="side-nav-item"
+           {% if request.resolver_match.url_name == 'circuit_request_list' %}aria-current="page"{% endif %}>
+            Circuit Requests
+            {% if pending_circuit_requests %}
+            <span class="badge bg-warning text-dark ms-1">{{ pending_circuit_requests }}</span>
             {% endif %}
-        </div>
+        </a>
+    </div>
     {% endif %}
 
-    {% if dkp_is_officer %}
-        <div class="side-nav-section">
-            <div class="side-nav-title">Officer</div>
-            {% for circuit in dkp_circuits %}
-                {% if circuit.id in officer_circuit_ids %}
-                    <div style="color:#8aa3ff; font-size:11px; text-transform:uppercase; letter-spacing:1px; padding: 6px 16px 2px;">
-                        {{ circuit.name }}
-                    </div>
-                    <a href="{% url 'dkp:raid_manage_list' circuit.id %}" class="side-nav-item"
-                       {% if request.resolver_match.url_name == 'raid_manage_list' %}aria-current="page"{% endif %}>
-                        Manage Raids
-                    </a>
-                    <a href="{% url 'dkp:member_list' circuit.id %}" class="side-nav-item"
-                       {% if request.resolver_match.url_name == 'member_list' %}aria-current="page"{% endif %}>
-                        Manage Members{% if dkp_pending_count %}
-                        <span class="badge bg-warning text-dark">{{ dkp_pending_count }}</span>{% endif %}
-                    </a>
-                    <a href="{% url 'dkp:circuit_config' circuit.id %}" class="side-nav-item"
-                       {% if request.resolver_match.url_name == 'circuit_config' %}aria-current="page"{% endif %}>
-                        Circuit Settings
-                    </a>
-                    <a href="{% url 'dkp:mob_manage' circuit.id %}" class="side-nav-item"
-                       {% if request.resolver_match.url_name == 'mob_manage' %}aria-current="page"{% endif %}>
-                        Manage Mobs
-                    </a>
-                    <a href="{% url 'dkp:circuit_adjustments' circuit.id %}" class="side-nav-item"
-                       {% if request.resolver_match.url_name == 'circuit_adjustments' %}aria-current="page"{% endif %}>
-                        DKP Adjustments
-                    </a>
-                {% endif %}
-            {% endfor %}
-        </div>
-    {% endif %}
 
 </nav>
 <button class="side-nav-toggle" type="button" aria-label="Collapse navigation"
         aria-expanded="true" aria-controls="sideNav">&#8249;
 </button>
+
+<style>
+.dkp-circuit-switcher {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 0 8px;
+}
+.dkp-circuit-opt {
+    display: block;
+    padding: 0.3rem 0.6rem;
+    border-radius: 0.35rem;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: background 0.12s, color 0.12s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.dkp-circuit-opt:hover { background: var(--bg-tertiary); color: var(--text-primary); }
+.dkp-circuit-opt.active {
+    background: rgba(138,163,255,0.12);
+    color: #8aa3ff;
+    font-weight: 600;
+}
+.dkp-browse-link {
+    display: block;
+    padding: 0.2rem 0.6rem 0.1rem;
+    margin: 0.25rem 8px 0;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    opacity: 0.6;
+    transition: opacity 0.12s, color 0.12s;
+}
+.dkp-browse-link:hover,
+.dkp-browse-link[aria-current] { opacity: 1; color: var(--text-secondary); }
+.dkp-ctx-label {
+    display: block;
+    font-size: 0.68rem;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+    color: #8aa3ff;
+    margin-top: 1px;
+    opacity: 0.8;
+}
+</style>

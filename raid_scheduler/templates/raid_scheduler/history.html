@@ -1,0 +1,460 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Raid History — EQ Archives{% endblock %}
+
+{% block extra_css %}
+<style>
+.rsh-wrap {
+    max-width: 860px;
+    margin: 1.5rem auto;
+    padding: 0 1rem 5rem;
+}
+
+/* ── Page header ─────────────────────────────────────────────────────── */
+.rsh-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+}
+.rsh-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+.rsh-count {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+/* ── Search + filter bar ─────────────────────────────────────────────── */
+.rsh-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.1rem;
+}
+.rsh-search-wrap {
+    flex: 1 1 200px;
+    position: relative;
+    min-width: 160px;
+}
+.rsh-search-wrap i {
+    position: absolute;
+    left: 0.6rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    pointer-events: none;
+}
+.rsh-input {
+    width: 100%;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-light);
+    border-radius: 0.4rem;
+    padding: 0.38rem 0.7rem 0.38rem 1.9rem;
+    font-size: 0.83rem;
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color 0.15s;
+    box-sizing: border-box;
+}
+.rsh-input:focus { border-color: var(--link-color); }
+.rsh-input::placeholder { color: var(--text-muted); }
+.rsh-select {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-light);
+    border-radius: 0.4rem;
+    padding: 0.38rem 0.65rem;
+    font-size: 0.83rem;
+    color: var(--text-secondary);
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.15s;
+}
+.rsh-select:focus { border-color: var(--link-color); }
+.rsh-date-input {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-light);
+    border-radius: 0.4rem;
+    padding: 0.38rem 0.65rem;
+    font-size: 0.83rem;
+    color: var(--text-secondary);
+    outline: none;
+    transition: border-color 0.15s;
+    width: 130px;
+}
+.rsh-date-input:focus { border-color: var(--link-color); }
+.rsh-btn-apply {
+    padding: 0.38rem 0.85rem;
+    background: var(--accent-color);
+    border: none;
+    border-radius: 0.4rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #0f0f0f;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    white-space: nowrap;
+}
+.rsh-btn-apply:hover { opacity: 0.88; }
+.rsh-btn-clear {
+    padding: 0.38rem 0.65rem;
+    background: none;
+    border: 1px solid var(--border-light);
+    border-radius: 0.4rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+}
+.rsh-btn-clear:hover { color: var(--text-primary); border-color: var(--border-color); }
+
+/* ── Event list ──────────────────────────────────────────────────────── */
+.rsh-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+.rsh-row {
+    display: grid;
+    grid-template-columns: 80px 1fr auto;
+    gap: 0 1rem;
+    align-items: start;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-light);
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    position: relative;
+    transition: background 0.12s;
+    text-decoration: none;
+}
+.rsh-row:hover { background: var(--bg-tertiary); }
+
+/* Date column */
+.rsh-date {
+    text-align: center;
+    flex-shrink: 0;
+}
+.rsh-date-month {
+    display: block;
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-muted);
+}
+.rsh-date-day {
+    display: block;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    line-height: 1.1;
+}
+.rsh-date-year {
+    display: block;
+    font-size: 0.65rem;
+    color: var(--text-muted);
+}
+
+/* Main column */
+.rsh-main {}
+.rsh-event-title {
+    font-size: 0.93rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.2rem;
+    line-height: 1.3;
+}
+.rsh-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem 0.6rem;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 0.3rem;
+}
+.rsh-circuit-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--text-muted);
+    vertical-align: middle;
+    margin-right: 0.2rem;
+}
+.rsh-targets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin-top: 0.25rem;
+}
+.rsh-target-tag {
+    font-size: 0.62rem;
+    padding: 0.06rem 0.3rem;
+    border-radius: 0.2rem;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: var(--text-muted);
+}
+
+/* Right column */
+.rsh-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.35rem;
+    flex-shrink: 0;
+}
+.rsh-badge {
+    display: inline-block;
+    font-size: 0.62rem;
+    font-weight: 700;
+    padding: 0.12rem 0.4rem;
+    border-radius: 0.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+}
+.rsh-badge--closed    { background: rgba(150,150,150,0.12); color: var(--text-muted); }
+.rsh-badge--expired   { background: rgba(150,150,150,0.12); color: var(--text-muted); }
+.rsh-badge--cancelled { background: rgba(255,107,107,0.12); color: #ff6b6b; }
+.rsh-signup-count {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+.rsh-signup-count i { font-size: 0.65rem; margin-right: 0.2rem; }
+
+/* ── Empty state ─────────────────────────────────────────────────────── */
+.rsh-empty {
+    text-align: center;
+    padding: 3.5rem 1rem;
+    color: var(--text-muted);
+}
+.rsh-empty-icon { font-size: 2rem; margin-bottom: 0.75rem; opacity: 0.3; }
+.rsh-empty p { font-size: 0.9rem; margin: 0; }
+.rsh-empty a { color: var(--link-color); }
+
+/* ── Pagination ──────────────────────────────────────────────────────── */
+.rsh-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+.rsh-page-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2rem;
+    height: 2rem;
+    padding: 0 0.5rem;
+    border-radius: 0.35rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-light);
+    background: var(--bg-secondary);
+    transition: background 0.12s, color 0.12s, border-color 0.12s;
+}
+.rsh-page-btn:hover { background: var(--bg-tertiary); color: var(--text-primary); }
+.rsh-page-btn.active {
+    background: var(--accent-color);
+    border-color: var(--accent-color);
+    color: #0f0f0f;
+}
+.rsh-page-btn.disabled {
+    opacity: 0.35;
+    pointer-events: none;
+}
+.rsh-page-info {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    padding: 0 0.25rem;
+}
+
+/* Mobile tweaks */
+@media (max-width: 540px) {
+    .rsh-row {
+        grid-template-columns: 60px 1fr auto;
+        gap: 0 0.6rem;
+        padding: 0.65rem 0.75rem;
+    }
+    .rsh-date-day { font-size: 1.1rem; }
+    .rsh-date-year { display: none; }
+    .rsh-event-title { font-size: 0.87rem; }
+}
+</style>
+{% endblock %}
+
+{% block sidebar %}{% include "includes/sidebar_raids.html" %}{% endblock %}
+
+{% block content %}
+<div class="rsh-wrap">
+
+    <div class="rsh-header">
+        <h1 class="rsh-title">Raid History</h1>
+        {% if page_obj.paginator.count %}
+        <span class="rsh-count">{{ page_obj.paginator.count }} event{{ page_obj.paginator.count|pluralize }}</span>
+        {% endif %}
+    </div>
+
+    <!-- Search + filters -->
+    <form method="get" action="" class="rsh-filters">
+        <div class="rsh-search-wrap">
+            <i class="fas fa-search" aria-hidden="true"></i>
+            <input type="text" name="q" class="rsh-input"
+                   placeholder="Search title or target…"
+                   value="{{ q }}" aria-label="Search raids">
+        </div>
+
+        {% if circuit_choices %}
+        <select name="circuit" class="rsh-select" aria-label="Filter by circuit">
+            <option value="">All Circuits</option>
+            {% for c in circuit_choices %}
+            <option value="{{ c.circuit_id }}" {% if circuit_id == c.circuit_id|stringformat:"s" %}selected{% endif %}>
+                {{ c.circuit__name }}
+            </option>
+            {% endfor %}
+            <option value="other" {% if circuit_id == 'other' %}selected{% endif %}>Other / Write-in</option>
+        </select>
+        {% endif %}
+
+        <input type="date" name="from" class="rsh-date-input"
+               value="{{ date_from }}" aria-label="From date" title="From">
+        <input type="date" name="to" class="rsh-date-input"
+               value="{{ date_to }}" aria-label="To date" title="To">
+
+        <button type="submit" class="rsh-btn-apply">Search</button>
+
+        {% if q or circuit_id or date_from or date_to %}
+        <a href="{% url 'raid_scheduler:history' %}" class="rsh-btn-clear">Clear</a>
+        {% endif %}
+    </form>
+
+    <!-- Results -->
+    {% if page_obj.object_list %}
+    <div class="rsh-list" id="rsh-list">
+        {% for event in page_obj %}
+        <a href="{% url 'raid_scheduler:event_detail' event.pk %}"
+           class="rsh-row"
+           aria-label="{{ event.title }}, {{ event.date|date:'F j Y' }}">
+
+            <div class="rsh-date" aria-hidden="true">
+                <span class="rsh-date-month">{{ event.date|date:'M' }}</span>
+                <span class="rsh-date-day">{{ event.date|date:'j' }}</span>
+                <span class="rsh-date-year">{{ event.date|date:'Y' }}</span>
+            </div>
+
+            <div class="rsh-main">
+                <div class="rsh-event-title">{{ event.title }}</div>
+                <div class="rsh-meta">
+                    <span>
+                        <span class="rsh-circuit-dot rs-circuit-dot-hist" data-circuit-id="{{ event.circuit_id|default:'' }}" aria-hidden="true"></span>
+                        {{ event.circuit_display }}
+                    </span>
+                    <span>{{ event.start_time|date:'g:i A' }}</span>
+                    {% if not event.is_public %}
+                    <span style="color:var(--accent-color);font-weight:600;">Private</span>
+                    {% endif %}
+                </div>
+                {% with targets=event.targets.all %}
+                {% if targets %}
+                <div class="rsh-targets">
+                    {% for t in targets %}<span class="rsh-target-tag">{{ t.name }}</span>{% endfor %}
+                </div>
+                {% endif %}
+                {% endwith %}
+            </div>
+
+            <div class="rsh-right">
+                <span class="rsh-badge rsh-badge--{{ event.status }}">{{ event.get_status_display }}</span>
+                {% with count=event.signups.count %}
+                {% if count %}
+                <span class="rsh-signup-count">
+                    <i class="fas fa-user-check" aria-hidden="true"></i>{{ count }} RSVP{{ count|pluralize }}
+                </span>
+                {% endif %}
+                {% endwith %}
+            </div>
+
+        </a>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if page_obj.paginator.num_pages > 1 %}
+    <nav class="rsh-pagination" aria-label="Pagination">
+        <a href="?q={{ q }}&circuit={{ circuit_id }}&from={{ date_from }}&to={{ date_to }}&page={{ page_obj.previous_page_number }}"
+           class="rsh-page-btn {% if not page_obj.has_previous %}disabled{% endif %}"
+           aria-label="Previous page">&#8249;</a>
+
+        {% for num in page_obj.paginator.page_range %}
+        {% if num == page_obj.number %}
+        <span class="rsh-page-btn active" aria-current="page">{{ num }}</span>
+        {% elif num == 1 or num == page_obj.paginator.num_pages or num >= page_obj.number|add:"-2" and num <= page_obj.number|add:"2" %}
+        <a href="?q={{ q }}&circuit={{ circuit_id }}&from={{ date_from }}&to={{ date_to }}&page={{ num }}"
+           class="rsh-page-btn">{{ num }}</a>
+        {% elif num == page_obj.number|add:"-3" or num == page_obj.number|add:"3" %}
+        <span class="rsh-page-info">…</span>
+        {% endif %}
+        {% endfor %}
+
+        <a href="?q={{ q }}&circuit={{ circuit_id }}&from={{ date_from }}&to={{ date_to }}&page={{ page_obj.next_page_number }}"
+           class="rsh-page-btn {% if not page_obj.has_next %}disabled{% endif %}"
+           aria-label="Next page">&#8250;</a>
+
+        <span class="rsh-page-info">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        </span>
+    </nav>
+    {% endif %}
+
+    {% else %}
+    <div class="rsh-empty">
+        <div class="rsh-empty-icon"><i class="fas fa-scroll" aria-hidden="true"></i></div>
+        {% if q or circuit_id or date_from or date_to %}
+        <p>No raids match your filters. <a href="{% url 'raid_scheduler:history' %}">Clear filters</a></p>
+        {% else %}
+        <p>No completed raids yet. Check back after your first raid wraps up.</p>
+        {% endif %}
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}
+
+{% block inline_js %}
+<script>
+(function () {
+    // Apply circuit colors to history dots (reuses same palette as board)
+    var dots = document.querySelectorAll('.rs-circuit-dot-hist[data-circuit-id]');
+    if (!dots.length) return;
+    // Pull color map from localStorage cache set by the board page, if available
+    // Otherwise dots remain muted gray — acceptable fallback
+    var COLOR_MAP = {};
+    try {
+        var stored = localStorage.getItem('rs_circuit_colors');
+        if (stored) COLOR_MAP = JSON.parse(stored);
+    } catch (e) {}
+    dots.forEach(function (dot) {
+        var color = COLOR_MAP[dot.getAttribute('data-circuit-id')];
+        if (color) dot.style.background = color;
+    });
+}());
+</script>
+{% endblock %}

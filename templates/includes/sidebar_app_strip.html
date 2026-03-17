@@ -1,0 +1,51 @@
+{% load static %}
+{% with url_app=request.resolver_match.app_name %}
+<div class="app-strip">
+    <a href="{% if active_circuit_membership %}{% url 'dkp:dashboard_member' active_circuit_membership.id %}{% else %}{% url 'dkp:circuit_list' %}{% endif %}"
+       class="app-strip-tab {% if url_app == 'dkp' %}active{% endif %}"
+       aria-label="DKP">
+        <i class="fas fa-coins" aria-hidden="true"></i>
+        <span>DKP</span>
+    </a>
+    <a href="{% url 'raid_scheduler:board' %}"
+       class="app-strip-tab {% if url_app == 'raid_scheduler' %}active{% endif %}"
+       aria-label="Raid Schedule">
+        <i class="fas fa-calendar-alt" aria-hidden="true"></i>
+        <span>Schedule</span>
+    </a>
+</div>
+{% endwith %}
+
+<style>
+.app-strip {
+    display: flex;
+    gap: 4px;
+    padding: 8px 10px 4px;
+    border-bottom: 1px solid var(--border-light);
+    margin-bottom: 4px;
+}
+.app-strip-tab {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.5rem;
+    border-radius: 0.35rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--text-muted);
+    transition: background 0.12s, color 0.12s;
+    letter-spacing: 0.03em;
+}
+.app-strip-tab i { font-size: 0.7rem; }
+.app-strip-tab:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+.app-strip-tab.active {
+    background: rgba(138,163,255,0.12);
+    color: #8aa3ff;
+}
+</style>

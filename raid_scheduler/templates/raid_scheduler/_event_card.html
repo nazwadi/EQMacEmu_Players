@@ -1,0 +1,55 @@
+<div class="rs-card {% if not event.is_public %}rs-card--private{% elif event.status == 'active' %}rs-card--active{% endif %}"
+     role="article"
+     aria-label="{{ event.title }}"
+     data-event-id="{{ event.pk }}"
+     data-circuit-id="{{ event.circuit_id|default:'' }}"
+     data-is-public="{{ event.is_public|yesno:'true,false' }}">
+
+    {# Invisible full-card link — sits below interactive elements in z-order #}
+    <a href="{% url 'raid_scheduler:event_detail' event.pk %}"
+       class="rs-card-overlay"
+       aria-hidden="true"
+       tabindex="-1"></a>
+
+    {% if event.pk in closeable_pks %}
+    <form method="post" action="{% url 'raid_scheduler:close_event' event.pk %}" style="display:inline">
+        {% csrf_token %}
+        <button type="submit" class="rs-close-btn"
+                title="Close this event"
+                onclick="return confirm('Close this raid event?')"
+                aria-label="Close event">
+            <i class="fas fa-times"></i>
+        </button>
+    </form>
+    {% endif %}
+
+    <a href="{% url 'raid_scheduler:event_detail' event.pk %}" class="rs-card-title-link">
+        <div class="rs-card-target">{{ event.title }}</div>
+    </a>
+    <div class="rs-card-meta">
+        <span>{{ event.start_time|date:'g:i A' }}</span>
+        <span class="sep">·</span>
+        <span class="rs-circuit-label">
+            <span class="rs-circuit-dot" aria-hidden="true"></span>{{ event.circuit_display }}</span>
+        {% if not event.is_public %}
+        <span class="rs-badge rs-badge--private">Private</span>
+        {% endif %}
+        {% if event.status == 'active' %}
+        <span class="rs-badge rs-badge--active">Live</span>
+        {% elif event.status == 'scheduled' %}
+        <span class="rs-badge rs-badge--scheduled">Scheduled</span>
+        {% endif %}
+    </div>
+    {% with targets=event.targets.all %}
+    {% if targets %}
+    <div class="rs-card-targets">
+        {% for t in targets %}
+        <span class="rs-target-tag">{{ t.name }}</span>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+    {% if event.notes %}
+    <div class="rs-card-notes">{{ event.notes|truncatechars:80 }}</div>
+    {% endif %}
+</div>

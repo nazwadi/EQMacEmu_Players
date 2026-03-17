@@ -42,7 +42,34 @@
                     {# Header row: name + circuit selector (own view only) #}
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <div class="d-flex align-items-center gap-2">
-                            <h4 class="eq-header mb-0">{{ membership.display_name }}</h4>
+                            <!-- Inline display name editor -->
+                            <span id="dn-display" class="d-flex align-items-center gap-1" style="cursor:default;">
+                                <h4 class="eq-header mb-0">{{ membership.display_name|default:request.user.username }}</h4>
+                                <button type="button" id="dn-edit-btn"
+                                        title="Edit display name"
+                                        style="background:none;border:none;padding:0 2px;cursor:pointer;color:#8aa3ff;font-size:13px;line-height:1;opacity:0.55;transition:opacity 0.12s;"
+                                        onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.55'">
+                                    <i class="fas fa-pencil-alt" aria-hidden="true"></i>
+                                </button>
+                            </span>
+                            <form id="dn-form" method="post"
+                                  action="{% url 'dkp:update_display_name' membership.id %}"
+                                  style="display:none; align-items:center; gap:6px;">
+                                {% csrf_token %}
+                                <input type="text" name="display_name" id="dn-input"
+                                       value="{{ membership.display_name|default:request.user.username }}"
+                                       maxlength="200" autocomplete="off"
+                                       style="background:#1a1a2e;border:1px solid #8aa3ff;border-radius:4px;
+                                              padding:3px 8px;font-size:15px;color:#fcc721;width:180px;outline:none;">
+                                <button type="submit" style="background:#8aa3ff;border:none;border-radius:4px;
+                                        padding:3px 10px;font-size:12px;font-weight:700;color:#0f0f0f;cursor:pointer;">
+                                    Save
+                                </button>
+                                <button type="button" id="dn-cancel"
+                                        style="background:none;border:none;font-size:12px;color:#666;cursor:pointer;padding:0;">
+                                    Cancel
+                                </button>
+                            </form>
                             {% if membership.hide_dashboard %}
                                 <a href="?show_dashboard=1" title="Dashboard hidden from others — click to make visible"
                                    style="color:#ff9; font-size:12px; text-decoration:none;">🔒 Hidden</a>
@@ -327,6 +354,36 @@
                 }
             }
         }
+    });
+}());
+</script>
+{% endif %}
+
+{% if is_own %}
+<script>
+(function () {
+    var display = document.getElementById('dn-display');
+    var form    = document.getElementById('dn-form');
+    var editBtn = document.getElementById('dn-edit-btn');
+    var cancel  = document.getElementById('dn-cancel');
+    var input   = document.getElementById('dn-input');
+    if (!editBtn) return;
+
+    function showForm() {
+        display.style.display = 'none';
+        form.style.display = 'flex';
+        input.focus();
+        input.select();
+    }
+    function showDisplay() {
+        form.style.display = 'none';
+        display.style.display = '';
+    }
+
+    editBtn.addEventListener('click', showForm);
+    cancel.addEventListener('click', showDisplay);
+    input.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') showDisplay();
     });
 }());
 </script>

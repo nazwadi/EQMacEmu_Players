@@ -1,0 +1,320 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Circuit Requests — EQ Archives{% endblock %}
+
+{% block extra_css %}
+<style>
+.crq-wrap {
+    max-width: 760px;
+    margin: 1.5rem auto;
+    padding: 0 1rem 4rem;
+}
+.crq-heading {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 0.25rem;
+}
+.crq-sub {
+    font-size: 0.83rem;
+    color: var(--text-muted);
+    margin: 0 0 1.5rem;
+}
+.crq-section-title {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-muted);
+    margin: 1.5rem 0 0.6rem;
+}
+.crq-section-title:first-of-type { margin-top: 0; }
+
+/* ── Request cards ──────────────────────────────────────────────────── */
+.crq-list { display: flex; flex-direction: column; gap: 0.6rem; }
+.crq-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-light);
+    border-radius: 0.5rem;
+    padding: 1rem 1.1rem;
+}
+.crq-card-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.3rem;
+}
+.crq-name {
+    font-size: 0.97rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+.crq-meta {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+.crq-desc {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+    line-height: 1.45;
+}
+.crq-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+}
+.crq-tag {
+    padding: 0.1rem 0.4rem;
+    border-radius: 0.2rem;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.07);
+}
+.crq-tag--public { border-color: rgba(138,163,255,0.3); color: #8aa3ff; }
+
+/* ── Inline review form ─────────────────────────────────────────────── */
+.crq-review-form {
+    border-top: 1px solid var(--border-light);
+    padding-top: 0.85rem;
+    margin-top: 0.1rem;
+}
+.crq-review-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem 1rem;
+    margin-bottom: 0.6rem;
+}
+@media (max-width: 520px) { .crq-review-grid { grid-template-columns: 1fr; } }
+.crq-field {}
+.crq-label {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: 0.25rem;
+}
+.crq-input {
+    width: 100%;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-light);
+    border-radius: 0.35rem;
+    padding: 0.38rem 0.6rem;
+    font-size: 0.83rem;
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color 0.15s;
+    box-sizing: border-box;
+}
+.crq-input:focus { border-color: var(--link-color); }
+textarea.crq-input { resize: vertical; min-height: 56px; }
+.crq-checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.83rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    margin-top: 0.15rem;
+}
+.crq-checkbox-row input[type="checkbox"] { accent-color: var(--accent-color); cursor: pointer; }
+.crq-review-note-row { grid-column: 1 / -1; }
+.crq-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+.crq-btn-approve {
+    padding: 0.38rem 0.9rem;
+    background: var(--accent-color);
+    border: none;
+    border-radius: 0.35rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #0f0f0f;
+    cursor: pointer;
+    transition: opacity 0.15s;
+}
+.crq-btn-approve:hover { opacity: 0.88; }
+.crq-btn-reject {
+    padding: 0.38rem 0.75rem;
+    background: none;
+    border: 1px solid rgba(255,107,107,0.4);
+    border-radius: 0.35rem;
+    font-size: 0.8rem;
+    color: #ff6b6b;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+}
+.crq-btn-reject:hover { background: rgba(255,107,107,0.08); border-color: #ff6b6b; }
+
+/* ── Status badges ──────────────────────────────────────────────────── */
+.crq-status-badge {
+    display: inline-block;
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.1rem 0.35rem;
+    border-radius: 0.2rem;
+}
+.crq-status-badge--pending  { background: rgba(255,196,102,0.15); color: #ffc466; }
+.crq-status-badge--approved { background: rgba(77,187,95,0.15);   color: #4dbb5f; }
+.crq-status-badge--rejected { background: rgba(255,107,107,0.15); color: #ff6b6b; }
+
+/* ── Reviewed cards ─────────────────────────────────────────────────── */
+.crq-reviewed-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-light);
+    border-radius: 0.5rem;
+    padding: 0.7rem 1rem;
+    opacity: 0.7;
+}
+.crq-reviewed-header {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.2rem;
+}
+.crq-reviewed-name { font-size: 0.88rem; font-weight: 600; color: var(--text-secondary); }
+.crq-reviewed-by { font-size: 0.72rem; color: var(--text-muted); }
+.crq-reviewed-note { font-size: 0.75rem; color: var(--text-muted); font-style: italic; }
+
+/* ── Empty ──────────────────────────────────────────────────────────── */
+.crq-empty {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    border: 1px dashed var(--border-light);
+    border-radius: 0.5rem;
+}
+.crq-empty i { font-size: 1.5rem; opacity: 0.25; display: block; margin-bottom: 0.5rem; }
+</style>
+{% endblock %}
+
+{% block sidebar %}{% include "includes/sidebar_dkp.html" %}{% endblock %}
+
+{% block content %}
+<div class="crq-wrap">
+
+    <h1 class="crq-heading">Circuit Requests</h1>
+    <p class="crq-sub">Review and approve or reject requests for new raid circuits.</p>
+
+    {% if messages %}
+    {% for msg in messages %}
+    <div class="alert alert-{{ msg.tags }} mb-3" role="alert" style="font-size:0.85rem;">{{ msg }}</div>
+    {% endfor %}
+    {% endif %}
+
+    <!-- Pending -->
+    <p class="crq-section-title">Pending
+        {% if pending %}<span style="color:var(--accent-color);margin-left:0.3rem;">({{ pending|length }})</span>{% endif %}
+    </p>
+
+    {% if pending %}
+    <div class="crq-list">
+        {% for cr in pending %}
+        <div class="crq-card">
+            <div class="crq-card-header">
+                <span class="crq-name">{{ cr.name }}</span>
+                <span class="crq-meta">
+                    by <strong>{{ cr.requested_by.username|default:"(deleted)" }}</strong>
+                    &middot; {{ cr.created_at|date:"M j, Y" }}
+                </span>
+            </div>
+
+            {% if cr.description %}
+            <div class="crq-desc">{{ cr.description }}</div>
+            {% endif %}
+
+            <div class="crq-tags">
+                {% if cr.is_public_requested %}
+                <span class="crq-tag crq-tag--public">Requested: Public</span>
+                {% else %}
+                <span class="crq-tag">Requested: Private</span>
+                {% endif %}
+            </div>
+
+            <!-- Approve form -->
+            <div class="crq-review-form">
+                <form method="post" action="{% url 'dkp:circuit_request_review' cr.pk %}">
+                    {% csrf_token %}
+                    <div class="crq-review-grid">
+                        <div class="crq-field">
+                            <label class="crq-label" for="crq-name-{{ cr.pk }}">Circuit Name</label>
+                            <input type="text" id="crq-name-{{ cr.pk }}" name="name"
+                                   class="crq-input" value="{{ cr.name }}" maxlength="200">
+                        </div>
+                        <div class="crq-field" style="display:flex;flex-direction:column;justify-content:flex-end;">
+                            <label class="crq-checkbox-row">
+                                <input type="checkbox" name="is_public" {% if cr.is_public_requested %}checked{% endif %}>
+                                Make circuit public
+                            </label>
+                        </div>
+                        <div class="crq-field crq-review-note-row">
+                            <label class="crq-label" for="crq-note-{{ cr.pk }}">Note <span style="font-weight:400;text-transform:none;">(optional — shown to requester)</span></label>
+                            <textarea id="crq-note-{{ cr.pk }}" name="review_note" class="crq-input"
+                                      placeholder="Optional note for the requester…" maxlength="500"></textarea>
+                        </div>
+                    </div>
+                    <div class="crq-actions">
+                        <button type="submit" name="action" value="approve" class="crq-btn-approve" data-no-loading>
+                            <i class="fas fa-check" aria-hidden="true"></i> Approve &amp; Create Circuit
+                        </button>
+                        <button type="submit" name="action" value="reject" class="crq-btn-reject"
+                                data-no-loading onclick="return confirm('Reject this circuit request?')">
+                            <i class="fas fa-times" aria-hidden="true"></i> Reject
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="crq-empty">
+        <i class="fas fa-inbox" aria-hidden="true"></i>
+        No pending circuit requests.
+    </div>
+    {% endif %}
+
+    <!-- Reviewed history -->
+    {% if reviewed %}
+    <p class="crq-section-title" style="margin-top:2rem;">Recently Reviewed</p>
+    <div class="crq-list">
+        {% for cr in reviewed %}
+        <div class="crq-reviewed-card">
+            <div class="crq-reviewed-header">
+                <span class="crq-reviewed-name">{{ cr.name }}</span>
+                <span class="crq-status-badge crq-status-badge--{{ cr.status }}">{{ cr.get_status_display }}</span>
+                {% if cr.circuit %}
+                <a href="{% url 'dkp:standings' cr.circuit.id %}" style="font-size:0.72rem;color:var(--link-color);">
+                    View Circuit →
+                </a>
+                {% endif %}
+            </div>
+            <div class="crq-reviewed-by">
+                Requested by {{ cr.requested_by.username|default:"(deleted)" }}
+                &middot; Reviewed by {{ cr.reviewed_by.username|default:"(deleted)" }}
+                on {{ cr.reviewed_at|date:"M j, Y" }}
+            </div>
+            {% if cr.review_note %}
+            <div class="crq-reviewed-note">{{ cr.review_note }}</div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

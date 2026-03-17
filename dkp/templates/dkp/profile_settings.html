@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Display Names — EQ Archives{% endblock %}
+
+{% block extra_css %}
+<style>
+.ps-wrap {
+    max-width: 520px;
+    margin: 1.5rem auto;
+    padding: 0 1rem 4rem;
+}
+.ps-heading {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 0.25rem;
+}
+.ps-sub {
+    font-size: 0.83rem;
+    color: var(--text-muted);
+    margin: 0 0 1.5rem;
+    line-height: 1.5;
+}
+.ps-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-light);
+    border-radius: 0.6rem;
+    overflow: hidden;
+    margin-bottom: 1.25rem;
+}
+.ps-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.85rem 1.1rem;
+    border-bottom: 1px solid var(--border-light);
+}
+.ps-row:last-child { border-bottom: none; }
+.ps-circuit-name {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    min-width: 130px;
+    flex-shrink: 0;
+}
+.ps-input {
+    flex: 1;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-light);
+    border-radius: 0.35rem;
+    padding: 0.38rem 0.65rem;
+    font-size: 0.87rem;
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color 0.15s;
+    min-width: 0;
+}
+.ps-input:focus { border-color: var(--link-color); }
+.ps-input::placeholder { color: var(--text-muted); }
+.ps-actions { margin-top: 0.25rem; }
+.ps-submit {
+    padding: 0.45rem 1.1rem;
+    background: var(--accent-color);
+    border: none;
+    border-radius: 0.4rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #0f0f0f;
+    cursor: pointer;
+    transition: opacity 0.15s;
+}
+.ps-submit:hover { opacity: 0.88; }
+.ps-empty {
+    text-align: center;
+    padding: 2.5rem 1rem;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    border: 1px dashed var(--border-light);
+    border-radius: 0.5rem;
+}
+</style>
+{% endblock %}
+
+{% block sidebar %}{% include "includes/sidebar_dkp.html" %}{% endblock %}
+
+{% block content %}
+<div class="ps-wrap">
+
+    <h1 class="ps-heading">Display Names</h1>
+    <p class="ps-sub">
+        Your display name is shown on RSVPs and raid rosters. Each circuit can have a
+        different name — useful if you play different characters across groups.
+    </p>
+
+    {% if messages %}
+    {% for msg in messages %}
+    <div class="alert alert-{{ msg.tags }} mb-3" role="alert" style="font-size:0.85rem;">{{ msg }}</div>
+    {% endfor %}
+    {% endif %}
+
+    {% if memberships %}
+    <form method="post">
+        {% csrf_token %}
+        <div class="ps-card">
+            {% for m in memberships %}
+            <div class="ps-row">
+                <span class="ps-circuit-name">{{ m.circuit.name }}</span>
+                <input type="text" name="display_name_{{ m.pk }}"
+                       class="ps-input"
+                       value="{{ m.display_name|default:'' }}"
+                       placeholder="{{ user.username }}"
+                       maxlength="200"
+                       aria-label="Display name for {{ m.circuit.name }}">
+            </div>
+            {% endfor %}
+        </div>
+        <div class="ps-actions">
+            <button type="submit" class="ps-submit">Save Display Names</button>
+        </div>
+    </form>
+    {% else %}
+    <div class="ps-empty">
+        You are not an active member of any circuits yet.
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

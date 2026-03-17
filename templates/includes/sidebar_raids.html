@@ -1,0 +1,84 @@
+{% load static %}
+<nav class="side-nav" id="sideNav" aria-label="Raid Schedule navigation">
+{% include "includes/sidebar_app_strip.html" %}
+
+    <div class="side-nav-section">
+        <div class="side-nav-title">Raid Schedule</div>
+        <a href="{% url 'raid_scheduler:board' %}" class="side-nav-item"
+           {% if request.resolver_match.url_name == 'board' %}aria-current="page"{% endif %}>
+            Public Board
+        </a>
+        {% if user.is_authenticated %}
+        <a href="{% url 'raid_scheduler:schedule' %}" class="side-nav-item"
+           {% if request.resolver_match.url_name == 'schedule' %}aria-current="page"{% endif %}>
+            Schedule a Raid
+        </a>
+        {% endif %}
+        <a href="{% url 'raid_scheduler:history' %}" class="side-nav-item"
+           {% if request.resolver_match.url_name == 'history' %}aria-current="page"{% endif %}>
+            History
+        </a>
+    </div>
+
+    {% if filter_circuits or filter_has_writein %}
+    <hr class="side-nav-divider">
+    <div class="side-nav-section">
+
+        <!-- Visibility group -->
+        <div class="rs-filter-hdr">
+            <div class="side-nav-title" style="margin:0">Visibility</div>
+            {% if user.is_authenticated %}
+            <div class="rs-filter-allnone">
+                <button type="button" class="rs-filter-all" data-group="vis">All</button>
+                <span class="rs-sep">·</span>
+                <button type="button" class="rs-filter-none" data-group="vis">None</button>
+            </div>
+            {% endif %}
+        </div>
+
+        <label class="rs-cal-filter" style="--cal-color:#8aa3ff">
+            <input type="checkbox" class="rs-cal-cb" data-group="vis" value="public" checked>
+            <span class="rs-cal-check" aria-hidden="true"></span>
+            Public Events
+        </label>
+        {% if user.is_authenticated %}
+        <label class="rs-cal-filter" style="--cal-color:#fcc721">
+            <input type="checkbox" class="rs-cal-cb" data-group="vis" value="private" checked>
+            <span class="rs-cal-check" aria-hidden="true"></span>
+            Private Events
+        </label>
+        {% endif %}
+
+        <!-- Circuits group -->
+        <div class="rs-filter-group-gap"></div>
+        <div class="rs-filter-hdr">
+            <div class="side-nav-title" style="margin:0">Circuits</div>
+            <div class="rs-filter-allnone">
+                <button type="button" class="rs-filter-all" data-group="circuit">All</button>
+                <span class="rs-sep">·</span>
+                <button type="button" class="rs-filter-none" data-group="circuit">None</button>
+            </div>
+        </div>
+
+        {% for c in filter_circuits %}
+        <label class="rs-cal-filter" style="--cal-color:{{ c.color }}">
+            <input type="checkbox" class="rs-cal-cb" data-group="circuit" value="{{ c.id }}" checked>
+            <span class="rs-cal-check" aria-hidden="true"></span>
+            {{ c.name }}
+        </label>
+        {% endfor %}
+        {% if filter_has_writein %}
+        <label class="rs-cal-filter" style="--cal-color:#888">
+            <input type="checkbox" class="rs-cal-cb" data-group="circuit" value="" checked>
+            <span class="rs-cal-check" aria-hidden="true"></span>
+            Other
+        </label>
+        {% endif %}
+
+    </div>
+    {% endif %}
+
+</nav>
+<button class="side-nav-toggle" type="button" aria-label="Collapse navigation"
+        aria-expanded="true" aria-controls="sideNav">&#8249;
+</button>

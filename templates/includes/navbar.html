@@ -241,6 +241,14 @@
                                 {% endif %}
                             </ul>
 
+                            <ul class="mega-menu-col" role="list">
+                                <li class="mega-menu-heading" aria-hidden="true">Raid Schedule</li>
+                                <li><a class="dropdown-item" href="{% url 'raid_scheduler:board' %}">Public Board</a></li>
+                                {% if user.is_authenticated %}
+                                <li><a class="dropdown-item" href="{% url 'raid_scheduler:schedule' %}">Schedule a Raid</a></li>
+                                {% endif %}
+                            </ul>
+
                         </div>
                     </div>
                 </li>
