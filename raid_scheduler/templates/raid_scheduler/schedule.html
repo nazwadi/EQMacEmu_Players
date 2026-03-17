@@ -294,6 +294,18 @@
 .rsf-avail-item:hover,
 .rsf-avail-item.keyboard-focus { background: rgba(138,163,255,0.07); }
 .rsf-avail-item.already-selected { opacity: 0.3; pointer-events: none; }
+.rsf-expansion-hdr {
+    padding: 0.35rem 0.6rem 0.15rem;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #8aa3ff;
+    opacity: 0.7;
+    border-top: 1px solid rgba(138,163,255,0.1);
+    margin-top: 2px;
+}
+.rsf-expansion-hdr:first-child { border-top: none; margin-top: 0; }
 .rsf-avail-name { font-size: 0.82rem; color: var(--text-primary); }
 .rsf-avail-zone {
     font-size: 0.68rem;
@@ -769,7 +781,17 @@
             return;
         }
 
+        var lastExpansion = null;
         visible.forEach(function (t) {
+            // Insert expansion header when group changes (only when not searching)
+            if (!query && t.expansion && t.expansion !== lastExpansion) {
+                var hdr = document.createElement('div');
+                hdr.className = 'rsf-expansion-hdr';
+                hdr.textContent = t.expansion;
+                availEl.appendChild(hdr);
+                lastExpansion = t.expansion;
+            }
+
             var row = document.createElement('div');
             row.className = 'rsf-avail-item';
             row.setAttribute('role', 'option');
@@ -781,7 +803,11 @@
 
             var zoneEl = document.createElement('span');
             zoneEl.className = 'rsf-avail-zone';
-            zoneEl.textContent = t.description;
+            var desc = t.description;
+            if (desc && desc.indexOf(' \u2014 ') !== -1) {
+                desc = desc.split(' \u2014 ').slice(1).join(' \u2014 ');
+            }
+            zoneEl.textContent = desc;
 
             row.appendChild(nameEl);
             row.appendChild(zoneEl);
