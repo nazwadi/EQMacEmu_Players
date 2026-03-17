@@ -62,6 +62,14 @@ class RaidEventForm(forms.ModelForm):
 
     @staticmethod
     def targets_json():
-        """Serialised target list for the JS picker."""
-        targets = RaidTarget.objects.filter(is_active=True).order_by('name').values('id', 'name', 'description')
-        return json.dumps(list(targets))
+        """Serialised target list for the JS picker, grouped by expansion."""
+        EXPANSION_ORDER = {'Luclin': 0, 'Velious': 1, 'Kunark': 2, 'Classic': 3, 'PoP': 4}
+        targets = list(RaidTarget.objects.filter(is_active=True).values('id', 'name', 'description'))
+        for t in targets:
+            expansion = t['description'].split(' \u2014 ')[0] if ' \u2014 ' in t['description'] else 'Other'
+            t['expansion'] = expansion
+            t['_order'] = (EXPANSION_ORDER.get(expansion, 99), t['name'])
+        targets.sort(key=lambda t: t['_order'])
+        for t in targets:
+            del t['_order']
+        return json.dumps(targets)
