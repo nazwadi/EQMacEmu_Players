@@ -1,23 +1,23 @@
 ## Vanilla Pre-Planar Gear
 
 ---
-* Ears – Opalline Earring, Batskull Earring, Golden Sapphire Earring
-* Fingers – Platinum Fire Wedding Ring, Electrum Star Ruby Ring, Ring of Goblin Lords
-* Neck – A Gypsy Medallion, Cat Eye Platinum Necklace, Sapphire Platinum Necklace, Split Paw Tooth Necklace
-* Head – Crown of King Tranix, Siryn Hair Hood, Mane Attraction, Runed Cowl, Savant's Cap
-* Face – Incandescent Mask, Platinum Star Ruby Veil
-* Chest – Robe of the Ishva, Shining Metallic Robes, Robe of the Oracle, Flowing Black Robe
-* Arms – Gatorscale Sleeves, Embroidered Black Sleeves, Hollowed Bone Bracers
-* Back – White Dragonscale Cloak, Mystic Cloak, Molten Cloak, Hooded Black Cloak
-* Waist – Giants Reminder String, Braided Cinch Cord
-* Shoulders – Embroidered Black Cape
-* Wrists – Golden Cat Eye Bracelet, Bracelet of Woven Grass, Golden Chitin Bracer
-* Legs – Black Chitin Leggings, Drake-hide Leggings
-* Hands – Incandescent Gloves, Impskin Gloves, Dusty Bloodstained Gloves
-* Feet – Golden Efreeti Boots, Wolf Fur Slippers
-* Primary – Rod of Insidious Glamour, Stein of Moggok, A Glowing Black Stone
-* Secondary – A Crude Stein, Rokyls Channelling Crystal, Stein of Moggok, A Glowing Black Stone
-* Range – Dragoon Dirk, Thex Dagger
+* Ears - Opalline Earring, Batskull Earring, Golden Sapphire Earring
+* Fingers - Platinum Fire Wedding Ring, Electrum Star Ruby Ring, Ring of Goblin Lords
+* Neck - A Gypsy Medallion, Cat Eye Platinum Necklace, Sapphire Platinum Necklace, Split Paw Tooth Necklace
+* Head - Crown of King Tranix, Siryn Hair Hood, Mane Attraction, Runed Cowl, Savant's Cap
+* Face - Incandescent Mask, Platinum Star Ruby Veil
+* Chest - Robe of the Ishva, Shining Metallic Robes, Robe of the Oracle, Flowing Black Robe
+* Arms - Gatorscale Sleeves, Embroidered Black Sleeves, Hollowed Bone Bracers
+* Back - White Dragonscale Cloak, Mystic Cloak, Molten Cloak, Hooded Black Cloak
+* Waist - Giants Reminder String, Braided Cinch Cord
+* Shoulders - Embroidered Black Cape
+* Wrists - Golden Cat Eye Bracelet, Bracelet of Woven Grass, Golden Chitin Bracer
+* Legs - Black Chitin Leggings, Drake-hide Leggings
+* Hands - Incandescent Gloves, Impskin Gloves, Dusty Bloodstained Gloves
+* Feet - Golden Efreeti Boots, Wolf Fur Slippers
+* Primary - Rod of Insidious Glamour, Stein of Moggok, A Glowing Black Stone
+* Secondary - A Crude Stein, Rokyls Channelling Crystal, Stein of Moggok, A Glowing Black Stone
+* Range - Dragoon Dirk, Thex Dagger
 
 ## Vanilla Planar Gear
 
@@ -70,23 +70,23 @@ Gear suggestions for Kunark raiding (51+) Enchanters. May include a short progre
 ---
 This section is for pre-raid Velious gear (requiring one group or less to obtain). Includes Thurg, Kael and SS class armors. EXCLUDES NToV, ST, boss mob drops. May include a short progression from "good" through "best" in slot. 
 
-* Ears – Helssen's Prismatic Trinket
-* Fingers – Velium Fire Wedding Ring, Djarns Amethyst Ring, Coldain Hero's Insignia Ring
-* Neck – Ayillish's Talisman or other +6 Talisman
-* Head – Ice Silk Cap, Circlet of the Falinkan, Illusionist's Headband, Mischievous Dazzler Crown
-* Face – Crystal Spider Eyes
-* Chest – Ice Silk Robe, Beguiler's Robe, Illusionist's Robe, Mischievous Dazzler Robe
-* Arms – Ice Silk Sleeves, Beguiler's Sleeves, Illusionist's Sleeves
-* Back – Shimmering Terror Hide Cloak, Hierophant's Cloak, Cloak of Confusion
-* Waist – Spider Fur Belt, Belt of Inconsistency
-* Shoulders – Wurm Lord Shawl, Neriad Shawl
-* Wrists – Bracelet of Frostbite, Illusionist's Wristguard
-* Legs – Beguiler's Trousers, Ice Silk Pantaloons, Illusionist's Pantaloons, Tanned Iksar Hide Leggings
-* Hands – Illusionist's Gloves
-* Feet – Spider Fur-Lined Boots, Illusionist's Slippers
-* Primary – Rod of Insidious Glamour, Book of Dawn, Staff of the Serpent
-* Secondary – Book of Dawn, Orb of the Infinite Void
-* Range – Kromzek Surveyor Scope, Purified Crystal Dagger, Sickly Glowing Orb, Writ of Di`zok
+* Ears - Helssen's Prismatic Trinket
+* Fingers - Velium Fire Wedding Ring, Djarns Amethyst Ring, Coldain Hero's Insignia Ring
+* Neck - Ayillish's Talisman or other +6 Talisman
+* Head - Ice Silk Cap, Circlet of the Falinkan, Illusionist's Headband, Mischievous Dazzler Crown
+* Face - Crystal Spider Eyes
+* Chest - Ice Silk Robe, Beguiler's Robe, Illusionist's Robe, Mischievous Dazzler Robe
+* Arms - Ice Silk Sleeves, Beguiler's Sleeves, Illusionist's Sleeves
+* Back - Shimmering Terror Hide Cloak, Hierophant's Cloak, Cloak of Confusion
+* Waist - Spider Fur Belt, Belt of Inconsistency
+* Shoulders - Wurm Lord Shawl, Neriad Shawl
+* Wrists - Bracelet of Frostbite, Illusionist's Wristguard
+* Legs - Beguiler's Trousers, Ice Silk Pantaloons, Illusionist's Pantaloons, Tanned Iksar Hide Leggings
+* Hands - Illusionist's Gloves
+* Feet - Spider Fur-Lined Boots, Illusionist's Slippers
+* Primary - Rod of Insidious Glamour, Book of Dawn, Staff of the Serpent
+* Secondary - Book of Dawn, Orb of the Infinite Void
+* Range - Kromzek Surveyor Scope, Purified Crystal Dagger, Sickly Glowing Orb, Writ of Di`zok
 
 ## Velious Raiding Gear
 

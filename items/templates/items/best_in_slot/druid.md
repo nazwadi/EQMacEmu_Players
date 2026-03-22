@@ -1,23 +1,23 @@
 ## Vanilla Pre-Planar Gear
 
 ---
-* Ears – Jasper Gold Earring, Granite Earring
-* Fingers – Platinum Jasper Ring
-* Neck – Chrysoberyl Talisman
-* Head – Savant's Cap, Batfang Headband, Runed Circlet, Crown of Leaves, Nightshade Wreath
-* Face – Platinum Ruby Veil, Polished Mithril Mask, Tobrin's Mystical Eyepatch
-* Chest – Foreman's Tunic, Mithril-Runed Tunic
-* Arms – Platinum Armband, Embroidered Black Sleeves
-* Back – Mammoth Hide Cloak, Molten Cloak
-* Waist – Purity Belt, Reed Belt
-* Shoulders – Prayer Cloth of Tunare, Braided Ivy Cords, Lizardscale Mantle, Prayer Shawl
-* Wrists – Runed Mithril Bracer, Chipped Bone Bracelet
-* Legs – Black Chitin Leggings, Gatorscale Leggings
-* Hands – Split Paw Hide Gloves
-* Feet – Golden Efreeti Boots, Wolf Fur Slippers
-* Primary – Paw of Opolla, Tainted Battleworn Morning Star, Sharkbone Warhammer
-* Secondary – Paw of Opolla, Testament of Vanear
-* Range – Small Wisdom Deity
+* Ears - Jasper Gold Earring, Granite Earring
+* Fingers - Platinum Jasper Ring
+* Neck - Chrysoberyl Talisman
+* Head - Savant's Cap, Batfang Headband, Runed Circlet, Crown of Leaves, Nightshade Wreath
+* Face - Platinum Ruby Veil, Polished Mithril Mask, Tobrin's Mystical Eyepatch
+* Chest - Foreman's Tunic, Mithril-Runed Tunic
+* Arms - Platinum Armband, Embroidered Black Sleeves
+* Back - Mammoth Hide Cloak, Molten Cloak
+* Waist - Purity Belt, Reed Belt
+* Shoulders - Prayer Cloth of Tunare, Braided Ivy Cords, Lizardscale Mantle, Prayer Shawl
+* Wrists - Runed Mithril Bracer, Chipped Bone Bracelet
+* Legs - Black Chitin Leggings, Gatorscale Leggings
+* Hands - Split Paw Hide Gloves
+* Feet - Golden Efreeti Boots, Wolf Fur Slippers
+* Primary - Paw of Opolla, Tainted Battleworn Morning Star, Sharkbone Warhammer
+* Secondary - Paw of Opolla, Testament of Vanear
+* Range - Small Wisdom Deity
 
 ## Vanilla Planar Gear
 
@@ -71,23 +71,23 @@ Gear suggestions for Kunark raiding (51+) Druids. May include a short progressio
 ---
 This section is for pre-raid Velious gear (requiring one group or less to obtain). Includes Thurg, Kael and SS class armors. EXCLUDES NToV, ST, boss mob drops. May include a short progression from "good" through "best" in slot. 
 
-* Ears – Treant Tear 
-* Fingers – Velium Fire Wedding Ring
-* Neck – Ayillish's Talisman or other +6 Talisman, Rough Silver Chain
-* Head – Rowyl's Circlet of Nature, Circlet of the Falinkan
-* Face – Golden Diamond Mask
-* Chest – Rowyl's Chestguard of Nature
-* Arms – Rowyl's Vambraces of Nature
-* Back – Lodizal Shell Shield, Cloak of Confusion
-* Waist – Silverleaf Belt
-* Shoulders – Runed Coldain Prayer Shawl
-* Wrists – Rowyl's Bracer of Nature, Coldain Military Wristguard
-* Legs – Rowyl's Greaves of Nature
-* Hands – Crystal Chitin Gauntlets, Coldain Skin Gloves
-* Feet – Rowyl's Boots of Nature, Coldain Skin Boots
-* Primary – Nature Walkers Scimitar
-* Secondary – Crystal Chitin Shield
-* Range – Talisman of Benevolence
+* Ears - Treant Tear 
+* Fingers - Velium Fire Wedding Ring
+* Neck - Ayillish's Talisman or other +6 Talisman, Rough Silver Chain
+* Head - Rowyl's Circlet of Nature, Circlet of the Falinkan
+* Face - Golden Diamond Mask
+* Chest - Rowyl's Chestguard of Nature
+* Arms - Rowyl's Vambraces of Nature
+* Back - Lodizal Shell Shield, Cloak of Confusion
+* Waist - Silverleaf Belt
+* Shoulders - Runed Coldain Prayer Shawl
+* Wrists - Rowyl's Bracer of Nature, Coldain Military Wristguard
+* Legs - Rowyl's Greaves of Nature
+* Hands - Crystal Chitin Gauntlets, Coldain Skin Gloves
+* Feet - Rowyl's Boots of Nature, Coldain Skin Boots
+* Primary - Nature Walkers Scimitar
+* Secondary - Crystal Chitin Shield
+* Range - Talisman of Benevolence
 
 ## Velious Raiding Gear
 
