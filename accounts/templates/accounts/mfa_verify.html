@@ -1,0 +1,55 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}Two-Factor Authentication - EQ Archives{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-7">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h1 class="mb-1">Two-Factor Authentication</h1>
+                    <p class="text-muted mb-4">Open your authenticator app and enter the 6-digit code.</p>
+                    <form method="POST" id="mfa-form">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <input
+                                type="text"
+                                name="token"
+                                id="token"
+                                class="form-control form-control-lg text-center"
+                                inputmode="numeric"
+                                pattern="[0-9]*"
+                                maxlength="6"
+                                autocomplete="one-time-code"
+                                placeholder="000000"
+                                autofocus
+                                required
+                            >
+                        </div>
+                        <button class="btn btn-primary w-100" type="submit">Verify</button>
+                    </form>
+                    <hr class="my-4">
+                    <p class="text-center mb-0 small text-muted">
+                        Lost access to your authenticator? Use a
+                        <a href="#">backup code</a> or
+                        <a href="{% url 'accounts:login' %}">return to login</a>.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block inline_js %}
+<script>
+    // Auto-submit when 6 digits are entered
+    document.getElementById('token').addEventListener('input', function () {
+        if (this.value.replace(/\D/g, '').length === 6) {
+            this.value = this.value.replace(/\D/g, '');
+            document.getElementById('mfa-form').submit();
+        }
+    });
+</script>
+{% endblock %}

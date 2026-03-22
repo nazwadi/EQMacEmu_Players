@@ -146,6 +146,8 @@
         if (!link || e.ctrlKey || e.metaKey || e.shiftKey) return;
         var href = link.getAttribute('href');
         if (!href || href.charAt(0) === '#' || link.target === '_blank') return;
+        // Skip download links — page never unloads so bar would get stuck
+        if (link.hasAttribute('download') || href.indexOf('_export=') !== -1) return;
         try {
             var url = new URL(href, location.href);
             if (url.hostname !== location.hostname) return;
@@ -153,9 +155,18 @@
         startProgress();
     });
 
-    // Restore buttons if user navigates back (bfcache)
+    // If a confirm() dialog was cancelled, focus returns to the window but the
+    // page never navigated — complete the bar so it doesn't get stuck
+    window.addEventListener('focus', function () {
+        if (bar.style.opacity !== '0' && bar.style.width !== '0px' && bar.style.width !== '0%' && bar.style.width !== '100%') {
+            completeProgress();
+        }
+    });
+
+    // Restore buttons and reset bar if user navigates back (bfcache)
     window.addEventListener('pageshow', function (e) {
         if (e.persisted) {
+            completeProgress();
             document.querySelectorAll('button[data-loading-text]').forEach(function (btn) {
                 btn.disabled = false;
                 btn.textContent = btn.getAttribute('data-original-text');

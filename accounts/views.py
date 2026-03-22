@@ -1,4 +1,8 @@
+import base64
+import csv
+import io
 import logging
+import qrcode
 from datetime import datetime
 
 logger = logging.getLogger('eqmacemu.security')
@@ -6,6 +10,13 @@ logger = logging.getLogger('eqmacemu.security')
 
 def _rate_limit_key(group, request):
     return get_client_ip(request)
+
+
+def _log_web_login(user, ip_address, keep=20):
+    WebLoginHistory.objects.create(user=user, ip_address=ip_address)
+    oldest_ids = WebLoginHistory.objects.filter(user=user).values_list('id', flat=True)[keep:]
+    if oldest_ids:
+        WebLoginHistory.objects.filter(id__in=list(oldest_ids)).delete()
 from django.utils import timezone
 from collections import namedtuple
 
@@ -16,8 +27,11 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.db import connections
 from django.shortcuts import redirect, render
 
-from django_tables2 import RequestConfig
-from django_tables2.export.export import TableExport
+import secrets
+from django_otp.plugins.otp_totp.models import TOTPDevice
+from django_otp.plugins.otp_static.models import StaticDevice, StaticToken
+from django.contrib.auth.models import User
+from django.http import HttpResponse
 
 from common.constants import (
     CONTAINER_TYPES,
@@ -32,9 +46,8 @@ from items.utils import build_stat_query, get_class_bitmask, get_item_effect, ge
 from django_ratelimit.decorators import ratelimit
 
 from .forms import NewLSAccountForm, NewUserForm, UpdateLSAccountForm
-from .models import Account, LoginServerAccounts, WorldServerRegistration
+from .models import Account, LoginServerAccounts, WebLoginHistory, WorldServerRegistration
 from common.models.characters import Characters
-from .tables import LoginServerAccountTable
 from .utils import get_client_ip, sha1_password
 
 
@@ -70,10 +83,20 @@ def login_request(request):
             password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=password)
             if user is not None:
-                login(request, user)
-                logger.info('LOGIN_SUCCESS user=%s ip=%s', username, get_client_ip(request))
-                messages.success(request, f"Welcome back, {username}!")
-                return redirect("accounts:list_accounts")
+                device = TOTPDevice.objects.filter(user=user, confirmed=True).first()
+                if device:
+                    # Don't log in yet — store user ID and redirect to MFA verify
+                    request.session['mfa_user_id'] = user.id
+                    request.session['mfa_timestamp'] = timezone.now().timestamp()
+                    return redirect('accounts:mfa_verify')
+                else:
+                    # No MFA set up — log in normally
+                    login(request, user)
+                    request.session['login_ip'] = get_client_ip(request)
+                    _log_web_login(user, get_client_ip(request))
+                    logger.info('LOGIN_SUCCESS user=%s ip=%s', username, get_client_ip(request))
+                    messages.success(request, f"Welcome back, {username}!")
+                    return redirect("accounts:list_accounts")
             else:
                 logger.warning('LOGIN_FAILED user=%s ip=%s', username, get_client_ip(request))
                 messages.error(request, "Invalid username or password.")
@@ -82,6 +105,138 @@ def login_request(request):
             messages.error(request, "Invalid username or password.")
     form = AuthenticationForm()
     return render(request=request, template_name="accounts/login.html", context={"login_form": form})
+
+
+def mfa_verify(request):
+    user_id = request.session.get('mfa_user_id')
+    if not user_id:
+        return redirect('accounts:login')
+
+    import time
+    timestamp = request.session.get('mfa_timestamp', 0)
+    if time.time() - timestamp > 300:
+        request.session.pop('mfa_user_id', None)
+        request.session.pop('mfa_timestamp', None)
+        messages.error(request, "Session expired. Please log in again.")
+        return redirect('accounts:login')
+
+    user = User.objects.get(id=user_id)
+
+    if request.method == 'POST':
+        token = request.POST.get('token', '').strip()
+        device = TOTPDevice.objects.filter(user=user, confirmed=True).first()
+
+        if device and device.verify_token(token):
+            del request.session['mfa_user_id']
+            login(request, user)
+            request.session['login_ip'] = get_client_ip(request)
+            _log_web_login(user, get_client_ip(request))
+            logger.info('LOGIN_SUCCESS user=%s ip=%s', user.username, get_client_ip(request))
+            messages.success(request, f"Welcome back, {user.username}!")
+            return redirect("accounts:list_accounts")
+        else:
+            messages.error(request, 'Invalid code. Please try again.')
+
+    return render(request, 'accounts/mfa_verify.html')
+
+
+@login_required
+def mfa_setup(request):
+    if TOTPDevice.objects.filter(user=request.user, confirmed=True).exists():
+        messages.info(request, "Two-factor authentication is already enabled.")
+        return redirect("accounts:list_accounts")
+
+    device, _ = TOTPDevice.objects.get_or_create(
+        user=request.user,
+        confirmed=False,
+        defaults={"name": "default"}
+    )
+
+    if request.method == "POST":
+        token = request.POST.get("token", "").strip()
+        if device.verify_token(token):
+            device.confirmed = True
+            device.save()
+            logger.info('MFA_SETUP user=%s ip=%s', request.user.username, get_client_ip(request))
+            messages.success(request, "Two-factor authentication has been enabled.")
+            return redirect("accounts:mfa_backup_codes")
+        else:
+            messages.error(request, "Invalid code. Please try again.")
+
+    img = qrcode.make(device.config_url)
+    buffer = io.BytesIO()
+    img.save(buffer, format="PNG")
+    qr_code = "data:image/png;base64," + base64.b64encode(buffer.getvalue()).decode()
+
+    return render(request, "accounts/mfa_setup.html", {
+        "qr_code": qr_code,
+        "secret": device.key,
+    })
+
+
+def _generate_backup_codes(device, count=10):
+    StaticToken.objects.filter(device=device).delete()
+    for _ in range(count):
+        StaticToken.objects.create(device=device, token=secrets.token_hex(4))
+
+
+@login_required
+def mfa_backup_codes(request):
+    if not TOTPDevice.objects.filter(user=request.user, confirmed=True).exists():
+        messages.info(request, "You need to enable two-factor authentication first.")
+        return redirect("accounts:mfa_setup")
+
+    device, created = StaticDevice.objects.get_or_create(
+        user=request.user,
+        defaults={"name": "backup"}
+    )
+
+    freshly_generated = False
+
+    if created or not StaticToken.objects.filter(device=device).exists():
+        _generate_backup_codes(device)
+        freshly_generated = True
+    elif request.method == "POST" and request.POST.get("action") == "regenerate":
+        _generate_backup_codes(device)
+        logger.info('MFA_BACKUP_REGENERATE user=%s ip=%s', request.user.username, get_client_ip(request))
+        freshly_generated = True
+
+    backup_codes = StaticToken.objects.filter(device=device)
+
+    return render(request, "accounts/mfa_backup_codes.html", {
+        "backup_codes": backup_codes,
+        "freshly_generated": freshly_generated,
+    })
+
+
+@login_required
+def mfa_disable(request):
+    totp_device = TOTPDevice.objects.filter(user=request.user, confirmed=True).first()
+
+    if not totp_device:
+        messages.info(request, "Two-factor authentication is not enabled on your account.")
+        return redirect("accounts:list_accounts")
+
+    if request.method == "POST":
+        token = request.POST.get("token", "").strip()
+
+        # Check TOTP device first, then fall back to backup codes
+        verified = totp_device.verify_token(token)
+        if not verified:
+            static_device = StaticDevice.objects.filter(user=request.user).first()
+            if static_device:
+                verified = static_device.verify_token(token)
+
+        if verified:
+            TOTPDevice.objects.filter(user=request.user).delete()
+            StaticDevice.objects.filter(user=request.user).delete()
+            logger.info('MFA_DISABLE user=%s ip=%s', request.user.username, get_client_ip(request))
+            messages.success(request, "Two-factor authentication has been disabled.")
+            return redirect("accounts:list_accounts")
+        else:
+            messages.error(request, "Invalid code. Please try again.")
+
+    return render(request, "accounts/mfa_disable.html")
 
 
 @login_required
@@ -127,18 +282,21 @@ def accounts(request):
         )
     )
 
-    table = LoginServerAccountTable(queryset)
+    if request.GET.get("_export") == "csv":
+        response = HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = 'attachment; filename="accounts.csv"'
+        writer = csv.writer(response)
+        writer.writerow(["Account Name", "Email", "Created", "Last Login"])
+        for acct in queryset:
+            writer.writerow([acct.AccountName, acct.AccountEmail, acct.AccountCreateDate, acct.LastLoginDate])
+        return response
 
-    RequestConfig(request).configure(table)
-
-    export_format = request.GET.get("_export", None)
-    if TableExport.is_valid_format(export_format):
-        exporter = TableExport(export_format, table)
-        return exporter.response(f"table.{export_format}")
+    mfa_enabled = TOTPDevice.objects.filter(user=request.user, confirmed=True).exists()
+    account_count = queryset.count()
 
     return render(request,
                   "accounts/list_accounts.html",
-                  {"table": table})
+                  {"accounts_list": queryset, "mfa_enabled": mfa_enabled, "account_count": account_count})
 
 
 @login_required
@@ -200,18 +358,81 @@ def update_account(request, pk):
 
 @login_required
 def delete_account(request, pk):
-    """Defines view for https://url.tld/accounts/delete/<int:pk>"""
-    account = LoginServerAccounts.objects.filter(LoginServerID=pk, ForumName=request.user.username)
-    if account.exists():
-        account.delete()
-        logger.info('ACCOUNT_DELETE user=%s ip=%s pk=%s', request.user.username, get_client_ip(request), pk)
-        messages.success(request, "Account deleted successfully.")
+    account = LoginServerAccounts.objects.filter(LoginServerID=pk, ForumName=request.user.username).first()
+
+    if not account:
+        logger.warning('ACCOUNT_DELETE_DENIED user=%s ip=%s pk=%s', request.user.username, get_client_ip(request), pk)
+        messages.error(request, "That account doesn't exist or doesn't belong to you.")
         return redirect("accounts:list_accounts")
 
-    logger.warning('ACCOUNT_DELETE_DENIED user=%s ip=%s pk=%s', request.user.username, get_client_ip(request), pk)
-    messages.error(request,
-                   "Unsuccessful delete attempt. The target account either does not exist or doesn't belong to you.")
-    return redirect("accounts:list_accounts")
+    if request.method == "POST":
+        typed_name = request.POST.get("account_name", "").strip()
+        if typed_name == account.AccountName:
+            account.delete()
+            logger.info('ACCOUNT_DELETE user=%s ip=%s pk=%s', request.user.username, get_client_ip(request), pk)
+            messages.success(request, f"Account '{account.AccountName}' deleted successfully.")
+            return redirect("accounts:list_accounts")
+        else:
+            messages.error(request, "Account name did not match. Please try again.")
+
+    return render(request, "accounts/delete_account.html", {"account": account})
+
+
+@login_required
+def login_history(request):
+    history = WebLoginHistory.objects.filter(user=request.user)[:20]
+    return render(request, "accounts/login_history.html", {"history": history})
+
+
+def _get_user_sessions(user, current_key):
+    from django.contrib.sessions.models import Session
+    user_sessions = []
+    for session in Session.objects.filter(expire_date__gte=timezone.now()):
+        data = session.get_decoded()
+        if str(user.pk) == data.get('_auth_user_id'):
+            user_sessions.append({
+                'session_key': session.session_key,
+                'expire_date': session.expire_date,
+                'ip_address': data.get('login_ip', 'Unknown'),
+                'is_current': session.session_key == current_key,
+            })
+    user_sessions.sort(key=lambda s: (not s['is_current']))
+    return user_sessions
+
+
+@login_required
+def session_management(request):
+    if request.method == 'POST':
+        action = request.POST.get('action')
+
+        if action == 'revoke_all':
+            from django.contrib.sessions.models import Session
+            for session in Session.objects.filter(expire_date__gte=timezone.now()):
+                data = session.get_decoded()
+                if str(request.user.pk) == data.get('_auth_user_id'):
+                    if session.session_key != request.session.session_key:
+                        session.delete()
+            logger.info('SESSION_REVOKE_ALL user=%s ip=%s', request.user.username, get_client_ip(request))
+            messages.success(request, "All other sessions have been signed out.")
+
+        elif action == 'revoke':
+            from django.contrib.sessions.models import Session
+            key = request.POST.get('session_key', '')
+            if key != request.session.session_key:
+                try:
+                    session = Session.objects.get(session_key=key, expire_date__gte=timezone.now())
+                    data = session.get_decoded()
+                    if str(request.user.pk) == data.get('_auth_user_id'):
+                        session.delete()
+                        logger.info('SESSION_REVOKE user=%s ip=%s', request.user.username, get_client_ip(request))
+                        messages.success(request, "Session signed out.")
+                except Session.DoesNotExist:
+                    pass
+
+        return redirect('accounts:session_management')
+
+    active_sessions = _get_user_sessions(request.user, request.session.session_key)
+    return render(request, 'accounts/session_management.html', {'active_sessions': active_sessions})
 
 
 @login_required

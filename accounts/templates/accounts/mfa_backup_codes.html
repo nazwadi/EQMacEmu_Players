@@ -1,0 +1,76 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}Backup Codes - EQ Archives{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-7">
+
+            {% if freshly_generated %}
+            <div class="alert alert-warning d-flex gap-2" role="alert">
+                <i class="fas fa-exclamation-triangle mt-1 flex-shrink-0"></i>
+                <span>Save these codes now. They will not be shown again. Each code can only be used once.</span>
+            </div>
+            {% endif %}
+
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h1 class="mb-1">Backup Codes</h1>
+                    <p class="text-muted mb-4">
+                        Use a backup code to sign in if you lose access to your authenticator app.
+                        Each code works once.
+                    </p>
+
+                    <div class="rounded p-3 mb-4 border">
+                        <div class="row row-cols-2 g-2" id="codes-list">
+                            {% for code in backup_codes %}
+                            <div class="col">
+                                <code class="d-block text-center p-2 rounded border {% if code.used %}text-decoration-line-through text-muted{% endif %}">
+                                    {{ code.token }}
+                                </code>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-outline-secondary" onclick="copyCodes()">
+                            <i class="fas fa-copy me-1"></i> Copy all codes
+                        </button>
+                        <form method="POST" onsubmit="return confirm('This will invalidate all existing backup codes and generate new ones. Are you sure?');">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="regenerate">
+                            <button type="submit" class="btn btn-outline-danger w-100">
+                                <i class="fas fa-sync me-1"></i> Regenerate codes
+                            </button>
+                        </form>
+                    </div>
+
+                    <hr class="my-4">
+                    <p class="text-center mb-0 small text-muted">
+                        <a href="{% url 'accounts:list_accounts' %}">Return to my accounts</a>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block inline_js %}
+<script>
+    function copyCodes() {
+        const codes = Array.from(document.querySelectorAll('#codes-list code'))
+            .map(el => el.textContent.trim())
+            .join('\n');
+        navigator.clipboard.writeText(codes).then(function () {
+            const btn = event.target.closest('button');
+            const original = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check me-1"></i> Copied!';
+            setTimeout(function () { btn.innerHTML = original; }, 2000);
+        });
+    }
+</script>
+{% endblock %}

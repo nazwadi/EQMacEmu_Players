@@ -1,9 +1,18 @@
 from django.db import models
+from django.contrib.auth.models import User
 from django.utils import timezone
 from datetime import datetime
 
 
-# Create your models here.
+class WebLoginHistory(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    ip_address = models.GenericIPAddressField()
+
+    class Meta:
+        ordering = ['-timestamp']
+
+
 class LoginServerAccounts(models.Model):
     """
     This model should be tied to the database specified in the LoginServerRouter

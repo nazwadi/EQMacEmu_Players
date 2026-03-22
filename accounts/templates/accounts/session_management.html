@@ -1,0 +1,77 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}Active Sessions - EQ Archives{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <div>
+                    <h1 class="mb-1">Active Sessions</h1>
+                    <p class="text-muted mb-0">Devices currently signed in to your account.</p>
+                </div>
+                <a href="{% url 'accounts:list_accounts' %}" class="btn btn-outline-secondary btn-sm">Back</a>
+            </div>
+
+            <div class="card shadow-sm mb-3">
+                {% if active_sessions %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>IP Address</th>
+                                <th>Expires</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for session in active_sessions %}
+                            <tr>
+                                <td>
+                                    <span class="font-monospace">{{ session.ip_address }}</span>
+                                    {% if session.is_current %}
+                                    <span class="badge bg-success ms-1">This session</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-muted small">{{ session.expire_date|date:"M j, Y g:i A" }}</td>
+                                <td class="text-end">
+                                    {% if not session.is_current %}
+                                    <form method="POST" class="d-inline">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="revoke">
+                                        <input type="hidden" name="session_key" value="{{ session.session_key }}">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">Sign out</button>
+                                    </form>
+                                    {% else %}
+                                    <span class="text-muted small">Current</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="card-body text-center py-4 text-muted">
+                    No active sessions found.
+                </div>
+                {% endif %}
+            </div>
+
+            {% if active_sessions|length > 1 %}
+            <form method="POST"
+                  onsubmit="return confirm('This will sign out all sessions except your current one. Continue?')">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="revoke_all">
+                <button type="submit" class="btn btn-danger w-100">
+                    <i class="fas fa-sign-out-alt me-1"></i> Sign out all other sessions
+                </button>
+            </form>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+{% endblock %}

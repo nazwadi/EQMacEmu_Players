@@ -1,19 +1,94 @@
 {% extends 'accounts/base.html' %}
 
-{% block title %}Create LS Account - EQ Archives{% endblock %}
+{% block title %}Create Game Account - EQ Archives{% endblock %}
 
 {% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-7">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h1 class="mb-1">Create Game Account</h1>
+                    <p class="text-muted mb-4">
+                        This is a login server account used to connect to the game —
+                        not your EQ Archives login. You can create multiple accounts.
+                    </p>
 
-    {% load crispy_forms_tags %}
-    <div class="container py-5">
-        <h1>Create a Loginserver Account</h1>
-        <form method="POST">
+                    <form method="POST" id="create-account-form">
+                        {% csrf_token %}
 
-            {% csrf_token %}
-            {{ form|crispy }}
-            <button class="btn btn-primary" type="submit">Submit</button>
-           <a href="/accounts/list" id="cancel" class="btn btn-default">Cancel</a> 
-        </form>
+                        <div class="mb-3">
+                            <label for="id_AccountName" class="form-label fw-semibold">Account Name</label>
+                            <input type="text"
+                                   name="AccountName"
+                                   id="id_AccountName"
+                                   class="form-control{% if form.AccountName.errors %} is-invalid{% endif %}"
+                                   value="{{ form.AccountName.value|default:'' }}"
+                                   maxlength="30"
+                                   autocomplete="off"
+                                   required>
+                            {% if form.AccountName.errors %}
+                            <div class="invalid-feedback">{{ form.AccountName.errors|join:", " }}</div>
+                            {% endif %}
+                            <div class="form-text">Used to log in to the game client. Letters and numbers only.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_AccountPassword" class="form-label fw-semibold">Password</label>
+                            <div class="input-group">
+                                <input type="password"
+                                       name="AccountPassword"
+                                       id="id_AccountPassword"
+                                       class="form-control{% if form.AccountPassword.errors %} is-invalid{% endif %}"
+                                       autocomplete="new-password"
+                                       required>
+                                <button type="button" class="btn btn-outline-secondary" id="toggle-password" tabindex="-1">
+                                    <i class="fas fa-eye" id="toggle-icon"></i>
+                                </button>
+                                {% if form.AccountPassword.errors %}
+                                <div class="invalid-feedback">{{ form.AccountPassword.errors|join:", " }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="form-text">This is separate from your EQ Archives password.</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="id_AccountEmail" class="form-label fw-semibold">Email <span class="text-muted fw-normal">(optional)</span></label>
+                            <input type="email"
+                                   name="AccountEmail"
+                                   id="id_AccountEmail"
+                                   class="form-control{% if form.AccountEmail.errors %} is-invalid{% endif %}"
+                                   value="{{ form.AccountEmail.value|default:'' }}"
+                                   autocomplete="email">
+                            {% if form.AccountEmail.errors %}
+                            <div class="invalid-feedback">{{ form.AccountEmail.errors|join:", " }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary text-dark flex-grow-1">Create Account</button>
+                            <a href="{% url 'accounts:list_accounts' %}" class="btn btn-outline-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
+{% endblock %}
 
+{% block inline_js %}
+<script>
+    document.getElementById('toggle-password').addEventListener('click', function () {
+        var input = document.getElementById('id_AccountPassword');
+        var icon = document.getElementById('toggle-icon');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.replace('fa-eye', 'fa-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.replace('fa-eye-slash', 'fa-eye');
+        }
+    });
+</script>
 {% endblock %}

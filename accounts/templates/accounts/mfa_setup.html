@@ -1,0 +1,85 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}Set Up Two-Factor Authentication - EQ Archives{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h1 class="mb-1">Set Up Two-Factor Authentication</h1>
+                    <p class="text-muted mb-4">Protect your account with an authenticator app.</p>
+
+                    <!-- Step 1 -->
+                    <h6 class="fw-semibold">Step 1 &mdash; Scan this QR code</h6>
+                    <p class="text-muted small">Use Google Authenticator, Authy, 1Password, or any TOTP app.</p>
+                    <div class="text-center my-3">
+                        <img src="{{ qr_code }}" alt="MFA QR Code" class="img-fluid rounded border" style="max-width: 200px;">
+                    </div>
+
+                    <!-- Manual entry fallback -->
+                    <details class="mb-4">
+                        <summary class="small text-muted" style="cursor: pointer;">Can't scan? Enter the key manually</summary>
+                        <div class="mt-2 p-2 bg-light rounded d-flex align-items-center justify-content-between gap-2">
+                            <code id="secret-key" class="small">{{ secret }}</code>
+                            <button type="button" class="btn btn-outline-secondary btn-sm" id="copy-btn" onclick="copySecret()">Copy</button>
+                        </div>
+                        <p class="small text-muted mt-1 mb-0">Enter this key in your app as a time-based (TOTP) account.</p>
+                    </details>
+
+                    <!-- Step 2 -->
+                    <h6 class="fw-semibold">Step 2 &mdash; Confirm your code</h6>
+                    <p class="text-muted small">Enter the 6-digit code from your app to confirm setup.</p>
+                    <form method="POST" id="mfa-setup-form">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <input
+                                type="text"
+                                name="token"
+                                id="token"
+                                class="form-control form-control-lg text-center"
+                                inputmode="numeric"
+                                pattern="[0-9]*"
+                                maxlength="6"
+                                autocomplete="one-time-code"
+                                placeholder="000000"
+                                autofocus
+                                required
+                            >
+                        </div>
+                        <button class="btn btn-primary w-100" type="submit">Enable Two-Factor Authentication</button>
+                    </form>
+
+                    <hr class="my-4">
+                    <p class="text-center mb-0 small text-muted">
+                        <a href="{% url 'accounts:list_accounts' %}">Cancel and return to my accounts</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block inline_js %}
+<script>
+    // Auto-submit when 6 digits are entered
+    document.getElementById('token').addEventListener('input', function () {
+        if (this.value.replace(/\D/g, '').length === 6) {
+            this.value = this.value.replace(/\D/g, '');
+            document.getElementById('mfa-setup-form').submit();
+        }
+    });
+
+    // Copy secret key to clipboard
+    function copySecret() {
+        const secret = document.getElementById('secret-key').textContent;
+        navigator.clipboard.writeText(secret).then(function () {
+            const btn = document.getElementById('copy-btn');
+            btn.textContent = 'Copied!';
+            setTimeout(function () { btn.textContent = 'Copy'; }, 2000);
+        });
+    }
+</script>
+{% endblock %}

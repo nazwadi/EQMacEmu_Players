@@ -1,19 +1,74 @@
 {% extends 'accounts/base.html' %}
 
-{% block title %}Update Account - EQ Archives{% endblock %}
+{% block title %}Update {{ AccountName }} - EQ Archives{% endblock %}
 
 {% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-7">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h1 class="mb-1">Update Account</h1>
+                    <p class="text-muted mb-4">Editing <strong>{{ AccountName }}</strong></p>
 
-    {% load crispy_forms_tags %}
-    <div class="container py-5">
-        <h1>Update Account: "{{ AccountName }}"</h1>
-        <form method="POST">
+                    <form method="POST">
+                        {% csrf_token %}
 
-            {% csrf_token %}
-            {{ form.AccountPassword|as_crispy_field }}
-            {{ form.AccountEmail|as_crispy_field }}
-            <button class="btn btn-primary" type="submit">Save</button>
-        </form>
+                        <div class="mb-3">
+                            <label for="id_AccountPassword" class="form-label fw-semibold">New Password</label>
+                            <div class="input-group">
+                                <input type="password"
+                                       name="AccountPassword"
+                                       id="id_AccountPassword"
+                                       class="form-control{% if form.AccountPassword.errors %} is-invalid{% endif %}"
+                                       autocomplete="new-password"
+                                       required>
+                                <button type="button" class="btn btn-outline-secondary" id="toggle-password" tabindex="-1">
+                                    <i class="fas fa-eye" id="toggle-icon"></i>
+                                </button>
+                                {% if form.AccountPassword.errors %}
+                                <div class="invalid-feedback">{{ form.AccountPassword.errors|join:", " }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="id_AccountEmail" class="form-label fw-semibold">Email <span class="text-muted fw-normal">(optional)</span></label>
+                            <input type="email"
+                                   name="AccountEmail"
+                                   id="id_AccountEmail"
+                                   class="form-control{% if form.AccountEmail.errors %} is-invalid{% endif %}"
+                                   value="{{ form.AccountEmail.value|default:'' }}"
+                                   autocomplete="email">
+                            {% if form.AccountEmail.errors %}
+                            <div class="invalid-feedback">{{ form.AccountEmail.errors|join:", " }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary text-dark flex-grow-1">Save Changes</button>
+                            <a href="{% url 'accounts:list_accounts' %}" class="btn btn-outline-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
+{% endblock %}
 
+{% block inline_js %}
+<script>
+    document.getElementById('toggle-password').addEventListener('click', function () {
+        var input = document.getElementById('id_AccountPassword');
+        var icon = document.getElementById('toggle-icon');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.replace('fa-eye', 'fa-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.replace('fa-eye-slash', 'fa-eye');
+        }
+    });
+</script>
 {% endblock %}
