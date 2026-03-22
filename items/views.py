@@ -1,11 +1,15 @@
 import logging
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render, redirect
+import json
+from django.http import HttpRequest, HttpResponse, JsonResponse
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.db import connections
 from django.views.decorators.http import require_http_methods
+from django.views.decorators.csrf import csrf_exempt
 from django.http import Http404
 
+from items.models import BISEntry, BISRevision, SLOT_ORDER
 from items.utils import get_class_bitmask
 from items.utils import get_race_bitmask
 from items.utils import build_stat_query
@@ -478,12 +482,46 @@ _BIS_CLASS_MIN_EXPANSION = {
     15: 'luclin-group',  # Beastlord introduced in Luclin
 }
 
+# Slots that only apply to specific classes (class_id set).
+# Slots absent from this dict are shown for every class.
+_BIS_SLOT_CLASS_RESTRICTIONS = {
+    'Instrument':       frozenset([8]),                         # Bard only
+    'Primary H2H':      frozenset([1, 7, 15]),                  # Warrior, Monk, Beastlord
+    'Primary 2HS':      frozenset([1, 3, 4, 5]),                # Warrior, Paladin, Ranger, SK
+    'Primary 1HS':      frozenset([1, 3, 4, 5, 8, 9, 15]),     # Melee + Bard + Rogue + Beastlord
+    'Primary 1HB':      frozenset([1, 2, 3, 4, 5, 6, 7, 8,
+                                   10, 11, 12, 13, 14, 15]),   # All except Rogue
+    'Primary 2HB':      frozenset([1, 2, 3, 4, 5, 6, 10]),     # Heavy melee + Priests
+    'Primary Piercing': frozenset([1, 3, 4, 5, 8, 9]),         # Melee + Bard + Rogue
+}
+
 _BIS_CLASS_ARCHETYPES = [
     ('Tanks',   [1, 3, 5]),           # Warrior, Paladin, Shadowknight
     ('Priests', [2, 6, 10]),          # Cleric, Druid, Shaman
     ('Melee',   [7, 9, 4, 8, 15]),    # Monk, Rogue, Ranger, Bard, Beastlord
     ('Casters', [11, 12, 13, 14]),    # Necromancer, Wizard, Magician, Enchanter
 ]
+
+
+def _group_bis_entries(entries):
+    """
+    Group a flat list of BISEntry objects into an ordered dict:
+        { expansion_slug: { slot_name: [BISEntry, ...] } }
+    Slots within each expansion are sorted by the canonical SLOT_ORDER.
+    """
+    _slot_rank = {s: i for i, s in enumerate(SLOT_ORDER)}
+
+    result = {slug: {} for slug in _BIS_EXPANSION_ORDER}
+    for entry in entries:
+        slot_map = result.setdefault(entry.expansion, {})
+        slot_map.setdefault(entry.slot, []).append(entry)
+
+    # Sort slots within each expansion by canonical order
+    for slug in result:
+        result[slug] = dict(
+            sorted(result[slug].items(), key=lambda kv: _slot_rank.get(kv[0], 999))
+        )
+    return result
 
 
 def best_in_slot(request: HttpRequest, class_id: int = None) -> HttpResponse:
@@ -509,15 +547,17 @@ def best_in_slot(request: HttpRequest, class_id: int = None) -> HttpResponse:
                       })
 
     selected_class = PLAYER_CLASSES.get(class_id, 0)
-    base = f"items/templates/items/best_in_slot/{selected_class.lower()}"
-
     min_exp = _BIS_CLASS_MIN_EXPANSION.get(class_id, 'vanilla-pre-planar')
     locked_expansions = set(_BIS_EXPANSION_ORDER[:_BIS_EXPANSION_ORDER.index(min_exp)])
 
-    files = {}
-    for slug in _BIS_EXPANSION_ORDER:
-        with open(f"{base}/{slug}.md", "r") as md_file:
-            files[slug] = md_file.read()
+    entries = BISEntry.objects.filter(class_id=class_id).order_by('expansion', 'slot', 'rank')
+    bis_data = _group_bis_entries(entries)
+
+    class_slot_order = [
+        s for s in SLOT_ORDER
+        if s not in _BIS_SLOT_CLASS_RESTRICTIONS
+        or class_id in _BIS_SLOT_CLASS_RESTRICTIONS[s]
+    ]
 
     return render(request=request,
                   template_name="items/best_in_slot.html",
@@ -528,5 +568,173 @@ def best_in_slot(request: HttpRequest, class_id: int = None) -> HttpResponse:
                       "class_id": class_id,
                       "locked_expansions": locked_expansions,
                       "first_expansion": min_exp,
-                      "bis_files": files,
+                      "bis_data": bis_data,
+                      "expansion_order": _BIS_EXPANSION_ORDER,
+                      "slot_order": class_slot_order,
                   })
+
+
+@require_http_methods(["GET"])
+def item_name_search(request):
+    q = request.GET.get('q', '').strip()
+    if len(q) < 2:
+        return JsonResponse({'results': []})
+    results = Items.objects.filter(Name__icontains=q).order_by('Name').values('id', 'Name')[:20]
+    return JsonResponse({'results': [{'id': r['id'], 'name': r['Name']} for r in results]})
+
+
+def _try_resolve_item_id(item_name):
+    """Attempt to find a unique item ID for a given name."""
+    hits = Items.objects.filter(Name=item_name)
+    if hits.count() == 1:
+        return hits.first().id
+    return None
+
+
+@login_required
+@require_http_methods(["POST"])
+def bis_edit_slot(request: HttpRequest, class_id: int, expansion: str, slot: str) -> JsonResponse:
+    """
+    AJAX endpoint to replace all items in a slot.
+
+    Accepts JSON body:
+        {
+            "items": [
+                {"item_name": "...", "note": "..."},
+                ...
+            ],
+            "edit_summary": "..."
+        }
+
+    Items are saved in the order provided (index = rank).
+    Returns JSON {"ok": true} or {"ok": false, "error": "..."}.
+    """
+    if class_id not in PLAYER_CLASSES or class_id == 0:
+        return JsonResponse({"ok": False, "error": "Invalid class."}, status=400)
+    if expansion not in _BIS_EXPANSION_ORDER:
+        return JsonResponse({"ok": False, "error": "Invalid expansion."}, status=400)
+
+    try:
+        body = json.loads(request.body)
+    except (json.JSONDecodeError, ValueError):
+        return JsonResponse({"ok": False, "error": "Invalid JSON."}, status=400)
+
+    incoming = body.get("items", [])
+    edit_summary = str(body.get("edit_summary", ""))[:200]
+
+    if not isinstance(incoming, list):
+        return JsonResponse({"ok": False, "error": "items must be a list."}, status=400)
+
+    # Validate individual items
+    cleaned = []
+    for i, item in enumerate(incoming):
+        name = str(item.get("item_name", "")).strip()[:128]
+        note = str(item.get("note", "")).strip()[:150]
+        if not name:
+            continue
+        cleaned.append({"item_name": name, "note": note, "rank": i})
+
+    # Fetch current state for diffing
+    existing = {
+        e.item_name: e
+        for e in BISEntry.objects.filter(class_id=class_id, expansion=expansion, slot=slot)
+    }
+    incoming_names = {c["item_name"] for c in cleaned}
+
+    revisions = []
+
+    # Removals
+    for name, entry in existing.items():
+        if name not in incoming_names:
+            revisions.append(BISRevision(
+                class_id=class_id, expansion=expansion, slot=slot,
+                item_name=name, action=BISRevision.ACTION_REMOVE,
+                changed_by=request.user, old_rank=entry.rank,
+                edit_summary=edit_summary,
+            ))
+            entry.delete()
+
+    # Additions and reorders
+    for c in cleaned:
+        name, rank, note = c["item_name"], c["rank"], c["note"]
+        if name in existing:
+            entry = existing[name]
+            old_rank = entry.rank
+            old_note = entry.note
+            needs_save = False
+            if old_rank != rank:
+                revisions.append(BISRevision(
+                    class_id=class_id, expansion=expansion, slot=slot,
+                    item_name=name, action=BISRevision.ACTION_REORDER,
+                    changed_by=request.user, old_rank=old_rank, new_rank=rank,
+                    edit_summary=edit_summary,
+                ))
+                entry.rank = rank
+                needs_save = True
+            if old_note != note:
+                revisions.append(BISRevision(
+                    class_id=class_id, expansion=expansion, slot=slot,
+                    item_name=name, action=BISRevision.ACTION_EDIT,
+                    changed_by=request.user, old_note=old_note, new_note=note,
+                    edit_summary=edit_summary,
+                ))
+                entry.note = note
+                needs_save = True
+            if needs_save:
+                entry.save(update_fields=['rank', 'note'])
+        else:
+            item_id = _try_resolve_item_id(name)
+            entry = BISEntry.objects.create(
+                class_id=class_id, expansion=expansion, slot=slot,
+                item_name=name, rank=rank, note=note, item_id=item_id,
+            )
+            revisions.append(BISRevision(
+                class_id=class_id, expansion=expansion, slot=slot,
+                item_name=name, action=BISRevision.ACTION_ADD,
+                changed_by=request.user, new_rank=rank,
+                edit_summary=edit_summary,
+            ))
+
+    BISRevision.objects.bulk_create(revisions)
+
+    # Return the updated slot so the page can re-render it without a reload
+    updated_entries = list(
+        BISEntry.objects.filter(class_id=class_id, expansion=expansion, slot=slot)
+                        .order_by('rank')
+    )
+    return JsonResponse({
+        "ok": True,
+        "entries": [
+            {"item_name": e.item_name, "item_id": e.item_id, "rank": e.rank, "note": e.note}
+            for e in updated_entries
+        ],
+    })
+
+
+def bis_history(request: HttpRequest, class_id: int = None) -> HttpResponse:
+    """
+    Edit history for a class's BIS list, or global history if no class_id.
+    """
+    class_archetypes = [
+        (label, [(cid, PLAYER_CLASSES[cid]) for cid in ids if cid in PLAYER_CLASSES])
+        for label, ids in _BIS_CLASS_ARCHETYPES
+    ]
+
+    qs = BISRevision.objects.select_related('changed_by').order_by('-changed_at')
+    if class_id and class_id in PLAYER_CLASSES:
+        qs = qs.filter(class_id=class_id)
+        selected_class = PLAYER_CLASSES[class_id]
+    else:
+        class_id = None
+        selected_class = None
+
+    revisions = qs[:200]
+
+    return render(request, "items/bis_history.html", {
+        "revisions": revisions,
+        "class_id": class_id,
+        "selected_class": selected_class,
+        "player_classes": PLAYER_CLASSES,
+        "class_archetypes": class_archetypes,
+        "expansion_labels": dict(BISEntry.EXPANSION_CHOICES if hasattr(BISEntry, 'EXPANSION_CHOICES') else []),
+    })

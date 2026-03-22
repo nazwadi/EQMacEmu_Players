@@ -168,6 +168,82 @@
             color: #6e6858;
             font-size: 13px;
         }
+
+        /* Item links — inherit text colour, underline on hover only */
+        .bis-item-link {
+            color: inherit;
+            text-decoration: none;
+        }
+        .bis-item-link:hover {
+            text-decoration: underline;
+            color: #fcc721;
+        }
+
+        /* Unresolved items — faint dashed underline to flag missing DB match */
+        .bis-item-unresolved {
+            text-decoration: underline;
+            text-decoration-style: dashed;
+            text-decoration-color: rgba(160, 144, 120, 0.35);
+            text-underline-offset: 3px;
+        }
+
+        /* Edit pencil button on each slot row */
+        .bis-edit-btn {
+            opacity: 0.25;
+            transition: opacity .15s, color .15s;
+            background: none;
+            border: none;
+            color: #a09078;
+            padding: 0 4px;
+            cursor: pointer;
+            font-size: 13px;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+        .bis-edit-btn:hover { opacity: 1; color: #fcc721; }
+
+        /* Modal editor styles */
+        #bisEditModal .modal-content {
+            background: #1a1914;
+            border: 1px solid rgba(200,175,100,0.2);
+            color: #d4cfc0;
+        }
+        #bisEditModal .modal-header { border-bottom: 1px solid rgba(255,255,255,0.08); }
+        #bisEditModal .modal-footer { border-top: 1px solid rgba(255,255,255,0.08); }
+        .bis-editor-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 4px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .bis-editor-item.sortable-ghost { opacity: .4; background: rgba(252,199,33,.05); }
+        .bis-editor-rank {
+            flex: 0 0 42px;
+            font-size: 10px;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            color: #c4a050;
+            font-family: arial, sans-serif;
+            text-align: center;
+        }
+        .bis-editor-name { flex: 1; min-width: 0; font-size: 13px; }
+        .bis-editor-note {
+            flex: 0 0 160px;
+            font-size: 11px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #c0bdb0;
+            border-radius: 3px;
+            padding: 2px 6px;
+        }
+        .bis-editor-note::placeholder { color: #5a5850; }
+        .bis-editor-remove {
+            background: none; border: none; color: #6e6858;
+            cursor: pointer; font-size: 16px; padding: 0 2px; flex-shrink: 0;
+        }
+        .bis-editor-remove:hover { color: #e05050; }
+        .bis-drag-handle { color: #4a4840; cursor: grab; flex-shrink: 0; user-select: none; }
     </style>
 {% endblock %}
 
@@ -315,12 +391,59 @@
 
             {# ── Tab content ───────────────────────────────────────────── #}
             <div class="col tab-content" id="bisTabContent">
-                {% for slug, content in bis_files.items %}
+                {% for slug in expansion_order %}
                 <div class="eq-window-fancy tab-pane fade{% if slug == first_expansion %} show active{% endif %}"
                      id="{{ slug }}-tab-pane" role="tabpanel"
                      aria-labelledby="{{ slug }}-tab" tabindex="0">
                     <div class="row px-2 bis-content">
-                        {{ content|render_markdown }}
+                        <div class="d-flex justify-content-end mb-2" style="opacity:.5; font-size:11px;">
+                            <a href="{% url 'items:bis_class_history' class_id %}#{{ slug }}" style="color:#a09078; text-decoration:none;">history</a>
+                        </div>
+                        {% with slot_map=bis_data|dict_get:slug %}
+                        {% if slot_map %}
+                        <ul>
+                            {% for slot, entries in slot_map.items %}
+                            <li data-slot="{{ slot }}" data-expansion="{{ slug }}">
+                                <span class="bis-slot">{{ slot }}</span>
+                                <span class="bis-items" data-slot="{{ slot }}" data-expansion="{{ slug }}">
+                                    {% for entry in entries %}
+                                    {% if forloop.first %}
+                                        <span class="bis-item-primary">{% if entry.item_id %}<a href="/items/view/{{ entry.item_id }}" class="bis-item-link">{{ entry.item_name }}</a>{% else %}<span class="bis-item-unresolved">{{ entry.item_name }}</span>{% endif %}{% if entry.note %}<span class="bis-item-note ms-1" style="font-size:11px;color:#6e6858;font-style:italic;">— {{ entry.note }}</span>{% endif %}</span>
+                                    {% else %}
+                                        <span class="bis-item-alt">, {% if entry.item_id %}<a href="/items/view/{{ entry.item_id }}" class="bis-item-link">{{ entry.item_name }}</a>{% else %}<span class="bis-item-unresolved">{{ entry.item_name }}</span>{% endif %}{% if entry.note %}<span class="bis-item-note ms-1" style="font-size:11px;color:#6e6858;font-style:italic;">— {{ entry.note }}</span>{% endif %}</span>
+                                    {% endif %}
+                                    {% endfor %}
+                                </span>
+                                {% if user.is_authenticated %}
+                                <button class="bis-edit-btn"
+                                        data-slot="{{ slot }}"
+                                        data-expansion="{{ slug }}"
+                                        data-class="{{ class_id }}"
+                                        data-entries="{{ entries|bis_entries_json }}"
+                                        title="Edit {{ slot }}">✎</button>
+                                {% endif %}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        <ul>
+                            {% for slot in slot_order %}
+                            <li data-slot="{{ slot }}" data-expansion="{{ slug }}">
+                                <span class="bis-slot">{{ slot }}</span>
+                                <span class="bis-items" data-slot="{{ slot }}" data-expansion="{{ slug }}"></span>
+                                {% if user.is_authenticated %}
+                                <button class="bis-edit-btn"
+                                        data-slot="{{ slot }}"
+                                        data-expansion="{{ slug }}"
+                                        data-class="{{ class_id }}"
+                                        data-entries="[]"
+                                        title="Edit {{ slot }}">✎</button>
+                                {% endif %}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        {% endwith %}
                     </div>
                 </div>
                 {% endfor %}
@@ -330,9 +453,53 @@
     {% endif %}
 
 </div>{# /container-fluid #}
+
+{% if user.is_authenticated %}
+<!-- BIS slot editor modal -->
+<div class="modal fade" id="bisEditModal" tabindex="-1" aria-labelledby="bisEditModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title eq-header" id="bisEditModalLabel">Edit slot</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:12px; color:#a09078;">Drag rows to reorder. The first item is the BIS pick; the rest are alternatives.</p>
+        <div id="bisEditorList"></div>
+        <div class="mt-3" style="position:relative;">
+          <div class="d-flex gap-2">
+            <input type="text" id="bisEditorNewName" class="form-control form-control-sm"
+                   style="background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.15);color:#d4cfc0;"
+                   placeholder="Search item name…" maxlength="128" autocomplete="off">
+            <button class="btn eq-button-fancy btn-sm flex-shrink-0" onclick="bisEditorAddItem()">Add</button>
+          </div>
+          <div id="bisEditorSearchResults"
+               style="display:none;position:absolute;left:0;right:48px;z-index:1060;
+                      background:#1a1914;border:1px solid rgba(200,175,100,0.2);
+                      max-height:200px;overflow-y:auto;border-top:none;"></div>
+        </div>
+        <div class="mt-3">
+          <input type="text" id="bisEditorSummary" class="form-control form-control-sm"
+                 style="background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.15);color:#d4cfc0;"
+                 placeholder="Edit summary (optional, max 200 chars)" maxlength="200">
+        </div>
+        <div id="bisEditorError" class="text-danger mt-2" style="display:none;font-size:12px;"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn eq-button-fancy btn-sm" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn eq-button-fancy btn-sm" id="bisEditorSave" onclick="bisEditorSave()">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
 {% endblock %}
 
 {% block inline_js %}
+{% if user.is_authenticated %}
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+{% endif %}
 <script>
     // Initialise Bootstrap tooltips on the compact class strip
     document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function (el) {
@@ -369,28 +536,205 @@
         });
     })();
 
-    // Split each BIS list item into a styled slot label + items.
-    // Format expected: "Slot - Item1, Item2, Item3"
-    // First item is treated as the primary BIS pick; the rest as alternatives.
-    document.querySelectorAll('.bis-content li').forEach(function (li) {
-        var text = li.textContent;
-        var sep  = ' - ';
-        var idx  = text.indexOf(sep);
-        if (idx === -1) return;
-
-        var slot      = text.substring(0, idx).trim();
-        var itemsText = text.substring(idx + sep.length).trim();
-        var parts     = itemsText.split(', ');
-
-        var itemsHtml = parts.map(function (item, i) {
-            item = item.trim();
-            if (!item) return '';
-            if (i === 0) return '<span class="bis-item-primary">' + item + '</span>';
-            return '<span class="bis-item-alt">, ' + item + '</span>';
-        }).join('');
-
-        li.innerHTML = '<span class="bis-slot">' + slot + '</span>' +
-                       '<span class="bis-items">'  + itemsHtml + '</span>';
-    });
 </script>
+
+{% if user.is_authenticated %}
+<script>
+// ── BIS slot editor ────────────────────────────────────────────────────────
+var _bisEditState = { classId: null, expansion: null, slot: null };
+var _bisSortable = null;
+
+function _rankLabel(i) {
+    return i === 0 ? 'BIS' : 'Alt ' + i;
+}
+
+function _refreshRankLabels() {
+    document.querySelectorAll('#bisEditorList .bis-editor-item').forEach(function(row, i) {
+        row.querySelector('.bis-editor-rank').textContent = _rankLabel(i);
+    });
+}
+
+function _buildRow(item) {
+    var div = document.createElement('div');
+    div.className = 'bis-editor-item';
+    div.innerHTML =
+        '<span class="bis-drag-handle" title="Drag to reorder">⠿</span>' +
+        '<span class="bis-editor-rank"></span>' +
+        '<span class="bis-editor-name">' + item.item_name.replace(/</g,'&lt;') + '</span>' +
+        '<input class="bis-editor-note" type="text" value="' + (item.note||'').replace(/"/g,'&quot;') + '" placeholder="Note (optional)" maxlength="150">' +
+        '<button class="bis-editor-remove" title="Remove">&times;</button>';
+    div.querySelector('.bis-editor-remove').addEventListener('click', function() {
+        div.remove();
+        _refreshRankLabels();
+    });
+    return div;
+}
+
+function openBisEditor(expansion, classId, slot, entriesJson) {
+    _bisEditState = { classId: classId, expansion: expansion, slot: slot };
+    document.getElementById('bisEditModalLabel').textContent = 'Edit: ' + slot;
+    document.getElementById('bisEditorNewName').value = '';
+    document.getElementById('bisEditorSummary').value = '';
+    document.getElementById('bisEditorError').style.display = 'none';
+    var sr = document.getElementById('bisEditorSearchResults');
+    sr.style.display = 'none'; sr.innerHTML = '';
+
+    var list = document.getElementById('bisEditorList');
+    list.innerHTML = '';
+
+    var entries = [];
+    try { entries = typeof entriesJson === 'string' ? JSON.parse(entriesJson) : entriesJson; } catch(e) {}
+    entries.forEach(function(item) { list.appendChild(_buildRow(item)); });
+    _refreshRankLabels();
+
+    if (_bisSortable) _bisSortable.destroy();
+    _bisSortable = Sortable.create(list, {
+        handle: '.bis-drag-handle',
+        animation: 150,
+        ghostClass: 'sortable-ghost',
+        onEnd: _refreshRankLabels,
+    });
+
+    new bootstrap.Modal(document.getElementById('bisEditModal')).show();
+}
+
+function bisEditorAddItem() {
+    var input = document.getElementById('bisEditorNewName');
+    var name = input.value.trim();
+    if (!name) return;
+    var list = document.getElementById('bisEditorList');
+    list.appendChild(_buildRow({ item_name: name, note: '', rank: list.children.length }));
+    _refreshRankLabels();
+    input.value = '';
+    input.focus();
+    var sr = document.getElementById('bisEditorSearchResults');
+    sr.style.display = 'none'; sr.innerHTML = '';
+}
+
+// ── Item autocomplete ─────────────────────────────────────────────────────
+var _bisSearchTimer = null;
+const BIS_ITEM_SEARCH_URL = "{% url 'items:item_name_search' %}";
+
+(function() {
+    var input = document.getElementById('bisEditorNewName');
+    var results = document.getElementById('bisEditorSearchResults');
+
+    input.addEventListener('input', function() {
+        var q = this.value.trim();
+        clearTimeout(_bisSearchTimer);
+        if (q.length < 2) { results.style.display = 'none'; results.innerHTML = ''; return; }
+        _bisSearchTimer = setTimeout(function() {
+            fetch(BIS_ITEM_SEARCH_URL + '?q=' + encodeURIComponent(q))
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    results.innerHTML = '';
+                    if (data.results.length === 0) {
+                        results.innerHTML = '<div style="padding:6px 10px;font-size:12px;color:#6e6858;">No items found</div>';
+                        results.style.display = '';
+                        return;
+                    }
+                    data.results.forEach(function(item) {
+                        var div = document.createElement('div');
+                        div.style.cssText = 'padding:5px 10px;font-size:13px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,0.04);color:#d4cfc0;';
+                        div.textContent = item.name;
+                        div.addEventListener('mouseenter', function() { this.style.background = 'rgba(252,199,33,0.08)'; });
+                        div.addEventListener('mouseleave', function() { this.style.background = ''; });
+                        div.addEventListener('mousedown', function(e) {
+                            e.preventDefault();
+                            input.value = item.name;
+                            results.style.display = 'none'; results.innerHTML = '';
+                            bisEditorAddItem();
+                        });
+                        results.appendChild(div);
+                    });
+                    results.style.display = '';
+                })
+                .catch(function() { results.style.display = 'none'; });
+        }, 300);
+    });
+
+    input.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') { e.preventDefault(); bisEditorAddItem(); }
+        if (e.key === 'Escape') { results.style.display = 'none'; results.innerHTML = ''; }
+    });
+
+    input.addEventListener('blur', function() {
+        setTimeout(function() { results.style.display = 'none'; }, 150);
+    });
+})();
+
+function bisEditorSave() {
+    var list = document.getElementById('bisEditorList');
+    var items = [];
+    list.querySelectorAll('.bis-editor-item').forEach(function(row, i) {
+        items.push({
+            item_name: row.querySelector('.bis-editor-name').textContent,
+            note: row.querySelector('.bis-editor-note').value.trim().slice(0, 150),
+        });
+    });
+
+    var summary = document.getElementById('bisEditorSummary').value.trim().slice(0, 200);
+    var errEl = document.getElementById('bisEditorError');
+    var saveBtn = document.getElementById('bisEditorSave');
+    errEl.style.display = 'none';
+    saveBtn.disabled = true;
+    saveBtn.textContent = 'Saving…';
+
+    var s = _bisEditState;
+    var url = '/items/bis/' + s.classId + '/edit/' + encodeURIComponent(s.expansion) + '/' + encodeURIComponent(s.slot) + '/';
+
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.cookie.match(/csrftoken=([^;]+)/)?.[1] || '',
+        },
+        body: JSON.stringify({ items: items, edit_summary: summary }),
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Save changes';
+        if (!data.ok) {
+            errEl.textContent = data.error || 'Save failed.';
+            errEl.style.display = '';
+            return;
+        }
+        // Update the slot row in the DOM without a full reload
+        var slotSpan = document.querySelector(
+            '.bis-items[data-slot="' + CSS.escape(s.slot) + '"][data-expansion="' + CSS.escape(s.expansion) + '"]'
+        );
+        if (slotSpan) {
+            slotSpan.innerHTML = data.entries.map(function(e, i) {
+                var nameHtml = e.item_id
+                    ? '<a href="/items/view/' + e.item_id + '" class="bis-item-link">' + e.item_name.replace(/</g,'&lt;') + '</a>'
+                    : '<span class="bis-item-unresolved">' + e.item_name.replace(/</g,'&lt;') + '</span>';
+                var noteHtml = e.note ? '<span class="bis-item-note ms-1" style="font-size:11px;color:#6e6858;font-style:italic;">— ' + e.note.replace(/</g,'&lt;') + '</span>' : '';
+                if (i === 0) return '<span class="bis-item-primary">' + nameHtml + '</span>' + noteHtml;
+                return '<span class="bis-item-alt">, ' + nameHtml + '</span>' + noteHtml;
+            }).join('');
+            // Update the edit button's data-entries
+            var editBtn = slotSpan.closest('li').querySelector('.bis-edit-btn');
+            if (editBtn) editBtn.dataset.entries = JSON.stringify(data.entries);
+        }
+        bootstrap.Modal.getInstance(document.getElementById('bisEditModal')).hide();
+    })
+    .catch(function() {
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Save changes';
+        errEl.textContent = 'Network error. Please try again.';
+        errEl.style.display = '';
+    });
+}
+
+// Wire up pencil buttons
+document.querySelectorAll('.bis-edit-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+        var entries = [];
+        try { entries = JSON.parse(btn.dataset.entries || '[]'); } catch(e) {}
+        openBisEditor(btn.dataset.expansion, btn.dataset.class, btn.dataset.slot, entries);
+    });
+});
+</script>
+{% endif %}
 {% endblock %}

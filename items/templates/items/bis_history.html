@@ -1,0 +1,101 @@
+{% extends 'items/base.html' %}
+{% load static %}
+{% load markdown_extras %}
+{% block title %}BIS Edit History{% if selected_class %} — {{ selected_class }}{% endif %} - EQ Archives{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/eq-ui.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+
+    <h2 class="eq-header text-center mb-3" style="font-size: 180%;">
+        Best in Slot — Edit History
+        {% if selected_class %}<span style="color:#a09078; font-size:60%;">{{ selected_class }}</span>{% endif %}
+    </h2>
+
+    <div class="eq-window-fancy mb-4 px-3 py-2">
+        <div class="d-flex align-items-center justify-content-center flex-wrap">
+            <a href="{% url 'items:bis_history' %}"
+               class="btn eq-button-fancy{% if not class_id %} eq-button-fancy-highlighted{% endif %} d-flex align-items-center justify-content-center rounded-0"
+               style="width: 46px; height: 46px; padding: 4px; font-size: 9px; letter-spacing: .04em;"
+               data-bs-toggle="tooltip" data-bs-placement="bottom" title="All classes">
+                All
+            </a>
+            {% for group_label, group_classes in class_archetypes %}
+                {% if not forloop.first %}
+                    <div style="width:1px;height:34px;background:rgba(255,255,255,0.12);margin:0 6px;flex-shrink:0;"></div>
+                {% endif %}
+                {% for cid, cname in group_classes %}
+                <a href="{% url 'items:bis_class_history' cid %}"
+                   class="btn eq-button-fancy{% if cid == class_id %} eq-button-fancy-highlighted{% endif %} d-flex align-items-center justify-content-center rounded-0"
+                   style="width: 46px; height: 46px; padding: 4px;"
+                   data-bs-toggle="tooltip" data-bs-placement="bottom"
+                   title="{{ cname }}{% if cid == 15 %} (Luclin){% endif %}">
+                    <img src="/static/images/class_icons/{{ cid }}.gif"
+                         alt="{{ cname }}"
+                         style="max-height: 32px; max-width: 32px; object-fit: contain;">
+                </a>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+
+    {% if class_id %}
+    <div class="text-end mb-2">
+        <a href="{% url 'items:bis_class' class_id %}" class="btn eq-button-fancy btn-sm">← Back to {{ selected_class }} BIS</a>
+    </div>
+    {% endif %}
+
+    <div class="eq-window-fancy px-3 py-3">
+        {% if revisions %}
+        <table class="table table-dark table-sm table-borderless" style="font-size:13px;">
+            <thead>
+                <tr style="color:#a09078; border-bottom:1px solid rgba(255,255,255,0.08);">
+                    <th style="width:140px;">When</th>
+                    <th style="width:100px;">Who</th>
+                    {% if not class_id %}<th style="width:110px;">Class</th>{% endif %}
+                    <th style="width:100px;">Expansion</th>
+                    <th>Change</th>
+                    <th>Summary</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for rev in revisions %}
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+                <td style="color:#6e6858; white-space:nowrap;">{{ rev.changed_at|date:"M j, Y H:i" }}</td>
+                <td style="color:#c4a050;">{{ rev.changed_by.username|default:"—" }}</td>
+                {% if not class_id %}
+                <td>{{ player_classes|dict_get:rev.class_id|default:rev.class_id }}</td>
+                {% endif %}
+                <td style="color:#6e6858; font-size:11px;">{{ rev.expansion }}</td>
+                <td>
+                    <span class="badge me-1
+                        {% if rev.action == 'add' %}bg-success
+                        {% elif rev.action == 'remove' %}bg-danger
+                        {% elif rev.action == 'reorder' %}bg-primary
+                        {% else %}bg-secondary{% endif %}"
+                        style="font-size:9px; letter-spacing:.05em;">{{ rev.get_action_display }}</span>
+                    {{ rev.describe }}
+                </td>
+                <td style="color:#6e6858; font-style:italic;">{{ rev.edit_summary|default:"" }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="text-muted fst-italic text-center py-4">No edits recorded yet.</p>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}
+
+{% block inline_js %}
+<script>
+    document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function(el) {
+        new bootstrap.Tooltip(el, { trigger: 'hover' });
+    });
+</script>
+{% endblock %}
