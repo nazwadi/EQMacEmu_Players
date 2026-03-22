@@ -123,7 +123,6 @@ class Account(models.Model):
     password = models.CharField(max_length=50, null=False)
     status = models.IntegerField(default=0, null=False)
     lsaccount_id = models.IntegerField(default=None, unique=True, null=False)
-    forum_id = models.IntegerField(default=0, null=False)
     gmspeed = models.SmallIntegerField(default=0, null=False)
     revoked = models.SmallIntegerField(default=0, null=False)
     karma = models.IntegerField(default=0, null=False)

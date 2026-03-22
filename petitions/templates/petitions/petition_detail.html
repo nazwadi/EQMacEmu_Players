@@ -1,0 +1,403 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Petition #{{ petition.pk }} - EQ Archives{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <!-- Header -->
+            <div class="d-flex align-items-start justify-content-between mb-4 flex-wrap gap-3">
+                <div>
+                    <div class="text-muted small mb-1">
+                        <a href="{% if user_is_staff %}{% url 'petitions:staff_list' %}{% else %}{% url 'petitions:list' %}{% endif %}">
+                            &larr; Back to petitions
+                        </a>
+                    </div>
+                    <h1 class="mb-1">{{ petition.subject }}</h1>
+                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                        <span class="badge bg-{{ petition.status_badge_color }}">{{ petition.get_status_display }}</span>
+                        {% if petition.is_locked %}
+                        <span class="badge bg-dark"><i class="fas fa-lock me-1"></i>Locked</span>
+                        {% endif %}
+                        {% if user_is_staff and petition.priority != 'normal' %}
+                        <span class="badge bg-{{ petition.priority_badge_color }}">{{ petition.get_priority_display }}</span>
+                        {% endif %}
+                        <span class="text-muted small">
+                            <i class="{{ petition.category.icon }} me-1"></i>{{ petition.category.name }}
+                        </span>
+                        {% if petition.character_name %}
+                        <span class="text-muted small">— {{ petition.character_name }}</span>
+                        {% endif %}
+                        <span class="text-muted small">Filed {{ petition.created_at|date:"M j, Y" }}</span>
+                    </div>
+                </div>
+
+                {% if user_is_staff %}
+                <div class="d-flex gap-2 flex-wrap align-items-center">
+                    <!-- Claim / Unclaim -->
+                    <form method="POST" action="{% url 'petitions:claim' petition.pk %}">
+                        {% csrf_token %}
+                        {% if petition.claimed_by == request.user %}
+                        <input type="hidden" name="action" value="unclaim">
+                        <button type="submit" class="btn btn-outline-secondary btn-sm">Unclaim</button>
+                        {% elif not petition.claimed_by %}
+                        <input type="hidden" name="action" value="claim">
+                        <button type="submit" class="btn btn-outline-primary btn-sm">Claim</button>
+                        {% else %}
+                        <span class="btn btn-outline-secondary btn-sm disabled">
+                            Claimed by {{ petition.claimed_by.username }}
+                        </span>
+                        {% endif %}
+                    </form>
+
+                    <!-- Priority — auto-submits on change -->
+                    <form method="POST" action="{% url 'petitions:priority_update' petition.pk %}">
+                        {% csrf_token %}
+                        <select name="priority" class="form-select form-select-sm" style="width:auto;"
+                                onchange="this.form.submit()" title="Set priority">
+                            {% for value, label in priority_choices %}
+                            <option value="{{ value }}" {% if petition.priority == value %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </form>
+
+                    <!-- Status — auto-submits on change -->
+                    <form method="POST" action="{% url 'petitions:status_update' petition.pk %}">
+                        {% csrf_token %}
+                        <select name="status" class="form-select form-select-sm" style="width:auto;"
+                                onchange="this.form.submit()" title="Change status">
+                            {% for value, label in status_choices %}
+                            <option value="{{ value }}" {% if petition.status == value %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </form>
+
+                    <!-- Lock / Unlock -->
+                    <form method="POST" action="{% url 'petitions:lock_toggle' petition.pk %}">
+                        {% csrf_token %}
+                        {% if petition.is_locked %}
+                        <input type="hidden" name="action" value="unlock">
+                        <button type="submit" class="btn btn-outline-secondary btn-sm" title="Unlock petition">
+                            <i class="fas fa-lock-open me-1"></i>Unlock
+                        </button>
+                        {% else %}
+                        <input type="hidden" name="action" value="lock">
+                        <button type="submit" class="btn btn-outline-dark btn-sm" title="Lock petition — prevents further replies">
+                            <i class="fas fa-lock me-1"></i>Lock
+                        </button>
+                        {% endif %}
+                    </form>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Staff-only info panel -->
+            {% if user_is_staff %}
+            <div class="card shadow-sm mb-4 border-warning">
+                <div class="card-body py-3 px-3">
+
+                    <!-- Row 1: Petitioner info + Reassign -->
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-2">
+                        <div class="small">
+                            <span class="text-muted">Petitioner:</span>
+                            <strong>{{ petition.user.username }}</strong>
+                            <span class="text-muted ms-3">Account created:</span>
+                            {{ petition.user.date_joined|date:"M j, Y" }}
+                            {% if petition.claimed_by %}
+                            <span class="text-muted ms-3">Claimed by:</span>
+                            <strong>{{ petition.claimed_by.username }}</strong>
+                            {% endif %}
+                        </div>
+
+                        <!-- Reassign -->
+                        {% if staff_members %}
+                        <form method="POST" action="{% url 'petitions:detail' petition.pk %}"
+                              class="d-flex align-items-center gap-2">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="reassign">
+                            <select name="assignee_id" class="form-select form-select-sm" style="width:auto;">
+                                <option value="">Assign to…</option>
+                                {% for member in staff_members %}
+                                <option value="{{ member.pk }}"
+                                    {% if petition.claimed_by == member %}selected{% endif %}>
+                                    {{ member.username }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <button type="submit" class="btn btn-outline-secondary btn-sm flex-shrink-0">Assign</button>
+                        </form>
+                        {% endif %}
+                    </div>
+
+                    <!-- Row 2: Tags — click to toggle -->
+                    {% if all_tags %}
+                    <form method="POST" action="{% url 'petitions:update_tags' petition.pk %}" id="tags-form">
+                        {% csrf_token %}
+                        <div class="d-flex flex-wrap gap-1 align-items-center">
+                            <span class="text-muted small me-1">Tags:</span>
+                            {% for tag in all_tags %}
+                            <label style="cursor:pointer;" title="Click to toggle">
+                                <input type="checkbox" name="tags" value="{{ tag.pk }}"
+                                       class="d-none"
+                                       {% if tag.pk in applied_tag_ids %}checked{% endif %}
+                                       onchange="document.getElementById('tags-form').submit()">
+                                <span class="badge {% if tag.pk in applied_tag_ids %}bg-{{ tag.color }}{% else %}bg-secondary opacity-50{% endif %}">
+                                    {{ tag.name }}{% if tag.pk in applied_tag_ids %} &times;{% endif %}
+                                </span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </form>
+                    {% else %}
+                    <div class="small">
+                        <span class="text-muted">Tags:</span>
+                        <a href="{% url 'petitions:staff_tags' %}" class="ms-1 text-muted">
+                            <i class="fas fa-plus me-1"></i>Create tags
+                        </a>
+                    </div>
+                    {% endif %}
+
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Thread -->
+            <div class="d-flex flex-column gap-3 mb-4">
+                {% for reply in replies %}
+
+                {% if reply.is_system %}
+                <!-- System / audit event — rendered as a subtle timeline divider -->
+                <div class="d-flex align-items-center gap-2 text-muted small px-1">
+                    <hr class="flex-grow-1 my-0">
+                    <span class="text-nowrap">
+                        <i class="fas fa-circle" style="font-size:6px; vertical-align:middle;"></i>
+                        {{ reply.body }} &middot; {{ reply.created_at|date:"M j, Y g:i A" }}
+                    </span>
+                    <hr class="flex-grow-1 my-0">
+                </div>
+
+                {% elif reply.is_internal %}
+                <!-- Internal note — staff only -->
+                <div class="card shadow-sm border-warning">
+                    <div class="card-header bg-warning bg-opacity-25 py-1 px-3 d-flex align-items-center justify-content-between">
+                        <span class="small fw-semibold">
+                            <i class="fas fa-lock me-1"></i> Staff Note — not visible to player
+                        </span>
+                        <span class="text-muted small">{{ reply.created_at|date:"M j, Y g:i A" }}</span>
+                    </div>
+                    <div class="card-body p-3">
+                        <div class="fw-semibold small mb-2">{{ reply.user.username }}</div>
+                        <div style="white-space: pre-wrap;">{{ reply.body }}</div>
+                        {% if reply.attachment %}
+                        <div class="mt-2">
+                            <a href="{% url 'petitions:attachment' reply.pk %}" class="small">
+                                <i class="fas fa-paperclip me-1"></i>{{ reply.attachment.name|slice:"27:" }}
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% else %}
+                <!-- Regular reply -->
+                <div class="card shadow-sm {% if reply.is_staff %}border-info{% endif %}">
+                    <div class="card-body p-3">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <div class="fw-semibold">
+                                {% if reply.is_staff %}
+                                <i class="fas fa-shield-alt text-info me-1"></i>
+                                {% endif %}
+                                {{ reply.user.username }}
+                                {% if reply.is_staff %}
+                                <span class="badge bg-info text-dark ms-1 small">Staff</span>
+                                {% endif %}
+                            </div>
+                            <span class="text-muted small">{{ reply.created_at|date:"M j, Y g:i A" }}</span>
+                        </div>
+                        <div style="white-space: pre-wrap;">{{ reply.body }}</div>
+                        {% if reply.attachment %}
+                        <div class="mt-2">
+                            <a href="{% url 'petitions:attachment' reply.pk %}" class="small">
+                                <i class="fas fa-paperclip me-1"></i>Attachment
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+
+                {% endfor %}
+            </div>
+
+            <!-- Reply form -->
+            {% if not petition.is_locked or user_is_staff %}
+            <div class="card shadow-sm" id="reply-card">
+
+                {% if user_is_staff %}
+                <!-- Mode tabs — switching to Staff Note turns the whole card amber -->
+                <div class="card-header p-0 border-bottom">
+                    <ul class="nav nav-tabs border-0 ms-0">
+                        <li class="nav-item">
+                            <button type="button" class="nav-link active px-4 py-2 rounded-0"
+                                    id="tab-public" onclick="setReplyMode('public')">
+                                <i class="fas fa-comment me-1"></i> Public Reply
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button type="button" class="nav-link px-4 py-2 rounded-0"
+                                    id="tab-internal" onclick="setReplyMode('internal')">
+                                <i class="fas fa-lock me-1"></i> Staff Note
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                {% endif %}
+
+                <div class="card-body p-4">
+
+                    {% if user_is_staff %}
+                    <div id="internal-banner" class="alert alert-warning py-2 mb-3 d-none">
+                        <i class="fas fa-lock me-1"></i>
+                        <strong>Staff note</strong> — this will <strong>not</strong> be visible to the petitioner.
+                    </div>
+                    {% endif %}
+
+                    {% if not user_is_staff %}
+                        {% if petition.status == 'resolved' or petition.status == 'closed' %}
+                        <p class="text-muted small mb-3">
+                            <i class="fas fa-info-circle me-1"></i>
+                            This petition is {{ petition.get_status_display|lower }}. Replying will reopen it.
+                        </p>
+                        {% endif %}
+                    {% endif %}
+
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="hidden" name="is_internal" id="is-internal-field" value="">
+
+                        {% if user_is_staff and canned_responses %}
+                        <div class="mb-3">
+                            <select id="canned-picker" class="form-select form-select-sm"
+                                    onchange="insertCannedResponse(this)">
+                                <option value="">Insert canned response…</option>
+                                {% for cr in canned_responses %}
+                                <option value="{{ cr.body|escapejs }}">{{ cr.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        {% endif %}
+
+                        <div class="mb-3">
+                            <textarea name="body"
+                                      id="reply-body"
+                                      class="form-control"
+                                      rows="6"
+                                      placeholder="Write your reply…"
+                                      required></textarea>
+                        </div>
+
+                        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                            <div class="d-flex align-items-center gap-3">
+                                <label class="btn btn-outline-secondary btn-sm mb-0" style="cursor:pointer;">
+                                    <i class="fas fa-paperclip me-1"></i> Attach file
+                                    <input type="file" name="attachment" class="d-none"
+                                           onchange="updateAttachLabel(this)">
+                                </label>
+                                <span id="attach-label" class="text-muted small"></span>
+                            </div>
+                            <button type="submit" id="submit-btn"
+                                    class="btn btn-primary text-dark"
+                                    style="color: #000 !important;">Send Reply</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {% else %}
+            <div class="alert alert-danger">
+                <i class="fas fa-lock me-1"></i>
+                This petition has been permanently locked by staff and cannot receive further replies.
+            </div>
+            {% endif %}
+
+            <!-- Other petitions by this player (staff only) -->
+            {% if user_is_staff and other_petitions %}
+            <div class="card shadow-sm mt-4">
+                <div class="card-header py-2 px-3 small fw-semibold text-muted">
+                    Other petitions by {{ petition.user.username }}
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-sm align-middle mb-0">
+                        <tbody>
+                            {% for other in other_petitions %}
+                            <tr>
+                                <td class="ps-3">
+                                    <a href="{% url 'petitions:detail' other.pk %}" class="text-decoration-none">
+                                        {{ other.subject }}
+                                    </a>
+                                </td>
+                                <td><span class="badge bg-{{ other.status_badge_color }}">{{ other.get_status_display }}</span></td>
+                                <td class="text-muted small pe-3">{{ other.updated_at|date:"M j, Y" }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
+<script>
+function setReplyMode(mode) {
+    const card      = document.getElementById('reply-card');
+    const banner    = document.getElementById('internal-banner');
+    const field     = document.getElementById('is-internal-field');
+    const btn       = document.getElementById('submit-btn');
+    const textarea  = document.getElementById('reply-body');
+    const tabPub    = document.getElementById('tab-public');
+    const tabInt    = document.getElementById('tab-internal');
+
+    const internal = mode === 'internal';
+
+    card.classList.toggle('border-warning', internal);
+    banner.classList.toggle('d-none', !internal);
+    field.value = internal ? 'on' : '';
+
+    btn.textContent = internal ? 'Save Staff Note' : 'Send Reply';
+    btn.classList.toggle('btn-warning', internal);
+    btn.classList.toggle('btn-primary', !internal);
+    btn.style.color = '#000';
+
+    textarea.placeholder = internal ? 'Write your internal staff note…' : 'Write your reply…';
+
+    tabPub.classList.toggle('active', !internal);
+    tabInt.classList.toggle('active', internal);
+}
+
+function insertCannedResponse(select) {
+    const body = select.value;
+    if (!body) return;
+    const textarea = document.getElementById('reply-body');
+    const start = textarea.selectionStart;
+    const end   = textarea.selectionEnd;
+    textarea.value = textarea.value.slice(0, start) + body + textarea.value.slice(end);
+    textarea.selectionStart = textarea.selectionEnd = start + body.length;
+    textarea.focus();
+    select.value = '';
+}
+
+function updateAttachLabel(input) {
+    document.getElementById('attach-label').textContent =
+        input.files.length ? input.files[0].name : '';
+}
+</script>
+{% endblock %}

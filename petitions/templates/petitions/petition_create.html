@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}File a Petition - EQ Archives{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-md-9">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h1 class="mb-1">File a Petition</h1>
+                    <p class="text-muted mb-4">Staff will respond as soon as possible. Please be as specific as you can.</p>
+
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label for="category" class="form-label fw-semibold">Category</label>
+                            <select name="category" id="category" class="form-select" required>
+                                <option value="">— Select a category —</option>
+                                {% for cat in categories %}
+                                <option value="{{ cat.pk }}">
+                                    {{ cat.name }} — {{ cat.description }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="character_name" class="form-label fw-semibold">
+                                Character <span class="text-muted fw-normal">(optional)</span>
+                            </label>
+                            <select name="character_name" id="character_name" class="form-select">
+                                <option value="">— Not character-specific —</option>
+                                {% for char in characters %}
+                                <option value="{{ char }}">{{ char }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="subject" class="form-label fw-semibold">Subject</label>
+                            <input type="text"
+                                   name="subject"
+                                   id="subject"
+                                   class="form-control"
+                                   maxlength="200"
+                                   placeholder="Brief description of your issue"
+                                   required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="body" class="form-label fw-semibold">Details</label>
+                            <textarea name="body"
+                                      id="body"
+                                      class="form-control"
+                                      rows="10"
+                                      placeholder="Describe the issue in as much detail as possible. Include what happened, when it happened, and any relevant context."
+                                      required></textarea>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary text-dark flex-grow-1">Submit Petition</button>
+                            <a href="{% url 'petitions:list' %}" class="btn btn-outline-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

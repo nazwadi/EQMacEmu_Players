@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Petitions - EQ Archives{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+
+    <div class="d-flex align-items-start justify-content-between mb-4 flex-wrap gap-3">
+        <div>
+            <h1 class="mb-1">My Petitions</h1>
+            <p class="text-muted mb-0">
+                Track your support requests and conversations with staff.
+                <a href="{% url 'petitions:player_email_prefs' %}" class="ms-2 small">Email preferences</a>
+            </p>
+        </div>
+        <a href="{% url 'petitions:create' %}" class="btn btn-primary text-dark"
+           style="color: #000 !important;">
+            <i class="fas fa-plus me-1"></i> File a Petition
+        </a>
+    </div>
+
+    <!-- Active petitions -->
+    {% if active_petitions %}
+    <div class="card shadow-sm mb-4">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Subject</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                        <th>Last Updated</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for petition in active_petitions %}
+                    <tr style="cursor:pointer;"
+                        onclick="window.location='{% url 'petitions:detail' petition.pk %}'"
+                        {% if petition.status == 'pending_player' %}class="table-warning"{% endif %}>
+                        <td class="text-muted small">#{{ petition.pk }}</td>
+                        <td>
+                            <a href="{% url 'petitions:detail' petition.pk %}" class="fw-semibold text-decoration-none">
+                                {{ petition.subject }}
+                            </a>
+                            {% if petition.character_name %}
+                            <span class="text-muted small ms-2">— {{ petition.character_name }}</span>
+                            {% endif %}
+                            {% if petition.unread_count %}
+                            <span class="badge bg-danger ms-1">{{ petition.unread_count }} new</span>
+                            {% endif %}
+                            {% if petition.status == 'pending_player' %}
+                            <span class="ms-2 small fw-semibold text-warning-emphasis">
+                                <i class="fas fa-reply me-1"></i>Your response needed
+                            </span>
+                            {% endif %}
+                        </td>
+                        <td class="text-muted small">
+                            <i class="{{ petition.category.icon }} me-1"></i>{{ petition.category.name }}
+                        </td>
+                        <td>
+                            <span class="badge bg-{{ petition.status_badge_color }}">
+                                {{ petition.get_player_status_display }}
+                            </span>
+                        </td>
+                        <td class="text-muted small">{{ petition.updated_at|date:"M j, Y g:i A" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <div class="card shadow-sm mb-4">
+        <div class="card-body text-center py-5">
+            <i class="fas fa-scroll fa-2x text-muted mb-3 d-block"></i>
+            <h5 class="mb-1">No open petitions</h5>
+            <p class="text-muted mb-3">Need help from staff? File a petition and we'll get back to you.</p>
+            <a href="{% url 'petitions:create' %}" class="btn btn-primary text-dark"
+               style="color: #000 !important;">File a petition</a>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Past petitions -->
+    {% if closed_petitions %}
+    <h5 class="text-muted mb-2">Past Petitions</h5>
+    <div class="card shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Subject</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                        <th>Closed</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for petition in closed_petitions %}
+                    <tr style="cursor:pointer;"
+                        onclick="window.location='{% url 'petitions:detail' petition.pk %}'"
+                        {% if forloop.counter > 5 %}class="past-overflow d-none"{% endif %}>
+                        <td class="text-muted small">#{{ petition.pk }}</td>
+                        <td>
+                            <a href="{% url 'petitions:detail' petition.pk %}" class="text-decoration-none text-muted">
+                                {{ petition.subject }}
+                            </a>
+                            {% if petition.character_name %}
+                            <span class="text-muted small ms-2">— {{ petition.character_name }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-muted small">
+                            <i class="{{ petition.category.icon }} me-1"></i>{{ petition.category.name }}
+                        </td>
+                        <td>
+                            <span class="badge bg-{{ petition.status_badge_color }}">
+                                {{ petition.get_player_status_display }}
+                            </span>
+                            {% if petition.is_locked %}
+                            <span class="badge bg-dark ms-1"><i class="fas fa-lock"></i></span>
+                            {% endif %}
+                        </td>
+                        <td class="text-muted small">{{ petition.updated_at|date:"M j, Y" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% if closed_petitions|length > 5 %}
+        <div class="card-footer text-center py-2">
+            <button class="btn btn-link btn-sm text-muted" id="show-past-btn"
+                    onclick="togglePast()">
+                Show all {{ closed_petitions|length }} past petitions
+            </button>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+</div>
+
+<script>
+function togglePast() {
+    const rows = document.querySelectorAll('.past-overflow');
+    const btn = document.getElementById('show-past-btn');
+    const hidden = rows[0].classList.contains('d-none');
+    rows.forEach(r => r.classList.toggle('d-none', !hidden));
+    btn.textContent = hidden ? 'Show fewer' : 'Show all {{ closed_petitions|length }} past petitions';
+}
+</script>
+{% endblock %}

@@ -39,6 +39,8 @@ DJANGO_EMAIL_USE_TLS = os.environ.get("DJANGO_EMAIL_USE_TLS")
 DJANGO_EMAIL_HOST_USER = os.environ.get("DJANGO_EMAIL_HOST_USER")
 DJANGO_EMAIL_HOST_PASSWORD = os.environ.get("DJANGO_EMAIL_HOST_PASSWORD")
 DJANGO_DEFAULT_FROM_EMAIL = os.environ.get("DJANGO_DEFAULT_FROM_EMAIL")
+PETITION_DISCORD_WEBHOOK_URL = os.environ.get("PETITION_DISCORD_WEBHOOK_URL", "")
+SITE_URL = os.environ.get("SITE_URL", "http://localhost:8000")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -89,6 +91,7 @@ INSTALLED_APPS = [
     'spells.apps.SpellsConfig',
     'zones.apps.ZonesConfig',
     'raid_scheduler.apps.RaidSchedulerConfig',
+    'petitions.apps.PetitionsConfig',
 ]
 
 MESSAGE_TAGS = {
@@ -148,6 +151,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'dkp.context_processors.dkp_context',
                 'EQMacEmu_Players.context_processors.navigation_context',
+                'petitions.context_processors.petition_context',
             ],
         },
     },
@@ -397,10 +401,8 @@ MDEDITOR_CONFIGS = {
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 MEDIA_URL = '/media/'
 
-# Development - prints emails to console
-#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-# Email backend configuration
-EMAIL_BACKEND = DJANGO_EMAIL_BACKEND
+# Email backend — falls back to console (prints to terminal) if not configured in .env
+EMAIL_BACKEND = DJANGO_EMAIL_BACKEND or 'django.core.mail.backends.console.EmailBackend'
 EMAIL_HOST = DJANGO_EMAIL_HOST
 EMAIL_PORT = DJANGO_EMAIL_PORT
 EMAIL_USE_TLS = DJANGO_EMAIL_USE_TLS

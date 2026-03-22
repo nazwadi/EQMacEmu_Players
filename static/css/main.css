@@ -854,9 +854,43 @@ p.text-muted {
     }
 
     /* Navbar search + login area on mobile */
-    .navbar .d-flex.px-5 {
-        padding: 0.5rem 1rem !important;
+    .navbar .d-flex.px-3 {
+        padding: 0.5rem 0.5rem !important;
         justify-content: flex-end;
+    }
+}
+
+/* Three-column grid: logo | nav (centered) | user — desktop only */
+@media (min-width: 992px) {
+    .navbar > .container-fluid {
+        display: grid !important;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: stretch;
+    }
+
+    #logo {
+        grid-column: 1;
+        display: flex;
+        align-items: center;
+    }
+
+    .navbar-collapse {
+        grid-column: 2;
+        display: flex !important;
+        align-items: stretch;
+    }
+
+    .navbar > .container-fluid > .d-flex {
+        grid-column: 3;
+        justify-content: flex-end;
+    }
+}
+
+/* Compress nav-link horizontal padding on lg screens (992–1399px) to prevent wrapping */
+@media (min-width: 992px) and (max-width: 1399px) {
+    .navbar-nav .nav-link,
+    .navbar-nav .dropdown-toggle {
+        padding: 15px 12px !important;
     }
 }
 

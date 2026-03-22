@@ -1,0 +1,253 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Petition Queue - EQ Archives{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+
+    <div class="d-flex align-items-start justify-content-between mb-4 flex-wrap gap-3">
+        <div>
+            <h1 class="mb-1">Petition Queue</h1>
+            <p class="text-muted mb-0">
+                {{ page_obj.paginator.count }} petition{{ page_obj.paginator.count|pluralize }} found.
+            </p>
+        </div>
+        <div class="d-flex gap-2 flex-wrap">
+            <a href="{% url 'petitions:staff_tags' %}" class="btn btn-outline-secondary btn-sm">
+                <i class="fas fa-tags me-1"></i> Tags
+            </a>
+            <a href="{% url 'petitions:staff_canned_responses' %}" class="btn btn-outline-secondary btn-sm">
+                <i class="fas fa-comment-dots me-1"></i> Canned Responses
+            </a>
+            <a href="{% url 'petitions:staff_email_prefs' %}" class="btn btn-outline-secondary btn-sm">
+                <i class="fas fa-envelope me-1"></i> Email Prefs
+            </a>
+        </div>
+    </div>
+
+    <!-- Filters — auto-submit on change -->
+    <form method="GET" class="card shadow-sm mb-3" id="filter-form">
+        <div class="card-body py-3">
+            <div class="row g-2 align-items-end">
+                <!-- Search -->
+                <div class="col-sm">
+                    <label class="form-label small fw-semibold mb-1">Search</label>
+                    <div class="input-group input-group-sm">
+                        <input type="text" name="q" class="form-control"
+                               placeholder="Subject, player, character, or message…"
+                               value="{{ search_query }}">
+                        <button type="submit" class="btn btn-outline-secondary">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-sm-auto">
+                    <label class="form-label small fw-semibold mb-1">Status</label>
+                    <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
+                        <option value="">All statuses</option>
+                        {% for value, label in status_choices %}
+                        <option value="{{ value }}" {% if status_filter == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-sm-auto">
+                    <label class="form-label small fw-semibold mb-1">Priority</label>
+                    <select name="priority" class="form-select form-select-sm" onchange="this.form.submit()">
+                        <option value="">All priorities</option>
+                        {% for value, label in priority_choices %}
+                        <option value="{{ value }}" {% if priority_filter == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-sm-auto">
+                    <label class="form-label small fw-semibold mb-1">Category</label>
+                    <select name="category" class="form-select form-select-sm" onchange="this.form.submit()">
+                        <option value="">All categories</option>
+                        {% for cat in categories %}
+                        <option value="{{ cat.pk }}" {% if category_filter == cat.pk|stringformat:"s" %}selected{% endif %}>{{ cat.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-sm-auto">
+                    <label class="form-label small fw-semibold mb-1">Tag</label>
+                    <select name="tag" class="form-select form-select-sm" onchange="this.form.submit()">
+                        <option value="">All tags</option>
+                        {% for tag in tags %}
+                        <option value="{{ tag.pk }}" {% if tag_filter == tag.pk|stringformat:"s" %}selected{% endif %}>{{ tag.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% if status_filter or category_filter or tag_filter or priority_filter or search_query %}
+                <div class="col-sm-auto">
+                    <a href="{% url 'petitions:staff_list' %}" class="btn btn-outline-secondary btn-sm">
+                        Clear filters
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </form>
+
+    {% if petitions %}
+    <!-- Bulk actions form wraps the table -->
+    <form method="POST" action="{% url 'petitions:staff_list' %}" id="bulk-form">
+        {% csrf_token %}
+
+        <div class="d-flex align-items-center gap-2 mb-2">
+            <select name="bulk_action" class="form-select form-select-sm" style="width:auto;">
+                <option value="">Bulk action…</option>
+                <option value="assign_me">Assign to me</option>
+                <option value="resolve">Resolve</option>
+                <option value="close">Close</option>
+            </select>
+            <button type="submit" class="btn btn-outline-secondary btn-sm"
+                    onclick="return confirmBulk()">Apply</button>
+            <span id="selected-count" class="text-muted small"></span>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th style="width:36px;">
+                                <input type="checkbox" class="form-check-input" id="select-all"
+                                       onchange="toggleAll(this)">
+                            </th>
+                            <th>Subject</th>
+                            <th>Player</th>
+                            <th>Category</th>
+                            <th>Priority</th>
+                            <th>Status</th>
+                            <th>Claimed</th>
+                            <th>Tags</th>
+                            <th>Updated</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for petition in petitions %}
+                        <tr>
+                            <td onclick="event.stopPropagation();">
+                                <input type="checkbox" class="form-check-input row-check"
+                                       name="petition_ids" value="{{ petition.pk }}"
+                                       onchange="updateSelectedCount()">
+                            </td>
+                            <td style="cursor:pointer;" onclick="window.location='{% url 'petitions:detail' petition.pk %}'">
+                                <a href="{% url 'petitions:detail' petition.pk %}" class="fw-semibold text-decoration-none">
+                                    {{ petition.subject }}
+                                </a>
+                                {% if petition.character_name %}
+                                <span class="text-muted small ms-1">— {{ petition.character_name }}</span>
+                                {% endif %}
+                            </td>
+                            <td class="small" style="cursor:pointer;" onclick="window.location='{% url 'petitions:detail' petition.pk %}'">{{ petition.user.username }}</td>
+                            <td class="text-muted small" style="cursor:pointer;" onclick="window.location='{% url 'petitions:detail' petition.pk %}'">
+                                <i class="{{ petition.category.icon }} me-1"></i>{{ petition.category.name }}
+                            </td>
+                            <td style="cursor:pointer;" onclick="window.location='{% url 'petitions:detail' petition.pk %}'">
+                                {% if petition.priority != 'normal' %}
+                                <span class="badge bg-{{ petition.priority_badge_color }}">{{ petition.get_priority_display }}</span>
+                                {% else %}
+                                <span class="text-muted small">—</span>
+                                {% endif %}
+                            </td>
+                            <td style="cursor:pointer;" onclick="window.location='{% url 'petitions:detail' petition.pk %}'">
+                                <span class="badge bg-{{ petition.status_badge_color }}">{{ petition.get_status_display }}</span>
+                                {% if petition.is_locked %}
+                                <span class="badge bg-dark ms-1"><i class="fas fa-lock"></i></span>
+                                {% endif %}
+                            </td>
+                            <td class="small text-muted" style="cursor:pointer;" onclick="window.location='{% url 'petitions:detail' petition.pk %}'">{{ petition.claimed_by.username|default:"—" }}</td>
+                            <td style="cursor:pointer;" onclick="window.location='{% url 'petitions:detail' petition.pk %}'">
+                                {% for tag in petition.staff_tags.all %}
+                                <span class="badge bg-{{ tag.color }}">{{ tag.name }}</span>
+                                {% endfor %}
+                            </td>
+                            <td class="text-muted small" style="cursor:pointer;" onclick="window.location='{% url 'petitions:detail' petition.pk %}'">
+                                {{ petition.updated_at|date:"M j g:i A" }}
+                                {% if petition.is_stale %}
+                                <span class="badge bg-warning text-dark ms-1">{{ petition.age_display }}</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </form>
+
+    <!-- Pagination -->
+    {% if page_obj.has_other_pages %}
+    <nav class="mt-4" aria-label="Petition queue pages">
+        <ul class="pagination pagination-sm justify-content-center mb-0">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ search_query }}&status={{ status_filter }}&category={{ category_filter }}&tag={{ tag_filter }}&priority={{ priority_filter }}">
+                    &laquo;
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+            <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ num }}&q={{ search_query }}&status={{ status_filter }}&category={{ category_filter }}&tag={{ tag_filter }}&priority={{ priority_filter }}">
+                    {{ num }}
+                </a>
+            </li>
+            {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ search_query }}&status={{ status_filter }}&category={{ category_filter }}&tag={{ tag_filter }}&priority={{ priority_filter }}">
+                    &raquo;
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+
+    {% else %}
+    <div class="card shadow-sm">
+        <div class="card-body text-center py-5 text-muted">
+            <i class="fas fa-inbox fa-2x mb-3 d-block"></i>
+            No petitions match your filters.
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+
+<script>
+function toggleAll(master) {
+    document.querySelectorAll('.row-check').forEach(cb => cb.checked = master.checked);
+    updateSelectedCount();
+}
+
+function updateSelectedCount() {
+    const n = document.querySelectorAll('.row-check:checked').length;
+    const el = document.getElementById('selected-count');
+    el.textContent = n > 0 ? `${n} selected` : '';
+    document.getElementById('select-all').indeterminate =
+        n > 0 && n < document.querySelectorAll('.row-check').length;
+}
+
+function confirmBulk() {
+    const n = document.querySelectorAll('.row-check:checked').length;
+    if (n === 0) { alert('Select at least one petition.'); return false; }
+    const action = document.querySelector('[name=bulk_action]').value;
+    if (!action) { alert('Choose a bulk action.'); return false; }
+    return true;
+}
+</script>
+{% endblock %}

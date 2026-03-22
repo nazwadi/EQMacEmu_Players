@@ -30,7 +30,7 @@
 
         <!-- Nav links -->
         <div class="collapse navbar-collapse" id="navbarText">
-            <ul class="navbar-nav ms-5 me-auto">
+            <ul class="navbar-nav">
                 <!-- Database mega-dropdown -->
                 <li class="nav-item dropdown">
                     <a
@@ -275,11 +275,23 @@
                         <span class="visually-hidden">(opens in new tab)</span>
                     </a>
                 </li>
+
+                {% if user_is_staff %}
+                <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center gap-1" href="{% url 'petitions:staff_list' %}">
+                        <i class="fas fa-inbox"></i>
+                        Queue
+                        {% if open_petition_count %}
+                        <span class="badge bg-danger rounded-pill" style="font-size:11px;">{{ open_petition_count }}</span>
+                        {% endif %}
+                    </a>
+                </li>
+                {% endif %}
             </ul>
         </div>
 
         <!-- Search + user -->
-        <div class="d-flex px-5 text-end">
+        <div class="d-flex px-3 text-end">
             <button
                     class="btn btn-outline-secondary fas fa-search me-2"
                     type="button"
@@ -327,6 +339,16 @@
                                     href="{% url 'accounts:inventory_search' %}"
                             >Inventory Search</a
                             >
+                        </li>
+                        <li>
+                            <li>
+                            <a class="dropdown-item d-flex align-items-center justify-content-between"
+                               href="{% url 'petitions:list' %}">
+                                My Petitions
+                                {% if unread_notification_count %}
+                                <span class="badge bg-danger rounded-pill ms-2">{{ unread_notification_count }}</span>
+                                {% endif %}
+                            </a>
                         </li>
                         <li>
                             <hr class="dropdown-divider"/>

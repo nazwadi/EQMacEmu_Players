@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block title %}Canned Responses - EQ Archives{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <h1 class="mb-0">Canned Responses</h1>
+                <a href="{% url 'petitions:staff_list' %}" class="btn btn-outline-secondary btn-sm">Back to queue</a>
+            </div>
+
+            <p class="text-muted mb-4">
+                Canned responses are reusable reply templates. When replying to a petition, select one
+                from the "Insert canned response" dropdown to pre-fill your reply box.
+            </p>
+
+            <!-- Create -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h6 class="fw-semibold mb-3">Create new response</h6>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="create">
+                        <div class="mb-3">
+                            <input type="text" name="name" class="form-control"
+                                   placeholder="Response name (e.g. Corpse retrieved)" required>
+                        </div>
+                        <div class="mb-3">
+                            <textarea name="body" class="form-control" rows="5"
+                                      placeholder="Response text…" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary text-dark"
+                                style="color: #000 !important;">Create</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Existing responses -->
+            {% if responses %}
+            <div class="card shadow-sm">
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Preview</th>
+                                <th>Created by</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for response in responses %}
+                            <tr>
+                                <td class="fw-semibold">{{ response.name }}</td>
+                                <td class="text-muted small" style="max-width:260px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                    {{ response.body }}
+                                </td>
+                                <td class="text-muted small">{{ response.created_by.username|default:"—" }}</td>
+                                <td class="text-end">
+                                    <form method="POST" class="d-inline"
+                                          onsubmit="return confirm('Delete \'{{ response.name }}\'?')">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="delete">
+                                        <input type="hidden" name="response_id" value="{{ response.pk }}">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% else %}
+            <div class="card shadow-sm">
+                <div class="card-body text-center py-4 text-muted">No canned responses yet.</div>
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -67,6 +67,14 @@
                 </div>
             </div>
             <div class="d-flex gap-2">
+                <a href="{% url 'petitions:list' %}" class="btn btn-outline-secondary position-relative">
+                    <i class="fas fa-scroll me-1"></i> My Petitions
+                    {% if unread_notification_count %}
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        {{ unread_notification_count }}
+                    </span>
+                    {% endif %}
+                </a>
                 <a href="{% url 'accounts:convert_to_trader' %}" class="btn btn-outline-secondary">
                     <i class="fas fa-coins me-1"></i> Manage Traders
                 </a>
