@@ -180,7 +180,17 @@ def circuit_config(request, circuit_id):
     })
 
 def circuit_list(request):
-    circuits = RaidCircuit.objects.filter(is_active=True, is_public=True)
+    qs = RaidCircuit.objects.filter(is_active=True)
+    if not request.user.is_authenticated:
+        circuits = qs.filter(is_public=True)
+    elif request.user.is_superuser:
+        circuits = qs
+    else:
+        member_circuit_ids = CircuitMembership.objects.filter(
+            member=request.user, status='active',
+        ).values_list('circuit_id', flat=True)
+        circuits = qs.filter(Q(is_public=True) | Q(pk__in=member_circuit_ids))
+    circuits = circuits.order_by('name')
     if circuits.count() == 1:
         return redirect('dkp:standings', circuit_id=circuits.first().id)
     return render(request, 'dkp/circuit_list.html', {'circuits': circuits})
