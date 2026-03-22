@@ -41,6 +41,17 @@ def get_officer_membership(user, circuit):
     return None
 
 
+def _admin_viewing_circuit(user, circuit):
+    """True when a superuser/staff is viewing a private circuit they aren't an active member of."""
+    if not (user.is_authenticated and (user.is_superuser or user.is_staff)):
+        return False
+    if circuit.is_public:
+        return False
+    return not CircuitMembership.objects.filter(
+        circuit=circuit, member=user, status='active',
+    ).exists()
+
+
 def officer_required(view_func):
     from functools import wraps
     @wraps(view_func)
@@ -361,7 +372,8 @@ def auction_list(request, circuit_id):
         'is_member': is_member,
         'is_officer': is_officer,
         'config': config,
-        'public_bids': public_bids
+        'public_bids': public_bids,
+        'viewing_as_admin': _admin_viewing_circuit(request.user, circuit),
     })
 
 def auction_detail(request, auction_id):
@@ -1049,6 +1061,7 @@ def standings(request, circuit_id):
         'standings': standings_data,
         'join_status': join_status,
         'is_officer': is_officer,
+        'viewing_as_admin': _admin_viewing_circuit(request.user, circuit),
     })
 
 def raid_list(request, circuit_id):
@@ -1078,6 +1091,7 @@ def raid_list(request, circuit_id):
         'circuit': circuit,
         'raids': raids,
         'is_member': is_member,
+        'viewing_as_admin': _admin_viewing_circuit(request.user, circuit),
     })
 
 def raid_detail(request, raid_id):

@@ -12,6 +12,18 @@
                 <div style="width:120px;"></div>
             </div>
 
+            {% if viewing_as_admin %}
+            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2"
+                 style="padding:10px 14px;background:rgba(80,40,140,0.18);border:1px solid #7a50cc;border-radius:6px;">
+                <div>
+                    <span style="color:#b48aff;font-size:11px;text-transform:uppercase;letter-spacing:1px;">Staff View</span>
+                    <div style="color:#ccc;font-size:14px;margin-top:2px;">
+                        Viewing <strong style="color:#d4bbff;">{{ circuit.name }}</strong> as staff &mdash; you are not a member of this circuit.
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
             <div class="WindowNestedTan" style="overflow-x:auto;">
                 <table class="eq-table eq-highlight-rows bordered" data-sortable id="raid-table">
                     <thead>
