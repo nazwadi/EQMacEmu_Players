@@ -112,21 +112,17 @@ def board(request):
         ).values_list('event_id', 'status')
         user_rsvp_map_json = json.dumps({str(eid): st for eid, st in rsvp_pairs})
 
-    # Build sidebar circuit filter list
-    circuit_rows = (
-        all_events.filter(circuit__isnull=False)
-        .values('circuit_id', 'circuit__name')
-        .distinct()
-    )
-    circuit_map = {}
-    for row in circuit_rows:
-        cid = row['circuit_id']
-        circuit_map[cid] = {
-            'id': str(cid),
-            'name': row['circuit__name'],
-            'color': _CIRCUIT_COLORS[cid % len(_CIRCUIT_COLORS)],
+    # Build sidebar circuit filter list from all approved (active) DKP circuits
+    # so a newly approved circuit appears here even before any events exist for it.
+    circuit_map = {
+        c.pk: {
+            'id': str(c.pk),
+            'name': c.name,
+            'color': _CIRCUIT_COLORS[c.pk % len(_CIRCUIT_COLORS)],
         }
-    filter_circuits = sorted(circuit_map.values(), key=lambda c: c['name'])
+        for c in RaidCircuit.objects.filter(is_active=True).order_by('name')
+    }
+    filter_circuits = list(circuit_map.values())
     filter_has_writein = all_events.filter(circuit__isnull=True).exists()
     circuit_color_map_json = json.dumps({str(cid): d['color'] for cid, d in circuit_map.items()})
 
