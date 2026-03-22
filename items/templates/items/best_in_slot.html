@@ -6,101 +6,138 @@
     <link rel="stylesheet" href="{% static 'spells/css/eq-ui.css' %}">
 {% endblock %}
 {% block content %}
-    <div class="container-fluid eq-window-complex-fancy py-4">
-        <div class="row row-cols-9">
-            {% for index, name in player_classes.items %}
-                <div class="col">
-                    {# Class 0 doesn't exist, and class 15 (beastlord) and class 16 (berserker) aren't released yet #}
+    <div class="container-fluid py-4">
+
+        {# ── Class selector ────────────────────────────────────────────── #}
+        <div class="eq-window-complex-fancy">
+            <div class="row row-cols-7 g-2 justify-content-center">
+                {% for index, name in player_classes.items %}
+                    {# Class 0 doesn't exist; classes 15 (Beastlord) and 16 (Berserker) not yet released #}
                     {% if index != 0 and index < 15 %}
-                        {% if index == class_id %}
+                        <div class="col d-flex justify-content-center">
                             <a href="/items/bis/{{ index }}"
-                               class="btn eq-button-fancy-highlighted eq-button-fancy d-flex flex-column align-items-center rounded-0"
-                               style="height: 100px;">
-                                <img class="img-fluid" src="/static/images/class_icons/{{ index }}.gif"
-                                     alt="{{ name }} icon" style="max-height: 70%; max-width: 70%;">
-                                <span class="hidden-print">{{ name }}</span>
+                               class="btn eq-button-fancy{% if index == class_id %} eq-button-fancy-highlighted{% endif %} d-flex flex-column align-items-center rounded-0"
+                               style="width: 100%; max-width: 110px; height: 90px;">
+                                <img class="img-fluid mt-1"
+                                     src="/static/images/class_icons/{{ index }}.gif"
+                                     alt="{{ name }} icon"
+                                     style="max-height: 55px; max-width: 55px; object-fit: contain;">
+                                <span class="mt-1" style="font-size: 11px; line-height: 1.2; text-align: center;">{{ name }}</span>
                             </a>
-                        {% else %}
-                            <a href="/items/bis/{{ index }}"
-                               class="btn eq-button-fancy d-flex flex-column align-items-center rounded-0"
-                               style="height: 100px;">
-                                <img class="img-fluid" src="/static/images/class_icons/{{ index }}.gif"
-                                     alt="{{ name }} icon" style="max-height: 70%; max-width: 70%;">
-                                <span class="hidden-print">{{ name }}</span>
-                            </a>
-                        {% endif %}
+                        </div>
                     {% endif %}
-                </div>
-            {% endfor %}
+                {% endfor %}
+            </div>
         </div>
-    </div>
-    <div class="row mt-4">
-        <div class="col-12"><h2 class="text-center mb-4">{{ selected_class }} Best in Slot</h2></div>
+
+        {# ── Content area ──────────────────────────────────────────────── #}
         {% if class_id == None %}
-            <div class="col-2 text-center mt-4 mb-4 align-items-center"><p>Select a class above.</p></div>
+            <div class="eq-window-fancy mt-4 py-5 text-center">
+                <p class="eq-header h4 mb-2">Select a Class</p>
+                <p class="text-muted" style="font-size: 13px;">
+                    Choose a class above to view Best in Slot gear recommendations.
+                </p>
+            </div>
         {% else %}
-            <div class="col-2">
-                <div class="eq-window-fancy flex-column me-3 bis-div" id="bisTab" role="tablist"
-                     aria-orientation="vertical">
-                    <button class="eq-button-fancy active" id=vanilla-pre-planar-tab" data-bs-toggle="pill"
-                            data-bs-target="#vanilla-pre-planar-tab-pane" type="button" role="tab"
-                            aria-controls="vanilla-pre-planar-tab-pane" aria-selected="true">Vanilla Pre-Planar Gear
-                    </button>
-                    <button class="eq-button-fancy" id=vanilla-planar-tab" data-bs-toggle="pill"
-                            data-bs-target="#vanilla-planar-tab-pane" type="button" role="tab"
-                            aria-controls="vanilla-planar-tab-pane" aria-selected="false">Vanilla Planar Gear
-                    </button>
-                    <button class="eq-button-fancy" id=kunark-tab" data-bs-toggle="pill"
-                            data-bs-target="#kunark-tab-pane" type="button" role="tab"
-                            aria-controls="kunark-tab-pane" aria-selected="false">Kunark Gear
-                    </button>
-                    <button class="eq-button-fancy" id=velious-group-tab" data-bs-toggle="pill"
-                            data-bs-target="#velious-group-tab-pane" type="button" role="tab"
-                            aria-controls="velious-group-tab-pane" aria-selected="false">Velious Group Gear
-                    </button>
-                    <button class="eq-button-fancy" id=velious-raid-tab" data-bs-toggle="pill"
-                            data-bs-target="#velious-raid-tab-pane" type="button" role="tab"
-                            aria-controls="velious-raid-tab-pane" aria-selected="false">Velious Raid Gear
-                    </button>
-                </div>
-            </div>
-            <div class="col tab-content" id="bisTabContent">
-                <div class="tab-pane fade show active" id="vanilla-pre-planar-tab-pane" role="tabpanel"
-                     aria-labelledby="vanilla-pre-planar-tab"
-                     tabindex="0">
-                    <div class="row px-4">
-                        {{ vanilla_pre_planar_file|render_markdown }}
+            <h2 class="eq-header text-center mt-4 mb-3" style="font-size: 200%;">
+                {{ selected_class }} Best in Slot
+            </h2>
+
+            <div class="row g-0">
+
+                {# ── Tier tab navigation ───────────────────────────────── #}
+                <div class="col-12 col-md-3 col-lg-2">
+                    <div class="eq-window-fancy d-flex flex-column bis-div me-md-3 mb-3 mb-md-0"
+                         id="bisTab" role="tablist" aria-orientation="vertical">
+                        <button class="eq-button-fancy active text-start"
+                                id="vanilla-pre-planar-tab"
+                                data-bs-toggle="pill"
+                                data-bs-target="#vanilla-pre-planar-tab-pane"
+                                type="button" role="tab"
+                                aria-controls="vanilla-pre-planar-tab-pane"
+                                aria-selected="true">
+                            Vanilla Pre-Planar
+                        </button>
+                        <button class="eq-button-fancy text-start"
+                                id="vanilla-planar-tab"
+                                data-bs-toggle="pill"
+                                data-bs-target="#vanilla-planar-tab-pane"
+                                type="button" role="tab"
+                                aria-controls="vanilla-planar-tab-pane"
+                                aria-selected="false">
+                            Vanilla Planar
+                        </button>
+                        <button class="eq-button-fancy text-start"
+                                id="kunark-tab"
+                                data-bs-toggle="pill"
+                                data-bs-target="#kunark-tab-pane"
+                                type="button" role="tab"
+                                aria-controls="kunark-tab-pane"
+                                aria-selected="false">
+                            Kunark
+                        </button>
+                        <button class="eq-button-fancy text-start"
+                                id="velious-group-tab"
+                                data-bs-toggle="pill"
+                                data-bs-target="#velious-group-tab-pane"
+                                type="button" role="tab"
+                                aria-controls="velious-group-tab-pane"
+                                aria-selected="false">
+                            Velious Group
+                        </button>
+                        <button class="eq-button-fancy text-start"
+                                id="velious-raid-tab"
+                                data-bs-toggle="pill"
+                                data-bs-target="#velious-raid-tab-pane"
+                                type="button" role="tab"
+                                aria-controls="velious-raid-tab-pane"
+                                aria-selected="false">
+                            Velious Raid
+                        </button>
                     </div>
                 </div>
-                <div class="tab-pane fade" id="vanilla-planar-tab-pane" role="tabpanel"
-                     aria-labelledby="vanilla-planar-tab"
-                     tabindex="1">
-                    <div class="row px-4">
-                        {{ vanilla_planar_file|render_markdown }}
+
+                {# ── Tab content ───────────────────────────────────────── #}
+                <div class="col tab-content" id="bisTabContent">
+                    <div class="eq-window-fancy tab-pane fade show active"
+                         id="vanilla-pre-planar-tab-pane" role="tabpanel"
+                         aria-labelledby="vanilla-pre-planar-tab" tabindex="0">
+                        <div class="row px-2">
+                            {{ vanilla_pre_planar_file|render_markdown }}
+                        </div>
+                    </div>
+                    <div class="eq-window-fancy tab-pane fade"
+                         id="vanilla-planar-tab-pane" role="tabpanel"
+                         aria-labelledby="vanilla-planar-tab" tabindex="0">
+                        <div class="row px-2">
+                            {{ vanilla_planar_file|render_markdown }}
+                        </div>
+                    </div>
+                    <div class="eq-window-fancy tab-pane fade"
+                         id="kunark-tab-pane" role="tabpanel"
+                         aria-labelledby="kunark-tab" tabindex="0">
+                        <div class="row px-2">
+                            {{ kunark_file|render_markdown }}
+                        </div>
+                    </div>
+                    <div class="eq-window-fancy tab-pane fade"
+                         id="velious-group-tab-pane" role="tabpanel"
+                         aria-labelledby="velious-group-tab" tabindex="0">
+                        <div class="row px-2">
+                            {{ velious_group_file|render_markdown }}
+                        </div>
+                    </div>
+                    <div class="eq-window-fancy tab-pane fade"
+                         id="velious-raid-tab-pane" role="tabpanel"
+                         aria-labelledby="velious-raid-tab" tabindex="0">
+                        <div class="row px-2">
+                            {{ velious_raid_file|render_markdown }}
+                        </div>
                     </div>
                 </div>
-                <div class="tab-pane fade" id="kunark-tab-pane" role="tabpanel"
-                     aria-labelledby="kunark-tab"
-                     tabindex="2">
-                    <div class="row px-4">
-                        {{ kunark_file|render_markdown }}
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="velious-group-tab-pane" role="tabpanel"
-                     aria-labelledby="velious-group-tab"
-                     tabindex="3">
-                    <div class="row px-4">
-                        {{ velious_group_file|render_markdown }}
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="velious-raid-tab-pane" role="tabpanel"
-                     aria-labelledby="velious-raid-tab"
-                     tabindex="4">
-                    <div class="row px-4">
-                        {{ velious_raid_file|render_markdown }}
-                    </div>
-                </div>
-            </div>
-            </div>
+
+            </div>{# /row #}
         {% endif %}
+
+    </div>{# /container-fluid #}
 {% endblock %}
