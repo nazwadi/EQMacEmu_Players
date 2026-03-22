@@ -1,0 +1,198 @@
+{% extends 'dkp/base.html' %}
+{% block title %}Manage Invites — {{ circuit.name }}{% endblock %}
+
+{% block content %}
+<div class="container">
+<div class="eq-window mt-4" style="padding-top:40px;">
+    <div class="eq-window-title-bar">Manage Invites</div>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <a href="{% url 'dkp:member_list' circuit.id %}" class="eq-button-fancy">← Manage Members</a>
+        <h4 class="eq-header mb-0">{{ circuit.name }}</h4>
+        <div style="width:150px;"></div>
+    </div>
+
+    {% if messages %}
+    {% for msg in messages %}
+    <div class="mb-3" style="padding:10px;border-radius:4px;
+         border:1px solid {% if msg.tags == 'error' %}#ff6b6b{% else %}#6bff9e{% endif %};
+         color:{% if msg.tags == 'error' %}#ff6b6b{% else %}#6bff9e{% endif %};
+         font-size:0.87rem;">
+        {{ msg }}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {# ── Create invite form ── #}
+    <div class="WindowNestedTan mb-4" style="padding:1.25rem 1.5rem;">
+        <div class="eq-header mb-3" style="font-size:0.9rem;">Create Invite Link</div>
+        <form method="post">
+            {% csrf_token %}
+            <div class="d-flex flex-wrap gap-3 align-items-end">
+                <div>
+                    <label class="inv-label" for="inv-max-uses">Max Uses</label>
+                    <select id="inv-max-uses" name="max_uses" class="inv-select">
+                        <option value="1">1 use</option>
+                        <option value="5">5 uses</option>
+                        <option value="10">10 uses</option>
+                        <option value="25">25 uses</option>
+                        <option value="0">Unlimited</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="inv-label" for="inv-expires">Expires After</label>
+                    <select id="inv-expires" name="expires_days" class="inv-select">
+                        <option value="1">1 day</option>
+                        <option value="3">3 days</option>
+                        <option value="7" selected>7 days</option>
+                        <option value="14">14 days</option>
+                        <option value="30">30 days</option>
+                        <option value="0">Never</option>
+                    </select>
+                </div>
+                <div style="flex:1;min-width:180px;max-width:360px;">
+                    <label class="inv-label" for="inv-note">Note (optional)</label>
+                    <input id="inv-note" type="text" name="note" maxlength="200"
+                           class="inv-text-input"
+                           placeholder="e.g. For Thalion">
+                </div>
+                <div>
+                    <button type="submit" class="eq-button-fancy" style="color:#6bff9e;">
+                        Generate Link
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    {# ── Active invite links ── #}
+    <div class="WindowNestedTan" style="overflow-x:auto;">
+        <table class="eq-table eq-highlight-rows bordered">
+            <thead>
+            <tr>
+                <th>Invite Link</th>
+                <th>Note</th>
+                <th>Uses</th>
+                <th>Expires</th>
+                <th>Created By</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for inv in invites %}
+            <tr>
+                <td style="min-width:260px;max-width:320px;">
+                    <div class="d-flex align-items-center gap-2">
+                        <input type="text" readonly
+                               value="{{ request.scheme }}://{{ request.get_host }}{% url 'dkp:circuit_invite_accept' inv.token %}"
+                               class="inv-link-input"
+                               id="inv-link-{{ inv.pk }}"
+                               onclick="this.select()">
+                        <button type="button" class="eq-button-fancy inv-copy-btn"
+                                style="font-size:11px;white-space:nowrap;"
+                                data-target="inv-link-{{ inv.pk }}">Copy</button>
+                    </div>
+                </td>
+                <td style="color:var(--text-muted);font-size:0.82rem;">
+                    {{ inv.note|default:"—" }}
+                </td>
+                <td style="font-size:0.85rem;white-space:nowrap;">
+                    {{ inv.use_count }}{% if inv.max_uses %}&nbsp;/&nbsp;{{ inv.max_uses }}{% else %}&nbsp;/&nbsp;∞{% endif %}
+                </td>
+                <td style="font-size:0.82rem;color:var(--text-muted);white-space:nowrap;">
+                    {% if inv.expires_at %}
+                        {{ inv.expires_at|date:"M j, Y" }}
+                        {% if not inv.is_valid %}<span style="color:#ff6b6b;"> (expired)</span>{% endif %}
+                    {% else %}
+                        Never
+                    {% endif %}
+                </td>
+                <td style="font-size:0.82rem;color:var(--text-muted);">
+                    {{ inv.created_by.username|default:"—" }}
+                </td>
+                <td>
+                    <form method="post" action="{% url 'dkp:circuit_invite_revoke' circuit.id %}" style="margin:0;">
+                        {% csrf_token %}
+                        <input type="hidden" name="invite_id" value="{{ inv.pk }}">
+                        <button type="submit" class="eq-button-fancy"
+                                style="font-size:11px;color:#ff6b6b;"
+                                onclick="return confirm('Revoke this invite link?')">Revoke</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" style="text-align:center;color:#aaa;padding:20px;">
+                    No active invite links. Create one above.
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+</div>
+
+<style>
+.inv-label {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: 0.3rem;
+}
+.inv-select, .inv-text-input {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-light);
+    border-radius: 0.35rem;
+    padding: 0.35rem 0.6rem;
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color 0.15s;
+    height: 34px;
+    box-sizing: border-box;
+}
+.inv-select { min-width: 110px; }
+.inv-text-input { width: 100%; }
+.inv-text-input::placeholder { color: var(--text-muted); }
+.inv-select:focus, .inv-text-input:focus { border-color: var(--link-color); }
+.inv-link-input {
+    flex: 1;
+    min-width: 0;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-light);
+    border-radius: 0.35rem;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    font-family: monospace;
+    cursor: text;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+}
+</style>
+{% endblock %}
+
+{% block inline_js %}
+<script>
+document.querySelectorAll('.inv-copy-btn').forEach(btn => {
+    btn.addEventListener('click', function () {
+        const input = document.getElementById(this.dataset.target);
+        navigator.clipboard.writeText(input.value).then(() => {
+            const orig = this.textContent;
+            this.textContent = 'Copied!';
+            setTimeout(() => { this.textContent = orig; }, 1500);
+        }).catch(() => {
+            input.select();
+            document.execCommand('copy');
+        });
+    });
+});
+</script>
+{% endblock %}

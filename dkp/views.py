@@ -7,9 +7,9 @@ from django.http import Http404
 from django.utils import timezone
 from datetime import timedelta
 from django.core.cache import cache
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from dkp.models import CircuitConfig, CircuitMembership, DKPTransaction, Auction, Bid, RaidCircuit, Raid, \
-    RaidAttendance, Mob, RaidMobAttendance, CircuitRequest
+    RaidAttendance, Mob, RaidMobAttendance, CircuitRequest, CircuitInvite
 from dkp.utils import get_standings
 from dkp.services import attendance_calculation
 
@@ -1231,6 +1231,95 @@ def member_list(request, circuit_id):
         'pending_members': pending_members,
         'pending_count': pending_members.count(),
     })
+
+# ── Circuit invites ───────────────────────────────────────────────────────────
+
+@officer_required
+def circuit_invite_manage(request, circuit_id):
+    circuit = get_object_or_404(RaidCircuit, pk=circuit_id, is_active=True)
+
+    if request.method == 'POST':
+        max_uses = request.POST.get('max_uses', '1')
+        expires_days = request.POST.get('expires_days', '7')
+        note = request.POST.get('note', '').strip()[:200]
+        try:
+            max_uses = int(max_uses)
+            expires_days = int(expires_days)
+        except ValueError:
+            max_uses, expires_days = 1, 7
+        expires_at = timezone.now() + timedelta(days=expires_days) if expires_days > 0 else None
+        CircuitInvite.objects.create(
+            circuit=circuit,
+            created_by=request.user,
+            max_uses=max_uses,
+            expires_at=expires_at,
+            note=note,
+        )
+        messages.success(request, 'Invite link created.')
+        return redirect('dkp:circuit_invite_manage', circuit_id=circuit_id)
+
+    invites = CircuitInvite.objects.filter(circuit=circuit, is_active=True).order_by('-created_at')
+    return render(request, 'dkp/circuit_invite_manage.html', {
+        'circuit': circuit,
+        'invites': invites,
+    })
+
+
+@officer_required
+@require_POST
+def circuit_invite_revoke(request, circuit_id):
+    circuit = get_object_or_404(RaidCircuit, pk=circuit_id, is_active=True)
+    invite_id = request.POST.get('invite_id')
+    invite = get_object_or_404(CircuitInvite, pk=invite_id, circuit=circuit)
+    invite.is_active = False
+    invite.save(update_fields=['is_active'])
+    messages.success(request, 'Invite revoked.')
+    return redirect('dkp:circuit_invite_manage', circuit_id=circuit_id)
+
+
+def circuit_invite_accept(request, token):
+    invite = get_object_or_404(CircuitInvite, token=token)
+
+    if not invite.is_valid:
+        return render(request, 'dkp/circuit_invite_accept.html', {'error': True, 'circuit': invite.circuit})
+
+    if not request.user.is_authenticated:
+        from django.contrib.auth.views import redirect_to_login
+        return redirect_to_login(request.get_full_path())
+
+    circuit = invite.circuit
+    existing = CircuitMembership.objects.filter(circuit=circuit, member=request.user).first()
+    if existing and existing.status == 'active':
+        messages.info(request, f'You are already an active member of {circuit.name}.')
+        return redirect('dkp:standings', circuit_id=circuit.id)
+
+    if request.method == 'POST':
+        display_name = request.POST.get('display_name', '').strip() or request.user.username
+        if existing:
+            existing.status = 'active'
+            if display_name:
+                existing.display_name = display_name
+            existing.save(update_fields=['status', 'display_name'])
+        else:
+            CircuitMembership.objects.create(
+                circuit=circuit,
+                member=request.user,
+                display_name=display_name,
+                role='member',
+                status='active',
+            )
+        invite.use_count += 1
+        invite.save(update_fields=['use_count'])
+        messages.success(request, f'Welcome to {circuit.name}! You are now an active member.')
+        return redirect('dkp:standings', circuit_id=circuit.id)
+
+    return render(request, 'dkp/circuit_invite_accept.html', {
+        'invite': invite,
+        'circuit': circuit,
+        'existing': existing,
+        'suggested_name': existing.display_name if existing else request.user.username,
+    })
+
 
 @officer_required
 def mob_manage(request, circuit_id):

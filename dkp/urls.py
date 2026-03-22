@@ -34,4 +34,7 @@ urlpatterns = [
     path('circuit-requests/', views.circuit_request_list, name='circuit_request_list'),
     path('circuit-requests/<int:pk>/review/', views.circuit_request_review, name='circuit_request_review'),
     path('membership/<int:membership_id>/display-name/', views.update_display_name, name='update_display_name'),
+    path('manage/<int:circuit_id>/invites/', views.circuit_invite_manage, name='circuit_invite_manage'),
+    path('manage/<int:circuit_id>/invites/revoke/', views.circuit_invite_revoke, name='circuit_invite_revoke'),
+    path('invite/<uuid:token>/', views.circuit_invite_accept, name='circuit_invite_accept'),
 ]

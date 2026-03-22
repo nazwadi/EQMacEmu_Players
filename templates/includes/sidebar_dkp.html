@@ -93,6 +93,10 @@
                 Manage Members
                 {% if dkp_pending_count %}<span class="badge bg-warning text-dark ms-1">{{ dkp_pending_count }}</span>{% endif %}
             </a>
+            <a href="{% url 'dkp:circuit_invite_manage' active_circuit.id %}" class="side-nav-item"
+               {% if request.resolver_match.url_name == 'circuit_invite_manage' %}aria-current="page"{% endif %}>
+                Invite Links
+            </a>
             <a href="{% url 'dkp:circuit_config' active_circuit.id %}" class="side-nav-item"
                {% if request.resolver_match.url_name == 'circuit_config' %}aria-current="page"{% endif %}>
                 Circuit Settings

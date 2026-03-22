@@ -9,7 +9,9 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <a href="{% url 'dkp:standings' circuit.id %}" class="eq-button-fancy">← Standings</a>
                 <h4 class="eq-header mb-0">{{ circuit.name }}</h4>
-                <div style="width:120px;"></div>
+                <a href="{% url 'dkp:circuit_invite_manage' circuit.id %}" class="eq-button-fancy" style="color:#8aa3ff;">
+                    Invite Links
+                </a>
             </div>
 
             <nav class="eq-tab-box-fancy">

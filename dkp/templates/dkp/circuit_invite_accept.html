@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% block title %}Circuit Invite{% if circuit %} — {{ circuit.name }}{% endif %}{% endblock %}
+
+{% block sidebar %}{% include "includes/sidebar_dkp.html" %}{% endblock %}
+
+{% block extra_css %}
+<style>
+.inv-accept-wrap {
+    max-width: 480px;
+    margin: 3rem auto;
+    padding: 0 1rem 4rem;
+    text-align: center;
+}
+.inv-accept-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+.inv-accept-heading {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 0.4rem;
+}
+.inv-accept-sub {
+    font-size: 0.87rem;
+    color: var(--text-muted);
+    margin: 0 0 1.75rem;
+    line-height: 1.5;
+}
+.inv-accept-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-light);
+    border-radius: 0.65rem;
+    padding: 1.5rem;
+    text-align: left;
+    margin-bottom: 1.25rem;
+}
+.inv-field-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: 0.3rem;
+}
+.inv-field-input {
+    width: 100%;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-light);
+    border-radius: 0.4rem;
+    padding: 0.45rem 0.7rem;
+    font-size: 0.88rem;
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color 0.15s;
+    box-sizing: border-box;
+}
+.inv-field-input:focus { border-color: var(--link-color); }
+.inv-field-note {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 0.3rem;
+}
+.inv-submit {
+    width: 100%;
+    margin-top: 1rem;
+    padding: 0.55rem;
+    background: var(--accent-color);
+    border: none;
+    border-radius: 0.4rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #0f0f0f;
+    cursor: pointer;
+    transition: opacity 0.15s;
+}
+.inv-submit:hover { opacity: 0.88; }
+.inv-error-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="inv-accept-wrap">
+
+{% if error %}
+    <div class="inv-error-icon">🔒</div>
+    <h1 class="inv-accept-heading">Invite Not Valid</h1>
+    <p class="inv-accept-sub">
+        This invite link has expired, been revoked, or has already reached its maximum number of uses.
+        Contact a circuit officer to get a fresh invite.
+    </p>
+    <a href="{% url 'dkp:circuit_list' %}" style="font-size:0.85rem;color:var(--link-color);">Browse circuits</a>
+
+{% else %}
+    <div class="inv-accept-icon">⚔️</div>
+    <h1 class="inv-accept-heading">You've been invited to join</h1>
+    <p class="inv-accept-sub">
+        <strong style="color:var(--text-primary);font-size:1.05rem;">{{ circuit.name }}</strong><br>
+        {% if circuit.description %}{{ circuit.description }}<br>{% endif %}
+        Accept below to become an active member and gain access to DKP standings and raid history.
+    </p>
+
+    {% if messages %}
+    {% for msg in messages %}
+    <div class="mb-3" style="padding:10px;border-radius:4px;border:1px solid #8aa3ff;color:#8aa3ff;font-size:0.85rem;">
+        {{ msg }}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <div class="inv-accept-card">
+        <form method="post">
+            {% csrf_token %}
+            <label class="inv-field-label" for="inv-display-name">
+                Your display name in {{ circuit.name }}
+            </label>
+            <input id="inv-display-name" type="text" name="display_name"
+                   class="inv-field-input"
+                   maxlength="200"
+                   value="{{ suggested_name }}"
+                   placeholder="{{ suggested_name }}"
+                   autocomplete="off">
+            <p class="inv-field-note">
+                This is how you'll appear on the standings and raid roster.
+                You can change it later from your profile.
+            </p>
+            {% if existing %}
+            <p class="inv-field-note" style="color:#ffc466;margin-top:0.6rem;">
+                You have an existing {{ existing.status }} membership — accepting will activate it.
+            </p>
+            {% endif %}
+            <button type="submit" class="inv-submit">Accept Invite &amp; Join {{ circuit.name }}</button>
+        </form>
+    </div>
+
+    <a href="{% url 'dkp:circuit_list' %}" style="font-size:0.8rem;color:var(--text-muted);">Not now</a>
+{% endif %}
+
+</div>
+{% endblock %}

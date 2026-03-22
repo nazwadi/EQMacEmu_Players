@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 from django.utils import timezone
 
@@ -230,6 +232,35 @@ class CircuitRequest(models.Model):
 
     def __str__(self):
         return f'CircuitRequest: {self.name} ({self.status})'
+
+
+class CircuitInvite(models.Model):
+    """A token-based invite link that officers can share to add members to a private circuit."""
+    circuit = models.ForeignKey(RaidCircuit, on_delete=models.CASCADE, related_name='invites')
+    token = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
+    created_by = models.ForeignKey(
+        'auth.User', on_delete=models.SET_NULL, null=True, blank=True,
+        related_name='created_circuit_invites',
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField(null=True, blank=True, help_text='Leave blank for no expiry')
+    max_uses = models.PositiveIntegerField(default=1, help_text='0 = unlimited')
+    use_count = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+    note = models.CharField(max_length=200, blank=True, help_text='Optional label, e.g. who this is for')
+
+    @property
+    def is_valid(self):
+        if not self.is_active:
+            return False
+        if self.expires_at and timezone.now() > self.expires_at:
+            return False
+        if self.max_uses > 0 and self.use_count >= self.max_uses:
+            return False
+        return True
+
+    def __str__(self):
+        return f'Invite for {self.circuit.name} ({self.token})'
 
 
 class RaidMobAttendance(models.Model):
