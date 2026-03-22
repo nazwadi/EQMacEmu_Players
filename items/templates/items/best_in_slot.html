@@ -2,142 +2,395 @@
 {% load static %}
 {% load markdown_extras %}
 {% block title %}Best in Slot - EQ Archives{% endblock %}
+
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'spells/css/eq-ui.css' %}">
-{% endblock %}
-{% block content %}
-    <div class="container-fluid py-4">
+    <style>
+        /* ── Full picker: archetype group labels ── */
+        .bis-archetype-label {
+            font-size: 9px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.35);
+            padding: 8px 2px 3px;
+            font-family: arial, sans-serif;
+        }
+        .bis-archetype-group {
+            padding-bottom: 6px;
+            margin-bottom: 4px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .bis-archetype-group:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
 
-        {# ── Class selector ────────────────────────────────────────────── #}
-        <div class="eq-window-complex-fancy">
-            <div class="row row-cols-7 g-2 justify-content-center">
-                {% for index, name in player_classes.items %}
-                    {# Class 0 doesn't exist; classes 15 (Beastlord) and 16 (Berserker) not yet released #}
-                    {% if index != 0 and index < 15 %}
-                        <div class="col d-flex justify-content-center">
-                            <a href="/items/bis/{{ index }}"
-                               class="btn eq-button-fancy{% if index == class_id %} eq-button-fancy-highlighted{% endif %} d-flex flex-column align-items-center rounded-0"
-                               style="width: 100%; max-width: 110px; height: 90px;">
-                                <img class="img-fluid mt-1"
-                                     src="/static/images/class_icons/{{ index }}.gif"
-                                     alt="{{ name }} icon"
-                                     style="max-height: 55px; max-width: 55px; object-fit: contain;">
-                                <span class="mt-1" style="font-size: 11px; line-height: 1.2; text-align: center;">{{ name }}</span>
-                            </a>
-                        </div>
+        /* ── Compact strip: vertical divider between archetype groups ── */
+        .bis-archetype-divider {
+            width: 1px;
+            height: 34px;
+            background: rgba(255, 255, 255, 0.12);
+            margin: 0 6px;
+            flex-shrink: 0;
+        }
+
+        /* ── Expansion era section headings in the sidebar ── */
+        .bis-expansion-heading {
+            font-size: 9px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.3);
+            padding: 10px 10px 2px;
+            font-family: arial, sans-serif;
+            border-top: 1px solid rgba(255, 255, 255, 0.07);
+            margin-top: 2px;
+        }
+        .bis-expansion-heading:first-child {
+            border-top: none;
+            margin-top: 0;
+            padding-top: 4px;
+        }
+
+        /* ── Locked / unavailable expansion tabs ── */
+        .bis-tab-locked {
+            opacity: 0.28 !important;
+            cursor: not-allowed !important;
+            pointer-events: none !important;
+            box-shadow: none !important;
+            border-color: rgba(218, 218, 218, 0.08) !important;
+        }
+
+        /* ── "Luclin" era badge on Beastlord ── */
+        .bis-era-badge {
+            font-size: 8px;
+            font-family: arial, sans-serif;
+            font-weight: bold;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            background: rgba(138, 163, 255, 0.12);
+            color: #8aa3ff;
+            border: 1px solid rgba(138, 163, 255, 0.3);
+            border-radius: 3px;
+            padding: 1px 4px;
+            margin-top: 2px;
+            line-height: 1.5;
+            display: inline-block;
+        }
+
+        /* ════════════════════════════════════════════════
+           BIS tab content typography
+        ════════════════════════════════════════════════ */
+
+        /* Warm base text — off-white instead of clinical white */
+        .bis-content {
+            color: #d4cfc0;
+        }
+
+        /* Tier heading — gold menuetto, matches site style */
+        .bis-content h2 {
+            font-family: menuetto, serif;
+            color: #fcc721;
+            font-size: 130%;
+            text-shadow: 0 0 3px #000, 1px 2px 5px #000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 8px;
+            margin-top: 0;
+            margin-bottom: 4px;
+        }
+
+        /* Horizontal rule after heading */
+        .bis-content hr {
+            border-color: rgba(255, 255, 255, 0.06);
+            margin: 8px 0 14px;
+        }
+
+        /* Description / intro paragraph */
+        .bis-content > p {
+            color: #a09078;
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        /* Italic callouts — draft notices, stub messages */
+        .bis-content p em {
+            color: #8a9fb0;
+            font-style: italic;
+        }
+
+        /* Strip default list chrome */
+        .bis-content ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* Each slot row — two-column: label | items */
+        .bis-content li {
+            display: flex;
+            align-items: baseline;
+            gap: 14px;
+            padding: 6px 2px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            font-size: 14px;
+            list-style: none;
+        }
+        .bis-content li:last-child {
+            border-bottom: none;
+        }
+
+        /* Slot label — small-caps, warm gold, fixed width for alignment */
+        .bis-slot {
+            flex: 0 0 120px;
+            font-size: 11px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #c4a050;
+            font-weight: bold;
+            font-family: arial, sans-serif;
+            padding-top: 1px;
+        }
+
+        /* Items column */
+        .bis-items {
+            flex: 1;
+            min-width: 0;
+        }
+
+        /* Primary (BIS) recommendation */
+        .bis-item-primary {
+            color: #e2ddd0;
+        }
+
+        /* Alternative items — present but subordinate */
+        .bis-item-alt {
+            color: #6e6858;
+            font-size: 13px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+
+    {% if class_id == None %}
+    {# ════════════════════════════════════════════════════════════════════ #}
+    {# LANDING: full archetype-grouped class picker + empty state prompt   #}
+    {# ════════════════════════════════════════════════════════════════════ #}
+
+        <div class="eq-window-complex-fancy px-3 py-2">
+            {% for group_label, group_classes in class_archetypes %}
+            <div class="bis-archetype-group">
+                <div class="bis-archetype-label">{{ group_label }}</div>
+                <div class="d-flex flex-wrap gap-1">
+                    {% for cid, cname in group_classes %}
+                    <a href="/items/bis/{{ cid }}"
+                       class="btn eq-button-fancy d-flex flex-column align-items-center rounded-0"
+                       style="width: 88px; height: 88px;">
+                        <img src="/static/images/class_icons/{{ cid }}.gif"
+                             alt="{{ cname }}"
+                             style="max-height: 48px; max-width: 48px; object-fit: contain; margin-top: 4px;">
+                        <span style="font-size: 10px; line-height: 1.2; margin-top: 3px; text-align: center;">{{ cname }}</span>
+                        {% if cid == 15 %}<span class="bis-era-badge">Luclin</span>{% endif %}
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="eq-window-fancy mt-4 py-5 text-center">
+            <p class="eq-header h4 mb-2">Select a Class</p>
+            <p class="text-muted" style="font-size: 13px;">
+                Choose a class above to view Best in Slot gear recommendations.
+            </p>
+        </div>
+
+    {% else %}
+    {# ════════════════════════════════════════════════════════════════════ #}
+    {# CLASS SELECTED: compact icon strip + sidebar + content              #}
+    {# ════════════════════════════════════════════════════════════════════ #}
+
+        {# ── Compact class strip ─────────────────────────────────────── #}
+        <div class="eq-window-complex-fancy px-3 py-2">
+            <div class="d-flex align-items-center justify-content-center flex-wrap">
+                {% for group_label, group_classes in class_archetypes %}
+                    {% if not forloop.first %}
+                        <div class="bis-archetype-divider"></div>
                     {% endif %}
+                    {% for cid, cname in group_classes %}
+                    <a href="/items/bis/{{ cid }}"
+                       class="btn eq-button-fancy{% if cid == class_id %} eq-button-fancy-highlighted{% endif %} d-flex align-items-center justify-content-center rounded-0 bis-icon-btn"
+                       style="width: 46px; height: 46px; padding: 4px;"
+                       data-bs-toggle="tooltip"
+                       data-bs-placement="bottom"
+                       title="{{ cname }}{% if cid == 15 %} (Luclin){% endif %}">
+                        <img src="/static/images/class_icons/{{ cid }}.gif"
+                             alt="{{ cname }}"
+                             style="max-height: 32px; max-width: 32px; object-fit: contain;">
+                    </a>
+                    {% endfor %}
                 {% endfor %}
             </div>
         </div>
 
-        {# ── Content area ──────────────────────────────────────────────── #}
-        {% if class_id == None %}
-            <div class="eq-window-fancy mt-4 py-5 text-center">
-                <p class="eq-header h4 mb-2">Select a Class</p>
-                <p class="text-muted" style="font-size: 13px;">
-                    Choose a class above to view Best in Slot gear recommendations.
-                </p>
+        <h2 class="eq-header text-center mt-4 mb-3" style="font-size: 200%;">
+            {{ selected_class }} Best in Slot
+        </h2>
+
+        <div class="row g-0">
+
+            {# ── Expansion tier navigation ─────────────────────────────── #}
+            <div class="col-12 col-md-3 col-lg-2">
+                <div class="eq-window-fancy d-flex flex-column bis-div me-md-3 mb-3 mb-md-0"
+                     id="bisTab" role="tablist" aria-orientation="vertical">
+
+                    <div class="bis-expansion-heading">Classic</div>
+                    <button type="button"
+                            class="eq-button-fancy text-start{% if first_expansion == 'vanilla-pre-planar' %} active{% endif %}{% if 'vanilla-pre-planar' in locked_expansions %} bis-tab-locked{% endif %}"
+                            id="vanilla-pre-planar-tab"
+                            {% if 'vanilla-pre-planar' not in locked_expansions %}data-bs-toggle="pill" data-bs-target="#vanilla-pre-planar-tab-pane" role="tab" aria-controls="vanilla-pre-planar-tab-pane" aria-selected="{% if first_expansion == 'vanilla-pre-planar' %}true{% else %}false{% endif %}"{% endif %}>
+                        Pre-Planar
+                    </button>
+                    <button type="button"
+                            class="eq-button-fancy text-start{% if first_expansion == 'vanilla-planar' %} active{% endif %}{% if 'vanilla-planar' in locked_expansions %} bis-tab-locked{% endif %}"
+                            id="vanilla-planar-tab"
+                            {% if 'vanilla-planar' not in locked_expansions %}data-bs-toggle="pill" data-bs-target="#vanilla-planar-tab-pane" role="tab" aria-controls="vanilla-planar-tab-pane" aria-selected="{% if first_expansion == 'vanilla-planar' %}true{% else %}false{% endif %}"{% endif %}>
+                        Planar
+                    </button>
+
+                    <div class="bis-expansion-heading">Kunark</div>
+                    <button type="button"
+                            class="eq-button-fancy text-start{% if first_expansion == 'kunark' %} active{% endif %}{% if 'kunark' in locked_expansions %} bis-tab-locked{% endif %}"
+                            id="kunark-tab"
+                            {% if 'kunark' not in locked_expansions %}data-bs-toggle="pill" data-bs-target="#kunark-tab-pane" role="tab" aria-controls="kunark-tab-pane" aria-selected="{% if first_expansion == 'kunark' %}true{% else %}false{% endif %}"{% endif %}>
+                        Gear
+                    </button>
+
+                    <div class="bis-expansion-heading">Velious</div>
+                    <button type="button"
+                            class="eq-button-fancy text-start{% if first_expansion == 'velious-group' %} active{% endif %}{% if 'velious-group' in locked_expansions %} bis-tab-locked{% endif %}"
+                            id="velious-group-tab"
+                            {% if 'velious-group' not in locked_expansions %}data-bs-toggle="pill" data-bs-target="#velious-group-tab-pane" role="tab" aria-controls="velious-group-tab-pane" aria-selected="{% if first_expansion == 'velious-group' %}true{% else %}false{% endif %}"{% endif %}>
+                        Group
+                    </button>
+                    <button type="button"
+                            class="eq-button-fancy text-start{% if first_expansion == 'velious-raid' %} active{% endif %}{% if 'velious-raid' in locked_expansions %} bis-tab-locked{% endif %}"
+                            id="velious-raid-tab"
+                            {% if 'velious-raid' not in locked_expansions %}data-bs-toggle="pill" data-bs-target="#velious-raid-tab-pane" role="tab" aria-controls="velious-raid-tab-pane" aria-selected="{% if first_expansion == 'velious-raid' %}true{% else %}false{% endif %}"{% endif %}>
+                        Raid
+                    </button>
+
+                    <div class="bis-expansion-heading">Luclin</div>
+                    <button type="button"
+                            class="eq-button-fancy text-start{% if first_expansion == 'luclin-group' %} active{% endif %}{% if 'luclin-group' in locked_expansions %} bis-tab-locked{% endif %}"
+                            id="luclin-group-tab"
+                            {% if 'luclin-group' not in locked_expansions %}data-bs-toggle="pill" data-bs-target="#luclin-group-tab-pane" role="tab" aria-controls="luclin-group-tab-pane" aria-selected="{% if first_expansion == 'luclin-group' %}true{% else %}false{% endif %}"{% endif %}>
+                        Group
+                    </button>
+                    <button type="button"
+                            class="eq-button-fancy text-start{% if first_expansion == 'luclin-raid' %} active{% endif %}{% if 'luclin-raid' in locked_expansions %} bis-tab-locked{% endif %}"
+                            id="luclin-raid-tab"
+                            {% if 'luclin-raid' not in locked_expansions %}data-bs-toggle="pill" data-bs-target="#luclin-raid-tab-pane" role="tab" aria-controls="luclin-raid-tab-pane" aria-selected="{% if first_expansion == 'luclin-raid' %}true{% else %}false{% endif %}"{% endif %}>
+                        Raid
+                    </button>
+
+                    <div class="bis-expansion-heading">Planes of Power</div>
+                    <button type="button"
+                            class="eq-button-fancy text-start{% if first_expansion == 'pop-group' %} active{% endif %}{% if 'pop-group' in locked_expansions %} bis-tab-locked{% endif %}"
+                            id="pop-group-tab"
+                            {% if 'pop-group' not in locked_expansions %}data-bs-toggle="pill" data-bs-target="#pop-group-tab-pane" role="tab" aria-controls="pop-group-tab-pane" aria-selected="{% if first_expansion == 'pop-group' %}true{% else %}false{% endif %}"{% endif %}>
+                        Group
+                    </button>
+                    <button type="button"
+                            class="eq-button-fancy text-start{% if first_expansion == 'pop-raid' %} active{% endif %}{% if 'pop-raid' in locked_expansions %} bis-tab-locked{% endif %}"
+                            id="pop-raid-tab"
+                            {% if 'pop-raid' not in locked_expansions %}data-bs-toggle="pill" data-bs-target="#pop-raid-tab-pane" role="tab" aria-controls="pop-raid-tab-pane" aria-selected="{% if first_expansion == 'pop-raid' %}true{% else %}false{% endif %}"{% endif %}>
+                        Raid
+                    </button>
+
+                </div>
             </div>
-        {% else %}
-            <h2 class="eq-header text-center mt-4 mb-3" style="font-size: 200%;">
-                {{ selected_class }} Best in Slot
-            </h2>
 
-            <div class="row g-0">
-
-                {# ── Tier tab navigation ───────────────────────────────── #}
-                <div class="col-12 col-md-3 col-lg-2">
-                    <div class="eq-window-fancy d-flex flex-column bis-div me-md-3 mb-3 mb-md-0"
-                         id="bisTab" role="tablist" aria-orientation="vertical">
-                        <button class="eq-button-fancy active text-start"
-                                id="vanilla-pre-planar-tab"
-                                data-bs-toggle="pill"
-                                data-bs-target="#vanilla-pre-planar-tab-pane"
-                                type="button" role="tab"
-                                aria-controls="vanilla-pre-planar-tab-pane"
-                                aria-selected="true">
-                            Vanilla Pre-Planar
-                        </button>
-                        <button class="eq-button-fancy text-start"
-                                id="vanilla-planar-tab"
-                                data-bs-toggle="pill"
-                                data-bs-target="#vanilla-planar-tab-pane"
-                                type="button" role="tab"
-                                aria-controls="vanilla-planar-tab-pane"
-                                aria-selected="false">
-                            Vanilla Planar
-                        </button>
-                        <button class="eq-button-fancy text-start"
-                                id="kunark-tab"
-                                data-bs-toggle="pill"
-                                data-bs-target="#kunark-tab-pane"
-                                type="button" role="tab"
-                                aria-controls="kunark-tab-pane"
-                                aria-selected="false">
-                            Kunark
-                        </button>
-                        <button class="eq-button-fancy text-start"
-                                id="velious-group-tab"
-                                data-bs-toggle="pill"
-                                data-bs-target="#velious-group-tab-pane"
-                                type="button" role="tab"
-                                aria-controls="velious-group-tab-pane"
-                                aria-selected="false">
-                            Velious Group
-                        </button>
-                        <button class="eq-button-fancy text-start"
-                                id="velious-raid-tab"
-                                data-bs-toggle="pill"
-                                data-bs-target="#velious-raid-tab-pane"
-                                type="button" role="tab"
-                                aria-controls="velious-raid-tab-pane"
-                                aria-selected="false">
-                            Velious Raid
-                        </button>
+            {# ── Tab content ───────────────────────────────────────────── #}
+            <div class="col tab-content" id="bisTabContent">
+                {% for slug, content in bis_files.items %}
+                <div class="eq-window-fancy tab-pane fade{% if slug == first_expansion %} show active{% endif %}"
+                     id="{{ slug }}-tab-pane" role="tabpanel"
+                     aria-labelledby="{{ slug }}-tab" tabindex="0">
+                    <div class="row px-2 bis-content">
+                        {{ content|render_markdown }}
                     </div>
                 </div>
+                {% endfor %}
+            </div>
 
-                {# ── Tab content ───────────────────────────────────────── #}
-                <div class="col tab-content" id="bisTabContent">
-                    <div class="eq-window-fancy tab-pane fade show active"
-                         id="vanilla-pre-planar-tab-pane" role="tabpanel"
-                         aria-labelledby="vanilla-pre-planar-tab" tabindex="0">
-                        <div class="row px-2">
-                            {{ vanilla_pre_planar_file|render_markdown }}
-                        </div>
-                    </div>
-                    <div class="eq-window-fancy tab-pane fade"
-                         id="vanilla-planar-tab-pane" role="tabpanel"
-                         aria-labelledby="vanilla-planar-tab" tabindex="0">
-                        <div class="row px-2">
-                            {{ vanilla_planar_file|render_markdown }}
-                        </div>
-                    </div>
-                    <div class="eq-window-fancy tab-pane fade"
-                         id="kunark-tab-pane" role="tabpanel"
-                         aria-labelledby="kunark-tab" tabindex="0">
-                        <div class="row px-2">
-                            {{ kunark_file|render_markdown }}
-                        </div>
-                    </div>
-                    <div class="eq-window-fancy tab-pane fade"
-                         id="velious-group-tab-pane" role="tabpanel"
-                         aria-labelledby="velious-group-tab" tabindex="0">
-                        <div class="row px-2">
-                            {{ velious_group_file|render_markdown }}
-                        </div>
-                    </div>
-                    <div class="eq-window-fancy tab-pane fade"
-                         id="velious-raid-tab-pane" role="tabpanel"
-                         aria-labelledby="velious-raid-tab" tabindex="0">
-                        <div class="row px-2">
-                            {{ velious_raid_file|render_markdown }}
-                        </div>
-                    </div>
-                </div>
+        </div>{# /row #}
+    {% endif %}
 
-            </div>{# /row #}
-        {% endif %}
+</div>{# /container-fluid #}
+{% endblock %}
 
-    </div>{# /container-fluid #}
+{% block inline_js %}
+<script>
+    // Initialise Bootstrap tooltips on the compact class strip
+    document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function (el) {
+        new bootstrap.Tooltip(el, { trigger: 'hover' });
+    });
+
+    // Persist selected expansion tab in the URL hash so refresh restores it.
+    // Also keep class-switcher links in sync so switching class stays on the same tier.
+    (function () {
+        function updateClassLinks(slug) {
+            document.querySelectorAll('.bis-icon-btn').forEach(function (a) {
+                a.href = a.href.split('#')[0] + '#' + slug;
+            });
+        }
+
+        var hash = location.hash.replace('#', '');
+        if (hash) {
+            var target = document.getElementById(hash + '-tab');
+            if (target && target.dataset.bsToggle === 'pill') {
+                bootstrap.Tab.getOrCreateInstance(target).show();
+                updateClassLinks(hash);
+            }
+        } else {
+            var active = document.querySelector('#bisTab [data-bs-toggle="pill"].active');
+            if (active) updateClassLinks(active.id.replace('-tab', ''));
+        }
+
+        document.querySelectorAll('#bisTab [data-bs-toggle="pill"]').forEach(function (btn) {
+            btn.addEventListener('shown.bs.tab', function () {
+                var slug = btn.id.replace('-tab', '');
+                history.replaceState(null, '', location.pathname + '#' + slug);
+                updateClassLinks(slug);
+            });
+        });
+    })();
+
+    // Split each BIS list item into a styled slot label + items.
+    // Format expected: "Slot - Item1, Item2, Item3"
+    // First item is treated as the primary BIS pick; the rest as alternatives.
+    document.querySelectorAll('.bis-content li').forEach(function (li) {
+        var text = li.textContent;
+        var sep  = ' - ';
+        var idx  = text.indexOf(sep);
+        if (idx === -1) return;
+
+        var slot      = text.substring(0, idx).trim();
+        var itemsText = text.substring(idx + sep.length).trim();
+        var parts     = itemsText.split(', ');
+
+        var itemsHtml = parts.map(function (item, i) {
+            item = item.trim();
+            if (!item) return '';
+            if (i === 0) return '<span class="bis-item-primary">' + item + '</span>';
+            return '<span class="bis-item-alt">, ' + item + '</span>';
+        }).join('');
+
+        li.innerHTML = '<span class="bis-slot">' + slot + '</span>' +
+                       '<span class="bis-items">'  + itemsHtml + '</span>';
+    });
+</script>
 {% endblock %}

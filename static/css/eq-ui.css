@@ -265,6 +265,7 @@ NAV.eq-tab-box-fancy UL LI.eq-tab-open:hover {
     cursor: default;
     border-width: 0;
     color: #ffffff;
+    height: 28px;
     padding: 0 16px;
     line-height: 25px;
     background-image: url(../eq-ui/images/tab_up_l.png),

@@ -43,27 +43,26 @@
     </script>
     <script>
 document.addEventListener('DOMContentLoaded', function() {
+    function activateTab(name) {
+        document.querySelectorAll('.eq-tab-box-fancy li').forEach(t => t.classList.remove('eq-tab-open'));
+        document.querySelectorAll('.tab-content').forEach(c => { c.style.display = 'none'; c.classList.remove('active'); });
+        const tab = document.querySelector('.eq-tab-box-fancy li[data-tab="' + name + '"]');
+        if (tab) tab.classList.add('eq-tab-open');
+        const content = document.getElementById('tab-' + name);
+        if (content) { content.style.display = 'block'; content.classList.add('active'); }
+    }
+
+    // Restore tab from URL hash on page load
+    const hash = location.hash.replace('#', '');
+    if (hash && document.querySelector('.eq-tab-box-fancy li[data-tab="' + hash + '"]')) {
+        activateTab(hash);
+    }
+
+    // Update hash and switch tab on click
     document.querySelectorAll('.eq-tab-box-fancy li[data-tab]').forEach(tab => {
         tab.addEventListener('click', function() {
-            // Remove active class from all tabs
-            document.querySelectorAll('.eq-tab-box-fancy li').forEach(t => {
-                t.classList.remove('eq-tab-open');
-            });
-
-            // Hide all tab contents
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.style.display = 'none';
-                content.classList.remove('active');
-            });
-
-            // Activate clicked tab
-            this.classList.add('eq-tab-open');
-            const tabId = 'tab-' + this.dataset.tab;
-            const content = document.getElementById(tabId);
-            if (content) {
-                content.style.display = 'block';
-                content.classList.add('active');
-            }
+            activateTab(this.dataset.tab);
+            history.replaceState(null, '', location.pathname + '#' + this.dataset.tab);
         });
     });
 });

@@ -465,6 +465,27 @@ def item_detail_api(request: HttpRequest, item_id: int) -> HttpResponse:
         return HttpResponse("Internal server error", status=500)
 
 
+_BIS_EXPANSION_ORDER = [
+    'vanilla-pre-planar', 'vanilla-planar', 'kunark',
+    'velious-group', 'velious-raid',
+    'luclin-group', 'luclin-raid',
+    'pop-group', 'pop-raid',
+]
+
+# Maps class_id → first expansion that class was available.
+# Classes not listed default to the very first expansion.
+_BIS_CLASS_MIN_EXPANSION = {
+    15: 'luclin-group',  # Beastlord introduced in Luclin
+}
+
+_BIS_CLASS_ARCHETYPES = [
+    ('Tanks',   [1, 3, 5]),           # Warrior, Paladin, Shadowknight
+    ('Priests', [2, 6, 10]),          # Cleric, Druid, Shaman
+    ('Melee',   [7, 9, 4, 8, 15]),    # Monk, Rogue, Ranger, Bard, Beastlord
+    ('Casters', [11, 12, 13, 14]),    # Necromancer, Wizard, Magician, Enchanter
+]
+
+
 def best_in_slot(request: HttpRequest, class_id: int = None) -> HttpResponse:
     """
     Defines view for https://url.tld/items/bis/<int:class_id>
@@ -473,34 +494,39 @@ def best_in_slot(request: HttpRequest, class_id: int = None) -> HttpResponse:
     :param class_id: a unique identifier for a playable class, usually between 1 - 16
     :return: an HTTP response rendering the best in slot template
     """
-    if class_id is None or not 0 < class_id < 15:
+    class_archetypes = [
+        (label, [(cid, PLAYER_CLASSES[cid]) for cid in ids if cid in PLAYER_CLASSES])
+        for label, ids in _BIS_CLASS_ARCHETYPES
+    ]
+
+    if class_id is None or not 0 < class_id < 16:
         return render(request=request,
                       template_name="items/best_in_slot.html",
                       context={
                           "player_classes": PLAYER_CLASSES,
+                          "class_archetypes": class_archetypes,
                           "class_id": None,
                       })
-    else:
-        selected_class = PLAYER_CLASSES.get(class_id, 0)
-        with open(f"items/templates/items/best_in_slot/{selected_class.lower()}/vanilla-pre-planar.md", "r") as md_file:
-            vanilla_pre_planar_file = md_file.read()
-        with open(f"items/templates/items/best_in_slot/{selected_class.lower()}/vanilla-planar.md", "r") as md_file:
-            vanilla_planar_file = md_file.read()
-        with open(f"items/templates/items/best_in_slot/{selected_class.lower()}/kunark.md", "r") as md_file:
-            kunark_file = md_file.read()
-        with open(f"items/templates/items/best_in_slot/{selected_class.lower()}/velious-group.md", "r") as md_file:
-            velious_group_file = md_file.read()
-        with open(f"items/templates/items/best_in_slot/{selected_class.lower()}/velious-raid.md", "r") as md_file:
-            velious_raid_file = md_file.read()
+
+    selected_class = PLAYER_CLASSES.get(class_id, 0)
+    base = f"items/templates/items/best_in_slot/{selected_class.lower()}"
+
+    min_exp = _BIS_CLASS_MIN_EXPANSION.get(class_id, 'vanilla-pre-planar')
+    locked_expansions = set(_BIS_EXPANSION_ORDER[:_BIS_EXPANSION_ORDER.index(min_exp)])
+
+    files = {}
+    for slug in _BIS_EXPANSION_ORDER:
+        with open(f"{base}/{slug}.md", "r") as md_file:
+            files[slug] = md_file.read()
+
     return render(request=request,
                   template_name="items/best_in_slot.html",
                   context={
                       "player_classes": PLAYER_CLASSES,
+                      "class_archetypes": class_archetypes,
                       "selected_class": selected_class,
-                      "vanilla_pre_planar_file": vanilla_pre_planar_file,
-                      "vanilla_planar_file": vanilla_planar_file,
-                      "kunark_file": kunark_file,
-                      "velious_group_file": velious_group_file,
-                      "velious_raid_file": velious_raid_file,
-                      "class_id": class_id
+                      "class_id": class_id,
+                      "locked_expansions": locked_expansions,
+                      "first_expansion": min_exp,
+                      "bis_files": files,
                   })
