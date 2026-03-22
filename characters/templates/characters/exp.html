@@ -2,69 +2,160 @@
 {% load static %}
 {% load data_utilities %}
 {% load humanize %}
-{% block content %}
-    <div class="container py-4">
-        <div class="col-12"><h2 class="text-center">Experience Per Level</h2></div>
-        <ul class="nav justify-content-center py-3">
-            {% for index, data in PLAYER_RACIAL_EXP_MODIFIERS.items %}
-                    <li class="nav-item border"><a class="border-0 btn btn-outline-secondary btn-sm rounded-0"
-                                                   href="/characters/exp/{{ index }}">{{ data.0 }}</a></li>
-            {% endfor %}
-        </ul>
 
-        {% if not level_data %}
-            <div class="p-3 mb-4 border bg-body-tertiary">
-                <div class="row"><p>Select a race from the list above...</p></div>
-            </div>
-        {% else %}
-            <div class="row">
-                <div class="p-3 mb-4 border bg-body-tertiary">
-                    <div class="col-12">
-                        <h4 class="text-center">
-                            {{ selected_race }} - 
-                            {{ racial_modifier }}%
-                        </h4>
-                    </div>
-                    <table class="table" id="exp-table">
-                        <thead>
-                        <tr>
-                            <th>Level</th>
-                            <th>This Level</th>
-                            <th>Modifier</th>
-                            <th>Total</th>
-                            <th>Green Range</th>
-                            <th>Light Blue Range</th>
-                            <th>Blue Range</th>
-                            <th>White Range</th>
-                            <th>Yellow Range</th>
-                            <th>Red Range</th>
-                            <th>Level Mobs Always Resist</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for entry in level_data %}
-                            <tr>
-                                <td>{{ entry.level }}</td>
-                                <td>{{ entry.difference | intcomma }}</td>
-                                <td><strong>&divide;{{ entry.exp_mod }}</strong></td>
-                                <td>{{ entry.experience|intcomma }}</td>
-                                <td class="text-success">{{ entry.con_levels.green.min }}
-                                    - {{ entry.con_levels.green.max }}</td>
-                                <td class="text-info">{{ entry.con_levels.lightblue.min }}
-                                    - {{ entry.con_levels.lightblue.max }}</td>
-                                <td class="text-primary">{{ entry.con_levels.blue.min }}
-                                    - {{ entry.con_levels.blue.max }}</td>
-                                <td>{{ entry.con_levels.white }}</td>
-                                <td class="text-warning">{{ entry.con_levels.yellow.min }}
-                                    - {{ entry.con_levels.yellow.max }}</td>
-                                <td class="text-danger">{{ entry.con_levels.red.min }} - {{ entry.con_levels.red.max }}</td>
-                                <td>>= {{ entry.six_rule }}</td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        {% endif %}
+{% block title %}Experience Calculator - EQ Archives{% endblock %}
+
+{% block content %}
+<style>
+    .exp-race-btn {
+        font-size: 13px;
+        padding: 4px 12px;
+        margin: 3px;
+        font-family: menuetto, serif;
+    }
+    .exp-mod-badge {
+        font-size: 9px;
+        font-family: arial, sans-serif;
+        font-weight: bold;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        border-radius: 3px;
+        padding: 1px 4px;
+        margin-left: 5px;
+        line-height: 1.5;
+        display: inline-block;
+        vertical-align: middle;
+    }
+    .exp-mod-penalty {
+        background: rgba(220,80,80,0.15);
+        color: #e07070;
+        border: 1px solid rgba(220,80,80,0.3);
+    }
+    .exp-mod-bonus {
+        background: rgba(80,180,80,0.15);
+        color: #70c070;
+        border: 1px solid rgba(80,180,80,0.3);
+    }
+    .exp-table th {
+        position: sticky;
+        top: 60px;
+        z-index: 1;
+        background: #1c1a14;
+        font-size: 10px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: #a09078;
+        font-family: arial, sans-serif;
+        font-weight: normal;
+        white-space: nowrap;
+        padding: 6px 10px;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .exp-table td {
+        font-size: 13px;
+        padding: 4px 10px;
+        border-bottom: 1px solid rgba(255,255,255,0.04);
+        white-space: nowrap;
+        vertical-align: middle;
+    }
+    .exp-table tbody tr:last-child td { border-bottom: none; }
+    .exp-table .col-lvl   { color: #c4a050; font-family: menuetto, serif; font-size: 15px; width: 48px; }
+    .exp-table .col-xp    { color: #d4cfc0; }
+    .exp-table .col-mod   { color: #6e6858; font-size: 11px; }
+    .exp-table .col-total { color: #8a9fb0; font-size: 11px; }
+    .exp-table .con-green     { color: #4caf50; }
+    .exp-table .con-lightblue { color: #4dd0e1; }
+    .exp-table .con-blue      { color: #64b5f6; }
+    .exp-table .con-white     { color: #e0ddd5; }
+    .exp-table .con-yellow    { color: #fcc721; }
+    .exp-table .con-red       { color: #ef5350; }
+    .exp-table .con-always    { color: #a09078; font-size: 11px; }
+</style>
+
+<div class="container-fluid py-4">
+
+    <h2 class="eq-header text-center mb-1" style="font-size: 200%;">Experience Calculator</h2>
+    <p class="text-center mb-4" style="color:#a09078; font-size:13px;">
+        Experience required per level, con ranges, and racial modifiers.
+    </p>
+
+    {# ── Race selector ─────────────────────────────────────────────── #}
+    <div class="eq-window-fancy px-3 py-3 mb-4">
+        <div class="d-flex flex-wrap justify-content-center">
+            {% for index, data in PLAYER_RACIAL_EXP_MODIFIERS.items %}
+            <a href="/characters/exp/{{ index }}"
+               class="btn eq-button-fancy exp-race-btn{% if index == race %} eq-button-fancy-highlighted{% endif %}">
+                {{ data.0 }}{% if data.1 > 100 %}<span class="exp-mod-badge exp-mod-penalty">{{ data.1 }}%</span>{% elif data.1 < 100 %}<span class="exp-mod-badge exp-mod-bonus">{{ data.1 }}%</span>{% endif %}
+            </a>
+            {% endfor %}
+        </div>
     </div>
+
+    {% if not level_data %}
+    {# ── Empty state ───────────────────────────────────────────────── #}
+    <div class="eq-window-fancy py-5 text-center">
+        <p class="eq-header h4 mb-2">Select a Race</p>
+        <p style="color:#a09078; font-size:13px;">
+            Choose a race above to view experience requirements and con ranges.
+        </p>
+    </div>
+
+    {% else %}
+    {# ── Table ─────────────────────────────────────────────────────── #}
+    <div class="eq-window-fancy px-3 py-3">
+
+        <h4 class="eq-header text-center mb-1">
+            {{ selected_race }}
+            {% if racial_modifier != 100 %}
+                <span class="exp-mod-badge {% if racial_modifier > 100 %}exp-mod-penalty{% else %}exp-mod-bonus{% endif %}"
+                      style="font-size:11px;">{{ racial_modifier }}% XP</span>
+            {% else %}
+                <span style="color:#6e6858; font-size:13px; font-family:arial,sans-serif; margin-left:6px;">100% XP</span>
+            {% endif %}
+        </h4>
+        <p class="text-center mb-4" style="color:#6e6858; font-size:11px;">
+            {% if racial_modifier > 100 %}This race requires more experience per level than the baseline.
+            {% elif racial_modifier < 100 %}This race requires less experience per level than the baseline.
+            {% else %}This race uses the standard experience curve.{% endif %}
+        </p>
+
+        <table class="table table-dark table-hover table-sm table-borderless exp-table">
+            <thead>
+                <tr>
+                    <th class="col-lvl">Lvl</th>
+                    <th>This Level</th>
+                    <th>Mod</th>
+                    <th>Total XP</th>
+                    <th class="con-green">Green</th>
+                    <th class="con-lightblue">Lt. Blue</th>
+                    <th class="con-blue">Blue</th>
+                    <th class="con-white">White</th>
+                    <th class="con-yellow">Yellow</th>
+                    <th class="con-red">Red</th>
+                    <th>Always Resist</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for entry in level_data %}
+            <tr>
+                <td class="col-lvl">{{ entry.level }}</td>
+                <td class="col-xp">{{ entry.difference|intcomma }}</td>
+                <td class="col-mod">&divide;{{ entry.exp_mod }}</td>
+                <td class="col-total">{{ entry.experience|intcomma }}</td>
+                <td class="con-green">{{ entry.con_levels.green.min }}–{{ entry.con_levels.green.max }}</td>
+                <td class="con-lightblue">{{ entry.con_levels.lightblue.min }}–{{ entry.con_levels.lightblue.max }}</td>
+                <td class="con-blue">{{ entry.con_levels.blue.min }}–{{ entry.con_levels.blue.max }}</td>
+                <td class="con-white">{{ entry.con_levels.white }}</td>
+                <td class="con-yellow">{{ entry.con_levels.yellow.min }}–{{ entry.con_levels.yellow.max }}</td>
+                <td class="con-red">{{ entry.con_levels.red.min }}–{{ entry.con_levels.red.max }}</td>
+                <td class="con-always">&ge;{{ entry.six_rule }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+    {% endif %}
+
+</div>
 {% endblock %}
