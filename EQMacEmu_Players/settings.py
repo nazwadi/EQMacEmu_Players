@@ -40,6 +40,7 @@ DJANGO_EMAIL_HOST_USER = os.environ.get("DJANGO_EMAIL_HOST_USER")
 DJANGO_EMAIL_HOST_PASSWORD = os.environ.get("DJANGO_EMAIL_HOST_PASSWORD")
 DJANGO_DEFAULT_FROM_EMAIL = os.environ.get("DJANGO_DEFAULT_FROM_EMAIL")
 PETITION_DISCORD_WEBHOOK_URL = os.environ.get("PETITION_DISCORD_WEBHOOK_URL", "")
+RAID_SCHEDULER_DISCORD_WEBHOOK_URL = os.environ.get("RAID_SCHEDULER_DISCORD_WEBHOOK_URL", "")
 SITE_URL = os.environ.get("SITE_URL", "http://localhost:8000")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.

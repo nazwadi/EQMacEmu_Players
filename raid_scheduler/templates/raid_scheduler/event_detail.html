@@ -440,15 +440,22 @@
     {% endwith %}
 
     <!-- Actions -->
-    {% if is_closeable and event.status in "scheduled active" %}
+    {% if is_editable or is_closeable and event.status in "scheduled active" %}
     <div class="rs-actions">
-        <form method="post" action="{% url 'raid_scheduler:close_event' event.pk %}">
+        {% if is_editable %}
+        <a href="{% url 'raid_scheduler:edit_event' event.pk %}" class="btn btn-sm btn-outline-secondary">
+            <i class="fas fa-edit"></i> Edit
+        </a>
+        {% endif %}
+        {% if is_closeable and event.status in "scheduled active" %}
+        <form method="post" action="{% url 'raid_scheduler:close_event' event.pk %}" style="display:inline;">
             {% csrf_token %}
             <button type="submit" class="btn btn-sm btn-outline-danger"
                     onclick="return confirm('Close this raid event? This cannot be undone.')">
                 <i class="fas fa-times-circle"></i> Close Event
             </button>
         </form>
+        {% endif %}
     </div>
     {% endif %}
 

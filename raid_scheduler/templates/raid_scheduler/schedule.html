@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Schedule a Raid — EQ Archives{% endblock %}
+{% block title %}{% if editing_event %}Edit Raid{% else %}Schedule a Raid{% endif %} — EQ Archives{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -421,12 +421,26 @@
 {% block content %}
 <div class="rsf-wrap">
 
+    {% if editing_event %}
+    <a href="{% url 'raid_scheduler:event_detail' editing_event.pk %}" class="rsf-back">
+        <i class="fas fa-chevron-left" aria-hidden="true"></i> Back to Event
+    </a>
+    <h1 class="rsf-heading">Edit Raid</h1>
+    <p class="rsf-subheading">{{ editing_event.title }}</p>
+    {% if rsvp_count %}
+    <div class="rsf-alert" role="note" style="border-color:#fcc721;color:#fcc721;background:rgba(252,199,33,0.07);">
+        <i class="fas fa-users" aria-hidden="true"></i>
+        {{ rsvp_count }} player{{ rsvp_count|pluralize }} ha{{ rsvp_count|pluralize:"s,ve" }} already RSVP'd.
+        {% if editing_event.circuit %}A Discord notification will be posted if you change the date, time, targets, or visibility.{% endif %}
+    </div>
+    {% endif %}
+    {% else %}
     <a href="{% url 'raid_scheduler:board' %}" class="rsf-back">
         <i class="fas fa-chevron-left" aria-hidden="true"></i> Back to Raid Schedule
     </a>
-
     <h1 class="rsf-heading">Schedule a Raid</h1>
     <p class="rsf-subheading">Raids appear on the public board and expire 2 hours after start time.</p>
+    {% endif %}
 
     <!-- Non-field errors -->
     {% if form.non_field_errors %}
@@ -452,7 +466,7 @@
     </div>
     {% endif %}
 
-    <form method="post" action="{% url 'raid_scheduler:schedule' %}" novalidate id="rsf-form">
+    <form method="post" action="{% if editing_event %}{% url 'raid_scheduler:edit_event' editing_event.pk %}{% else %}{% url 'raid_scheduler:schedule' %}{% endif %}" novalidate id="rsf-form">
         {% csrf_token %}
 
         <!-- ── Section 1: Raid info ──────────────────────────────────── -->
@@ -624,9 +638,13 @@
         <div class="rsf-submit-row">
             <button type="submit" class="rsf-submit-btn" id="rsf-submit-btn"
                     {% if hard_conflicts %}disabled{% endif %}>
+                {% if editing_event %}
+                <i class="fas fa-save" aria-hidden="true"></i> Save Changes
+                {% else %}
                 <i class="fas fa-calendar-plus" aria-hidden="true"></i> Schedule Raid
+                {% endif %}
             </button>
-            <a href="{% url 'raid_scheduler:board' %}" class="rsf-cancel-link">Cancel</a>
+            <a href="{% if editing_event %}{% url 'raid_scheduler:event_detail' editing_event.pk %}{% else %}{% url 'raid_scheduler:board' %}{% endif %}" class="rsf-cancel-link">Cancel</a>
         </div>
 
     </form>
@@ -651,6 +669,7 @@
     var charCount   = document.getElementById('rsf-char-count');
     var targetsErr  = document.getElementById('rsf-targets-error');
     var conflictUrl = '{% url "raid_scheduler:conflict_check" %}';
+    var excludePk   = {% if editing_event %}{{ editing_event.pk }}{% else %}null{% endif %};
 
     // ── Circuit write-in ──────────────────────────────────────────────
     function toggleWritein() {
@@ -891,6 +910,7 @@
             date: dateVal, start_time: timeVal, is_public: isPublic, circuit: circuit,
         });
         selected.forEach(function (_, id) { params.append('targets', id); });
+        if (excludePk) params.append('exclude_pk', excludePk);
 
         fetch(conflictUrl + '?' + params.toString())
             .then(function (r) { return r.json(); })

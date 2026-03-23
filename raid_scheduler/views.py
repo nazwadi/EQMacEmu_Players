@@ -19,6 +19,7 @@ from dkp.models import CircuitMembership, RaidCircuit
 from .conflicts import check_conflicts
 from .forms import RaidEventForm
 from .models import GMOverrideLog, RaidEvent, RaidSignup, RaidTarget
+from .utils import notify_raid_scheduled, notify_raid_updated
 
 _CIRCUIT_COLORS = [
     '#8aa3ff', '#4dbb5f', '#ff8c69', '#c97bff',
@@ -256,6 +257,7 @@ def schedule(request):
                     event.circuit_name = form.cleaned_data.get('circuit_name', '')
                     event.save()
                     event.targets.set(selected_targets)
+                    notify_raid_scheduled(event)
                     messages.success(
                         request,
                         f"Raid scheduled: {form.cleaned_data['title']} on {event_date.strftime('%A, %b %-d')}.",
@@ -304,6 +306,118 @@ def close_event(request, pk):
     return redirect('raid_scheduler:board')
 
 
+# ── edit event ────────────────────────────────────────────────────────────────
+
+@login_required
+def edit_event(request, pk):
+    event = get_object_or_404(
+        RaidEvent.objects.prefetch_related('targets'),
+        pk=pk,
+    )
+
+    # Same permission model as close_event
+    is_officer = False
+    if event.circuit:
+        is_officer = CircuitMembership.objects.filter(
+            circuit=event.circuit,
+            member=request.user,
+            role='officer',
+            status='active',
+        ).exists()
+
+    if not (request.user.is_superuser or request.user == event.created_by or is_officer):
+        messages.error(request, 'You do not have permission to edit this event.')
+        return redirect('raid_scheduler:event_detail', pk=pk)
+
+    if event.status not in (RaidEvent.STATUS_SCHEDULED, RaidEvent.STATUS_ACTIVE):
+        messages.error(request, 'Only scheduled or active events can be edited.')
+        return redirect('raid_scheduler:event_detail', pk=pk)
+
+    hard_conflicts = []
+    soft_warnings = []
+    preselected_target_ids = list(event.targets.values_list('pk', flat=True))
+
+    if request.method == 'POST':
+        form = RaidEventForm(request.POST, instance=event)
+        preselected_target_ids = request.POST.getlist('targets')
+
+        if form.is_valid():
+            event_date = form.cleaned_data['date']
+            start_time = form.cleaned_data['start_time']
+            is_public = form.cleaned_data['is_public']
+            circuit = form.cleaned_data.get('circuit')
+            ack = form.cleaned_data.get('warnings_acknowledged', False)
+
+            target_ids = request.POST.getlist('targets')
+            selected_targets = list(RaidTarget.objects.filter(pk__in=target_ids)) if target_ids else []
+
+            if not selected_targets:
+                form.add_error(None, 'Please add at least one raid target.')
+            else:
+                hard_conflicts, soft_warnings = check_conflicts(
+                    selected_targets, event_date, start_time, is_public, circuit,
+                    exclude_pk=pk,
+                )
+
+                if hard_conflicts:
+                    messages.error(request, 'This raid cannot be rescheduled due to a conflict.')
+                elif soft_warnings and not ack:
+                    pass  # re-render with warnings + acknowledge checkbox
+                else:
+                    # Capture what changed for Discord notification
+                    changes = []
+                    old_date = event.date
+                    old_time = event.start_time
+                    old_target_ids = set(event.targets.values_list('pk', flat=True))
+                    old_title = event.title
+                    old_public = event.is_public
+
+                    updated = form.save(commit=False)
+                    updated.circuit_name = form.cleaned_data.get('circuit_name', '')
+                    updated.save()
+                    updated.targets.set(selected_targets)
+
+                    if old_title != updated.title:
+                        changes.append(f'title: "{old_title}" → "{updated.title}"')
+                    if old_date != updated.date:
+                        changes.append(
+                            f'date: {old_date.strftime("%b %-d")} → {updated.date.strftime("%b %-d")}'
+                        )
+                    if old_time != updated.start_time:
+                        changes.append(
+                            f'time: {old_time.strftime("%-I:%M %p")} → {updated.start_time.strftime("%-I:%M %p")}'
+                        )
+                    new_target_ids = set(updated.targets.values_list('pk', flat=True))
+                    if old_target_ids != new_target_ids:
+                        changes.append('raid targets updated')
+                    if old_public != updated.is_public:
+                        changes.append(
+                            f'visibility: {"public" if old_public else "private"} → {"public" if updated.is_public else "private"}'
+                        )
+
+                    notify_raid_updated(updated, changes)
+
+                    messages.success(
+                        request,
+                        f"Raid updated: {updated.title} on {updated.date.strftime('%A, %b %-d')}.",
+                    )
+                    return redirect('raid_scheduler:event_detail', pk=pk)
+    else:
+        form = RaidEventForm(instance=event)
+
+    rsvp_count = event.signups.count()
+
+    return render(request, 'raid_scheduler/schedule.html', {
+        'form': form,
+        'hard_conflicts': hard_conflicts,
+        'soft_warnings': soft_warnings,
+        'preselected_target_ids': preselected_target_ids,
+        'targets_json': RaidEventForm.targets_json(),
+        'editing_event': event,
+        'rsvp_count': rsvp_count,
+    })
+
+
 # ── AJAX conflict check ───────────────────────────────────────────────────────
 
 def conflict_check(request):
@@ -332,7 +446,13 @@ def conflict_check(request):
         except RaidCircuit.DoesNotExist:
             pass
 
-    hard, soft = check_conflicts(targets, event_date, start_time, is_public, circuit)
+    exclude_pk = request.GET.get('exclude_pk')
+    try:
+        exclude_pk = int(exclude_pk) if exclude_pk else None
+    except (ValueError, TypeError):
+        exclude_pk = None
+
+    hard, soft = check_conflicts(targets, event_date, start_time, is_public, circuit, exclude_pk=exclude_pk)
     return JsonResponse({'hard': hard, 'soft': soft})
 
 
@@ -417,10 +537,9 @@ def event_detail(request, pk):
                 from django.http import Http404
                 raise Http404
 
-    is_closeable = event.pk in _closeable_pks(
-        request.user,
-        RaidEvent.objects.filter(pk=pk),
-    )
+    editable_pks = _closeable_pks(request.user, RaidEvent.objects.filter(pk=pk))
+    is_closeable = event.pk in editable_pks
+    is_editable = is_closeable and event.status in (RaidEvent.STATUS_SCHEDULED, RaidEvent.STATUS_ACTIVE)
 
     can_rsvp = False
     user_signup = None
@@ -438,6 +557,7 @@ def event_detail(request, pk):
     return render(request, 'raid_scheduler/event_detail.html', {
         'event': event,
         'is_closeable': is_closeable,
+        'is_editable': is_editable,
         'can_rsvp': can_rsvp,
         'user_signup': user_signup,
         'membership': rsvp_membership,
