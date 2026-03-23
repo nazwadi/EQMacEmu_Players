@@ -24,6 +24,8 @@ def dict_get(d, key):
 @register.filter
 def bis_entries_json(entries):
     """Serialize a list of BISEntry objects to a JSON string safe for an HTML attribute."""
+    if not isinstance(entries, (list, tuple)):
+        return escape(json.dumps([]))
     data = [
         {"item_name": e.item_name, "item_id": e.item_id, "rank": e.rank, "note": e.note}
         for e in entries

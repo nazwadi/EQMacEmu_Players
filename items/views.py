@@ -4,7 +4,7 @@ from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.db import connections
+from django.db import connections, transaction
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 from django.http import Http404
@@ -592,7 +592,28 @@ def _try_resolve_item_id(item_name):
 
 
 @login_required
+@require_http_methods(["GET"])
+def bis_slot_entries(request: HttpRequest, class_id: int, expansion: str, slot: str) -> JsonResponse:
+    """Return the current entries for a slot as JSON (used to populate the editor fresh)."""
+    if class_id not in PLAYER_CLASSES or class_id == 0:
+        return JsonResponse({"ok": False, "error": "Invalid class."}, status=400)
+    if expansion not in _BIS_EXPANSION_ORDER:
+        return JsonResponse({"ok": False, "error": "Invalid expansion."}, status=400)
+    entries = list(
+        BISEntry.objects.filter(class_id=class_id, expansion=expansion, slot=slot).order_by('rank')
+    )
+    return JsonResponse({
+        "ok": True,
+        "entries": [
+            {"item_name": e.item_name, "item_id": e.item_id, "rank": e.rank, "note": e.note}
+            for e in entries
+        ],
+    })
+
+
+@login_required
 @require_http_methods(["POST"])
+@transaction.atomic
 def bis_edit_slot(request: HttpRequest, class_id: int, expansion: str, slot: str) -> JsonResponse:
     """
     AJAX endpoint to replace all items in a slot.

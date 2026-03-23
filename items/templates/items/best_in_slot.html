@@ -400,9 +400,9 @@
                             <a href="{% url 'items:bis_class_history' class_id %}#{{ slug }}" style="color:#a09078; text-decoration:none;">history</a>
                         </div>
                         {% with slot_map=bis_data|dict_get:slug %}
-                        {% if slot_map %}
                         <ul>
-                            {% for slot, entries in slot_map.items %}
+                            {% for slot in slot_order %}
+                            {% with entries=slot_map|dict_get:slot %}
                             <li data-slot="{{ slot }}" data-expansion="{{ slug }}">
                                 <span class="bis-slot">{{ slot }}</span>
                                 <span class="bis-items" data-slot="{{ slot }}" data-expansion="{{ slug }}">
@@ -419,30 +419,12 @@
                                         data-slot="{{ slot }}"
                                         data-expansion="{{ slug }}"
                                         data-class="{{ class_id }}"
-                                        data-entries="{{ entries|bis_entries_json }}"
                                         title="Edit {{ slot }}">✎</button>
                                 {% endif %}
                             </li>
+                            {% endwith %}
                             {% endfor %}
                         </ul>
-                        {% else %}
-                        <ul>
-                            {% for slot in slot_order %}
-                            <li data-slot="{{ slot }}" data-expansion="{{ slug }}">
-                                <span class="bis-slot">{{ slot }}</span>
-                                <span class="bis-items" data-slot="{{ slot }}" data-expansion="{{ slug }}"></span>
-                                {% if user.is_authenticated %}
-                                <button class="bis-edit-btn"
-                                        data-slot="{{ slot }}"
-                                        data-expansion="{{ slug }}"
-                                        data-class="{{ class_id }}"
-                                        data-entries="[]"
-                                        title="Edit {{ slot }}">✎</button>
-                                {% endif %}
-                            </li>
-                            {% endfor %}
-                        </ul>
-                        {% endif %}
                         {% endwith %}
                     </div>
                 </div>
@@ -570,23 +552,11 @@ function _buildRow(item) {
     return div;
 }
 
-function openBisEditor(expansion, classId, slot, entriesJson) {
-    _bisEditState = { classId: classId, expansion: expansion, slot: slot };
-    document.getElementById('bisEditModalLabel').textContent = 'Edit: ' + slot;
-    document.getElementById('bisEditorNewName').value = '';
-    document.getElementById('bisEditorSummary').value = '';
-    document.getElementById('bisEditorError').style.display = 'none';
-    var sr = document.getElementById('bisEditorSearchResults');
-    sr.style.display = 'none'; sr.innerHTML = '';
-
+function _populateBisEditor(entries) {
     var list = document.getElementById('bisEditorList');
     list.innerHTML = '';
-
-    var entries = [];
-    try { entries = typeof entriesJson === 'string' ? JSON.parse(entriesJson) : entriesJson; } catch(e) {}
     entries.forEach(function(item) { list.appendChild(_buildRow(item)); });
     _refreshRankLabels();
-
     if (_bisSortable) _bisSortable.destroy();
     _bisSortable = Sortable.create(list, {
         handle: '.bis-drag-handle',
@@ -594,8 +564,41 @@ function openBisEditor(expansion, classId, slot, entriesJson) {
         ghostClass: 'sortable-ghost',
         onEnd: _refreshRankLabels,
     });
+}
 
-    new bootstrap.Modal(document.getElementById('bisEditModal')).show();
+function openBisEditor(expansion, classId, slot) {
+    _bisEditState = { classId: classId, expansion: expansion, slot: slot };
+    document.getElementById('bisEditModalLabel').textContent = 'Edit: ' + slot;
+    document.getElementById('bisEditorNewName').value = '';
+    document.getElementById('bisEditorSummary').value = '';
+    var errEl = document.getElementById('bisEditorError');
+    errEl.style.display = 'none';
+    var sr = document.getElementById('bisEditorSearchResults');
+    sr.style.display = 'none'; sr.innerHTML = '';
+
+    var list = document.getElementById('bisEditorList');
+    list.innerHTML = '<div style="padding:12px;color:#a09078;font-size:13px;">Loading…</div>';
+
+    var modal = new bootstrap.Modal(document.getElementById('bisEditModal'));
+    modal.show();
+
+    var url = '/items/bis/' + classId + '/slot/' + encodeURIComponent(expansion) + '/' + encodeURIComponent(slot) + '/';
+    fetch(url, { headers: { 'X-CSRFToken': document.cookie.match(/csrftoken=([^;]+)/)?.[1] || '' } })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (!data.ok) {
+                list.innerHTML = '';
+                errEl.textContent = data.error || 'Failed to load slot data.';
+                errEl.style.display = '';
+                return;
+            }
+            _populateBisEditor(data.entries);
+        })
+        .catch(function() {
+            list.innerHTML = '';
+            errEl.textContent = 'Network error loading slot data.';
+            errEl.style.display = '';
+        });
 }
 
 function bisEditorAddItem() {
@@ -713,9 +716,6 @@ function bisEditorSave() {
                 if (i === 0) return '<span class="bis-item-primary">' + nameHtml + '</span>' + noteHtml;
                 return '<span class="bis-item-alt">, ' + nameHtml + '</span>' + noteHtml;
             }).join('');
-            // Update the edit button's data-entries
-            var editBtn = slotSpan.closest('li').querySelector('.bis-edit-btn');
-            if (editBtn) editBtn.dataset.entries = JSON.stringify(data.entries);
         }
         bootstrap.Modal.getInstance(document.getElementById('bisEditModal')).hide();
     })
@@ -730,9 +730,7 @@ function bisEditorSave() {
 // Wire up pencil buttons
 document.querySelectorAll('.bis-edit-btn').forEach(function(btn) {
     btn.addEventListener('click', function() {
-        var entries = [];
-        try { entries = JSON.parse(btn.dataset.entries || '[]'); } catch(e) {}
-        openBisEditor(btn.dataset.expansion, btn.dataset.class, btn.dataset.slot, entries);
+        openBisEditor(btn.dataset.expansion, btn.dataset.class, btn.dataset.slot);
     });
 });
 </script>
