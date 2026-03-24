@@ -2,6 +2,7 @@ import calendar
 import json
 from datetime import date, datetime, time, timedelta
 from datetime import timezone as dt_timezone
+from zoneinfo import ZoneInfo
 
 from django.core.paginator import Paginator
 
@@ -34,8 +35,10 @@ def _expire_stale(qs):
     now = timezone.now()
     stale_pks = []
     for ev in qs:
+        tz_name = ev.timezone or 'America/New_York'
         naive = datetime.combine(ev.date, ev.start_time)
-        if now >= timezone.make_aware(naive) + timedelta(hours=2):
+        aware = naive.replace(tzinfo=ZoneInfo(tz_name))
+        if now >= aware + timedelta(hours=2):
             stale_pks.append(ev.pk)
     if stale_pks:
         RaidEvent.objects.filter(pk__in=stale_pks).update(status=RaidEvent.STATUS_EXPIRED)
@@ -70,6 +73,32 @@ def _visible_events(user):
     return _expire_stale(qs)
 
 
+def _calendar_visible_events(user):
+    """All events (including past) visible to user — for the calendar grid."""
+    qs = RaidEvent.objects.select_related('circuit').prefetch_related('targets').filter(
+        status__in=(
+            RaidEvent.STATUS_SCHEDULED, RaidEvent.STATUS_ACTIVE,
+            RaidEvent.STATUS_EXPIRED, RaidEvent.STATUS_CLOSED,
+        ),
+    )
+    if user is None or not user.is_authenticated:
+        return qs.filter(is_public=True)
+    if user.is_superuser:
+        return qs
+
+    member_circuit_ids = CircuitMembership.objects.filter(
+        member=user, status='active',
+    ).values_list('circuit_id', flat=True)
+    signup_event_ids = RaidEvent.objects.filter(
+        signups__member__member=user,
+    ).values_list('pk', flat=True)
+    return qs.filter(
+        Q(is_public=True)
+        | Q(circuit_id__in=member_circuit_ids)
+        | Q(pk__in=signup_event_ids)
+    ).distinct()
+
+
 def _closeable_pks(user, events_qs):
     """Return set of event PKs that this user may close."""
     if not user.is_authenticated:
@@ -102,7 +131,8 @@ def board(request):
     except ValueError:
         anchor = today
 
-    all_events = _visible_events(request.user)
+    all_events = _visible_events(request.user)   # live only — RSVP/close logic
+    grid_events = _calendar_visible_events(request.user)  # incl. past — calendar grid
     closeable = _closeable_pks(request.user, all_events)
 
     user_rsvp_map_json = '{}'
@@ -141,13 +171,13 @@ def board(request):
 
     if view_mode == 'month':
         first_of_month = anchor.replace(day=1)
-        # grid starts on the Monday of the week containing the 1st
-        grid_start = first_of_month - timedelta(days=first_of_month.weekday())
-        cal = calendar.Calendar(firstweekday=0)
+        # grid starts on the Sunday of the week containing the 1st
+        grid_start = first_of_month - timedelta(days=first_of_month.isoweekday() % 7)
+        cal = calendar.Calendar(firstweekday=6)
         weeks_count = len(cal.monthdayscalendar(anchor.year, anchor.month))
         grid_end = grid_start + timedelta(weeks=weeks_count)
 
-        range_events = all_events.filter(date__gte=grid_start, date__lt=grid_end)
+        range_events = grid_events.filter(date__gte=grid_start, date__lt=grid_end)
         events_by_date = {}
         for ev in range_events:
             events_by_date.setdefault(ev.date, []).append(ev)
@@ -176,7 +206,7 @@ def board(request):
         })
 
     elif view_mode == 'day':
-        day_events = list(all_events.filter(date=anchor).order_by('start_time'))
+        day_events = list(grid_events.filter(date=anchor).order_by('start_time'))
         prev_anchor = anchor - timedelta(days=1)
         next_anchor = anchor + timedelta(days=1)
         ctx.update({
@@ -186,12 +216,12 @@ def board(request):
             'period_label': anchor.strftime('%A, %B %-d, %Y'),
         })
 
-    else:  # week — Mon→Sun
-        week_start = anchor - timedelta(days=anchor.weekday())
+    else:  # week — Sun→Sat
+        week_start = anchor - timedelta(days=anchor.isoweekday() % 7)
         week_end = week_start + timedelta(days=6)
         days = [week_start + timedelta(days=i) for i in range(7)]
 
-        week_events = all_events.filter(date__gte=week_start, date__lte=week_end)
+        week_events = grid_events.filter(date__gte=week_start, date__lte=week_end)
         events_by_day = {d: [] for d in days}
         for ev in week_events:
             if ev.date in events_by_day:

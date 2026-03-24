@@ -432,6 +432,18 @@
 /* Day view card: a bit more spacious */
 .rs-day .rs-card { padding: 0.65rem 0.75rem; margin-bottom: 0.6rem; }
 
+/* ── Past events — faded ─────────────────────────────────────────────── */
+/* Month view: fade chips and date number for past cells */
+.rs-month-cell.past .rs-month-chip { opacity: 0.38; }
+.rs-month-cell.past .rs-date-num   { color: var(--text-muted); }
+/* Week view: fade header and event cards for past columns */
+.rs-week-hcell.past .rs-hday-abbr,
+.rs-week-hcell.past .rs-hday-num  { opacity: 0.45; }
+.rs-week-col.past .rs-card         { opacity: 0.42; }
+.rs-strip-pill.past                { opacity: 0.45; }
+/* Day view: fade cards when browsing a past day */
+.rs-day.past .rs-card              { opacity: 0.42; }
+
 .rs-card-target {
     font-weight: 700;
     font-size: 0.83rem;
@@ -715,11 +727,14 @@
 
         <div class="rs-switcher" role="group" aria-label="View mode">
             <a href="?view=day&date={{ anchor|date:'Y-m-d' }}"
-               class="{% if view_mode == 'day' %}active{% endif %}">Day</a>
+               class="{% if view_mode == 'day' %}active{% endif %}"
+               data-rs-view="day">Day</a>
             <a href="?view=week&date={{ anchor|date:'Y-m-d' }}"
-               class="{% if view_mode == 'week' %}active{% endif %}">Week</a>
+               class="{% if view_mode == 'week' %}active{% endif %}"
+               data-rs-view="week">Week</a>
             <a href="?view=month&date={{ anchor|date:'Y-m-d' }}"
-               class="{% if view_mode == 'month' %}active{% endif %}">Month</a>
+               class="{% if view_mode == 'month' %}active{% endif %}"
+               data-rs-view="month">Month</a>
         </div>
 
         {% if can_schedule %}
@@ -736,8 +751,8 @@
     {% if view_mode == 'month' %}
     <div class="rs-month">
         <div class="rs-month-headers" aria-hidden="true">
-            <div>Mon</div><div>Tue</div><div>Wed</div>
-            <div>Thu</div><div>Fri</div><div>Sat</div><div>Sun</div>
+            <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div>
+            <div>Thu</div><div>Fri</div><div>Sat</div>
         </div>
         <div class="rs-month-body">
             {% for week in weeks %}
@@ -746,7 +761,8 @@
                 <div class="rs-month-cell
                             {% if cell.is_today %}today{% endif %}
                             {% if not cell.in_month %}out-month{% endif %}
-                            {% if cell.events %}has-events{% endif %}">
+                            {% if cell.events %}has-events{% endif %}
+                            {% if cell.date < today %}past{% endif %}">
                     <a href="?view=day&date={{ cell.date|date:'Y-m-d' }}"
                        class="rs-date-num"
                        aria-label="{{ cell.date|date:'l, F j' }}">{{ cell.date.day }}</a>
@@ -780,7 +796,7 @@
         <!-- Desktop: column header row -->
         <div class="rs-week-headers" aria-hidden="true">
             {% for day, events in days_with_events %}
-            <div class="rs-week-hcell {% if day == today %}today{% endif %}">
+            <div class="rs-week-hcell {% if day == today %}today{% elif day < today %}past{% endif %}">
                 <span class="rs-hday-abbr">{{ day|date:'D' }}</span>
                 <a href="?view=day&date={{ day|date:'Y-m-d' }}" class="rs-hday-num">{{ day|date:'j' }}</a>
             </div>
@@ -790,7 +806,7 @@
         <!-- Desktop: event columns -->
         <div class="rs-week-cols">
             {% for day, events in days_with_events %}
-            <div class="rs-week-col {% if day == today %}today{% endif %}">
+            <div class="rs-week-col {% if day == today %}today{% elif day < today %}past{% endif %}">
                 {% for event in events %}{% include "raid_scheduler/_event_card.html" %}
                 {% empty %}<div class="rs-empty">—</div>{% endfor %}
             </div>
@@ -801,7 +817,7 @@
         <div class="rs-week-mobile">
             <div class="rs-strip" aria-label="Day navigation">
                 {% for day, events in days_with_events %}
-                <a class="rs-strip-pill {% if day == today %}today{% endif %}"
+                <a class="rs-strip-pill {% if day == today %}today{% elif day < today %}past{% endif %}"
                    href="#mob-{{ day|date:'Y-m-d' }}"
                    aria-label="{{ day|date:'l, F j' }}">
                     <span style="font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;">{{ day|date:'D' }}</span>
@@ -829,7 +845,7 @@
 
     {# ════════════════════════ DAY VIEW ══════════════════════════ #}
     {% else %}
-    <div class="rs-day">
+    <div class="rs-day{% if anchor < today %} past{% endif %}">
         {% if day_events %}
             {% for event in day_events %}
             {% include "raid_scheduler/_event_card.html" %}
@@ -859,6 +875,64 @@
 <script>
 (function () {
     'use strict';
+
+    // ── Persist calendar view preference in localStorage ─────────────────
+    var RS_VIEW_KEY = 'rs_default_view';
+    var VALID_VIEWS = ['day', 'week', 'month'];
+
+    // If no ?view= param in URL, redirect to the user's saved preference.
+    var params = new URLSearchParams(window.location.search);
+    if (!params.has('view')) {
+        var saved = localStorage.getItem(RS_VIEW_KEY);
+        if (saved && VALID_VIEWS.indexOf(saved) !== -1) {
+            params.set('view', saved);
+            window.location.replace(window.location.pathname + '?' + params.toString());
+        }
+    }
+
+    // Save preference whenever the user clicks a view-switcher link.
+    document.querySelectorAll('[data-rs-view]').forEach(function (el) {
+        el.addEventListener('click', function () {
+            localStorage.setItem(RS_VIEW_KEY, el.getAttribute('data-rs-view'));
+        });
+    });
+
+    // ── Local-time hint on event cards ───────────────────────────────────
+    (function () {
+        var userTz;
+        try { userTz = Intl.DateTimeFormat().resolvedOptions().timeZone; } catch (e) { return; }
+
+        document.querySelectorAll('[data-event-tz]').forEach(function (card) {
+            var eventTz = card.getAttribute('data-event-tz');
+            var dateStr = card.getAttribute('data-event-date');
+            var timeStr = card.getAttribute('data-event-time');
+            var hintEl  = card.querySelector('.rs-local-time');
+            if (!eventTz || !dateStr || !timeStr || !hintEl) return;
+            if (eventTz === userTz) return;
+
+            try {
+                // Build a UTC Date at the event's wall-clock time, then use
+                // Intl to determine the real UTC offset for eventTz.
+                var fakeUtc = new Date(dateStr + 'T' + timeStr + ':00Z');
+                var parts = Object.fromEntries(
+                    new Intl.DateTimeFormat('en-US', {
+                        timeZone: eventTz,
+                        year: 'numeric', month: '2-digit', day: '2-digit',
+                        hour: '2-digit', minute: '2-digit', second: '2-digit',
+                        hour12: false
+                    }).formatToParts(fakeUtc).map(function (p) { return [p.type, p.value]; })
+                );
+                var tzWall  = new Date(parts.year + '-' + parts.month + '-' + parts.day +
+                                       'T' + parts.hour + ':' + parts.minute + ':' + parts.second + 'Z');
+                var realUtc = new Date(fakeUtc.getTime() + (fakeUtc.getTime() - tzWall.getTime()));
+                var localStr = new Intl.DateTimeFormat('en-US', {
+                    timeZone: userTz, hour: 'numeric', minute: '2-digit', hour12: true
+                }).format(realUtc);
+                hintEl.textContent = localStr + ' your time';
+                hintEl.style.display = 'inline';
+            } catch (e) {}
+        });
+    }());
 
     // ── Mobile week strip smooth-scroll ──────────────────────────────────
     document.querySelectorAll('.rs-strip-pill').forEach(function (pill) {

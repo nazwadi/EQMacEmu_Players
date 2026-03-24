@@ -538,6 +538,14 @@
                     </div>
                 </div>
 
+                <div class="rsf-field">
+                    <label class="rsf-label" for="{{ form.timezone.id_for_label }}">Time Zone</label>
+                    {{ form.timezone }}
+                    {% if form.timezone.errors %}
+                    <ul class="rsf-errorlist">{% for e in form.timezone.errors %}<li>{{ e }}</li>{% endfor %}</ul>
+                    {% endif %}
+                </div>
+
                 <!-- Inline live conflict area -->
                 <div id="rsf-live-conflicts" aria-live="polite"></div>
 

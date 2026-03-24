@@ -5,7 +5,7 @@ from django import forms
 
 from dkp.models import RaidCircuit
 
-from .models import RaidEvent, RaidTarget
+from .models import RAID_TZ_CHOICES, RaidEvent, RaidTarget
 
 
 class RaidEventForm(forms.ModelForm):
@@ -30,15 +30,17 @@ class RaidEventForm(forms.ModelForm):
 
     class Meta:
         model = RaidEvent
-        fields = ['title', 'date', 'start_time', 'circuit', 'circuit_name', 'is_public', 'notes']
+        fields = ['title', 'date', 'start_time', 'timezone', 'circuit', 'circuit_name', 'is_public', 'notes']
         widgets = {
             'title': forms.TextInput(attrs={'placeholder': 'e.g. "Tuesday NToV Progression"'}),
             'date': forms.DateInput(attrs={'type': 'date'}),
             'start_time': forms.TimeInput(attrs={'type': 'time', 'step': '900'}),
+            'timezone': forms.Select(attrs={'id': 'id_timezone', 'class': 'rsf-input'}),
             'notes': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Optional notes for attendees…'}),
             'is_public': forms.CheckboxInput(attrs={'id': 'id_is_public'}),
         }
         labels = {
+            'timezone': 'Time Zone',
             'is_public': 'Public raid (visible on the public board)',
         }
 

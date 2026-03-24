@@ -369,7 +369,7 @@
                         <span class="rsh-circuit-dot rs-circuit-dot-hist" data-circuit-id="{{ event.circuit_id|default:'' }}" aria-hidden="true"></span>
                         {{ event.circuit_display }}
                     </span>
-                    <span>{{ event.start_time|date:'g:i A' }}</span>
+                    <span>{{ event.start_time|date:'g:i A' }} {{ event.tz_abbr }}</span>
                     {% if not event.is_public %}
                     <span style="color:var(--accent-color);font-weight:600;">Private</span>
                     {% endif %}

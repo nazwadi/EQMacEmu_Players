@@ -3,7 +3,10 @@
      aria-label="{{ event.title }}"
      data-event-id="{{ event.pk }}"
      data-circuit-id="{{ event.circuit_id|default:'' }}"
-     data-is-public="{{ event.is_public|yesno:'true,false' }}">
+     data-is-public="{{ event.is_public|yesno:'true,false' }}"
+     data-event-date="{{ event.date|date:'Y-m-d' }}"
+     data-event-time="{{ event.start_time|time:'H:i' }}"
+     data-event-tz="{{ event.timezone }}">
 
     {# Invisible full-card link — sits below interactive elements in z-order #}
     <a href="{% url 'raid_scheduler:event_detail' event.pk %}"
@@ -27,7 +30,8 @@
         <div class="rs-card-target">{{ event.title }}</div>
     </a>
     <div class="rs-card-meta">
-        <span>{{ event.start_time|date:'g:i A' }}</span>
+        <span>{{ event.start_time|date:'g:i A' }} {{ event.tz_abbr }}</span>
+        <span class="rs-local-time" style="display:none;font-size:0.72rem;color:var(--text-muted);font-style:italic;" aria-live="polite"></span>
         <span class="sep">·</span>
         <span class="rs-circuit-label">
             <span class="rs-circuit-dot" aria-hidden="true"></span>{{ event.circuit_display }}</span>

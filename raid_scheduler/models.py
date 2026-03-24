@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
 
 from django.contrib.auth import get_user_model
 from django.db import models
@@ -7,6 +8,23 @@ from django.utils import timezone
 from dkp.models import CircuitMembership, RaidCircuit
 
 User = get_user_model()
+
+RAID_TZ_CHOICES = [
+    ('North America', [
+        ('America/New_York',    'Eastern Time (ET)'),
+        ('America/Chicago',     'Central Time (CT)'),
+        ('America/Denver',      'Mountain Time (MT)'),
+        ('America/Los_Angeles', 'Pacific Time (PT)'),
+        ('America/Anchorage',   'Alaska Time (AKT)'),
+        ('Pacific/Honolulu',    'Hawaii Time (HT)'),
+    ]),
+    ('Europe', [
+        ('Europe/London',   'London (GMT/BST)'),
+        ('Europe/Paris',    'Paris / Berlin / Rome (CET/CEST)'),
+        ('Europe/Helsinki', 'Helsinki / Athens (EET/EEST)'),
+        ('Europe/Moscow',   'Moscow (MSK)'),
+    ]),
+]
 
 
 class RaidTarget(models.Model):
@@ -51,6 +69,11 @@ class RaidEvent(models.Model):
     )
     is_public = models.BooleanField(default=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_SCHEDULED)
+    timezone = models.CharField(
+        max_length=50,
+        default='America/New_York',
+        choices=RAID_TZ_CHOICES,
+    )
     notes = models.TextField(blank=True)
     created_by = models.ForeignKey(
         User, on_delete=models.SET_NULL, null=True,
@@ -83,9 +106,18 @@ class RaidEvent(models.Model):
         return self.circuit_name or '—'
 
     @property
+    def tz_abbr(self):
+        """Short timezone label for display, e.g. 'EST', 'PDT'."""
+        tz_name = self.timezone or 'America/New_York'
+        dt = datetime.combine(self.date, self.start_time).replace(tzinfo=ZoneInfo(tz_name))
+        return dt.strftime('%Z')
+
+    @property
     def expiry_dt(self):
+        tz_name = self.timezone or 'America/New_York'
         naive = datetime.combine(self.date, self.start_time)
-        return timezone.make_aware(naive) + timedelta(hours=2)
+        aware = naive.replace(tzinfo=ZoneInfo(tz_name))
+        return aware + timedelta(hours=2)
 
     def expire_if_stale(self):
         """Mark expired if 2 h have passed since start. Returns True if expired."""
