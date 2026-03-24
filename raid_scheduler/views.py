@@ -121,9 +121,11 @@ def _closeable_pks(user, events_qs):
 def board(request):
     today = date.today()
 
-    view_mode = request.GET.get('view', 'week')
+    view_mode = request.GET.get('view', '')
     if view_mode not in ('day', 'week', 'month'):
-        view_mode = 'week'
+        view_mode = request.COOKIES.get('rs_view', 'week')
+        if view_mode not in ('day', 'week', 'month'):
+            view_mode = 'week'
 
     date_str = request.GET.get('date', '')
     try:

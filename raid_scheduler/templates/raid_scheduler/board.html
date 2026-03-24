@@ -876,26 +876,11 @@
 (function () {
     'use strict';
 
-    // ── Persist calendar view preference in localStorage ─────────────────
-    var RS_VIEW_KEY = 'rs_default_view';
-    var VALID_VIEWS = ['day', 'week', 'month'];
-
-    // If no ?view= param in URL, redirect to the user's saved preference.
-    var params = new URLSearchParams(window.location.search);
-    if (!params.has('view')) {
-        var saved = localStorage.getItem(RS_VIEW_KEY);
-        if (saved && VALID_VIEWS.indexOf(saved) !== -1) {
-            params.set('view', saved);
-            window.location.replace(window.location.pathname + '?' + params.toString());
-        }
-    }
-
-    // Save preference whenever the user clicks a view-switcher link.
-    document.querySelectorAll('[data-rs-view]').forEach(function (el) {
-        el.addEventListener('click', function () {
-            localStorage.setItem(RS_VIEW_KEY, el.getAttribute('data-rs-view'));
-        });
-    });
+    // ── Persist calendar view preference via cookie (read server-side) ────
+    // Write the current view into a long-lived cookie on every board load.
+    // Django reads rs_view as the default when no ?view= param is in the URL,
+    // so the correct view is rendered immediately with no redirect flash.
+    document.cookie = 'rs_view={{ view_mode }}; path=/; max-age=31536000; SameSite=Lax';
 
     // ── Local-time hint on event cards ───────────────────────────────────
     (function () {
