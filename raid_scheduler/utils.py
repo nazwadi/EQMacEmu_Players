@@ -1,6 +1,9 @@
 """Discord webhook notifications for raid scheduler events."""
 import json
+import logging
 import urllib.request
+
+logger = logging.getLogger(__name__)
 
 
 def _post_to_discord(payload):
@@ -13,11 +16,14 @@ def _post_to_discord(payload):
         req = urllib.request.Request(
             webhook_url,
             data=data,
-            headers={'Content-Type': 'application/json'},
+            headers={
+                'Content-Type': 'application/json',
+                'User-Agent': 'DiscordBot (https://www.eqarchives.com, 1.0)',
+            },
         )
         urllib.request.urlopen(req, timeout=5)
-    except Exception:
-        pass  # never crash the request over a notification failure
+    except Exception as e:
+        logger.error('Discord webhook failed: %s', e)
 
 
 def notify_raid_scheduled(event):
@@ -41,7 +47,7 @@ def notify_raid_scheduled(event):
             'title': f'📅 Raid Scheduled: {event.title}',
             'color': 0x8AA3FF,
             'fields': fields,
-            'url': f'{site_url}/schedule/event/{event.pk}/',
+            'url': f'{site_url}/raids/event/{event.pk}/',
             'footer': {'text': f'Posted by {event.posted_by_display}'},
         }]
     })
@@ -75,7 +81,7 @@ def notify_raid_updated(event, changes):
             'title': f'✏️ Raid Updated: {event.title}',
             'color': 0xFCC721,
             'fields': fields,
-            'url': f'{site_url}/schedule/event/{event.pk}/',
+            'url': f'{site_url}/raids/event/{event.pk}/',
             'footer': {'text': 'Check the schedule for the latest details.'},
         }]
     })

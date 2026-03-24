@@ -364,6 +364,11 @@ LOGGING = {
             'level': 'INFO',
             'propagate': False,
         },
+        'raid_scheduler': {
+            'handlers': ['logfile'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
     },
 }
 

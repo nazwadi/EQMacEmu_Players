@@ -727,14 +727,11 @@
 
         <div class="rs-switcher" role="group" aria-label="View mode">
             <a href="?view=day&date={{ anchor|date:'Y-m-d' }}"
-               class="{% if view_mode == 'day' %}active{% endif %}"
-               data-rs-view="day">Day</a>
+               class="{% if view_mode == 'day' %}active{% endif %}">Day</a>
             <a href="?view=week&date={{ anchor|date:'Y-m-d' }}"
-               class="{% if view_mode == 'week' %}active{% endif %}"
-               data-rs-view="week">Week</a>
+               class="{% if view_mode == 'week' %}active{% endif %}">Week</a>
             <a href="?view=month&date={{ anchor|date:'Y-m-d' }}"
-               class="{% if view_mode == 'month' %}active{% endif %}"
-               data-rs-view="month">Month</a>
+               class="{% if view_mode == 'month' %}active{% endif %}">Month</a>
         </div>
 
         {% if can_schedule %}
