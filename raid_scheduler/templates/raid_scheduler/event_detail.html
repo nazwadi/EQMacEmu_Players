@@ -67,7 +67,7 @@
     letter-spacing: 0.05em;
 }
 .rs-badge--private   { background: rgba(252,199,33,0.15);  color: var(--accent-color); }
-.rs-badge--public    { background: rgba(138,163,255,0.12); color: var(--link-color); }
+.rs-badge--open      { background: rgba(138,163,255,0.12); color: var(--link-color); }
 .rs-badge--active    { background: rgba(77,187,95,0.15);   color: #4dbb5f; }
 .rs-badge--scheduled { background: rgba(138,163,255,0.12); color: var(--link-color); }
 .rs-badge--closed    { background: rgba(150,150,150,0.12); color: var(--text-muted); }
@@ -277,7 +277,7 @@
     <div class="rs-detail-header {% if not event.is_public %}private{% elif event.status == 'active' %}active{% endif %}">
         <div class="rs-badges">
             {% if event.is_public %}
-            <span class="rs-badge rs-badge--public">Public</span>
+            <span class="rs-badge rs-badge--open">Open</span>
             {% else %}
             <span class="rs-badge rs-badge--private">Private</span>
             {% endif %}

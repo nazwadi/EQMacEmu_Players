@@ -370,7 +370,9 @@
                         {{ event.circuit_display }}
                     </span>
                     <span>{{ event.start_time|date:'g:i A' }} {{ event.tz_abbr }}</span>
-                    {% if not event.is_public %}
+                    {% if event.is_public %}
+                    <span style="color:var(--link-color);font-weight:600;">Open</span>
+                    {% else %}
                     <span style="color:var(--accent-color);font-weight:600;">Private</span>
                     {% endif %}
                 </div>

@@ -41,7 +41,7 @@ class RaidEventForm(forms.ModelForm):
         }
         labels = {
             'timezone': 'Time Zone',
-            'is_public': 'Public raid (visible on the public board)',
+            'is_public': 'Open raid (visible to all players, eligible for GM reservation)',
         }
 
     def __init__(self, *args, **kwargs):

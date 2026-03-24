@@ -579,7 +579,7 @@
                         </select>
                     </div>
                     <div class="rsf-helptext">
-                        Your DKP-tracked guild or fellowship. Not listed?
+                        Your guild, fellowship, group, or any organized raid force. Not listed?
                         Use the write-in below for a casual event, or
                         <a href="{% url 'dkp:circuit_request_create' %}" style="color:var(--link-color);">request a new circuit</a>
                         to get full DKP tracking.
@@ -608,7 +608,7 @@
                         <label class="rsf-vis-opt" id="rsf-vis-public">
                             <input type="radio" name="_visibility" value="public" {% if form.is_public.value != False %}checked{% endif %}>
                             <span class="rsf-vis-dot" aria-hidden="true"></span>
-                            Public
+                            Open
                         </label>
                         <label class="rsf-vis-opt" id="rsf-vis-private">
                             <input type="radio" name="_visibility" value="private" {% if form.is_public.value == False %}checked{% endif %}>
@@ -622,7 +622,7 @@
 
                     <div class="rsf-private-note" id="rsf-private-note" {% if form.is_public.value == False %}style="display:flex;"{% endif %}>
                         <i class="fas fa-lock" aria-hidden="true" style="flex-shrink:0;margin-top:0.1rem;"></i>
-                        <span>Private raids are only visible to your circuit members and will not appear on the public board.</span>
+                        <span>Private raids are only visible to your circuit members. Open raids appear on the public board and are eligible for GM reservation protection.</span>
                     </div>
                 </div>
             </div>

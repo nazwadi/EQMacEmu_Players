@@ -35,7 +35,9 @@
         <span class="sep">·</span>
         <span class="rs-circuit-label">
             <span class="rs-circuit-dot" aria-hidden="true"></span>{{ event.circuit_display }}</span>
-        {% if not event.is_public %}
+        {% if event.is_public %}
+        <span class="rs-badge rs-badge--open">Open</span>
+        {% else %}
         <span class="rs-badge rs-badge--private">Private</span>
         {% endif %}
         {% if event.status == 'active' %}
