@@ -28,9 +28,9 @@
     <hr class="side-nav-divider">
     <div class="side-nav-section">
 
-        <!-- Visibility group -->
+        <!-- Event type group -->
         <div class="rs-filter-hdr">
-            <div class="side-nav-title" style="margin:0">Visibility</div>
+            <div class="side-nav-title" style="margin:0">Show</div>
             {% if user.is_authenticated %}
             <div class="rs-filter-allnone">
                 <button type="button" class="rs-filter-all" data-group="vis">All</button>
@@ -41,15 +41,20 @@
         </div>
 
         <label class="rs-cal-filter" style="--cal-color:#8aa3ff">
-            <input type="checkbox" class="rs-cal-cb" data-group="vis" value="public" checked>
+            <input type="checkbox" class="rs-cal-cb" data-group="vis" value="open" checked>
             <span class="rs-cal-check" aria-hidden="true"></span>
-            Public Events
+            Open
+        </label>
+        <label class="rs-cal-filter" style="--cal-color:#b09aed">
+            <input type="checkbox" class="rs-cal-cb" data-group="vis" value="closed" checked>
+            <span class="rs-cal-check" aria-hidden="true"></span>
+            Closed
         </label>
         {% if user.is_authenticated %}
         <label class="rs-cal-filter" style="--cal-color:#fcc721">
-            <input type="checkbox" class="rs-cal-cb" data-group="vis" value="private" checked>
+            <input type="checkbox" class="rs-cal-cb" data-group="vis" value="hidden" checked>
             <span class="rs-cal-check" aria-hidden="true"></span>
-            Private Events
+            Hidden <span class="rs-filter-hint">(your circuits)</span>
         </label>
         {% endif %}
 
@@ -88,6 +93,11 @@
 </button>
 
 <style>
+.rs-filter-hint {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-style: italic;
+}
 .rs-subscribe-link {
     display: flex;
     align-items: center;

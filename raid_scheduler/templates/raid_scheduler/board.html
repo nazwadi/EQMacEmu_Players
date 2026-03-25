@@ -772,6 +772,7 @@
                               {% if not event.is_visible %}hidden{% elif event.status == 'active' %}active{% endif %}"
                        data-circuit-id="{{ event.circuit_id|default:'' }}"
                        data-is-visible="{{ event.is_visible|yesno:'true,false' }}"
+                       data-vis-state="{% if not event.is_visible %}hidden{% elif not event.is_open %}closed{% else %}open{% endif %}"
                        title="{{ event.title }} — {{ event.start_time|date:'g:i A' }} — {{ event.circuit_display }}">
                         {{ event.start_time|date:'g:iA' }} {{ event.title }}
                     </a>
@@ -1023,9 +1024,9 @@
         function applyFilter() {
             // An event is visible only if BOTH its visibility type AND circuit are checked
             document.querySelectorAll('[data-circuit-id]').forEach(function (el) {
-                var isPublic = el.getAttribute('data-is-public') === 'true';
+                var visState = el.getAttribute('data-vis-state') || 'open';
                 var cid = el.getAttribute('data-circuit-id');
-                var visHidden = hiddenVis.indexOf(isPublic ? 'public' : 'private') !== -1;
+                var visHidden = hiddenVis.indexOf(visState) !== -1;
                 var cirHidden = hiddenCir.indexOf(cid) !== -1;
                 el.style.display = (visHidden || cirHidden) ? 'none' : '';
             });

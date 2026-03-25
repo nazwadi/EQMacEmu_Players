@@ -4,6 +4,7 @@
      data-event-id="{{ event.pk }}"
      data-circuit-id="{{ event.circuit_id|default:'' }}"
      data-is-visible="{{ event.is_visible|yesno:'true,false' }}"
+     data-vis-state="{% if not event.is_visible %}hidden{% elif not event.is_open %}closed{% else %}open{% endif %}"
      data-event-date="{{ event.date|date:'Y-m-d' }}"
      data-event-time="{{ event.start_time|time:'H:i' }}"
      data-event-tz="{{ event.timezone }}">
