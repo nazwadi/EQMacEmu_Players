@@ -33,7 +33,8 @@
     padding: 1.25rem 1.4rem 1.1rem;
     margin-bottom: 1rem;
 }
-.rs-detail-header.private { border-top-color: var(--accent-color); }
+.rs-detail-header.hidden     { border-top-color: var(--accent-color); }
+.rs-detail-header.restricted { border-top-color: #b482ff; }
 .rs-detail-header.active  { border-top-color: #4dbb5f; }
 
 .rs-detail-title {
@@ -66,8 +67,9 @@
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
-.rs-badge--private   { background: rgba(252,199,33,0.15);  color: var(--accent-color); }
-.rs-badge--open      { background: rgba(138,163,255,0.12); color: var(--link-color); }
+.rs-badge--hidden     { background: rgba(252,199,33,0.15);  color: var(--accent-color); }
+.rs-badge--restricted { background: rgba(180,130,255,0.15); color: #b482ff; }
+.rs-badge--open       { background: rgba(138,163,255,0.12); color: var(--link-color); }
 .rs-badge--active    { background: rgba(77,187,95,0.15);   color: #4dbb5f; }
 .rs-badge--scheduled { background: rgba(138,163,255,0.12); color: var(--link-color); }
 .rs-badge--closed    { background: rgba(150,150,150,0.12); color: var(--text-muted); }
@@ -274,12 +276,14 @@
     </a>
 
     <!-- Header -->
-    <div class="rs-detail-header {% if not event.is_public %}private{% elif event.status == 'active' %}active{% endif %}">
+    <div class="rs-detail-header {% if not event.is_visible %}hidden{% elif not event.is_open %}restricted{% elif event.status == 'active' %}active{% endif %}">
         <div class="rs-badges">
-            {% if event.is_public %}
-            <span class="rs-badge rs-badge--open">Open</span>
+            {% if not event.is_visible %}
+            <span class="rs-badge rs-badge--hidden">Hidden</span>
+            {% elif not event.is_open %}
+            <span class="rs-badge rs-badge--restricted">Closed</span>
             {% else %}
-            <span class="rs-badge rs-badge--private">Private</span>
+            <span class="rs-badge rs-badge--open">Open</span>
             {% endif %}
             <span class="rs-badge rs-badge--{{ event.status }}">{{ event.get_status_display }}</span>
         </div>

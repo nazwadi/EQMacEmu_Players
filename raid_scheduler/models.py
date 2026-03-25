@@ -67,7 +67,14 @@ class RaidEvent(models.Model):
         max_length=100, blank=True,
         help_text='Free-text circuit name when not linked to an existing circuit',
     )
-    is_public = models.BooleanField(default=True)
+    is_visible = models.BooleanField(
+        default=True,
+        help_text='Visible on the public board. Eligible for GM reservation protection.',
+    )
+    is_open = models.BooleanField(
+        default=True,
+        help_text='Open to all players. When False, attendance is restricted to circuit members.',
+    )
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_SCHEDULED)
     timezone = models.CharField(
         max_length=50,
@@ -104,6 +111,14 @@ class RaidEvent(models.Model):
         if self.circuit:
             return self.circuit.name
         return self.circuit_name or '—'
+
+    @property
+    def visibility_display(self):
+        if not self.is_visible:
+            return 'Hidden'
+        if self.is_open:
+            return 'Open'
+        return 'Closed'
 
     @property
     def tz_abbr(self):

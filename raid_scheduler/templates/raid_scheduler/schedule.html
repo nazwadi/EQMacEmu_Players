@@ -146,7 +146,7 @@
 .rsf-char-count.near-limit { color: var(--accent-color); }
 .rsf-char-count.at-limit    { color: #ff8080; }
 
-/* ── Public / Private toggle ─────────────────────────────────────────── */
+/* ── Visibility / Attendance toggles ────────────────────────────────── */
 .rsf-visibility-toggle {
     display: inline-flex;
     border: 1px solid var(--border-light);
@@ -168,8 +168,15 @@
 }
 .rsf-vis-opt:last-child { border-right: none; }
 .rsf-vis-opt input { display: none; }
-.rsf-vis-opt.selected-public  { background: rgba(138,163,255,0.12); color: var(--link-color); }
-.rsf-vis-opt.selected-private { background: rgba(252,199,33,0.1);   color: var(--accent-color); }
+.rsf-vis-opt.selected-visible { background: rgba(138,163,255,0.12); color: var(--link-color); }
+.rsf-vis-opt.selected-hidden  { background: rgba(252,199,33,0.1);   color: var(--accent-color); }
+.rsf-vis-opt.selected-open    { background: rgba(138,163,255,0.12); color: var(--link-color); }
+.rsf-vis-opt.selected-closed  { background: rgba(180,130,255,0.12); color: #b482ff; }
+.rsf-vis-opt--disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+}
 .rsf-vis-dot {
     width: 8px;
     height: 8px;
@@ -177,19 +184,25 @@
     background: currentColor;
     flex-shrink: 0;
 }
-.rsf-private-note {
+.rsf-vis-note {
     display: none;
     align-items: flex-start;
     gap: 0.5rem;
     margin-top: 0.6rem;
     padding: 0.55rem 0.75rem;
-    background: rgba(252,199,33,0.07);
-    border: 1px solid rgba(252,199,33,0.2);
     border-radius: 0.4rem;
     font-size: 0.8rem;
+}
+.rsf-note--hidden {
+    background: rgba(252,199,33,0.07);
+    border: 1px solid rgba(252,199,33,0.2);
     color: #e0b820;
 }
-.rsf-private-note.visible { display: flex; }
+.rsf-note--closed {
+    background: rgba(180,130,255,0.07);
+    border: 1px solid rgba(180,130,255,0.2);
+    color: #b482ff;
+}
 
 /* ── Target picker ───────────────────────────────────────────────────── */
 .rsf-picker {
@@ -604,26 +617,51 @@
                 <!-- Visibility toggle -->
                 <div class="rsf-field" style="margin-top:0.85rem;">
                     <label class="rsf-label">Visibility</label>
-                    <div class="rsf-visibility-toggle" role="group" aria-label="Raid visibility">
-                        <label class="rsf-vis-opt" id="rsf-vis-public">
-                            <input type="radio" name="_visibility" value="public" {% if form.is_public.value != False %}checked{% endif %}>
+                    <div class="rsf-visibility-toggle" role="group" aria-label="Event visibility">
+                        <label class="rsf-vis-opt" id="rsf-vis-visible">
+                            <input type="radio" name="_vis" value="visible" {% if form.is_visible.value != False %}checked{% endif %}>
+                            <span class="rsf-vis-dot" aria-hidden="true"></span>
+                            Visible
+                        </label>
+                        <label class="rsf-vis-opt" id="rsf-vis-hidden">
+                            <input type="radio" name="_vis" value="hidden" {% if form.is_visible.value == False %}checked{% endif %}>
+                            <span class="rsf-vis-dot" aria-hidden="true"></span>
+                            Hidden
+                        </label>
+                    </div>
+                    <input type="hidden" id="id_is_visible" name="is_visible"
+                           value="{% if form.is_visible.value != False %}True{% else %}False{% endif %}">
+                </div>
+
+                <!-- Attendance toggle -->
+                <div class="rsf-field" style="margin-top:0.6rem;">
+                    <label class="rsf-label">Attendance</label>
+                    <div class="rsf-visibility-toggle" role="group" aria-label="Event attendance">
+                        <label class="rsf-vis-opt" id="rsf-open-open">
+                            <input type="radio" name="_open" value="open" {% if form.is_open.value != False %}checked{% endif %}>
                             <span class="rsf-vis-dot" aria-hidden="true"></span>
                             Open
                         </label>
-                        <label class="rsf-vis-opt" id="rsf-vis-private">
-                            <input type="radio" name="_visibility" value="private" {% if form.is_public.value == False %}checked{% endif %}>
+                        <label class="rsf-vis-opt" id="rsf-open-closed">
+                            <input type="radio" name="_open" value="closed" {% if form.is_open.value == False %}checked{% endif %}>
                             <span class="rsf-vis-dot" aria-hidden="true"></span>
-                            Private
+                            Closed
                         </label>
                     </div>
-                    <!-- Hidden real field -->
-                    <input type="hidden" id="id_is_public" name="is_public"
-                           value="{% if form.is_public.value != False %}True{% else %}False{% endif %}">
+                    <input type="hidden" id="id_is_open" name="is_open"
+                           value="{% if form.is_open.value != False %}True{% else %}False{% endif %}">
+                </div>
 
-                    <div class="rsf-private-note" id="rsf-private-note" {% if form.is_public.value == False %}style="display:flex;"{% endif %}>
-                        <i class="fas fa-lock" aria-hidden="true" style="flex-shrink:0;margin-top:0.1rem;"></i>
-                        <span>Private raids are only visible to your circuit members. Open raids appear on the public board and are eligible for GM reservation protection.</span>
-                    </div>
+                <!-- State notes -->
+                <div class="rsf-vis-note rsf-note--hidden" id="rsf-note-hidden"
+                     {% if form.is_visible.value == False %}style="display:flex;"{% endif %}>
+                    <i class="fas fa-eye-slash" aria-hidden="true" style="flex-shrink:0;margin-top:0.1rem;"></i>
+                    <span>Hidden raids are only visible to your circuit members. Not eligible for GM reservation protection.</span>
+                </div>
+                <div class="rsf-vis-note rsf-note--closed" id="rsf-note-closed"
+                     {% if form.is_visible.value != False and form.is_open.value == False %}style="display:flex;"{% endif %}>
+                    <i class="fas fa-lock" aria-hidden="true" style="flex-shrink:0;margin-top:0.1rem;"></i>
+                    <span>Visible to all players and eligible for GM reservation protection. Attendance is restricted to circuit members.</span>
                 </div>
             </div>
 
@@ -667,8 +705,10 @@
     var form        = document.getElementById('rsf-form');
     var circuitSel  = document.getElementById('id_circuit');
     var writeinDiv  = document.getElementById('rsf-circuit-writein');
-    var publicHid   = document.getElementById('id_is_public');
-    var privateNote = document.getElementById('rsf-private-note');
+    var visHid      = document.getElementById('id_is_visible');
+    var openHid     = document.getElementById('id_is_open');
+    var noteHidden  = document.getElementById('rsf-note-hidden');
+    var noteClosed  = document.getElementById('rsf-note-closed');
     var liveArea    = document.getElementById('rsf-live-conflicts');
     var ackRow      = document.getElementById('rsf-ack-row');
     var submitBtn   = document.getElementById('rsf-submit-btn');
@@ -686,20 +726,43 @@
     circuitSel.addEventListener('change', toggleWritein);
     toggleWritein();
 
-    // ── Visibility pill toggle ────────────────────────────────────────
-    var visPublicLabel  = document.getElementById('rsf-vis-public');
-    var visPrivateLabel = document.getElementById('rsf-vis-private');
-    var visRadios = form.querySelectorAll('input[name="_visibility"]');
+    // ── Visibility / Attendance toggles ──────────────────────────────
+    var visVisibleLabel = document.getElementById('rsf-vis-visible');
+    var visHiddenLabel  = document.getElementById('rsf-vis-hidden');
+    var openOpenLabel   = document.getElementById('rsf-open-open');
+    var openClosedLabel = document.getElementById('rsf-open-closed');
+    var visRadios  = form.querySelectorAll('input[name="_vis"]');
+    var openRadios = form.querySelectorAll('input[name="_open"]');
 
     function applyVisState() {
-        var isPublic = form.querySelector('input[name="_visibility"]:checked').value === 'public';
-        publicHid.value = isPublic ? 'True' : 'False';
-        visPublicLabel.className  = 'rsf-vis-opt' + (isPublic  ? ' selected-public'  : '');
-        visPrivateLabel.className = 'rsf-vis-opt' + (!isPublic ? ' selected-private' : '');
-        privateNote.style.display = isPublic ? 'none' : 'flex';
+        var visVal  = (form.querySelector('input[name="_vis"]:checked')  || {value: 'visible'}).value;
+        var openVal = (form.querySelector('input[name="_open"]:checked') || {value: 'open'}).value;
+        var isVisible = visVal  === 'visible';
+        var isOpen    = openVal === 'open';
+
+        // When hidden, lock attendance to closed
+        if (!isVisible && isOpen) {
+            form.querySelector('input[name="_open"][value="closed"]').checked = true;
+            isOpen = false;
+        }
+
+        visHid.value  = isVisible ? 'True' : 'False';
+        openHid.value = isOpen    ? 'True' : 'False';
+
+        visVisibleLabel.className = 'rsf-vis-opt' + (isVisible  ? ' selected-visible' : '');
+        visHiddenLabel.className  = 'rsf-vis-opt' + (!isVisible ? ' selected-hidden'  : '');
+
+        var disabledCls = !isVisible ? ' rsf-vis-opt--disabled' : '';
+        openOpenLabel.className   = 'rsf-vis-opt' + (isOpen  ? ' selected-open'   : '') + disabledCls;
+        openClosedLabel.className = 'rsf-vis-opt' + (!isOpen ? ' selected-closed' : '') + disabledCls;
+
+        noteHidden.style.display = !isVisible              ? 'flex' : 'none';
+        noteClosed.style.display = (isVisible && !isOpen)  ? 'flex' : 'none';
+
         scheduleCheck();
     }
-    visRadios.forEach(function (r) { r.addEventListener('change', applyVisState); });
+    visRadios.forEach(function (r)  { r.addEventListener('change', applyVisState); });
+    openRadios.forEach(function (r) { r.addEventListener('change', applyVisState); });
     applyVisState();
 
     // ── Expiry time preview ───────────────────────────────────────────
@@ -909,13 +972,13 @@
     function fetchConflicts() {
         var dateVal  = document.getElementById('id_date').value;
         var timeVal  = document.getElementById('id_start_time').value;
-        var isPublic = publicHid.value === 'True' ? 'true' : 'false';
-        var circuit  = circuitSel.value;
+        var isVisible = visHid.value === 'True' ? 'true' : 'false';
+        var circuit   = circuitSel.value;
 
         if (!dateVal || !timeVal || selected.size === 0) { clearLive(); return; }
 
         var params = new URLSearchParams({
-            date: dateVal, start_time: timeVal, is_public: isPublic, circuit: circuit,
+            date: dateVal, start_time: timeVal, is_visible: isVisible, circuit: circuit,
         });
         selected.forEach(function (_, id) { params.append('targets', id); });
         if (excludePk) params.append('exclude_pk', excludePk);

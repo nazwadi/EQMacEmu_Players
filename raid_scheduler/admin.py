@@ -43,15 +43,15 @@ class RaidEventAdminForm(forms.ModelForm):
 @admin.register(RaidEvent)
 class RaidEventAdmin(admin.ModelAdmin):
     form = RaidEventAdminForm
-    list_display = ('title', 'date', 'start_time', 'circuit_display', 'is_public', 'status', 'created_by', 'created_at')
-    list_filter = ('status', 'is_public', 'date', 'targets')
+    list_display = ('title', 'date', 'start_time', 'circuit_display', 'is_visible', 'is_open', 'status', 'created_by', 'created_at')
+    list_filter = ('status', 'is_visible', 'is_open', 'date', 'targets')
     search_fields = ('title', 'targets__name', 'circuit__name', 'circuit_name', 'created_by__username')
     readonly_fields = ('created_at',)
     autocomplete_fields = ('created_by',)
     inlines = [RaidSignupInline, GMOverrideLogInline]
     fieldsets = (
         (None, {
-            'fields': ('title', 'targets', 'date', 'start_time', 'circuit', 'circuit_name', 'is_public', 'status', 'notes'),
+            'fields': ('title', 'targets', 'date', 'start_time', 'circuit', 'circuit_name', 'is_visible', 'is_open', 'status', 'notes'),
         }),
         ('Audit', {
             'fields': ('created_by', 'posted_by_name', 'created_at'),

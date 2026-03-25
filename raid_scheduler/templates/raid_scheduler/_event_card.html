@@ -1,9 +1,9 @@
-<div class="rs-card {% if not event.is_public %}rs-card--private{% elif event.status == 'active' %}rs-card--active{% endif %}"
+<div class="rs-card {% if not event.is_visible %}rs-card--hidden{% elif event.status == 'active' %}rs-card--active{% endif %}"
      role="article"
      aria-label="{{ event.title }}"
      data-event-id="{{ event.pk }}"
      data-circuit-id="{{ event.circuit_id|default:'' }}"
-     data-is-public="{{ event.is_public|yesno:'true,false' }}"
+     data-is-visible="{{ event.is_visible|yesno:'true,false' }}"
      data-event-date="{{ event.date|date:'Y-m-d' }}"
      data-event-time="{{ event.start_time|time:'H:i' }}"
      data-event-tz="{{ event.timezone }}">
@@ -35,10 +35,12 @@
         <span class="sep">·</span>
         <span class="rs-circuit-label">
             <span class="rs-circuit-dot" aria-hidden="true"></span>{{ event.circuit_display }}</span>
-        {% if event.is_public %}
-        <span class="rs-badge rs-badge--open">Open</span>
+        {% if not event.is_visible %}
+        <span class="rs-badge rs-badge--hidden">Hidden</span>
+        {% elif not event.is_open %}
+        <span class="rs-badge rs-badge--restricted">Closed</span>
         {% else %}
-        <span class="rs-badge rs-badge--private">Private</span>
+        <span class="rs-badge rs-badge--open">Open</span>
         {% endif %}
         {% if event.status == 'active' %}
         <span class="rs-badge rs-badge--active">Live</span>

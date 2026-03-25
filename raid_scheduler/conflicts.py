@@ -8,7 +8,7 @@ from .models import RaidEvent
 _ACTIVE = ('scheduled', 'active')
 
 
-def check_conflicts(targets, event_date, start_time, is_public, circuit, exclude_pk=None):
+def check_conflicts(targets, event_date, start_time, is_visible, circuit, exclude_pk=None):
     """
     Returns (hard_conflicts, soft_warnings).
 
@@ -16,11 +16,11 @@ def check_conflicts(targets, event_date, start_time, is_public, circuit, exclude
 
     Rules
     -----
-    Both public and private raids:
-        Hard block if another PUBLIC event already holds ANY of the same targets on the same day.
+    Any new event:
+        Hard block if another VISIBLE event already holds ANY of the same targets on the same day.
 
-    Public and private raids additionally:
-        Soft warn if any public event on the same day overlaps in time (<2 h apart)
+    Any new event additionally:
+        Soft warn if any visible event on the same day overlaps in time (<2 h apart)
         and the two circuits share active roster members.
 
     Write-in circuits (circuit=None) produce no soft warnings (no roster to compare).
@@ -36,7 +36,7 @@ def check_conflicts(targets, event_date, start_time, is_public, circuit, exclude
     blocking_qs = RaidEvent.objects.filter(
         targets__in=targets,
         date=event_date,
-        is_public=True,
+        is_visible=True,
         status__in=_ACTIVE,
     ).distinct().select_related('circuit')
     if exclude_pk:
@@ -62,7 +62,7 @@ def check_conflicts(targets, event_date, start_time, is_public, circuit, exclude
 
     same_day_public = RaidEvent.objects.filter(
         date=event_date,
-        is_public=True,
+        is_visible=True,
         status__in=_ACTIVE,
     ).select_related('circuit')
     if exclude_pk:

@@ -370,10 +370,12 @@
                         {{ event.circuit_display }}
                     </span>
                     <span>{{ event.start_time|date:'g:i A' }} {{ event.tz_abbr }}</span>
-                    {% if event.is_public %}
-                    <span style="color:var(--link-color);font-weight:600;">Open</span>
+                    {% if not event.is_visible %}
+                    <span style="color:var(--accent-color);font-weight:600;">Hidden</span>
+                    {% elif not event.is_open %}
+                    <span style="color:#b482ff;font-weight:600;">Closed</span>
                     {% else %}
-                    <span style="color:var(--accent-color);font-weight:600;">Private</span>
+                    <span style="color:var(--link-color);font-weight:600;">Open</span>
                     {% endif %}
                 </div>
                 {% with targets=event.targets.all %}

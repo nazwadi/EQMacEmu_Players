@@ -52,11 +52,11 @@ def _visible_events(user):
         status__in=(RaidEvent.STATUS_SCHEDULED, RaidEvent.STATUS_ACTIVE),
     )
     if user is None or not user.is_authenticated:
-        return _expire_stale(qs.filter(is_public=True))
+        return _expire_stale(qs.filter(is_visible=True))
     if user.is_superuser:
         return _expire_stale(qs)
 
-    # Authenticated non-superuser: public + private events they belong to
+    # Authenticated non-superuser: visible events + hidden events they belong to
     member_circuit_ids = CircuitMembership.objects.filter(
         member=user, status='active',
     ).values_list('circuit_id', flat=True)
@@ -66,7 +66,7 @@ def _visible_events(user):
     ).values_list('pk', flat=True)
 
     qs = qs.filter(
-        Q(is_public=True)
+        Q(is_visible=True)
         | Q(circuit_id__in=member_circuit_ids)
         | Q(pk__in=signup_event_ids)
     ).distinct()
@@ -82,7 +82,7 @@ def _calendar_visible_events(user):
         ),
     )
     if user is None or not user.is_authenticated:
-        return qs.filter(is_public=True)
+        return qs.filter(is_visible=True)
     if user.is_superuser:
         return qs
 
@@ -93,7 +93,7 @@ def _calendar_visible_events(user):
         signups__member__member=user,
     ).values_list('pk', flat=True)
     return qs.filter(
-        Q(is_public=True)
+        Q(is_visible=True)
         | Q(circuit_id__in=member_circuit_ids)
         | Q(pk__in=signup_event_ids)
     ).distinct()
@@ -264,7 +264,7 @@ def schedule(request):
         if form.is_valid():
             event_date = form.cleaned_data['date']
             start_time = form.cleaned_data['start_time']
-            is_public = form.cleaned_data['is_public']
+            is_visible = form.cleaned_data['is_visible']
             circuit = form.cleaned_data.get('circuit')
             ack = form.cleaned_data.get('warnings_acknowledged', False)
 
@@ -276,7 +276,7 @@ def schedule(request):
                 form.add_error(None, 'Please add at least one raid target.')
             else:
                 hard_conflicts, soft_warnings = check_conflicts(
-                    selected_targets, event_date, start_time, is_public, circuit,
+                    selected_targets, event_date, start_time, is_visible, circuit,
                 )
 
                 if hard_conflicts:
@@ -289,7 +289,8 @@ def schedule(request):
                     event.circuit_name = form.cleaned_data.get('circuit_name', '')
                     event.save()
                     event.targets.set(selected_targets)
-                    notify_raid_scheduled(event)
+                    if event.is_visible:
+                        notify_raid_scheduled(event)
                     messages.success(
                         request,
                         f"Raid scheduled: {form.cleaned_data['title']} on {event_date.strftime('%A, %b %-d')}.",
@@ -376,7 +377,7 @@ def edit_event(request, pk):
         if form.is_valid():
             event_date = form.cleaned_data['date']
             start_time = form.cleaned_data['start_time']
-            is_public = form.cleaned_data['is_public']
+            is_visible = form.cleaned_data['is_visible']
             circuit = form.cleaned_data.get('circuit')
             ack = form.cleaned_data.get('warnings_acknowledged', False)
 
@@ -387,7 +388,7 @@ def edit_event(request, pk):
                 form.add_error(None, 'Please add at least one raid target.')
             else:
                 hard_conflicts, soft_warnings = check_conflicts(
-                    selected_targets, event_date, start_time, is_public, circuit,
+                    selected_targets, event_date, start_time, is_visible, circuit,
                     exclude_pk=pk,
                 )
 
@@ -402,7 +403,7 @@ def edit_event(request, pk):
                     old_time = event.start_time
                     old_target_ids = set(event.targets.values_list('pk', flat=True))
                     old_title = event.title
-                    old_public = event.is_public
+                    old_visibility = event.visibility_display
 
                     updated = form.save(commit=False)
                     updated.circuit_name = form.cleaned_data.get('circuit_name', '')
@@ -422,12 +423,12 @@ def edit_event(request, pk):
                     new_target_ids = set(updated.targets.values_list('pk', flat=True))
                     if old_target_ids != new_target_ids:
                         changes.append('raid targets updated')
-                    if old_public != updated.is_public:
-                        changes.append(
-                            f'visibility: {"public" if old_public else "private"} → {"public" if updated.is_public else "private"}'
-                        )
+                    new_visibility = updated.visibility_display
+                    if old_visibility != new_visibility:
+                        changes.append(f'visibility: {old_visibility} → {new_visibility}')
 
-                    notify_raid_updated(updated, changes)
+                    if updated.is_visible:
+                        notify_raid_updated(updated, changes)
 
                     messages.success(
                         request,
@@ -460,7 +461,7 @@ def conflict_check(request):
     target_ids = request.GET.getlist('targets')
     date_str = request.GET.get('date')
     time_str = request.GET.get('start_time')
-    is_public = request.GET.get('is_public', 'true').lower() in ('true', '1', 'on')
+    is_visible = request.GET.get('is_visible', 'true').lower() in ('true', '1', 'on')
     circuit_id = request.GET.get('circuit')
 
     try:
@@ -484,7 +485,7 @@ def conflict_check(request):
     except (ValueError, TypeError):
         exclude_pk = None
 
-    hard, soft = check_conflicts(targets, event_date, start_time, is_public, circuit, exclude_pk=exclude_pk)
+    hard, soft = check_conflicts(targets, event_date, start_time, is_visible, circuit, exclude_pk=exclude_pk)
     return JsonResponse({'hard': hard, 'soft': soft})
 
 
@@ -551,8 +552,8 @@ def event_detail(request, pk):
         pk=pk,
     )
 
-    # Visibility: private events require authenticated user with access
-    if not event.is_public:
+    # Visibility: hidden events require authenticated user with access
+    if not event.is_visible:
         if not request.user.is_authenticated:
             return redirect(f'{request.build_absolute_uri("/accounts/login/")}?next={request.path}')
         if not request.user.is_superuser:
@@ -673,7 +674,7 @@ def event_ics(request, pk):
         RaidEvent.objects.select_related('circuit').prefetch_related('targets'),
         pk=pk,
     )
-    if not event.is_public:
+    if not event.is_visible:
         if not request.user.is_authenticated:
             from django.http import Http404
             raise Http404
@@ -699,7 +700,7 @@ def calendar_feed(request):
     """Subscribable .ics feed of all upcoming public events."""
     events = (
         RaidEvent.objects.select_related('circuit').prefetch_related('targets')
-        .filter(is_public=True, status__in=(RaidEvent.STATUS_SCHEDULED, RaidEvent.STATUS_ACTIVE))
+        .filter(is_visible=True, status__in=(RaidEvent.STATUS_SCHEDULED, RaidEvent.STATUS_ACTIVE))
         .order_by('date', 'start_time')
     )
     content = _build_ics(events, request, cal_name='EQ Archives — Raid Schedule')
@@ -718,7 +719,7 @@ def history(request):
 
     # Apply same visibility rules as the live board
     if not request.user.is_authenticated:
-        qs = qs.filter(is_public=True)
+        qs = qs.filter(is_visible=True)
     elif not request.user.is_superuser:
         member_circuit_ids = CircuitMembership.objects.filter(
             member=request.user, status='active',
@@ -727,7 +728,7 @@ def history(request):
             signups__member__member=request.user,
         ).values_list('pk', flat=True)
         qs = qs.filter(
-            Q(is_public=True)
+            Q(is_visible=True)
             | Q(circuit_id__in=member_circuit_ids)
             | Q(pk__in=signup_event_ids)
         ).distinct()

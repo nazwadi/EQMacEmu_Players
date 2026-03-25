@@ -221,7 +221,7 @@
     transition: background 0.12s;
 }
 .rs-month-chip:hover { background: rgba(138,163,255,0.2); color: var(--text-primary); }
-.rs-month-chip.private {
+.rs-month-chip.hidden {
     border-left-color: var(--accent-color);
     background: rgba(252,199,33,0.08);
 }
@@ -426,8 +426,8 @@
     transition: background 0.12s, border-color 0.12s;
 }
 .rs-card:hover { background: var(--bg-content); }
-.rs-card--private { border-left-color: var(--accent-color); background: rgba(252,199,33,0.025); }
-.rs-card--private:hover { background: rgba(252,199,33,0.05); }
+.rs-card--hidden { border-left-color: var(--accent-color); background: rgba(252,199,33,0.025); }
+.rs-card--hidden:hover { background: rgba(252,199,33,0.05); }
 .rs-card--active  { border-left-color: #4dbb5f; }
 /* Day view card: a bit more spacious */
 .rs-day .rs-card { padding: 0.65rem 0.75rem; margin-bottom: 0.6rem; }
@@ -479,10 +479,11 @@
     letter-spacing: 0.05em;
     vertical-align: middle;
 }
-.rs-badge--open      { background: rgba(138,163,255,0.15); color: var(--link-color); }
-.rs-badge--private   { background: rgba(252,199,33,0.15);  color: var(--accent-color); }
-.rs-badge--active    { background: rgba(77,187,95,0.15);   color: #4dbb5f; }
-.rs-badge--scheduled { background: rgba(138,163,255,0.15); color: var(--link-color); }
+.rs-badge--open       { background: rgba(138,163,255,0.15); color: var(--link-color); }
+.rs-badge--restricted { background: rgba(180,130,255,0.15); color: #b482ff; }
+.rs-badge--hidden     { background: rgba(252,199,33,0.15);  color: var(--accent-color); }
+.rs-badge--active     { background: rgba(77,187,95,0.15);   color: #4dbb5f; }
+.rs-badge--scheduled  { background: rgba(138,163,255,0.15); color: var(--link-color); }
 
 /* ── Card clickable overlay ──────────────────────────────────────────────── */
 .rs-card { position: relative; }
@@ -768,9 +769,9 @@
                     {% for event in cell.events|slice:":3" %}
                     <a href="{% url 'raid_scheduler:event_detail' event.pk %}"
                        class="rs-month-chip
-                              {% if not event.is_public %}private{% elif event.status == 'active' %}active{% endif %}"
+                              {% if not event.is_visible %}hidden{% elif event.status == 'active' %}active{% endif %}"
                        data-circuit-id="{{ event.circuit_id|default:'' }}"
-                       data-is-public="{{ event.is_public|yesno:'true,false' }}"
+                       data-is-visible="{{ event.is_visible|yesno:'true,false' }}"
                        title="{{ event.title }} — {{ event.start_time|date:'g:i A' }} — {{ event.circuit_display }}">
                         {{ event.start_time|date:'g:iA' }} {{ event.title }}
                     </a>
