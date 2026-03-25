@@ -724,7 +724,7 @@
     var circuitSel    = document.getElementById('id_circuit');
     var writeinDiv    = document.getElementById('rsf-circuit-writein');
     var postedByInput = document.getElementById('id_posted_by_name');
-    var memberNames   = {{ member_names_json }};
+    var memberNames   = {{ member_names_json|safe }};
     var visHid      = document.getElementById('id_is_visible');
     var openHid     = document.getElementById('id_is_open');
     var noteHidden  = document.getElementById('rsf-note-hidden');
