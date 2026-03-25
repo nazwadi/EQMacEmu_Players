@@ -773,8 +773,11 @@
                        data-circuit-id="{{ event.circuit_id|default:'' }}"
                        data-is-visible="{{ event.is_visible|yesno:'true,false' }}"
                        data-vis-state="{% if not event.is_visible %}hidden{% elif not event.is_open %}closed{% else %}open{% endif %}"
-                       title="{{ event.title }} — {{ event.start_time|date:'g:i A' }} — {{ event.circuit_display }}">
-                        {{ event.start_time|date:'g:iA' }} {{ event.title }}
+                       data-event-tz="{{ event.timezone }}"
+                       data-event-date="{{ event.date|date:'Y-m-d' }}"
+                       data-event-time="{{ event.start_time|time:'H:i' }}"
+                       title="{{ event.title }} — {{ event.start_time|date:'g:i A' }} {{ event.tz_abbr }} — {{ event.circuit_display }}">
+                        <span class="rs-chip-time">{{ event.start_time|date:'g:iA' }} {{ event.tz_abbr }}</span> {{ event.title }}
                     </a>
                     {% endfor %}
                     {% if cell.events|length > 3 %}
@@ -888,11 +891,13 @@
         try { userTz = Intl.DateTimeFormat().resolvedOptions().timeZone; } catch (e) { return; }
 
         document.querySelectorAll('[data-event-tz]').forEach(function (card) {
-            var eventTz = card.getAttribute('data-event-tz');
-            var dateStr = card.getAttribute('data-event-date');
-            var timeStr = card.getAttribute('data-event-time');
-            var hintEl  = card.querySelector('.rs-local-time');
-            if (!eventTz || !dateStr || !timeStr || !hintEl) return;
+            var eventTz    = card.getAttribute('data-event-tz');
+            var dateStr    = card.getAttribute('data-event-date');
+            var timeStr    = card.getAttribute('data-event-time');
+            var hintEl     = card.querySelector('.rs-local-time');
+            var chipTimeEl = card.querySelector('.rs-chip-time');
+            if (!eventTz || !dateStr || !timeStr) return;
+            if (!hintEl && !chipTimeEl) return;
             if (eventTz === userTz) return;
 
             try {
@@ -913,8 +918,14 @@
                 var localStr = new Intl.DateTimeFormat('en-US', {
                     timeZone: userTz, hour: 'numeric', minute: '2-digit', hour12: true
                 }).format(realUtc);
-                hintEl.textContent = localStr + ' your time';
-                hintEl.style.display = 'inline';
+                if (hintEl) {
+                    // Event card: show converted time as a secondary hint below
+                    hintEl.textContent = localStr + ' your time';
+                    hintEl.style.display = 'inline';
+                } else if (chipTimeEl) {
+                    // Month chip: replace displayed time with user's local time
+                    chipTimeEl.textContent = localStr;
+                }
             } catch (e) {}
         });
     }());

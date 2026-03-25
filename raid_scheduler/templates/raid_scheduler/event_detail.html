@@ -295,10 +295,14 @@
                 <i class="far fa-calendar" aria-hidden="true"></i>
                 {{ event.date|date:'l, F j, Y' }}
             </span>
-            <span>
+            <span id="rs-detail-time"
+                  data-event-tz="{{ event.timezone }}"
+                  data-event-date="{{ event.date|date:'Y-m-d' }}"
+                  data-event-time="{{ event.start_time|time:'H:i' }}">
                 <i class="far fa-clock" aria-hidden="true"></i>
-                {{ event.start_time|date:'g:i A' }}
-                <span style="color:var(--text-muted);font-size:0.75rem;">(expires {{ event.expiry_dt|date:'g:i A' }})</span>
+                {{ event.start_time|date:'g:i A' }} {{ event.tz_abbr }}
+                <span class="rs-detail-local-time" style="color:var(--text-muted);font-size:0.75rem;font-style:italic;"></span>
+                <span style="color:var(--text-muted);font-size:0.75rem;">(expires {{ event.expiry_dt|date:'g:i A' }} {{ event.tz_abbr }})</span>
             </span>
             <span>
                 <i class="fas fa-users" aria-hidden="true"></i>
@@ -464,4 +468,38 @@
     {% endif %}
 
 </div>
+
+<script>
+(function () {
+    'use strict';
+    var el = document.getElementById('rs-detail-time');
+    if (!el) return;
+    var userTz;
+    try { userTz = Intl.DateTimeFormat().resolvedOptions().timeZone; } catch (e) { return; }
+    var eventTz = el.getAttribute('data-event-tz');
+    if (!eventTz || eventTz === userTz) return;
+    var dateStr = el.getAttribute('data-event-date');
+    var timeStr = el.getAttribute('data-event-time');
+    var hintEl  = el.querySelector('.rs-detail-local-time');
+    if (!hintEl) return;
+    try {
+        var fakeUtc = new Date(dateStr + 'T' + timeStr + ':00Z');
+        var parts = Object.fromEntries(
+            new Intl.DateTimeFormat('en-US', {
+                timeZone: eventTz,
+                year: 'numeric', month: '2-digit', day: '2-digit',
+                hour: '2-digit', minute: '2-digit', second: '2-digit',
+                hour12: false
+            }).formatToParts(fakeUtc).map(function (p) { return [p.type, p.value]; })
+        );
+        var tzWall  = new Date(parts.year + '-' + parts.month + '-' + parts.day +
+                               'T' + parts.hour + ':' + parts.minute + ':' + parts.second + 'Z');
+        var realUtc = new Date(fakeUtc.getTime() + (fakeUtc.getTime() - tzWall.getTime()));
+        var localStr = new Intl.DateTimeFormat('en-US', {
+            timeZone: userTz, hour: 'numeric', minute: '2-digit', hour12: true
+        }).format(realUtc);
+        hintEl.textContent = '· ' + localStr + ' your time';
+    } catch (e) {}
+}());
+</script>
 {% endblock %}
