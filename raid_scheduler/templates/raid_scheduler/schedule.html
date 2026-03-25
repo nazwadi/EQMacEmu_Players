@@ -574,9 +574,9 @@
                 </div>
             </div>
 
-            <!-- ── Section 3: Circuit & visibility ───────────────── -->
+            <!-- ── Section 3: Circuit ─────────────────────────────── -->
             <div class="rsf-section">
-                <div class="rsf-section-label">Circuit &amp; Visibility</div>
+                <div class="rsf-section-label">Circuit</div>
 
                 <!-- Circuit dropdown -->
                 <div class="rsf-field">
@@ -614,8 +614,26 @@
                     {% endif %}
                 </div>
 
+                <!-- Posted by -->
+                <div class="rsf-field">
+                    <label class="rsf-label" for="id_posted_by_name">Posted by</label>
+                    <input type="text" id="id_posted_by_name" name="posted_by_name"
+                           class="rsf-input" autocomplete="off"
+                           placeholder="Your character name…"
+                           value="{{ form.posted_by_name.value|default:'' }}">
+                    <div class="rsf-helptext">Use your in-game character name, not your account username.</div>
+                    {% if form.posted_by_name.errors %}
+                    <ul class="rsf-errorlist">{% for e in form.posted_by_name.errors %}<li>{{ e }}</li>{% endfor %}</ul>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- ── Section 4: Access ──────────────────────────────── -->
+            <div class="rsf-section">
+                <div class="rsf-section-label">Access</div>
+
                 <!-- Visibility toggle -->
-                <div class="rsf-field" style="margin-top:0.85rem;">
+                <div class="rsf-field">
                     <label class="rsf-label">Visibility</label>
                     <div class="rsf-visibility-toggle" role="group" aria-label="Event visibility">
                         <label class="rsf-vis-opt" id="rsf-vis-visible">
@@ -634,7 +652,7 @@
                 </div>
 
                 <!-- Attendance toggle -->
-                <div class="rsf-field" style="margin-top:0.6rem;">
+                <div class="rsf-field">
                     <label class="rsf-label">Attendance</label>
                     <div class="rsf-visibility-toggle" role="group" aria-label="Event attendance">
                         <label class="rsf-vis-opt" id="rsf-open-open">
@@ -665,7 +683,7 @@
                 </div>
             </div>
 
-            <!-- ── Section 4: Notes ───────────────────────────────── -->
+            <!-- ── Section 5: Notes ───────────────────────────────── -->
             <div class="rsf-section">
                 <div class="rsf-section-label">Notes <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted);font-size:0.7rem;">optional</span></div>
                 <div class="rsf-field">
@@ -703,8 +721,10 @@
     'use strict';
 
     var form        = document.getElementById('rsf-form');
-    var circuitSel  = document.getElementById('id_circuit');
-    var writeinDiv  = document.getElementById('rsf-circuit-writein');
+    var circuitSel    = document.getElementById('id_circuit');
+    var writeinDiv    = document.getElementById('rsf-circuit-writein');
+    var postedByInput = document.getElementById('id_posted_by_name');
+    var memberNames   = {{ member_names_json }};
     var visHid      = document.getElementById('id_is_visible');
     var openHid     = document.getElementById('id_is_open');
     var noteHidden  = document.getElementById('rsf-note-hidden');
@@ -719,12 +739,25 @@
     var conflictUrl = '{% url "raid_scheduler:conflict_check" %}';
     var excludePk   = {% if editing_event %}{{ editing_event.pk }}{% else %}null{% endif %};
 
-    // ── Circuit write-in ──────────────────────────────────────────────
+    // ── Circuit write-in + Posted-by auto-fill ───────────────────────
     function toggleWritein() {
         writeinDiv.style.display = circuitSel.value ? 'none' : 'block';
     }
-    circuitSel.addEventListener('change', toggleWritein);
+    function autoFillPostedBy() {
+        var cid = circuitSel.value;
+        if (cid && memberNames[cid]) {
+            postedByInput.value = memberNames[cid];
+        }
+    }
+    circuitSel.addEventListener('change', function () {
+        toggleWritein();
+        autoFillPostedBy();
+    });
     toggleWritein();
+    // Auto-fill on initial load only when creating (no existing value)
+    if (!postedByInput.value) {
+        autoFillPostedBy();
+    }
 
     // ── Visibility / Attendance toggles ──────────────────────────────
     var visVisibleLabel = document.getElementById('rsf-vis-visible');

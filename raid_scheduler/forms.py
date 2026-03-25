@@ -30,20 +30,26 @@ class RaidEventForm(forms.ModelForm):
 
     class Meta:
         model = RaidEvent
-        fields = ['title', 'date', 'start_time', 'timezone', 'circuit', 'circuit_name', 'is_visible', 'is_open', 'notes']
+        fields = ['title', 'date', 'start_time', 'timezone', 'circuit', 'circuit_name', 'posted_by_name', 'is_visible', 'is_open', 'notes']
         widgets = {
             'title': forms.TextInput(attrs={'placeholder': 'e.g. "Tuesday NToV Progression"'}),
             'date': forms.DateInput(attrs={'type': 'date'}),
             'start_time': forms.TimeInput(attrs={'type': 'time', 'step': '900'}),
             'timezone': forms.Select(attrs={'id': 'id_timezone', 'class': 'rsf-input'}),
+            'posted_by_name': forms.TextInput(attrs={
+                'placeholder': 'Your character name…',
+                'autocomplete': 'off',
+                'id': 'id_posted_by_name',
+            }),
             'notes': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Optional notes for attendees…'}),
             'is_visible': forms.HiddenInput(attrs={'id': 'id_is_visible'}),
             'is_open':    forms.HiddenInput(attrs={'id': 'id_is_open'}),
         }
         labels = {
-            'timezone':   'Time Zone',
-            'is_visible': 'Visible on public board',
-            'is_open':    'Open attendance',
+            'timezone':        'Time Zone',
+            'posted_by_name':  'Posted by',
+            'is_visible':      'Visible on public board',
+            'is_open':         'Open attendance',
         }
 
     def __init__(self, *args, **kwargs):

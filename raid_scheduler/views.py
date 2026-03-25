@@ -299,12 +299,18 @@ def schedule(request):
     else:
         form = RaidEventForm()
 
+    memberships = CircuitMembership.objects.filter(
+        member=request.user, status='active',
+    ).values('circuit_id', 'display_name')
+    member_names = {str(m['circuit_id']): m['display_name'] for m in memberships}
+
     return render(request, 'raid_scheduler/schedule.html', {
         'form': form,
         'hard_conflicts': hard_conflicts,
         'soft_warnings': soft_warnings,
         'preselected_target_ids': preselected_target_ids,
         'targets_json': RaidEventForm.targets_json(),
+        'member_names_json': json.dumps(member_names),
     })
 
 
@@ -448,6 +454,12 @@ def edit_event(request, pk):
         'targets_json': RaidEventForm.targets_json(),
         'editing_event': event,
         'rsvp_count': rsvp_count,
+        'member_names_json': json.dumps({
+            str(m['circuit_id']): m['display_name']
+            for m in CircuitMembership.objects.filter(
+                member=request.user, status='active',
+            ).values('circuit_id', 'display_name')
+        }),
     })
 
 
