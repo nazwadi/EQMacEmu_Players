@@ -452,7 +452,7 @@
         <i class="fas fa-chevron-left" aria-hidden="true"></i> Back to Raid Schedule
     </a>
     <h1 class="rsf-heading">Schedule a Raid</h1>
-    <p class="rsf-subheading">Raids appear on the public board and expire 2 hours after start time.</p>
+    <p class="rsf-subheading" id="rsf-subheading">Raids appear on the public board and expire 2 hours after start time.</p>
     {% endif %}
 
     <!-- Non-field errors -->
@@ -791,6 +791,13 @@
 
         noteHidden.style.display = !isVisible              ? 'flex' : 'none';
         noteClosed.style.display = (isVisible && !isOpen)  ? 'flex' : 'none';
+
+        var subheading = document.getElementById('rsf-subheading');
+        if (subheading) {
+            subheading.textContent = isVisible
+                ? 'Raids appear on the public board and expire 2 hours after start time.'
+                : 'Hidden raids are only visible to your circuit members and expire 2 hours after start time.';
+        }
 
         scheduleCheck();
     }
