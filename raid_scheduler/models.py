@@ -42,14 +42,12 @@ class RaidTarget(models.Model):
 class RaidEvent(models.Model):
     STATUS_SCHEDULED = 'scheduled'
     STATUS_ACTIVE = 'active'
-    STATUS_CLOSED = 'closed'
     STATUS_EXPIRED = 'expired'
     STATUS_CANCELLED = 'cancelled'
 
     STATUS_CHOICES = [
         (STATUS_SCHEDULED, 'Scheduled'),
         (STATUS_ACTIVE, 'Active'),
-        (STATUS_CLOSED, 'Closed'),
         (STATUS_EXPIRED, 'Expired'),
         (STATUS_CANCELLED, 'Cancelled'),
     ]

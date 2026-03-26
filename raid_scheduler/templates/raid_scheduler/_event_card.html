@@ -16,12 +16,12 @@
        tabindex="-1"></a>
 
     {% if event.pk in closeable_pks %}
-    <form method="post" action="{% url 'raid_scheduler:close_event' event.pk %}" style="display:inline">
+    <form method="post" action="{% url 'raid_scheduler:cancel_event' event.pk %}" style="display:inline">
         {% csrf_token %}
         <button type="submit" class="rs-close-btn"
-                title="Close this event"
-                onclick="return confirm('Close this raid event?')"
-                aria-label="Close event">
+                title="Cancel this raid"
+                onclick="return confirm('Cancel this raid? This cannot be undone.')"
+                aria-label="Cancel raid">
             <i class="fas fa-times"></i>
         </button>
     </form>

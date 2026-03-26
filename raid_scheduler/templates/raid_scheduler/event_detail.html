@@ -456,11 +456,11 @@
         </a>
         {% endif %}
         {% if is_closeable and event.status in "scheduled active" %}
-        <form method="post" action="{% url 'raid_scheduler:close_event' event.pk %}" style="display:inline;">
+        <form method="post" action="{% url 'raid_scheduler:cancel_event' event.pk %}" style="display:inline;">
             {% csrf_token %}
             <button type="submit" class="btn btn-sm btn-outline-danger"
-                    onclick="return confirm('Close this raid event? This cannot be undone.')">
-                <i class="fas fa-times-circle"></i> Close Event
+                    onclick="return confirm('Cancel this raid? This cannot be undone.')">
+                <i class="fas fa-times-circle"></i> Cancel Event
             </button>
         </form>
         {% endif %}

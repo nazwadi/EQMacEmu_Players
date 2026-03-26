@@ -78,7 +78,7 @@ def _calendar_visible_events(user):
     qs = RaidEvent.objects.select_related('circuit').prefetch_related('targets').filter(
         status__in=(
             RaidEvent.STATUS_SCHEDULED, RaidEvent.STATUS_ACTIVE,
-            RaidEvent.STATUS_EXPIRED, RaidEvent.STATUS_CLOSED,
+            RaidEvent.STATUS_EXPIRED, RaidEvent.STATUS_CANCELLED,
         ),
     )
     if user is None or not user.is_authenticated:
@@ -314,11 +314,11 @@ def schedule(request):
     })
 
 
-# ── close event ───────────────────────────────────────────────────────────────
+# ── cancel event ──────────────────────────────────────────────────────────────
 
 @login_required
 @require_POST
-def close_event(request, pk):
+def cancel_event(request, pk):
     event = get_object_or_404(RaidEvent, pk=pk)
 
     # Permission: creator, circuit officer, or superuser
@@ -332,15 +332,15 @@ def close_event(request, pk):
         ).exists()
 
     if not (request.user.is_superuser or request.user == event.created_by or is_officer):
-        messages.error(request, 'You do not have permission to close this event.')
+        messages.error(request, 'You do not have permission to cancel this event.')
         return redirect('raid_scheduler:board')
 
     if event.status in (RaidEvent.STATUS_SCHEDULED, RaidEvent.STATUS_ACTIVE):
-        event.status = RaidEvent.STATUS_CLOSED
+        event.status = RaidEvent.STATUS_CANCELLED
         event.save(update_fields=['status'])
-        messages.success(request, f"Raid closed: {event.title} on {event.date}.")
+        messages.success(request, f"Raid cancelled: {event.title} on {event.date}.")
     else:
-        messages.warning(request, 'That event is already closed or expired.')
+        messages.warning(request, 'That event is already cancelled or expired.')
 
     return redirect('raid_scheduler:board')
 
@@ -354,7 +354,7 @@ def edit_event(request, pk):
         pk=pk,
     )
 
-    # Same permission model as close_event
+    # Same permission model as cancel_event
     is_officer = False
     if event.circuit:
         is_officer = CircuitMembership.objects.filter(
@@ -718,7 +718,7 @@ def calendar_feed(request):
     return response
 
 
-_HISTORY_STATUSES = (RaidEvent.STATUS_CLOSED, RaidEvent.STATUS_EXPIRED, RaidEvent.STATUS_CANCELLED)
+_HISTORY_STATUSES = (RaidEvent.STATUS_EXPIRED, RaidEvent.STATUS_CANCELLED)
 
 
 def history(request):
