@@ -386,7 +386,7 @@
                     <input type="text" name="display_name" id="rsvp-display-name"
                            class="rs-rsvp-note"
                            placeholder="{{ user.username }}"
-                           value="{{ membership.display_name|default:user.username }}"
+                           value="{{ user_signup.display_name|default:membership.display_name|default:'' }}"
                            maxlength="100">
                 </div>
                 <div>
@@ -435,7 +435,7 @@
             <tbody>
                 {% for signup in signups %}
                 <tr>
-                    <td>{{ signup.member.display_name|default:signup.display_name|default:"—" }}</td>
+                    <td>{{ signup.display_name|default:signup.member.display_name|default:"—" }}</td>
                     <td>{{ signup.get_status_display }}</td>
                     <td>{{ signup.note|default:"—" }}</td>
                 </tr>

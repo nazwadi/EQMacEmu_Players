@@ -533,19 +533,16 @@ def rsvp_event(request, pk):
         RaidSignup.objects.filter(event=event, member=membership).delete()
         messages.success(request, 'Your RSVP has been removed.')
     elif status in (RaidSignup.STATUS_CONFIRMED, RaidSignup.STATUS_TENTATIVE, RaidSignup.STATUS_DECLINED):
-        # Persist display name to membership so it pre-fills on future RSVPs
-        if display_name and display_name != membership.display_name:
-            membership.display_name = display_name
-            membership.save(update_fields=['display_name'])
         signup, created = RaidSignup.objects.get_or_create(
             event=event,
             member=membership,
-            defaults={'status': status, 'note': note},
+            defaults={'status': status, 'note': note, 'display_name': display_name},
         )
         if not created:
             signup.status = status
             signup.note = note
-            signup.save(update_fields=['status', 'note'])
+            signup.display_name = display_name
+            signup.save(update_fields=['status', 'note', 'display_name'])
         messages.success(request, 'Your RSVP has been saved.')
     else:
         messages.error(request, 'Invalid RSVP status.')
@@ -633,10 +630,11 @@ def _build_ics(events, request, cal_name='EQ Archives Raid Schedule'):
     ]
 
     for event in events:
+        event_tz = ZoneInfo(event.timezone or 'America/New_York')
         start_naive = datetime.combine(event.date, event.start_time)
         end_naive = start_naive + timedelta(hours=2)
-        aware_start = timezone.make_aware(start_naive)
-        aware_end = timezone.make_aware(end_naive)
+        aware_start = start_naive.replace(tzinfo=event_tz)
+        aware_end = end_naive.replace(tzinfo=event_tz)
         dtstart = aware_start.astimezone(dt_timezone.utc).strftime('%Y%m%dT%H%M%SZ')
         dtend = aware_end.astimezone(dt_timezone.utc).strftime('%Y%m%dT%H%M%SZ')
 
@@ -688,8 +686,7 @@ def event_ics(request, pk):
     )
     if not event.is_visible:
         if not request.user.is_authenticated:
-            from django.http import Http404
-            raise Http404
+            return redirect(f'{request.build_absolute_uri("/accounts/login/")}?next={request.path}')
         if not request.user.is_superuser:
             has_access = False
             if event.circuit:
