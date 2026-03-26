@@ -625,6 +625,13 @@
                     {% if form.posted_by_name.errors %}
                     <ul class="rsf-errorlist">{% for e in form.posted_by_name.errors %}<li>{{ e }}</li>{% endfor %}</ul>
                     {% endif %}
+                    <div class="rsf-ack-row" id="rsf-name-warn" role="alert">
+                        <input type="checkbox" id="rsf-name-warn-ack"
+                               style="margin-top:0.1rem;flex-shrink:0;accent-color:var(--accent-color);width:15px;height:15px;cursor:pointer;">
+                        <label for="rsf-name-warn-ack" style="font-size:0.8rem;color:#e0b820;cursor:pointer;line-height:1.4;">
+                            No character name entered — your account username will be shown publicly on this event and in Discord. Check to proceed anyway.
+                        </label>
+                    </div>
                 </div>
             </div>
 
@@ -720,11 +727,13 @@
 (function () {
     'use strict';
 
-    var form        = document.getElementById('rsf-form');
+    var form          = document.getElementById('rsf-form');
     var circuitSel    = document.getElementById('id_circuit');
     var writeinDiv    = document.getElementById('rsf-circuit-writein');
     var postedByInput = document.getElementById('id_posted_by_name');
     var memberNames   = {{ member_names_json|safe }};
+    var nameWarn      = document.getElementById('rsf-name-warn');
+    var nameWarnAck   = document.getElementById('rsf-name-warn-ack');
     var visHid      = document.getElementById('id_is_visible');
     var openHid     = document.getElementById('id_is_open');
     var noteHidden  = document.getElementById('rsf-note-hidden');
@@ -758,6 +767,22 @@
     if (!postedByInput.value) {
         autoFillPostedBy();
     }
+
+    // ── Posted-by blank warning ───────────────────────────────────────
+    postedByInput.addEventListener('input', function () {
+        if (postedByInput.value.trim()) {
+            nameWarn.classList.remove('visible');
+            nameWarnAck.checked = false;
+        }
+    });
+
+    form.addEventListener('submit', function (e) {
+        if (!postedByInput.value.trim() && !nameWarnAck.checked) {
+            e.preventDefault();
+            nameWarn.classList.add('visible');
+            nameWarn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    });
 
     // ── Visibility / Attendance toggles ──────────────────────────────
     var visVisibleLabel = document.getElementById('rsf-vis-visible');
