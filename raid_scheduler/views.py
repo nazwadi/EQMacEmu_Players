@@ -20,7 +20,7 @@ from dkp.models import CircuitMembership, RaidCircuit
 from .conflicts import check_conflicts
 from .forms import RaidEventForm
 from .models import GMOverrideLog, RaidEvent, RaidSignup, RaidTarget
-from .utils import notify_raid_scheduled, notify_raid_updated
+from .utils import notify_raid_cancelled, notify_raid_scheduled, notify_raid_updated
 
 _CIRCUIT_COLORS = [
     '#8aa3ff', '#4dbb5f', '#ff8c69', '#c97bff',
@@ -338,6 +338,8 @@ def cancel_event(request, pk):
     if event.status in (RaidEvent.STATUS_SCHEDULED, RaidEvent.STATUS_ACTIVE):
         event.status = RaidEvent.STATUS_CANCELLED
         event.save(update_fields=['status'])
+        if event.is_visible:
+            notify_raid_cancelled(event)
         messages.success(request, f"Raid cancelled: {event.title} on {event.date}.")
     else:
         messages.warning(request, 'That event is already cancelled or expired.')

@@ -53,6 +53,33 @@ def notify_raid_scheduled(event):
     })
 
 
+def notify_raid_cancelled(event):
+    """Post to Discord when a scheduled raid is cancelled."""
+    from django.conf import settings
+    site_url = getattr(settings, 'SITE_URL', 'http://localhost:8000')
+
+    targets = ', '.join(t.name for t in event.targets.all())
+    date_str = event.date.strftime('%A, %B %-d')
+    time_str = event.start_time.strftime('%-I:%M %p')
+
+    fields = [
+        {'name': 'Circuit',  'value': event.circuit_display, 'inline': True},
+        {'name': 'Date',     'value': date_str,               'inline': True},
+        {'name': 'Time',     'value': time_str,               'inline': True},
+        {'name': 'Targets',  'value': targets or '—',         'inline': False},
+    ]
+
+    _post_to_discord({
+        'embeds': [{
+            'title': f'❌ Raid Cancelled: {event.title}',
+            'color': 0xFF6B6B,
+            'fields': fields,
+            'url': f'{site_url}/raids/event/{event.pk}/',
+            'footer': {'text': f'Cancelled by {event.posted_by_display}'},
+        }]
+    })
+
+
 def notify_raid_updated(event, changes):
     """
     Post to Discord when a scheduled raid is edited.
