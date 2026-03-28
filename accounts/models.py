@@ -144,4 +144,5 @@ class Account(models.Model):
     class Meta:
         db_table = "account"
         managed = False
+        permissions = [('can_suspend_accounts', 'Can suspend and lift player game accounts')]
 

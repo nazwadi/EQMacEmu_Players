@@ -1,0 +1,70 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block content %}
+<h1>Lift Suspension Early</h1>
+
+<p>
+  This will immediately lift the game account suspension for the selected user(s).
+  Only accounts that are currently suspended are shown below.
+</p>
+
+<h2>Web users selected</h2>
+<ul>
+  {% for user in queryset %}
+    <li><strong>{{ user.username }}</strong> ({{ user.email }})
+      {% if not user.is_active %}<em> — web login is currently disabled</em>{% endif %}
+    </li>
+  {% endfor %}
+</ul>
+
+{% if game_accounts %}
+  <h2>Currently suspended game accounts</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Account Name</th>
+        <th>Suspended Until</th>
+        <th>Reason</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for acct in game_accounts %}
+        <tr>
+          <td>{{ acct.name }}</td>
+          <td>{{ acct.suspendeduntil }}</td>
+          <td>{{ acct.suspend_reason|default:"—" }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p><em>None of the selected users have active game account suspensions.</em></p>
+{% endif %}
+
+<form method="post">
+  {% csrf_token %}
+
+  {% for user in queryset %}
+    <input type="hidden" name="{{ action_checkbox_name }}" value="{{ user.pk }}">
+  {% endfor %}
+  <input type="hidden" name="action" value="{{ action_name }}">
+  <input type="hidden" name="select_across" value="0">
+  <input type="hidden" name="confirmed" value="yes">
+
+  <fieldset class="module aligned">
+    <div class="form-row">
+      <label for="id_restore_web">
+        <input type="checkbox" id="id_restore_web" name="restore_web_login" value="1">
+        Also re-enable web site login (<code>is_active = True</code>) for any disabled users
+      </label>
+    </div>
+  </fieldset>
+
+  <div>
+    <input type="submit" value="Confirm — lift suspension" class="button default">
+    &nbsp;
+    <a href="{% url 'admin:auth_user_changelist' %}">Cancel</a>
+  </div>
+</form>
+{% endblock %}
