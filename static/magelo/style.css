@@ -1361,6 +1361,26 @@ div.Slot.slotloc9999.slotimage9999 {
         width: auto;
         margin: 10px auto;
     }
+
+    /* AA page: allow fixed-width window to scroll horizontally */
+    .FlagOuter {
+        max-width: 100%;
+        overflow-x: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .NavOuter {
+        width: 100%;
+        min-width: unset;
+        max-width: unset;
+    }
+
+    .NavInner {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
 }
 
 /* Responsive adjustments */
@@ -1598,28 +1618,46 @@ div.Slot.slotloc9999.slotimage9999 {
 }
 
 /* ================================================================
-   SETTINGS / PERMISSION PANEL — EQ Dark Theme
-   Overrides Bootstrap card defaults so the panel matches the
-   dark parchment aesthetic instead of looking bright white.
+   SETTINGS OFFCANVAS — EQ Dark Theme
    ================================================================ */
 
-#settingsPanel > .card {
+.eq-settings {
     background-color: #1a1408;
-    border: 1px solid #5a5030;
-    border-radius: 2px;
+    border-left: 2px solid #5a5030;
+    width: 320px;
+    max-width: 90vw;
 }
 
-#settingsPanel .card-title {
-    color: #c8b97a;
-    font-family: Arial, sans-serif;
-    font-size: 10pt;
-    padding-bottom: 10px;
+.eq-settings .offcanvas-header {
+    background-image: url(midt.gif);
+    background-repeat: repeat-x;
     border-bottom: 1px solid #3a3218;
-    margin-bottom: 14px !important;
+    padding: 0 14px;
+    height: 21px;
+    min-height: 21px;
+    align-items: center;
 }
 
-#settingsPanel .card-body {
-    padding: 16px 20px;
+.eq-settings .offcanvas-title {
+    font-family: Arial, sans-serif;
+    font-size: 9pt;
+    color: #ffffff;
+    font-weight: normal;
+    line-height: 21px;
+}
+
+.eq-settings .btn-close {
+    filter: invert(1) opacity(0.6);
+    width: 10px;
+    height: 10px;
+    padding: 0;
+    margin: 0;
+    flex-shrink: 0;
+}
+
+.eq-settings .offcanvas-body {
+    padding: 14px;
+    overflow-y: auto;
 }
 
 .permission-card {
@@ -1750,13 +1788,11 @@ nav[aria-label="breadcrumb"] .breadcrumb-item + .breadcrumb-item::before {
 .flag-zone {
     font-family: Arial, sans-serif;
     font-size: 9pt;
-    white-space: nowrap;
 }
 
 .flag-sub {
     font-family: Arial, sans-serif;
     font-size: 8pt;
-    white-space: nowrap;
 }
 
 .flag-row-earned .flag-check { color: #44dd66; }

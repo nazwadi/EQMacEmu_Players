@@ -21,97 +21,72 @@
         <div class="row mt-2">
             <div class="col">
                 {% if is_character_owner %}
-                    <!-- Settings Panel -->
-                    <div class="collapse mb-4" id="settingsPanel">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title mb-3">Profile Permission Settings for {{ character.name }}</h5>
-                                <div class="row g-3">
-                                    <div class="col-12 col-md-6 col-lg-4">
-                                        <div class="card permission-card">
-                                            <div class="card-body">
-                                                <div class="form-check form-switch">
-                                                    <input class="form-check-input" type="checkbox" id="inventoryToggle"
-                                                           {% if permissions.inventory %}checked{% endif %}
-                                                           onchange="updatePermission('inventory', this.checked, '{{ character.name }}')">
-                                                    <label class="form-check-label" for="inventoryToggle">
-                                                        Gear is Publicly Visible
-                                                    </label>
-                                                </div>
-                                            </div>
+                    <div class="offcanvas offcanvas-end eq-settings" tabindex="-1" id="settingsOffcanvas" aria-labelledby="settingsOffcanvasLabel">
+                        <div class="offcanvas-header">
+                            <span class="offcanvas-title" id="settingsOffcanvasLabel">Settings &mdash; {{ character.name }}</span>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                        </div>
+                        <div class="offcanvas-body">
+                            <div class="d-flex flex-column gap-2">
+                                <div class="permission-card card">
+                                    <div class="card-body">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="inventoryToggle"
+                                                   {% if permissions.inventory %}checked{% endif %}
+                                                   onchange="updatePermission('inventory', this.checked, '{{ character.name }}')">
+                                            <label class="form-check-label" for="inventoryToggle">Gear is Publicly Visible</label>
                                         </div>
                                     </div>
-                                    <div class="col-12 col-md-6 col-lg-4">
-                                        <div class="card permission-card">
-                                            <div class="card-body">
-                                                <div class="form-check form-switch">
-                                                    <input class="form-check-input" type="checkbox" id="bagsToggle"
-                                                           {% if permissions.bags %}checked{% endif %}
-                                                           onchange="updatePermission('bags', this.checked, '{{ character.name }}')">
-                                                    <label class="form-check-label" for="bagsToggle">
-                                                        Bags are Publicly Visible
-                                                    </label>
-                                                </div>
-                                            </div>
+                                </div>
+                                <div class="permission-card card">
+                                    <div class="card-body">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="bagsToggle"
+                                                   {% if permissions.bags %}checked{% endif %}
+                                                   onchange="updatePermission('bags', this.checked, '{{ character.name }}')">
+                                            <label class="form-check-label" for="bagsToggle">Bags are Publicly Visible</label>
                                         </div>
                                     </div>
-                                    <div class="col-12 col-md-6 col-lg-4">
-                                        <div class="card permission-card">
-                                            <div class="card-body">
-                                                <div class="form-check form-switch">
-                                                    <input class="form-check-input" type="checkbox" id="bankToggle"
-                                                           {% if permissions.bank %}checked{% endif %}
-                                                           onchange="updatePermission('bank', this.checked, '{{ character.name }}')">
-                                                    <label class="form-check-label" for="bankToggle">
-                                                        Bank is Publicly Visible
-                                                    </label>
-                                                </div>
-                                            </div>
+                                </div>
+                                <div class="permission-card card">
+                                    <div class="card-body">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="bankToggle"
+                                                   {% if permissions.bank %}checked{% endif %}
+                                                   onchange="updatePermission('bank', this.checked, '{{ character.name }}')">
+                                            <label class="form-check-label" for="bankToggle">Bank is Publicly Visible</label>
                                         </div>
                                     </div>
-                                    <div class="col-12 col-md-6 col-lg-4">
-                                        <div class="card permission-card">
-                                            <div class="card-body">
-                                                <div class="form-check form-switch">
-                                                    <input class="form-check-input" type="checkbox"
-                                                           id="coinInventoryToggle"
-                                                           {% if permissions.coin_inventory %}checked{% endif %}
-                                                           onchange="updatePermission('coin_inventory', this.checked, '{{ character.name }}')">
-                                                    <label class="form-check-label" for="coinInventoryToggle">
-                                                        Coin in Inventory is Publicly Visible
-                                                    </label>
-                                                </div>
-                                            </div>
+                                </div>
+                                <div class="permission-card card">
+                                    <div class="card-body">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="coinInventoryToggle"
+                                                   {% if permissions.coin_inventory %}checked{% endif %}
+                                                   onchange="updatePermission('coin_inventory', this.checked, '{{ character.name }}')">
+                                            <label class="form-check-label" for="coinInventoryToggle">Coin in Inventory is Publicly Visible</label>
                                         </div>
                                     </div>
-                                    <div class="col-12 col-md-6 col-lg-4">
-                                        <div class="card permission-card">
-                                            <div class="card-body">
-                                                <div class="form-check form-switch">
-                                                    <input class="form-check-input" type="checkbox" id="coinBankToggle"
-                                                           {% if permissions.coin_bank %}checked{% endif %}
-                                                           onchange="updatePermission('coin_bank', this.checked, '{{ character.name }}')">
-                                                    <label class="form-check-label" for="coinBankToggle">
-                                                        Coin in Bank is Publicly Visible
-                                                    </label>
-                                                </div>
-                                            </div>
+                                </div>
+                                <div class="permission-card card">
+                                    <div class="card-body">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="coinBankToggle"
+                                                   {% if permissions.coin_bank %}checked{% endif %}
+                                                   onchange="updatePermission('coin_bank', this.checked, '{{ character.name }}')">
+                                            <label class="form-check-label" for="coinBankToggle">Coin in Bank is Publicly Visible</label>
                                         </div>
                                     </div>
-                                    <div class="col-12 col-md-6 col-lg-4">
-                                        <div class="card permission-card">
-                                            <div class="card-body">
-                                                <div class="form-check form-switch">
-                                                    <input class="form-check-input" type="checkbox" id="wishlistPublicToggle"
-                                                           {% if permissions.wishlist_public %}checked{% endif %}
-                                                           onchange="updatePermission('wishlist_public', this.checked, '{{ character.name }}')">
-                                                    <label class="form-check-label" for="wishlistPublicToggle">
-                                                        Wishlist is Publicly Visible
-                                                    </label>
-                                                </div>
-                                                <small class="text-muted">When off, only you can see your wishlist.</small>
-                                            </div>
+                                </div>
+                                <div class="permission-card card">
+                                    <div class="card-body">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="wishlistPublicToggle"
+                                                   {% if permissions.wishlist_public %}checked{% endif %}
+                                                   onchange="updatePermission('wishlist_public', this.checked, '{{ character.name }}')">
+                                            <label class="form-check-label" for="wishlistPublicToggle">Wishlist is Publicly Visible</label>
                                         </div>
+                                        <small class="text-muted">When off, only you can see your wishlist.</small>
                                     </div>
                                 </div>
                             </div>
@@ -523,9 +498,8 @@
                                 <div class="NavInner">
                                     <button class="eq-button" disabled>Profile</button>
                                     {% if is_character_owner %}
-                                        <button class="eq-button" type="button" data-bs-toggle="collapse"
-                                                data-bs-target="#settingsPanel" aria-expanded="false"
-                                                aria-controls="settingsPanel">Settings
+                                        <button class="eq-button" type="button" data-bs-toggle="offcanvas"
+                                                data-bs-target="#settingsOffcanvas" aria-controls="settingsOffcanvas">Settings
                                         </button>
                                     {% endif %}
                                     <button class="eq-button"
