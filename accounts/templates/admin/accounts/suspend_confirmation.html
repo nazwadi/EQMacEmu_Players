@@ -1,0 +1,87 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block content %}
+<h1>Suspend Game Accounts</h1>
+
+<p>
+  You are about to suspend game accounts for the following web user(s).
+  Suspensions lift automatically when the duration expires — no action is needed to reverse unless you want to lift early.
+</p>
+
+<h2>Web users selected</h2>
+<ul>
+  {% for user in queryset %}
+    <li><strong>{{ user.username }}</strong> ({{ user.email }})
+      {% if not user.is_active %}<em> — web login already disabled</em>{% endif %}
+    </li>
+  {% endfor %}
+</ul>
+
+{% if game_accounts %}
+  <h2>Game accounts that will be suspended</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Account Name</th>
+        <th>Currently Suspended Until</th>
+        <th>Current Reason</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for acct in game_accounts %}
+        <tr>
+          <td>{{ acct.name }}</td>
+          <td>{{ acct.suspendeduntil|default:"—" }}</td>
+          <td>{{ acct.suspend_reason|default:"—" }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p><em>No game accounts found linked to the selected web user(s).</em></p>
+{% endif %}
+
+<form method="post">
+  {% csrf_token %}
+
+  {# Re-submit the selected user IDs and action name so Django reconstructs the queryset #}
+  {% for user in queryset %}
+    <input type="hidden" name="{{ action_checkbox_name }}" value="{{ user.pk }}">
+  {% endfor %}
+  <input type="hidden" name="action" value="{{ action_name }}">
+  <input type="hidden" name="select_across" value="0">
+  <input type="hidden" name="confirmed" value="yes">
+
+  <fieldset class="module aligned">
+    <h2>Suspension settings</h2>
+
+    <div class="form-row">
+      <label for="id_reason">Reason <span class="help">(shown on the account record)</span></label>
+      <textarea id="id_reason" name="reason" rows="3" cols="60" placeholder="Enter reason for suspension…"></textarea>
+    </div>
+
+    <div class="form-row">
+      <label for="id_duration_days">Duration (days)</label>
+      <input type="number" id="id_duration_days" name="duration_days" value="7" min="1" max="365">
+    </div>
+
+    <div class="form-row">
+      <label for="id_disable_web">
+        <input type="checkbox" id="id_disable_web" name="disable_web_login" value="1">
+        Also disable web site login (<code>is_active = False</code>)
+      </label>
+      <p class="help">
+        Prevents the player from logging into this site. You can re-enable this separately in the user detail page,
+        or via the "Lift suspension early" action.
+      </p>
+    </div>
+  </fieldset>
+
+  <div>
+    <input type="submit" value="Confirm suspension" class="button default">
+    &nbsp;
+    <a href="{% url 'admin:auth_user_changelist' %}">Cancel</a>
+  </div>
+</form>
+{% endblock %}
