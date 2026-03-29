@@ -8,13 +8,13 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{% url 'accounts:index' %}">Home</a></li>
                 <li class="breadcrumb-item"><a href="{% url 'magelo:search' %}">Character Search</a></li>
-                <li class="breadcrumb-item active" aria-current="page">{{ character.name }}</li>
+                <li class="breadcrumb-item"><a href="{% url 'magelo:character_profile' character.name %}">{{ character.name }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Flags</li>
             </ol>
         </nav>
         <div class="row mt-2">
             <div class="col">
                 {% if is_character_owner %}
-                    <!-- Settings Panel -->
                     <div class="collapse mb-4" id="settingsPanel">
                         <div class="card">
                             <div class="card-body">
@@ -27,9 +27,7 @@
                                                     <input class="form-check-input" type="checkbox" id="inventoryToggle"
                                                            {% if permissions.inventory %}checked{% endif %}
                                                            onchange="updatePermission('inventory', this.checked, '{{ character.name }}')">
-                                                    <label class="form-check-label" for="inventoryToggle">
-                                                        Gear is Publicly Visible
-                                                    </label>
+                                                    <label class="form-check-label" for="inventoryToggle">Gear is Publicly Visible</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -41,9 +39,7 @@
                                                     <input class="form-check-input" type="checkbox" id="bagsToggle"
                                                            {% if permissions.bags %}checked{% endif %}
                                                            onchange="updatePermission('bags', this.checked, '{{ character.name }}')">
-                                                    <label class="form-check-label" for="bagsToggle">
-                                                        Bags are Publicly Visible
-                                                    </label>
+                                                    <label class="form-check-label" for="bagsToggle">Bags are Publicly Visible</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -55,10 +51,45 @@
                                                     <input class="form-check-input" type="checkbox" id="bankToggle"
                                                            {% if permissions.bank %}checked{% endif %}
                                                            onchange="updatePermission('bank', this.checked, '{{ character.name }}')">
-                                                    <label class="form-check-label" for="bankToggle">
-                                                        Bank is Publicly Visible
-                                                    </label>
+                                                    <label class="form-check-label" for="bankToggle">Bank is Publicly Visible</label>
                                                 </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="card permission-card">
+                                            <div class="card-body">
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox" id="coinInventoryToggle"
+                                                           {% if permissions.coin_inventory %}checked{% endif %}
+                                                           onchange="updatePermission('coin_inventory', this.checked, '{{ character.name }}')">
+                                                    <label class="form-check-label" for="coinInventoryToggle">Coin in Inventory is Publicly Visible</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="card permission-card">
+                                            <div class="card-body">
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox" id="coinBankToggle"
+                                                           {% if permissions.coin_bank %}checked{% endif %}
+                                                           onchange="updatePermission('coin_bank', this.checked, '{{ character.name }}')">
+                                                    <label class="form-check-label" for="coinBankToggle">Coin in Bank is Publicly Visible</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="card permission-card">
+                                            <div class="card-body">
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox" id="wishlistPublicToggle"
+                                                           {% if permissions.wishlist_public %}checked{% endif %}
+                                                           onchange="updatePermission('wishlist_public', this.checked, '{{ character.name }}')">
+                                                    <label class="form-check-label" for="wishlistPublicToggle">Wishlist is Publicly Visible</label>
+                                                </div>
+                                                <small class="text-muted">When off, only you can see your wishlist.</small>
                                             </div>
                                         </div>
                                     </div>
@@ -72,74 +103,47 @@
                     <nav class="NavOuter">
                         <div class="NavInner">
                             <button class="eq-button"
-                                    onclick="window.location='{% url 'magelo:character_profile' character.name %}'"
-                                    style="color:#606060;">Profile
+                                    onclick="window.location='{% url 'magelo:character_profile' character.name %}'">Profile
                             </button>
                             {% if is_character_owner %}
                                 <button class="eq-button" type="button" data-bs-toggle="collapse"
                                         data-bs-target="#settingsPanel" aria-expanded="false"
-                                        aria-controls="settingsPanel" style="color:#606060;">
-                                    Settings
+                                        aria-controls="settingsPanel">Settings
                                 </button>
                             {% endif %}
                             <button class="eq-button"
-                                    onclick="window.location='{% url 'magelo:aas' character.name %}'"
-                                    style="margin:3px">AAs
+                                    onclick="window.location='{% url 'magelo:aas' character.name %}'">AAs
                             </button>
                             <button class="eq-button"
-                                    onclick="window.location='{% url 'magelo:keys' character.name %}'"
-                                    style="margin:3px">Keys
+                                    onclick="window.location='{% url 'magelo:keys' character.name %}'">Keys
                             </button>
+                            <button class="eq-button" disabled>Flags</button>
                             <button class="eq-button"
-                                    disabled
-                                    style="margin:3px">Flags
-                            </button>
-                            <button class="eq-button"
-                                    onclick="window.location='{% url 'magelo:wishlist' character.name %}'"
-                                    style="margin:3px">Wishlist
+                                    onclick="window.location='{% url 'magelo:wishlist' character.name %}'">Wishlist
                             </button>
                         </div>
                     </nav>
 
                     <div class="character-main">
                         <div class="keys-container">
-                            <div class='ItemTitle'>
-                                <div class='ItemTitleLeft'></div>
-                                <div class='ItemTitleMid'>Planes of Power Flags - {{ character.name }}</div>
-                                <div class='ItemTitleRight'></div>
-                            </div>
-                            <div class='ItemInner'>
-                                <p style="font-family: Arial, sans-serif; font-size: 9pt; color: #aaa; margin-bottom: 12px;">
-                                    {{ flags_earned }} of {{ flags_total }} flags earned
-                                </p>
-                                <table class="StatTable" style="width: 100%; max-width: 500px;">
-                                    <thead>
-                                        <tr>
-                                            <th class="ColumnHead" style="width: 28px;"></th>
-                                            <th class="ColumnHead">Zone</th>
-                                            <th class="ColumnHead" style="color: #aaa; font-weight: normal;">Details</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for group in flag_groups %}
-                                            <tr>
-                                                <td style="text-align: center; padding: 3px 6px;">
-                                                    {% if group.flagged %}
-                                                        <span style="color: #00cc44; font-size: 14px;" title="Flagged">&#10003;</span>
-                                                    {% else %}
-                                                        <span style="color: #555; font-size: 14px;" title="Not flagged">&mdash;</span>
-                                                    {% endif %}
-                                                </td>
-                                                <td style="padding: 3px 6px; {% if group.flagged %}color: #ffffff;{% else %}color: #666;{% endif %}">
-                                                    {{ group.label }}
-                                                </td>
-                                                <td style="padding: 3px 6px; color: #888; font-size: 8pt;">
-                                                    {{ group.subtitle }}
-                                                </td>
-                                            </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
+                            <div class="content-window-title">Planes of Power Flags &mdash; {{ character.name }}</div>
+                            <div class="ItemInner">
+                                <div class="flags-progress-wrap">
+                                    <span>{{ flags_earned }} / {{ flags_total }} flags</span>
+                                    <div class="flags-progress-bar-outer">
+                                        <div class="flags-progress-bar-inner"
+                                             style="width: {% widthratio flags_earned flags_total 100 %}%"></div>
+                                    </div>
+                                </div>
+                                <div class="flags-grid">
+                                    {% for group in flag_groups %}
+                                        <div class="flag-row {% if group.flagged %}flag-row-earned{% else %}flag-row-missing{% endif %}">
+                                            <span class="flag-check">{% if group.flagged %}&#10003;{% else %}&mdash;{% endif %}</span>
+                                            <span class="flag-zone">{{ group.label }}</span>
+                                            <span class="flag-sub">{{ group.subtitle }}</span>
+                                        </div>
+                                    {% endfor %}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -147,4 +151,5 @@
             </div>
         </div>
     </div>
+
 {% endblock %}

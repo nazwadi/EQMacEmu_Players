@@ -410,9 +410,14 @@ def character_keys(request: HttpRequest, character_name: str) -> HttpResponse:
     character = Characters.objects.filter(name=character_name).first()
     if character is None:
         raise Http404("This character does not exist")
+    is_character_owner = valid_game_account_owner(request.user.username, str(character.account_id))
+    permissions = get_permissions(request.user, character_name, character.gm, character.anon)
     character_keyring = get_character_keyring(character_id=character.id)
     context = {
         'character': character,
+        'character_name': character_name,
+        'is_character_owner': is_character_owner,
+        'permissions': permissions,
         'keys': character_keyring
     }
     return render(request=request, template_name='magelo/character_keys.html', context=context)
@@ -504,8 +509,13 @@ def character_aas(request: HttpRequest, character_name: str) -> HttpResponse:
                 box_data['aas'].append(aa_data)
             boxes.append(box_data)
 
+    is_character_owner = valid_game_account_owner(request.user.username, str(character.account_id))
+    permissions = get_permissions(request.user, character_name, character.gm, character.anon)
     context = {
         'character': character,
+        'character_name': character_name,
+        'is_character_owner': is_character_owner,
+        'permissions': permissions,
         'tabs': tabs,
         'boxes': boxes,
         'POINTS_SPENT': character.aa_points_spent,
@@ -629,14 +639,16 @@ def wishlist_view(request: HttpRequest, character_name: str) -> HttpResponse:
         raise Http404("This character does not exist")
 
     is_owner = valid_game_account_owner(request.user.username, str(character.account_id)) if request.user.is_authenticated else False
-    permissions = CharacterPermissions.get_or_create_permissions(character_name)
+    permissions = get_permissions(request.user, character_name, character.gm, character.anon)
+    char_permissions = CharacterPermissions.get_or_create_permissions(character_name)
 
-    if not permissions.wishlist_public and not is_owner:
+    if not char_permissions.wishlist_public and not is_owner:
         return render(request, 'magelo/wishlist.html', {
             'character': character,
             'is_owner': False,
             'wishlist_hidden': True,
             'entries': [],
+            'permissions': permissions,
         })
 
     entries = WishlistEntry.objects.filter(character_name=character_name)
@@ -646,7 +658,7 @@ def wishlist_view(request: HttpRequest, character_name: str) -> HttpResponse:
         'is_owner': is_owner,
         'wishlist_hidden': False,
         'entries': entries,
-        'wishlist_public': permissions.wishlist_public,
+        'permissions': permissions,
     })
 
 

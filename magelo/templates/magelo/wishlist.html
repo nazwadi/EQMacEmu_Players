@@ -15,25 +15,81 @@
         <div class="row mt-2">
             <div class="col">
                 {% if is_owner %}
-                    <!-- Wishlist visibility panel -->
                     <div class="collapse mb-4" id="settingsPanel">
                         <div class="card">
                             <div class="card-body">
-                                <h5 class="card-title mb-3">Wishlist Settings for {{ character.name }}</h5>
+                                <h5 class="card-title mb-3">Profile Permission Settings for {{ character.name }}</h5>
                                 <div class="row g-3">
                                     <div class="col-12 col-md-6 col-lg-4">
                                         <div class="card permission-card">
                                             <div class="card-body">
                                                 <div class="form-check form-switch">
-                                                    <input class="form-check-input" type="checkbox"
-                                                           id="wishlistPublicToggle"
-                                                           {% if wishlist_public %}checked{% endif %}
-                                                           onchange="updatePermission('wishlist_public', this.checked, '{{ character.name }}')">
-                                                    <label class="form-check-label" for="wishlistPublicToggle">
-                                                        Wishlist is Publicly Visible
-                                                    </label>
+                                                    <input class="form-check-input" type="checkbox" id="inventoryToggle"
+                                                           {% if permissions.inventory %}checked{% endif %}
+                                                           onchange="updatePermission('inventory', this.checked, '{{ character.name }}')">
+                                                    <label class="form-check-label" for="inventoryToggle">Gear is Publicly Visible</label>
                                                 </div>
-                                                <small class="text-muted">When off, only you can see this wishlist.</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="card permission-card">
+                                            <div class="card-body">
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox" id="bagsToggle"
+                                                           {% if permissions.bags %}checked{% endif %}
+                                                           onchange="updatePermission('bags', this.checked, '{{ character.name }}')">
+                                                    <label class="form-check-label" for="bagsToggle">Bags are Publicly Visible</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="card permission-card">
+                                            <div class="card-body">
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox" id="bankToggle"
+                                                           {% if permissions.bank %}checked{% endif %}
+                                                           onchange="updatePermission('bank', this.checked, '{{ character.name }}')">
+                                                    <label class="form-check-label" for="bankToggle">Bank is Publicly Visible</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="card permission-card">
+                                            <div class="card-body">
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox" id="coinInventoryToggle"
+                                                           {% if permissions.coin_inventory %}checked{% endif %}
+                                                           onchange="updatePermission('coin_inventory', this.checked, '{{ character.name }}')">
+                                                    <label class="form-check-label" for="coinInventoryToggle">Coin in Inventory is Publicly Visible</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="card permission-card">
+                                            <div class="card-body">
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox" id="coinBankToggle"
+                                                           {% if permissions.coin_bank %}checked{% endif %}
+                                                           onchange="updatePermission('coin_bank', this.checked, '{{ character.name }}')">
+                                                    <label class="form-check-label" for="coinBankToggle">Coin in Bank is Publicly Visible</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="card permission-card">
+                                            <div class="card-body">
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox" id="wishlistPublicToggle"
+                                                           {% if permissions.wishlist_public %}checked{% endif %}
+                                                           onchange="updatePermission('wishlist_public', this.checked, '{{ character.name }}')">
+                                                    <label class="form-check-label" for="wishlistPublicToggle">Wishlist is Publicly Visible</label>
+                                                </div>
+                                                <small class="text-muted">When off, only you can see your wishlist.</small>
                                             </div>
                                         </div>
                                     </div>
@@ -47,46 +103,34 @@
                     <nav class="NavOuter">
                         <div class="NavInner">
                             <button class="eq-button"
-                                    onclick="window.location='{% url 'magelo:character_profile' character.name %}'"
-                                    style="color:#606060;">Profile
+                                    onclick="window.location='{% url 'magelo:character_profile' character.name %}'">Profile
                             </button>
                             {% if is_owner %}
                                 <button class="eq-button" type="button" data-bs-toggle="collapse"
                                         data-bs-target="#settingsPanel" aria-expanded="false"
-                                        aria-controls="settingsPanel" style="color:#606060;">
-                                    Settings
+                                        aria-controls="settingsPanel">Settings
                                 </button>
                             {% endif %}
                             <button class="eq-button"
-                                    onclick="window.location='{% url 'magelo:aas' character.name %}'"
-                                    style="margin:3px">AAs
+                                    onclick="window.location='{% url 'magelo:aas' character.name %}'">AAs
                             </button>
                             <button class="eq-button"
-                                    onclick="window.location='{% url 'magelo:keys' character.name %}'"
-                                    style="margin:3px">Keys
+                                    onclick="window.location='{% url 'magelo:keys' character.name %}'">Keys
                             </button>
                             <button class="eq-button"
-                                    onclick="window.location='{% url 'magelo:flags' character.name %}'"
-                                    style="margin:3px">Flags
+                                    onclick="window.location='{% url 'magelo:flags' character.name %}'">Flags
                             </button>
-                            <button class="eq-button"
-                                    disabled
-                                    style="margin:3px">Wishlist
-                            </button>
+                            <button class="eq-button" disabled>Wishlist</button>
                         </div>
                     </nav>
 
                     <div class="character-main">
                         <div class="keys-container">
-                            <div class='ItemTitle'>
-                                <div class='ItemTitleLeft'></div>
-                                <div class='ItemTitleMid'>Wishlist - {{ character.name }}</div>
-                                <div class='ItemTitleRight'></div>
-                            </div>
-                            <div class='ItemInner'>
+                            <div class="content-window-title">Wishlist &mdash; {{ character.name }}</div>
+                            <div class="ItemInner">
                                 {% if wishlist_hidden %}
-                                    <div style="text-align:center; padding:20px;">
-                                        {{ character.name }}'s wishlist is private.
+                                    <div class="wishlist-private">
+                                        {{ character.name }}'s wishlist is set to private.
                                     </div>
                                 {% elif entries %}
                                     {% if messages %}
@@ -97,41 +141,41 @@
                                             </div>
                                         {% endfor %}
                                     {% endif %}
-                                    <table style="min-width:90%;" class="StatTable">
+                                    <table class="StatTable wishlist-table" style="width:100%;">
                                         <thead>
-                                        <tr>
-                                            <th>Item</th>
-                                            <th>Note</th>
-                                            {% if is_owner %}<th></th>{% endif %}
-                                        </tr>
+                                            <tr>
+                                                <th>Item</th>
+                                                <th>Note</th>
+                                                {% if is_owner %}<th></th>{% endif %}
+                                            </tr>
                                         </thead>
                                         <tbody>
-                                        {% for entry in entries %}
-                                            <tr>
-                                                <td>
-                                                    <a href="{% url 'items:view' entry.item_id %}" target="_blank">
-                                                        {{ entry.item_name }}
-                                                    </a>
-                                                </td>
-                                                <td style="color:#aaa; font-size:0.9em;">{{ entry.note }}</td>
-                                                {% if is_owner %}
-                                                    <td>
-                                                        <form method="post" action="{% url 'magelo:wishlist_remove' entry.pk %}" style="display:inline;">
-                                                            {% csrf_token %}
-                                                            <button type="submit" class="eq-button"
-                                                                    style="color:#c0392b; font-size:0.8em;"
-                                                                    onclick="return confirm('Remove {{ entry.item_name }} from wishlist?')">
-                                                                Remove
-                                                            </button>
-                                                        </form>
+                                            {% for entry in entries %}
+                                                <tr>
+                                                    <td style="white-space:nowrap;">
+                                                        <a href="{% url 'items:view' entry.item_id %}" target="_blank">
+                                                            {{ entry.item_name }}
+                                                        </a>
                                                     </td>
-                                                {% endif %}
-                                            </tr>
-                                        {% endfor %}
+                                                    <td class="wishlist-note" style="width:100%; padding-left:20px;">{{ entry.note }}</td>
+                                                    {% if is_owner %}
+                                                        <td style="text-align:right;">
+                                                            <form method="post" action="{% url 'magelo:wishlist_remove' entry.pk %}" style="display:inline;">
+                                                                {% csrf_token %}
+                                                                <button type="submit" class="eq-button"
+                                                                        style="color:#c0392b;"
+                                                                        onclick="return confirm('Remove {{ entry.item_name }} from wishlist?')">
+                                                                    Remove
+                                                                </button>
+                                                            </form>
+                                                        </td>
+                                                    {% endif %}
+                                                </tr>
+                                            {% endfor %}
                                         </tbody>
                                     </table>
                                 {% else %}
-                                    <div style="text-align:center; padding:20px;">
+                                    <div class="eq-empty-state">
                                         {{ character.name }}'s wishlist is empty.
                                         {% if is_owner %}
                                             Browse the <a href="{% url 'items:search' %}">item database</a> to add items.
@@ -146,28 +190,4 @@
         </div>
     </div>
 
-    <script>
-        function updatePermission(permission, value, characterName) {
-            fetch('{% url "magelo:update_permission" %}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': '{{ csrf_token }}',
-                    'Content-Length': '0'
-                },
-                body: JSON.stringify({
-                    permission: permission,
-                    value: value,
-                    character_name: characterName
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (!data.success) {
-                    console.error('Permission update failed:', data.error);
-                }
-            })
-            .catch(err => console.error('Error:', err));
-        }
-    </script>
 {% endblock %}

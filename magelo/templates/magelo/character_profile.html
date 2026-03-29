@@ -358,120 +358,6 @@
                                 }
                             }
 
-                            async function updatePermission(permission, value, characterName) {
-                                try {
-                                    // Get CSRF token - try multiple methods
-                                    let csrftoken = null;
-
-                                    // Method 1: Try to get from meta tag
-                                    const csrfMeta = document.querySelector('meta[name="csrf-token"]');
-                                    if (csrfMeta) {
-                                        csrftoken = csrfMeta.getAttribute('content');
-                                    }
-
-                                    // Method 2: Try to get from hidden input field
-                                    if (!csrftoken) {
-                                        const csrfInput = document.querySelector('[name=csrfmiddlewaretoken]');
-                                        if (csrfInput) {
-                                            csrftoken = csrfInput.value;
-                                        }
-                                    }
-
-                                    // Method 3: Try to get from cookie
-                                    if (!csrftoken) {
-                                        const name = 'csrftoken';
-                                        const cookies = document.cookie.split(';');
-                                        for (let i = 0; i < cookies.length; i++) {
-                                            const cookie = cookies[i].trim();
-                                            if (cookie.startsWith(name + '=')) {
-                                                csrftoken = cookie.substring(name.length + 1);
-                                                break;
-                                            }
-                                        }
-                                    }
-
-                                    if (!csrftoken) {
-                                        throw new Error('CSRF token not found');
-                                    }
-
-                                    console.log('Sending request:', {permission, value}); // Debug log
-
-                                    const response = await fetch('/magelo/update_permission/', {
-                                        method: 'POST',
-                                        headers: {
-                                            'Content-Type': 'application/json',
-                                            'X-CSRFToken': csrftoken
-                                        },
-                                        body: JSON.stringify({
-                                            permission: permission,
-                                            value: value,
-                                            character_name: characterName
-                                        })
-                                    });
-
-                                    console.log('Response status:', response.status); // Debug log
-
-                                    const result = await response.json();
-                                    console.log('Response data:', result); // Debug log
-
-                                    if (!response.ok) {
-                                        throw new Error(result.error || 'Failed to update permission');
-                                    }
-
-                                    if (result.success) {
-                                        showToast(`${permission.replace('_', ' ')} ${value ? 'enabled' : 'disabled'} for ${characterName}`);
-                                        // Reload page to reflect changes
-                                        setTimeout(() => window.location.reload(), 1000);
-                                    } else {
-                                        showToast(result.error || 'Failed to update permission', 'danger');
-                                        document.getElementById(`${permission}Toggle`).checked = !value;
-                                    }
-                                } catch (error) {
-                                    console.error('Error updating permission:', error);
-                                    showToast(error.message || 'Error updating permission', 'danger');
-                                    document.getElementById(`${permission}Toggle`).checked = !value;
-                                }
-                            }
-
-                            // Add toast notification function
-                            function showToast(message, type = 'success') {
-                                const toastContainer = document.createElement('div');
-                                toastContainer.style.position = 'fixed';
-                                toastContainer.style.top = '20px';
-                                toastContainer.style.right = '20px';
-                                toastContainer.style.zIndex = '1050';
-
-                                const toast = document.createElement('div');
-                                toast.className = `toast align-items-center text-white bg-${type} border-0`;
-                                toast.setAttribute('role', 'alert');
-                                toast.setAttribute('aria-live', 'assertive');
-                                toast.setAttribute('aria-atomic', 'true');
-
-                                toast.innerHTML = `
-                            <div class="d-flex">
-                                <div class="toast-body">
-                                    ${message}
-                                </div>
-                                <button type="button" class="btn-close btn-close-white me-2 m-auto"
-                                    data-bs-dismiss="toast" aria-label="Close"></button>
-                            </div>
-                        `;
-
-                                toastContainer.appendChild(toast);
-                                document.body.appendChild(toastContainer);
-
-                                const bsToast = new bootstrap.Toast(toast, {
-                                    autohide: true,
-                                    delay: 3000
-                                });
-
-                                bsToast.show();
-
-                                toast.addEventListener('hidden.bs.toast', () => {
-                                    toastContainer.remove();
-                                });
-                            }
-
                             /**
                              * Initialize drag functionality for a tooltip
                              * @param {HTMLElement} element - The tooltip element
@@ -635,38 +521,25 @@
                         <div class="character-layout">
                             <nav class="NavOuter">
                                 <div class="NavInner">
-                                    <button class="eq-button" disabled style="color:#606060;">Profile</button>
+                                    <button class="eq-button" disabled>Profile</button>
                                     {% if is_character_owner %}
                                         <button class="eq-button" type="button" data-bs-toggle="collapse"
                                                 data-bs-target="#settingsPanel" aria-expanded="false"
-                                                aria-controls="settingsPanel" style="color:#606060;">
-                                            Settings
+                                                aria-controls="settingsPanel">Settings
                                         </button>
                                     {% endif %}
                                     <button class="eq-button"
-                                            onclick="window.location='{% url 'magelo:aas' character.name %}'"
-                                            style="margin:3px">AAs
+                                            onclick="window.location='{% url 'magelo:aas' character.name %}'">AAs
                                     </button>
                                     <button class="eq-button"
-                                            onclick="window.location='{% url 'magelo:keys' character.name %}'"
-                                            style="margin:3px">Keys
+                                            onclick="window.location='{% url 'magelo:keys' character.name %}'">Keys
                                     </button>
                                     <button class="eq-button"
-                                            onclick="window.location='{% url 'magelo:flags' character.name %}'"
-                                            style="margin:3px">Flags
+                                            onclick="window.location='{% url 'magelo:flags' character.name %}'">Flags
                                     </button>
                                     <button class="eq-button"
-                                            onclick="window.location='{% url 'magelo:wishlist' character.name %}'"
-                                            style="margin:3px">Wishlist
+                                            onclick="window.location='{% url 'magelo:wishlist' character.name %}'">Wishlist
                                     </button>
-                                    {#                        <button class="eq-button"#}
-                                    {#                                onclick="window.location='{% url 'magelo:skills' character.name %}'"#}
-                                    {#                                style="margin:3px">Skills#}
-                                    {#                        </button>#}
-                                    {#                        <button class="eq-button"#}
-                                    {#                                onclick="window.location='{% url 'magelo:corpse' character.name %}'"#}
-                                    {#                                style="margin:3px">Corpse#}
-                                    {#                        </button>#}
                                 </div>
                             </nav>
 

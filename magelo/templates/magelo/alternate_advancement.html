@@ -83,7 +83,8 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{% url 'accounts:index' %}">Home</a></li>
                 <li class="breadcrumb-item"><a href="{% url 'magelo:search' %}">Character Search</a></li>
-                <li class="breadcrumb-item active" aria-current="page">{{ character.name }}</li>
+                <li class="breadcrumb-item"><a href="{% url 'magelo:character_profile' character.name %}">{{ character.name }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">AAs</li>
             </ol>
         </nav>
         <div class="row mt-2">
@@ -163,6 +164,21 @@
                                                         Coin in Bank is Publicly Visible
                                                     </label>
                                                 </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="card permission-card">
+                                            <div class="card-body">
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox" id="wishlistPublicToggle"
+                                                           {% if permissions.wishlist_public %}checked{% endif %}
+                                                           onchange="updatePermission('wishlist_public', this.checked, '{{ character.name }}')">
+                                                    <label class="form-check-label" for="wishlistPublicToggle">
+                                                        Wishlist is Publicly Visible
+                                                    </label>
+                                                </div>
+                                                <small class="text-muted">When off, only you can see your wishlist.</small>
                                             </div>
                                         </div>
                                     </div>
@@ -282,40 +298,24 @@
                     <nav class="NavOuter">
                         <div class="NavInner">
                             <button class="eq-button"
-                                    onclick="window.location='{% url 'magelo:character_profile' character.name %}'"
-                                    style="color:#606060;">Profile
+                                    onclick="window.location='{% url 'magelo:character_profile' character.name %}'">Profile
                             </button>
                             {% if is_character_owner %}
                                 <button class="eq-button" type="button" data-bs-toggle="collapse"
                                         data-bs-target="#settingsPanel" aria-expanded="false"
-                                        aria-controls="settingsPanel" style="color:#606060;">
-                                    Settings
+                                        aria-controls="settingsPanel">Settings
                                 </button>
                             {% endif %}
+                            <button class="eq-button" disabled>AAs</button>
                             <button class="eq-button"
-                                    onclick="window.location='{% url 'magelo:aas' character.name %}'"
-                                    style="margin:3px">AAs
+                                    onclick="window.location='{% url 'magelo:keys' character.name %}'">Keys
                             </button>
                             <button class="eq-button"
-                                    onclick="window.location='{% url 'magelo:keys' character.name %}'"
-                                    style="margin:3px">Keys
+                                    onclick="window.location='{% url 'magelo:flags' character.name %}'">Flags
                             </button>
                             <button class="eq-button"
-                                    onclick="window.location='{% url 'magelo:flags' character.name %}'"
-                                    style="margin:3px">Flags
+                                    onclick="window.location='{% url 'magelo:wishlist' character.name %}'">Wishlist
                             </button>
-                            <button class="eq-button"
-                                    onclick="window.location='{% url 'magelo:wishlist' character.name %}'"
-                                    style="margin:3px">Wishlist
-                            </button>
-                            {#                        <button class="eq-button"#}
-                            {#                                onclick="window.location='{% url 'magelo:skills' character.name %}'"#}
-                            {#                                style="margin:3px">Skills#}
-                            {#                        </button>#}
-                            {#                        <button class="eq-button"#}
-                            {#                                onclick="window.location='{% url 'magelo:corpse' character.name %}'"#}
-                            {#                                style="margin:3px">Corpse#}
-                            {#                        </button>#}
                         </div>
                     </nav>
                     <div class="character-main">
