@@ -768,3 +768,81 @@ def wishlist_remove(request: HttpRequest, entry_id: int) -> HttpResponse:
 
     messages.success(request, f"Removed {item_name} from {character_name}'s wishlist.")
     return redirect('magelo:wishlist', character_name=character_name)
+
+
+# ---------------------------------------------------------------------------
+# Planes of Power flags — each group maps to one or more zone IDs stored
+# in the character_zone_flags table.  A character has the flag if any row
+# exists for their character id with a matching zoneID.
+# ---------------------------------------------------------------------------
+POP_FLAG_GROUPS = [
+    {'label': 'The Lair of Terris Thule',  'subtitle': 'Plane of Nightmare B', 'zone_ids': [221]},
+    {'label': 'Drunder, Fortress of Zek',  'subtitle': 'Plane of Tactics',     'zone_ids': [214]},
+    {'label': 'Ruins of Lxanvom',          'subtitle': 'Crypt of Decay',        'zone_ids': [200]},
+    {'label': 'Plane of Valor',            'subtitle': '',                      'zone_ids': [208]},
+    {'label': 'Plane of Storms',           'subtitle': '',                      'zone_ids': [210]},
+    {'label': 'Halls of Honor',            'subtitle': '',                      'zone_ids': [211]},
+    {'label': 'Bastion of Thunder',        'subtitle': '',                      'zone_ids': [209]},
+    {'label': 'Temple of Marr',            'subtitle': 'Halls of Honor B',      'zone_ids': [220]},
+    {'label': 'Plane of Torment',          'subtitle': '',                      'zone_ids': [207]},
+    {'label': 'Tower of Solusek Ro',       'subtitle': '',                      'zone_ids': [212]},
+    {'label': 'Plane of Fire',             'subtitle': '',                      'zone_ids': [217]},
+    {'label': 'Plane of Air',              'subtitle': '',                      'zone_ids': [215]},
+    {'label': 'Plane of Earth',            'subtitle': '',                      'zone_ids': [218, 222]},
+    {'label': 'Plane of Water',            'subtitle': '',                      'zone_ids': [216]},
+    {'label': 'Plane of Time',             'subtitle': '',                      'zone_ids': [223]},
+]
+
+
+@require_http_methods(["GET"])
+def character_flags(request: HttpRequest, character_name: str) -> HttpResponse:
+    """
+    Display Planes of Power progression flags for a character.
+
+    Reads character_zone_flags (game DB) and checks each PoP zone group.
+    A group is considered flagged if any matching zoneID row exists for the character.
+
+    :param request: The HTTP request object
+    :param character_name: The name of the EverQuest character
+    :return: Rendered 'magelo/character_flags.html' template
+    :raises Http404: If no character exists with the given name
+    """
+    from django.db import connections
+
+    character = Characters.objects.filter(name=character_name).first()
+    if character is None:
+        raise Http404("This character does not exist")
+
+    is_character_owner = valid_game_account_owner(request.user.username, str(character.account_id))
+    permissions = get_permissions(request.user, character_name, character.gm, character.anon)
+
+    all_zone_ids = [zid for group in POP_FLAG_GROUPS for zid in group['zone_ids']]
+    placeholders = ', '.join(['%s'] * len(all_zone_ids))
+
+    with connections['game_database'].cursor() as cur:
+        cur.execute(
+            f"SELECT DISTINCT zoneID FROM character_zone_flags WHERE id = %s AND zoneID IN ({placeholders})",
+            [character.id] + all_zone_ids,
+        )
+        flagged_zone_ids = {row[0] for row in cur.fetchall()}
+
+    flag_groups = []
+    for group in POP_FLAG_GROUPS:
+        flag_groups.append({
+            'label': group['label'],
+            'subtitle': group['subtitle'],
+            'flagged': bool(set(group['zone_ids']) & flagged_zone_ids),
+        })
+
+    flags_earned = sum(1 for g in flag_groups if g['flagged'])
+
+    context = {
+        'character': character,
+        'character_name': character_name,
+        'is_character_owner': is_character_owner,
+        'permissions': permissions,
+        'flag_groups': flag_groups,
+        'flags_earned': flags_earned,
+        'flags_total': len(flag_groups),
+    }
+    return render(request=request, template_name='magelo/character_flags.html', context=context)

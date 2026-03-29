@@ -1,7 +1,7 @@
 {% extends 'magelo/base.html' %}
 {% load static %}
 {% load data_utilities %}
-{% block title %}EQA Character Browser - {{ character_name }}'s Keyring{% endblock %}
+{% block title %}EQA Character Browser - {{ character_name }}'s Flags{% endblock %}
 {% block content %}
     <div class="container-fluid container-lg py-4">
         <nav aria-label="breadcrumb">
@@ -62,35 +62,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-12 col-md-6 col-lg-4">
-                                        <div class="card permission-card">
-                                            <div class="card-body">
-                                                <div class="form-check form-switch">
-                                                    <input class="form-check-input" type="checkbox"
-                                                           id="coinInventoryToggle"
-                                                           {% if permissions.coin_inventory %}checked{% endif %}
-                                                           onchange="updatePermission('coin_inventory', this.checked, '{{ character.name }}')">
-                                                    <label class="form-check-label" for="coinInventoryToggle">
-                                                        Coin in Inventory is Publicly Visible
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-md-6 col-lg-4">
-                                        <div class="card permission-card">
-                                            <div class="card-body">
-                                                <div class="form-check form-switch">
-                                                    <input class="form-check-input" type="checkbox" id="coinBankToggle"
-                                                           {% if permissions.coin_bank %}checked{% endif %}
-                                                           onchange="updatePermission('coin_bank', this.checked, '{{ character.name }}')">
-                                                    <label class="form-check-label" for="coinBankToggle">
-                                                        Coin in Bank is Publicly Visible
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -116,54 +87,59 @@
                                     style="margin:3px">AAs
                             </button>
                             <button class="eq-button"
-                                    disabled
+                                    onclick="window.location='{% url 'magelo:keys' character.name %}'"
                                     style="margin:3px">Keys
                             </button>
                             <button class="eq-button"
-                                    onclick="window.location='{% url 'magelo:flags' character.name %}'"
+                                    disabled
                                     style="margin:3px">Flags
                             </button>
                             <button class="eq-button"
                                     onclick="window.location='{% url 'magelo:wishlist' character.name %}'"
                                     style="margin:3px">Wishlist
                             </button>
-                            {#                        <button class="eq-button"#}
-                            {#                                onclick="window.location='{% url 'magelo:skills' character.name %}'"#}
-                            {#                                style="margin:3px">Skills#}
-                            {#                        </button>#}
-                            {#                        <button class="eq-button"#}
-                            {#                                onclick="window.location='{% url 'magelo:corpse' character.name %}'"#}
-                            {#                                style="margin:3px">Corpse#}
-                            {#                        </button>#}
                         </div>
                     </nav>
 
                     <div class="character-main">
                         <div class="keys-container">
-                            <div style="" class='ItemTitle'>
+                            <div class='ItemTitle'>
                                 <div class='ItemTitleLeft'></div>
-                                <div class='ItemTitleMid'>Keys - {{ character.name }}</div>
+                                <div class='ItemTitleMid'>Planes of Power Flags - {{ character.name }}</div>
                                 <div class='ItemTitleRight'></div>
                             </div>
                             <div class='ItemInner'>
-                                {% if keys %}
-                                    <table style="min-width: 90%;" class="StatTable">
-                                        <thead>
+                                <p style="font-family: Arial, sans-serif; font-size: 9pt; color: #aaa; margin-bottom: 12px;">
+                                    {{ flags_earned }} of {{ flags_total }} flags earned
+                                </p>
+                                <table class="StatTable" style="width: 100%; max-width: 500px;">
+                                    <thead>
                                         <tr>
-                                            <th>Key (Item Id)</th>
+                                            <th class="ColumnHead" style="width: 28px;"></th>
+                                            <th class="ColumnHead">Zone</th>
+                                            <th class="ColumnHead" style="color: #aaa; font-weight: normal;">Details</th>
                                         </tr>
-                                        </thead>
-                                        <tbody>
-                                        {% for item_id, key in keys %}
+                                    </thead>
+                                    <tbody>
+                                        {% for group in flag_groups %}
                                             <tr>
-                                                <td><a href="/items/view/{{ item_id }}" target="_blank">{{ key }} ({{ item_id }})</a></td>
+                                                <td style="text-align: center; padding: 3px 6px;">
+                                                    {% if group.flagged %}
+                                                        <span style="color: #00cc44; font-size: 14px;" title="Flagged">&#10003;</span>
+                                                    {% else %}
+                                                        <span style="color: #555; font-size: 14px;" title="Not flagged">&mdash;</span>
+                                                    {% endif %}
+                                                </td>
+                                                <td style="padding: 3px 6px; {% if group.flagged %}color: #ffffff;{% else %}color: #666;{% endif %}">
+                                                    {{ group.label }}
+                                                </td>
+                                                <td style="padding: 3px 6px; color: #888; font-size: 8pt;">
+                                                    {{ group.subtitle }}
+                                                </td>
                                             </tr>
                                         {% endfor %}
-                                        </tbody>
-                                    </table>
-                                {% else %}
-                                    <div style="text-align: center;">{{ character.name }} has no keys.</div>
-                                {% endif %}
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>

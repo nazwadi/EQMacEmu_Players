@@ -300,10 +300,14 @@
                                     onclick="window.location='{% url 'magelo:keys' character.name %}'"
                                     style="margin:3px">Keys
                             </button>
-                            {#                                                            <button class="eq-button"#}
-                            {#                                onclick="window.location='{% url 'magelo:flags' character.name %}'"#}
-                            {#                                style="margin:3px">Flags#}
-                            {#                        </button>#}
+                            <button class="eq-button"
+                                    onclick="window.location='{% url 'magelo:flags' character.name %}'"
+                                    style="margin:3px">Flags
+                            </button>
+                            <button class="eq-button"
+                                    onclick="window.location='{% url 'magelo:wishlist' character.name %}'"
+                                    style="margin:3px">Wishlist
+                            </button>
                             {#                        <button class="eq-button"#}
                             {#                                onclick="window.location='{% url 'magelo:skills' character.name %}'"#}
                             {#                                style="margin:3px">Skills#}
@@ -397,9 +401,11 @@
                                     </tr>
                                 </table>
                                 <br>
-                                <div style="display: flex; justify-content: center;" class='FreeButton'
-                                     onclick="window.location='{% url 'magelo:character_profile' character.name %}';">
-                                    Done
+                                <div style="display: flex; justify-content: center;">
+                                    <div class='eq-button'
+                                         onclick="window.location='{% url 'magelo:character_profile' character.name %}';">
+                                        Done
+                                    </div>
                                 </div>
                             </div>
                         </div>

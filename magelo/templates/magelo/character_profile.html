@@ -652,13 +652,13 @@
                                             style="margin:3px">Keys
                                     </button>
                                     <button class="eq-button"
+                                            onclick="window.location='{% url 'magelo:flags' character.name %}'"
+                                            style="margin:3px">Flags
+                                    </button>
+                                    <button class="eq-button"
                                             onclick="window.location='{% url 'magelo:wishlist' character.name %}'"
                                             style="margin:3px">Wishlist
                                     </button>
-                                    {#                                                            <button class="eq-button"#}
-                                    {#                                onclick="window.location='{% url 'magelo:flags' character.name %}'"#}
-                                    {#                                style="margin:3px">Flags#}
-                                    {#                        </button>#}
                                     {#                        <button class="eq-button"#}
                                     {#                                onclick="window.location='{% url 'magelo:skills' character.name %}'"#}
                                     {#                                style="margin:3px">Skills#}
@@ -784,17 +784,13 @@
                                                         <tr>
                                                             <td>STR<br>STA<br>AGI<br>DEX</td>
                                                             <td>
-                                                        <span class="player-str"><font
-                                                                color='#00FF00'>{{ character.total_stats.str }}</font></span>
+                                                        <span class="player-str" style="color: #00FF00;">{{ character.total_stats.str }}</span>
                                                                 / {{ item_stats.str_cap }}<br>
-                                                                <span class="player-sta"><font
-                                                                        color='#00FF00'>{{ character.total_stats.sta }}</font></span>
+                                                                <span class="player-sta" style="color: #00FF00;">{{ character.total_stats.sta }}</span>
                                                                 / {{ item_stats.sta_cap }}<br>
-                                                                <span class="player-agi"><font
-                                                                        color='#00FF00'>{{ character.total_stats.agi }}</font></span>
+                                                                <span class="player-agi" style="color: #00FF00;">{{ character.total_stats.agi }}</span>
                                                                 / {{ item_stats.agi_cap }}<br>
-                                                                <span class="player-dex"><font
-                                                                        color='#00FF00'>{{ character.total_stats.dex }}</font></span>
+                                                                <span class="player-dex" style="color: #00FF00;">{{ character.total_stats.dex }}</span>
                                                                 / {{ item_stats.dex_cap }}
                                                             </td>
                                                         </tr>
@@ -804,14 +800,11 @@
                                                         <tr>
                                                             <td>WIS<br>INT<br>CHA</td>
                                                             <td>
-                                                        <span class="player-wis"><font
-                                                                color='#00FF00'>{{ character.total_stats.wis }}</font></span>
+                                                        <span class="player-wis" style="color: #00FF00;">{{ character.total_stats.wis }}</span>
                                                                 / {{ item_stats.wis_cap }}<br>
-                                                                <span class="player-int"><font
-                                                                        color='#00FF00'>{{ character.total_stats.int }}</font></span>
+                                                                <span class="player-int" style="color: #00FF00;">{{ character.total_stats.int }}</span>
                                                                 / {{ item_stats.int_cap }}<br>
-                                                                <span class="player-cha"><font
-                                                                        color='#00FF00'>{{ character.total_stats.cha }}</font></span>
+                                                                <span class="player-cha" style="color: #00FF00;">{{ character.total_stats.cha }}</span>
                                                                 / {{ item_stats.cha_cap }}
                                                             </td>
                                                         </tr>
