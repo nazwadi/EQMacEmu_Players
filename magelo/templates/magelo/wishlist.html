@@ -1,0 +1,169 @@
+{% extends 'magelo/base.html' %}
+{% load static %}
+{% block title %}EQA Character Browser - {{ character.name }}'s Wishlist{% endblock %}
+{% block content %}
+    <div class="container-fluid container-lg py-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'accounts:index' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'magelo:search' %}">Character Search</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'magelo:character_profile' character.name %}">{{ character.name }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Wishlist</li>
+            </ol>
+        </nav>
+
+        <div class="row mt-2">
+            <div class="col">
+                {% if is_owner %}
+                    <!-- Wishlist visibility panel -->
+                    <div class="collapse mb-4" id="settingsPanel">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3">Wishlist Settings for {{ character.name }}</h5>
+                                <div class="row g-3">
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="card permission-card">
+                                            <div class="card-body">
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox"
+                                                           id="wishlistPublicToggle"
+                                                           {% if wishlist_public %}checked{% endif %}
+                                                           onchange="updatePermission('wishlist_public', this.checked, '{{ character.name }}')">
+                                                    <label class="form-check-label" for="wishlistPublicToggle">
+                                                        Wishlist is Publicly Visible
+                                                    </label>
+                                                </div>
+                                                <small class="text-muted">When off, only you can see this wishlist.</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="character-layout">
+                    <nav class="NavOuter">
+                        <div class="NavInner">
+                            <button class="eq-button"
+                                    onclick="window.location='{% url 'magelo:character_profile' character.name %}'"
+                                    style="color:#606060;">Profile
+                            </button>
+                            {% if is_owner %}
+                                <button class="eq-button" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#settingsPanel" aria-expanded="false"
+                                        aria-controls="settingsPanel" style="color:#606060;">
+                                    Settings
+                                </button>
+                            {% endif %}
+                            <button class="eq-button"
+                                    onclick="window.location='{% url 'magelo:aas' character.name %}'"
+                                    style="margin:3px">AAs
+                            </button>
+                            <button class="eq-button"
+                                    onclick="window.location='{% url 'magelo:keys' character.name %}'"
+                                    style="margin:3px">Keys
+                            </button>
+                            <button class="eq-button"
+                                    disabled
+                                    style="margin:3px">Wishlist
+                            </button>
+                        </div>
+                    </nav>
+
+                    <div class="character-main">
+                        <div class="keys-container">
+                            <div class='ItemTitle'>
+                                <div class='ItemTitleLeft'></div>
+                                <div class='ItemTitleMid'>Wishlist - {{ character.name }}</div>
+                                <div class='ItemTitleRight'></div>
+                            </div>
+                            <div class='ItemInner'>
+                                {% if wishlist_hidden %}
+                                    <div style="text-align:center; padding:20px;">
+                                        {{ character.name }}'s wishlist is private.
+                                    </div>
+                                {% elif entries %}
+                                    {% if messages %}
+                                        {% for message in messages %}
+                                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                                {{ message }}
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                    <table style="min-width:90%;" class="StatTable">
+                                        <thead>
+                                        <tr>
+                                            <th>Item</th>
+                                            <th>Note</th>
+                                            {% if is_owner %}<th></th>{% endif %}
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for entry in entries %}
+                                            <tr>
+                                                <td>
+                                                    <a href="{% url 'items:view' entry.item_id %}" target="_blank">
+                                                        {{ entry.item_name }}
+                                                    </a>
+                                                </td>
+                                                <td style="color:#aaa; font-size:0.9em;">{{ entry.note }}</td>
+                                                {% if is_owner %}
+                                                    <td>
+                                                        <form method="post" action="{% url 'magelo:wishlist_remove' entry.pk %}" style="display:inline;">
+                                                            {% csrf_token %}
+                                                            <button type="submit" class="eq-button"
+                                                                    style="color:#c0392b; font-size:0.8em;"
+                                                                    onclick="return confirm('Remove {{ entry.item_name }} from wishlist?')">
+                                                                Remove
+                                                            </button>
+                                                        </form>
+                                                    </td>
+                                                {% endif %}
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                {% else %}
+                                    <div style="text-align:center; padding:20px;">
+                                        {{ character.name }}'s wishlist is empty.
+                                        {% if is_owner %}
+                                            Browse the <a href="{% url 'items:search' %}">item database</a> to add items.
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updatePermission(permission, value, characterName) {
+            fetch('{% url "magelo:update_permission" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Length': '0'
+                },
+                body: JSON.stringify({
+                    permission: permission,
+                    value: value,
+                    character_name: characterName
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.success) {
+                    console.error('Permission update failed:', data.error);
+                }
+            })
+            .catch(err => console.error('Error:', err));
+        }
+    </script>
+{% endblock %}

@@ -4,7 +4,8 @@ from dataclasses import asdict
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.http import Http404, HttpRequest, HttpResponse, JsonResponse
-from django.shortcuts import render
+from django.contrib import messages
+from django.shortcuts import redirect, render
 from django.views.decorators.http import require_http_methods
 
 from characters.utils import get_character_keyring
@@ -14,7 +15,7 @@ from common.models.guilds import GuildMembers
 from common.models.items import Items
 from common.utils import valid_game_account_owner
 
-from .models import CharacterPermissions
+from .models import CharacterPermissions, WishlistEntry
 from .utils import (
     ItemStats,
     calc_hp_regen_cap,
@@ -604,3 +605,166 @@ def magelo_aa_description_api(request: HttpRequest, aa_name: str):
         return JsonResponse(asdict(ability))
 
     return JsonResponse({'error': f'Ability "{aa_name}" not found'}, status=404)
+
+
+# ---------------------------------------------------------------------------
+# Wishlist views
+# ---------------------------------------------------------------------------
+
+@require_http_methods(["GET"])
+def wishlist_view(request: HttpRequest, character_name: str) -> HttpResponse:
+    """
+    Display the gear wishlist for a character.
+
+    Respects the character's wishlist_public permission. Owners always see
+    their own wishlist; everyone else is subject to the visibility setting.
+
+    :param request: The HTTP request object
+    :param character_name: The EverQuest character name
+    :return: Rendered 'magelo/wishlist.html'
+    :raises Http404: If the character does not exist
+    """
+    character = Characters.objects.filter(name=character_name).first()
+    if character is None:
+        raise Http404("This character does not exist")
+
+    is_owner = valid_game_account_owner(request.user.username, str(character.account_id)) if request.user.is_authenticated else False
+    permissions = CharacterPermissions.get_or_create_permissions(character_name)
+
+    if not permissions.wishlist_public and not is_owner:
+        return render(request, 'magelo/wishlist.html', {
+            'character': character,
+            'is_owner': False,
+            'wishlist_hidden': True,
+            'entries': [],
+        })
+
+    entries = WishlistEntry.objects.filter(character_name=character_name)
+
+    return render(request, 'magelo/wishlist.html', {
+        'character': character,
+        'is_owner': is_owner,
+        'wishlist_hidden': False,
+        'entries': entries,
+        'wishlist_public': permissions.wishlist_public,
+    })
+
+
+@login_required
+@require_http_methods(["GET", "POST"])
+def wishlist_add(request: HttpRequest) -> HttpResponse:
+    """
+    Add an item to a character's wishlist.
+
+    GET: Display a form to select the character and optionally add a note.
+         Expects ?item_id=<int>&item_name=<str> query params.
+    POST: Save the wishlist entry after verifying character ownership.
+
+    :param request: The HTTP request object
+    :return: Redirect to wishlist on success, or re-render form on error
+    """
+    from accounts.models import Account, LoginServerAccounts
+
+    def get_user_characters(username):
+        """Return character names/levels for the logged-in user across all their accounts.
+
+        Each queryset is evaluated to a Python list before being passed to the next
+        query — these span three separate databases and cannot be combined as subqueries.
+        """
+        ls_ids = list(LoginServerAccounts.objects.filter(
+            ForumName=username
+        ).values_list('LoginServerID', flat=True))
+
+        account_ids = list(Account.objects.filter(
+            lsaccount_id__in=ls_ids
+        ).values_list('id', flat=True))
+
+        return Characters.objects.filter(account_id__in=account_ids).values(
+            'name', 'class_name', 'level'
+        ).order_by('name')
+
+    if request.method == "GET":
+        item_id = request.GET.get('item_id', '')
+        item_name = request.GET.get('item_name', '')
+        if not item_id or not item_name:
+            messages.error(request, "Invalid item.")
+            return redirect('items:search')
+
+        user_characters = get_user_characters(request.user.username)
+        if not user_characters.exists():
+            messages.error(request, "No characters found on your account.")
+            return redirect('items:view', item_id=item_id)
+
+        return render(request, 'magelo/wishlist_add.html', {
+            'item_id': item_id,
+            'item_name': item_name,
+            'user_characters': user_characters,
+        })
+
+    # POST
+    item_id_raw = request.POST.get('item_id', '').strip()
+    item_name = request.POST.get('item_name', '').strip()
+    character_name = request.POST.get('character_name', '').strip()
+    note = request.POST.get('note', '').strip()
+
+    # Validate item_id
+    try:
+        item_id = int(item_id_raw)
+    except (ValueError, TypeError):
+        messages.error(request, "Invalid item.")
+        return redirect('items:search')
+
+    if not character_name or not item_name:
+        messages.error(request, "Missing required fields.")
+        return redirect('items:search')
+
+    # Verify character exists and belongs to this user
+    character = Characters.objects.filter(name=character_name).first()
+    if character is None:
+        messages.error(request, "Character not found.")
+        return redirect('items:search')
+
+    if not valid_game_account_owner(request.user.username, str(character.account_id)):
+        raise PermissionDenied("You don't own that character.")
+
+    # Cap note length to prevent abuse
+    note = note[:500]
+
+    WishlistEntry.objects.get_or_create(
+        character_name=character_name,
+        item_id=item_id,
+        defaults={'item_name': item_name, 'note': note},
+    )
+
+    messages.success(request, f"Added {item_name} to {character_name}'s wishlist.")
+    return redirect('magelo:wishlist', character_name=character_name)
+
+
+@login_required
+@require_http_methods(["POST"])
+def wishlist_remove(request: HttpRequest, entry_id: int) -> HttpResponse:
+    """
+    Remove an entry from a character's wishlist.
+
+    Verifies that the requesting user owns the character before deleting.
+
+    :param request: The HTTP request object
+    :param entry_id: Primary key of the WishlistEntry to remove
+    :return: Redirect back to the character's wishlist
+    :raises Http404: If the entry does not exist
+    :raises PermissionDenied: If the user does not own the character
+    """
+    entry = WishlistEntry.objects.filter(pk=entry_id).first()
+    if entry is None:
+        raise Http404("Wishlist entry not found.")
+
+    character = Characters.objects.filter(name=entry.character_name).first()
+    if character is None or not valid_game_account_owner(request.user.username, str(character.account_id)):
+        raise PermissionDenied("You don't have permission to modify this wishlist.")
+
+    item_name = entry.item_name
+    character_name = entry.character_name
+    entry.delete()
+
+    messages.success(request, f"Removed {item_name} from {character_name}'s wishlist.")
+    return redirect('magelo:wishlist', character_name=character_name)

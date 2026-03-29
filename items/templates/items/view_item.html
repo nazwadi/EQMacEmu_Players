@@ -20,7 +20,15 @@
 {% block content %}
     <div class="container py-4">
         <div class="row">
-            <h3>{{ item.Name }}</h3>
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-1">
+                <h3 class="mb-0">{{ item.Name }}</h3>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'magelo:wishlist_add' %}?item_id={{ item.id }}&item_name={{ item.Name|urlencode }}"
+                       class="btn btn-sm btn-outline-secondary">
+                        + Add to Wishlist
+                    </a>
+                {% endif %}
+            </div>
             <hr/>
             <div class="col">
                 <div class="row py-2">

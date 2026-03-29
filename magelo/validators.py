@@ -4,7 +4,8 @@ class PermissionValidator:
         'bags',
         'bank',
         'coin_inventory',
-        'coin_bank'
+        'coin_bank',
+        'wishlist_public',
     ]
 
     @classmethod

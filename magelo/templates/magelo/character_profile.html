@@ -98,6 +98,21 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="card permission-card">
+                                            <div class="card-body">
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox" id="wishlistPublicToggle"
+                                                           {% if permissions.wishlist_public %}checked{% endif %}
+                                                           onchange="updatePermission('wishlist_public', this.checked, '{{ character.name }}')">
+                                                    <label class="form-check-label" for="wishlistPublicToggle">
+                                                        Wishlist is Publicly Visible
+                                                    </label>
+                                                </div>
+                                                <small class="text-muted">When off, only you can see your wishlist.</small>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -635,6 +650,10 @@
                                     <button class="eq-button"
                                             onclick="window.location='{% url 'magelo:keys' character.name %}'"
                                             style="margin:3px">Keys
+                                    </button>
+                                    <button class="eq-button"
+                                            onclick="window.location='{% url 'magelo:wishlist' character.name %}'"
+                                            style="margin:3px">Wishlist
                                     </button>
                                     {#                                                            <button class="eq-button"#}
                                     {#                                onclick="window.location='{% url 'magelo:flags' character.name %}'"#}

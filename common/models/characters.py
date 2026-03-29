@@ -14,7 +14,6 @@ class Characters(models.Model):
 
     id = models.AutoField(primary_key=True)
     account_id = models.IntegerField(default=0, null=False)
-    forum_id = models.IntegerField(default=0, null=False)
     name = models.CharField(max_length=64, default='', unique=True, null=False, blank=True)
     last_name = models.CharField(max_length=64, default='', null=False, blank=True)
     title = models.CharField(max_length=32, default='', null=False, blank=True)

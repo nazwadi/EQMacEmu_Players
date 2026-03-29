@@ -10,4 +10,7 @@ urlpatterns = [
     path('update_permission/', views.update_permission, name='update_permission'),
     path('search/', views.search, name='search'),
     path('api/aa-description/<str:aa_name>/', views.magelo_aa_description_api, name='magelo_aa_description_api'),
+    path('wishlist/add/', views.wishlist_add, name='wishlist_add'),
+    path('wishlist/remove/<int:entry_id>/', views.wishlist_remove, name='wishlist_remove'),
+    path('wishlist/<str:character_name>/', views.wishlist_view, name='wishlist'),
 ]

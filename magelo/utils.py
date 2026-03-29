@@ -33,13 +33,14 @@ def get_permissions(user, character_name, gm_level, anon_level):
     Returns:
         dict: Permission states for various features
     """
-    # Start with default false permissions
+    # Start with default permissions (inventory/bank off; wishlist on)
     base_permissions = {
         'inventory': False,
         'bags': False,
         'bank': False,
         'coin_inventory': False,
-        'coin_bank': False
+        'coin_bank': False,
+        'wishlist_public': True,
     }
 
     try:
