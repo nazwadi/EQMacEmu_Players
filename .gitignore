@@ -189,6 +189,7 @@ cython_debug/
 .idea/data_source_mapping.xml
 .idea/db-forest-config.xml
 .idea/**/*.iml
+.idea/**/misc.xml
 
 # Gradle
 .idea/**/gradle.xml
