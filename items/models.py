@@ -2,6 +2,42 @@ from django.db import models
 
 from common.constants import PLAYER_CLASSES
 
+# Integer-keyed expansion choices used by ItemExpansion (covers all 31 expansions).
+ITEM_EXPANSION_CHOICES = [
+    (0, 'Original EverQuest'),
+    (1, 'Ruins of Kunark'),
+    (2, 'Scars of Velious'),
+    (3, 'Shadows of Luclin'),
+    (4, 'Planes of Power'),
+    (5, 'Legacy of Ykesha'),
+    (6, 'Lost Dungeons of Norrath'),
+    (7, 'Gates of Discord'),
+    (8, 'Omens of War'),
+    (9, 'Dragons of Norrath'),
+    (10, 'Depths of Darkhollow'),
+    (11, 'Prophecy of Ro'),
+    (12, "The Serpent's Spine"),
+    (13, 'The Buried Sea'),
+    (14, 'Secrets of Faydwer'),
+    (15, 'Seeds of Destruction'),
+    (16, 'Underfoot'),
+    (17, 'House of Thule'),
+    (18, 'Veil of Alaris'),
+    (19, 'Rain of Fear'),
+    (20, 'Call of the Forsaken'),
+    (21, 'The Darkened Sea'),
+    (22, 'The Broken Mirror'),
+    (23, 'Empires of Kunark'),
+    (24, 'Ring of Scale'),
+    (25, 'The Burning Lands'),
+    (26, 'Torment of Velious'),
+    (27, 'Claws of Veeshan'),
+    (28, 'Terror of Luclin'),
+    (29, 'Night of Shadows'),
+    (30, "Laurion's Song"),
+    (31, 'The Outer Brood'),
+]
+
 EXPANSION_CHOICES = [
     ('vanilla-pre-planar', 'Classic: Pre-Planar'),
     ('vanilla-planar', 'Classic: Planar'),
@@ -23,6 +59,75 @@ SLOT_ORDER = [
     'Primary H2H', 'Primary 2HS', 'Primary 1HS', 'Primary 1HB',
     'Primary 2HB', 'Primary Piercing', 'Secondary', 'Range',
 ]
+
+
+class ItemExpansionIdRange(models.Model):
+    """
+    Configurable item ID → expansion mapping used as a fallback by
+    compute_item_expansions when no zone provenance data exists for an item
+    (e.g. crafted, quest-reward, or vendor-only items).
+
+    Ranges are evaluated in ascending min_item_id order; the first range whose
+    window contains the item ID wins.  Edit via the Django admin, then re-run:
+
+        python manage.py compute_item_expansions --force
+
+    For individual exceptions (a later item filling an earlier ID slot, etc.)
+    use ItemExpansion.is_override instead of adjusting ranges here.
+    """
+    expansion = models.IntegerField(choices=ITEM_EXPANSION_CHOICES)
+    min_item_id = models.IntegerField()
+    max_item_id = models.IntegerField(
+        null=True,
+        blank=True,
+        help_text='Exclusive upper bound. Leave blank for "this expansion and above".',
+    )
+
+    class Meta:
+        ordering = ['min_item_id']
+        verbose_name = 'Item Expansion ID Range'
+        verbose_name_plural = 'Item Expansion ID Ranges'
+
+    def __str__(self):
+        label = dict(ITEM_EXPANSION_CHOICES).get(self.expansion, str(self.expansion))
+        upper = str(self.max_item_id) if self.max_item_id is not None else '∞'
+        return f'{label}: IDs {self.min_item_id} – {upper}'
+
+
+class ItemExpansion(models.Model):
+    """
+    Maps an item ID (from the game DB) to the expansion it was first introduced in.
+
+    Populated by the compute_item_expansions management command using zone provenance
+    (minimum expansion of zones the item drops in) with an item ID range fallback.
+    Set is_override=True via the admin to pin a specific expansion and prevent the
+    management command from overwriting it.
+    """
+    SOURCE_ZONE = 'zone'
+    SOURCE_ID_RANGE = 'id_range'
+    SOURCE_MANUAL = 'manual'
+    SOURCE_CHOICES = [
+        (SOURCE_ZONE, 'Zone Provenance'),
+        (SOURCE_ID_RANGE, 'Item ID Range'),
+        (SOURCE_MANUAL, 'Manual Override'),
+    ]
+
+    item_id = models.IntegerField(unique=True)
+    expansion = models.IntegerField(choices=ITEM_EXPANSION_CHOICES, db_index=True)
+    source = models.CharField(max_length=16, choices=SOURCE_CHOICES, default=SOURCE_ZONE)
+    is_override = models.BooleanField(
+        default=False,
+        help_text='When checked, compute_item_expansions will never overwrite this entry.',
+    )
+
+    class Meta:
+        ordering = ['item_id']
+        verbose_name = 'Item Expansion'
+        verbose_name_plural = 'Item Expansions'
+
+    def __str__(self):
+        label = dict(ITEM_EXPANSION_CHOICES).get(self.expansion, str(self.expansion))
+        return f'Item {self.item_id}: {label} ({self.source})'
 
 
 class BISEntry(models.Model):

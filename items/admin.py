@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from items.models import BISEntry, BISRevision
+from items.models import BISEntry, BISRevision, ItemExpansion, ItemExpansionIdRange
 from common.constants import PLAYER_CLASSES
 
 
@@ -40,3 +40,26 @@ class BISRevisionAdmin(admin.ModelAdmin):
     @admin.display(description='Class', ordering='class_id')
     def get_class_name(self, obj):
         return PLAYER_CLASSES.get(obj.class_id, str(obj.class_id))
+
+
+@admin.register(ItemExpansionIdRange)
+class ItemExpansionIdRangeAdmin(admin.ModelAdmin):
+    list_display = ['get_expansion_display', 'min_item_id', 'max_item_id']
+    list_filter = ['expansion']
+    ordering = ['min_item_id']
+
+    @admin.display(description='Expansion', ordering='expansion')
+    def get_expansion_display(self, obj):
+        return obj.get_expansion_display()
+
+
+@admin.register(ItemExpansion)
+class ItemExpansionAdmin(admin.ModelAdmin):
+    list_display = ['item_id', 'get_expansion_display', 'source', 'is_override']
+    list_filter = ['expansion', 'source', 'is_override']
+    search_fields = ['item_id']
+    ordering = ['item_id']
+
+    @admin.display(description='Expansion', ordering='expansion')
+    def get_expansion_display(self, obj):
+        return obj.get_expansion_display()

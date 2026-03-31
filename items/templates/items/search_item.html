@@ -42,6 +42,13 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             z-index: 50000;
         }
+
+        .stat-group {
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 0.75rem;
+            background: rgba(0,0,0,0.02);
+        }
     </style>
 {% endblock %}
 {% block title %}Search Item - EQ Archives{% endblock %}
@@ -50,30 +57,25 @@
         <div class="row">
             <div class="col">
                 <h1 class="text-center mb-4">Item Search</h1>
-                <details {% if search_results|length == 0 %}open=""{% endif %}>
+                <details id="search-form-details" {% if search_results|length == 0 %}open=""{% endif %}>
                     <summary class="none">
                         <span class="mb-2">Item Search Form</span>
                     </summary>
-                    <form class="p-3 mb-4 border" action="/items/search" method="post">
+                    <form id="item-search-form" class="p-3 mb-4 border" action="/items/search" method="post">
                         {% csrf_token %}
                         <div class="row mb-4">
-                            <div class="col-12 col-md-10">
+                            <div class="col-12">
                                 <div class="form-label text-wrap"><label for="item_name">Item Name</label></div>
                                 <input type="text" class="form-control" id="item_name" name="item_name"
-                                       placeholder="a tattered note">
-                            </div>
-                            <div class="col-12 col-md-2">
-                                <div class="form-label text-wrap"><label for="query_limit">Query Limit (Max: 200)</label>
-                                </div>
-                                <input class="form-control" id="query_limit" name="query_limit" type="number" min="0"
-                                       max="200" value="50">
+                                       placeholder="a tattered note" value="{{ posted_item_name|default:'' }}">
                             </div>
                         </div>
-                        <details>
+                        <details id="advanced-search-details">
                             <summary>Advanced Search</summary>
-                            <div class="row mb-4">
-                                <hr/>
-                                <div class="col-12 col-md-2">
+                            <!-- Section 1: Class / Race / Slot / Type / Expansion / Resists -->
+                            <div class="row gy-3 mb-3 mt-2">
+                                <div class="col-12"><h6 class="text-muted fw-semibold mb-0">Filters</h6><hr class="mt-1 mb-0"/></div>
+                                <div class="col-6 col-md-2">
                                     <div class="form-label text-wrap"><label for="player_class">Class</label></div>
                                     <select class="form-select" id="player_class" name="player_class"
                                             aria-label="player_class">
@@ -85,7 +87,7 @@
                                         {% endfor %}
                                     </select>
                                 </div>
-                                <div class="col-12 col-md-2">
+                                <div class="col-6 col-md-2">
                                     <div class="form-label text-wrap"><label for="player_race">Race</label></div>
                                     <select class="form-select" id="player_race" name="player_race"
                                             aria-label="player_race">
@@ -97,7 +99,7 @@
                                         {% endfor %}
                                     </select>
                                 </div>
-                                <div class="col-12 col-md-2">
+                                <div class="col-6 col-md-2">
                                     <div class="form-label text-wrap"><label for="item_slot">Equip Slot</label></div>
                                     <select class="form-select" id="item_slot" name="item_slot" aria-label="item_slot">
                                         <option value="0" selected>Any</option>
@@ -108,7 +110,7 @@
                                         {% endfor %}
                                     </select>
                                 </div>
-                                <div class="col-12 col-md-2">
+                                <div class="col-6 col-md-2">
                                     <div class="form-label text-wrap"><label for="item_type">Item Type</label></div>
                                     <select class="form-select" id="item_type" name="item_type" aria-label="item_type">
                                         <option value="-1" selected>Any</option>
@@ -117,7 +119,27 @@
                                         {% endfor %}
                                     </select>
                                 </div>
-                                <div class="col-12 col-md-2">
+                                <div class="col-6 col-md-2">
+                                    <div class="form-label text-wrap"><label for="item_expansion">Expansion</label></div>
+                                    <select class="form-select" id="item_expansion" name="item_expansion" aria-label="item_expansion">
+                                        <option value="" selected>Any</option>
+                                        {% for exp_id, exp_name in ITEM_EXPANSION_CHOICES %}
+                                            {% if exp_id <= 6 %}
+                                                <option value="{{ exp_id }}">{{ exp_name }} and earlier</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-6 col-md-2">
+                                    <div class="form-label text-wrap"><label for="query_limit">Result Limit <small class="text-muted">(max 200)</small></label></div>
+                                    <input class="form-control" id="query_limit" name="query_limit" type="number" min="1"
+                                           max="200" value="50">
+                                </div>
+                            </div>
+                            <!-- Section 2: Resists -->
+                            <div class="row gy-3 mb-3">
+                                <div class="col-12"><h6 class="text-muted fw-semibold mb-0">Resists</h6><hr class="mt-1 mb-0"/></div>
+                                <div class="col-12 col-md-4">
                                     <div class="form-label text-wrap"><label for="resists_type">Resist Type</label></div>
                                     <select class="form-select" id="resists_type" name="resists_type">
                                         <option value="Resist">Resist</option>
@@ -128,114 +150,125 @@
                                         <option value="dr">Resist Disease</option>
                                     </select>
                                 </div>
-                                <div class="col-6 col-md-1">
-                                    <div class="form-label text-wrap"><label for="resists_operator">Operator</label>
-                                    </div>
+                                <div class="col-6 col-md-2">
+                                    <div class="form-label text-wrap"><label for="resists_operator">Operator</label></div>
                                     <select class="form-select" id="resists_operator" name="resists_operator">
                                         <option value=">">&gt;</option>
-                                        <option value=">=">&gt;=</option>
+                                        <option value=">=" selected>&gt;=</option>
                                         <option value="=">=</option>
                                         <option value="<=">&lt;=</option>
                                         <option value="<">&lt;</option>
                                     </select>
                                 </div>
-                                <div class="col-6 col-md-1">
-                                    <div class="form-label text-wrap"><label for="resists_value">Resist Value</label>
-                                    </div>
+                                <div class="col-6 col-md-2">
+                                    <div class="form-label text-wrap"><label for="resists_value">Value</label></div>
                                     <input class="form-control" id="resists_value" name="resists_value" type="number"
-                                           min="0"
-                                           value="0">
+                                           min="0" value="0">
                                 </div>
                             </div>
-                            <div class="row mt-2 mb-4">
-                                <hr/>
-                                <div class="col-xs-4 col-md-2">
-                                    <div class="form-label text-wrap"><label for="stat1">Stat 1</label></div>
-                                    <select class="form-select" id="stat1" name="stat1" aria-label="stat1">
-                                        <option value="stat1" selected>Stat</option>
-                                        {% for key, value in ITEM_STATS.items %}
-                                            <option value="{{ key }}">{{ value }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                                <div class="col-xs-2 col-md-2">
-                                    <div class="form-label text-wrap"><label for="stat1_operator">Operator</label>
+                            <!-- Section 3: Stats -->
+                            <div class="row gy-3 mb-3">
+                                <div class="col-12"><h6 class="text-muted fw-semibold mb-0">Stats</h6><hr class="mt-1 mb-0"/></div>
+                                <div class="col-12 col-md-6">
+                                    <div class="stat-group">
+                                        <div class="row gy-2">
+                                            <div class="col-12">
+                                                <label class="form-label text-wrap mb-1" for="stat1">Stat 1</label>
+                                                <select class="form-select" id="stat1" name="stat1" aria-label="stat1">
+                                                    <option value="stat1" selected>Stat</option>
+                                                    {% for key, value in ITEM_STATS.items %}
+                                                        <option value="{{ key }}">{{ value }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="form-label text-wrap mb-1" for="stat1_operator">Operator</label>
+                                                <select class="form-select" id="stat1_operator" name="stat1_operator">
+                                                    <option value=">">&gt;</option>
+                                                    <option value=">=" selected>&gt;=</option>
+                                                    <option value="=">=</option>
+                                                    <option value="<=">&lt;=</option>
+                                                    <option value="<">&lt;</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="form-label text-wrap mb-1" for="stat1_value">Value</label>
+                                                <input class="form-control" id="stat1_value" name="stat1_value" type="number"
+                                                       min="0" value="0">
+                                            </div>
+                                        </div>
                                     </div>
-                                    <select class="form-select" id="stat1_operator" name="stat1_operator">
-                                        <option value=">">&gt;</option>
-                                        <option value=">=">&gt;=</option>
-                                        <option value="=">=</option>
-                                        <option value="<=">&lt;=</option>
-                                        <option value="<">&lt;</option>
-                                    </select>
                                 </div>
-                                <div class="col-xs-2 col-md-2">
-                                    <div class="form-label text-wrap"><label for="stat1_value">Stat 1 Value</label>
+                                <div class="col-12 col-md-6">
+                                    <div class="stat-group">
+                                        <div class="row gy-2">
+                                            <div class="col-12">
+                                                <label class="form-label text-wrap mb-1" for="stat2">Stat 2</label>
+                                                <select class="form-select" id="stat2" name="stat2" aria-label="stat2">
+                                                    <option value="stat2" selected>Stat</option>
+                                                    {% for key, value in ITEM_STATS.items %}
+                                                        <option value="{{ key }}">{{ value }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="form-label text-wrap mb-1" for="stat2_operator">Operator</label>
+                                                <select class="form-select" id="stat2_operator" name="stat2_operator">
+                                                    <option value=">">&gt;</option>
+                                                    <option value=">=" selected>&gt;=</option>
+                                                    <option value="=">=</option>
+                                                    <option value="<=">&lt;=</option>
+                                                    <option value="<">&lt;</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="form-label text-wrap mb-1" for="stat2_value">Value</label>
+                                                <input class="form-control" id="stat2_value" name="stat2_value" type="number"
+                                                       min="0" value="0">
+                                            </div>
+                                        </div>
                                     </div>
-                                    <input class="form-control" id="stat1_value" name="stat1_value" type="number"
-                                           min="0"
-                                           value="0">
-                                </div>
-                                <div class="col-xs-4 col-md-2">
-                                    <div class="form-label text-wrap"><label for="stat2">Stat 2</label></div>
-                                    <select class="form-select" id="stat2" name="stat2" aria-label="stat2">
-                                        <option value="stat2" selected>Stat</option>
-                                        {% for key, value in ITEM_STATS.items %}
-                                            <option value="{{ key }}">{{ value }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                                <div class="col-xs-2 col-md-2">
-                                    <div class="form-label text-wrap"><label for="stat2_operator">Operator</label></div>
-                                    <select class="form-select" id="stat2_operator" name="stat2_operator">
-                                        <option value=">">&gt;</option>
-                                        <option value=">=">&gt;=</option>
-                                        <option value="=">=</option>
-                                        <option value="<=">&lt;=</option>
-                                        <option value="<">&lt;</option>
-                                    </select>
-                                </div>
-                                <div class="col-xs-4 col-md-2">
-                                    <div class="form-label text-wrap"><label for="stat2_value">Stat 2 Value</label></div>
-                                    <input class="form-control" id="stat2_value" name="stat2_value" type="number"
-                                           min="0"
-                                           value="0">
                                 </div>
                             </div>
-                            <div class="row mt-2 mb-4">
-                                <hr/>
-                                <div class="col-12 col-md-8">
-                                    <div class="form-label text-wrap"><label for="item_effect">Item Effect</label></div>
+                            <!-- Section 4: Effects -->
+                            <div class="row gy-3 mb-3">
+                                <div class="col-12"><h6 class="text-muted fw-semibold mb-0">Effects</h6><hr class="mt-1 mb-0"/></div>
+                                <div class="col-12 col-md-6">
+                                    <div class="form-label text-wrap"><label for="item_effect">Effect Name</label></div>
                                     <input type="text" class="form-control" id="item_effect" name="item_effect"
                                            placeholder="Complete Healing">
                                 </div>
-                                <div class="col-12 col-md-2">
-                                    <div class="form-check text-wrap"></div>
-                                    <input class="form-check-input" type="checkbox" value="y" id="item_has_proc"
-                                           name="item_has_proc">
-                                    <label for="item_has_proc">Proc?</label>
-                                    <div class="form-check text-wrap"></div>
-                                    <input class="form-check-input" type="checkbox" value="y" id="item_has_click"
-                                           name="item_has_click">
-                                    <label for="item_has_click">Click?</label>
-                                </div>
-                                <div class="col-12 col-md-2">
-                                    <div class="form-check text-wrap"></div>
-                                    <input class="form-check-input" type="checkbox" value="y" id="item_has_focus"
-                                           name="item_has_focus">
-                                    <label for="item_has_focus">Focus?</label>
-                                    <div class="form-check text-wrap"></div>
-                                    <input class="form-check-input" type="checkbox" value="y" id="item_has_worn"
-                                           name="item_has_worn">
-                                    <label for="item_has_worn">Worn?</label>
+                                <div class="col-12 col-md-6">
+                                    <div class="form-label text-wrap mb-2">Has Effect Type</div>
+                                    <div class="d-flex flex-wrap gap-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="y" id="item_has_proc"
+                                                   name="item_has_proc">
+                                            <label class="form-check-label" for="item_has_proc">Proc</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="y" id="item_has_click"
+                                                   name="item_has_click">
+                                            <label class="form-check-label" for="item_has_click">Click</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="y" id="item_has_focus"
+                                                   name="item_has_focus">
+                                            <label class="form-check-label" for="item_has_focus">Focus</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="y" id="item_has_worn"
+                                                   name="item_has_worn">
+                                            <label class="form-check-label" for="item_has_worn">Worn</label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="row mb-4">
-                                <hr/>
-                                <div class="col-12 col-xs-4 col-md-4">
-                                    <div class="form-label text-wrap"><label for="container_select">Container
-                                        Type</label>
-                                    </div>
+                            <!-- Section 5: Containers -->
+                            <div class="row gy-3 mb-3" id="container-section">
+                                <div class="col-12"><h6 class="text-muted fw-semibold mb-0">Containers</h6><hr class="mt-1 mb-0"/></div>
+                                <div class="col-12 col-sm-4">
+                                    <div class="form-label text-wrap"><label for="container_select">Container Type</label></div>
                                     <select class="form-select" id="container_select" name="container_select">
                                         <option value="Container" selected>Container</option>
                                         {% for key, value in CONTAINER_TYPES.items %}
@@ -243,31 +276,24 @@
                                         {% endfor %}
                                     </select>
                                 </div>
-                                <div class="col-12 col-xs-4 col-md-4">
-                                    <div class="form-label text-wrap"><label for="container_slots">Container Slots
-                                        >=</label>
-                                    </div>
+                                <div class="col-6 col-sm-4">
+                                    <div class="form-label text-wrap"><label for="container_slots">Slots &gt;=</label></div>
                                     <input class="form-control" id="container_slots" name="container_slots"
-                                           type="number"
-                                           min="0"
-                                           value="0">
+                                           type="number" min="0" value="0">
                                 </div>
-                                <div class="col-12 col-xs-4 col-md-4">
-                                    <div class="form-label text-wrap"><label for="container_wr">Container Weight
-                                        Reduction
-                                        >=</label>
-                                    </div>
+                                <div class="col-6 col-sm-4">
+                                    <div class="form-label text-wrap"><label for="container_wr">Weight Reduction &gt;=</label></div>
                                     <input class="form-control" id="container_wr" name="container_wr" type="number"
-                                           min="0"
-                                           value="0">
+                                           min="0" value="0">
                                 </div>
                             </div>
                         </details>
-                        <div class="row">
+                        <div class="row mt-3">
                             <hr/>
-                            <div class="col-12 col-md-12">
-                                <div class="d-grid gap-2 py-4">
-                                    <button type="submit" class="btn btn-outline-primary">Search</button>
+                            <div class="col-12">
+                                <div class="d-flex gap-2 py-4">
+                                    <button type="submit" class="btn btn-outline-primary flex-grow-1" data-saving-label="Searching…">Search</button>
+                                    <button type="reset" class="btn btn-outline-secondary" id="reset-btn">Reset</button>
                                 </div>
                             </div>
                         </div>
@@ -317,7 +343,68 @@
             pageLength: 50
         });
     });
+
     document.addEventListener('DOMContentLoaded', function () {
+        // Persist advanced search open if any non-default filters are set
+        function hasAdvancedFilters() {
+            const form = document.getElementById('item-search-form');
+            if (!form) return false;
+            const checks = [
+                () => form.querySelector('#player_class').value !== '0',
+                () => form.querySelector('#player_race').value !== '0',
+                () => form.querySelector('#item_slot').value !== '0',
+                () => form.querySelector('#item_type').value !== '-1',
+                () => form.querySelector('#item_expansion').value !== '',
+                () => form.querySelector('#query_limit').value !== '50',
+                () => form.querySelector('#resists_type').value !== 'Resist',
+                () => form.querySelector('#resists_value').value !== '0',
+                () => form.querySelector('#stat1').value !== 'stat1',
+                () => form.querySelector('#stat1_value').value !== '0',
+                () => form.querySelector('#stat2').value !== 'stat2',
+                () => form.querySelector('#stat2_value').value !== '0',
+                () => form.querySelector('#item_effect').value !== '',
+                () => form.querySelector('#item_has_proc').checked,
+                () => form.querySelector('#item_has_click').checked,
+                () => form.querySelector('#item_has_focus').checked,
+                () => form.querySelector('#item_has_worn').checked,
+                () => form.querySelector('#container_select').value !== 'Container',
+                () => form.querySelector('#container_slots').value !== '0',
+                () => form.querySelector('#container_wr').value !== '0',
+            ];
+            return checks.some(fn => fn());
+        }
+
+        const advancedDetails = document.getElementById('advanced-search-details');
+        if (advancedDetails && hasAdvancedFilters()) {
+            advancedDetails.open = true;
+        }
+
+        // Auto-show/hide container section based on item type
+        // Type 17 = Combinable (bags/containers) or Any (-1) shows container fields
+        const CONTAINER_ITEM_TYPE = '17';
+        const itemTypeSelect = document.getElementById('item_type');
+        const containerSection = document.getElementById('container-section');
+
+        function updateContainerVisibility() {
+            const val = itemTypeSelect.value;
+            const show = (val === '-1' || val === CONTAINER_ITEM_TYPE);
+            containerSection.style.display = show ? '' : 'none';
+        }
+
+        if (itemTypeSelect && containerSection) {
+            updateContainerVisibility();
+            itemTypeSelect.addEventListener('change', updateContainerVisibility);
+        }
+
+        // Reset button — also re-show container section after reset
+        const resetBtn = document.getElementById('reset-btn');
+        if (resetBtn) {
+            resetBtn.addEventListener('click', function () {
+                setTimeout(updateContainerVisibility, 0);
+            });
+        }
+
+        // Tooltip setup
         tippy('.tooltip-link', {
             content: 'Loading...',
             allowHTML: true,

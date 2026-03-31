@@ -51,7 +51,29 @@ Edit `.env` — see [Configuration](#configuration) below for a description of e
 python manage.py migrate
 ```
 
-### 4. Collect static files
+### 4. Populate app data
+
+After migrating, run the bootstrap script to generate spell data, import Best-in-Slot entries, and build the item expansion table:
+
+```bash
+bash scripts/bootstrap.sh
+```
+
+This runs the following commands in order — you can also run them individually if you need to refresh a specific dataset:
+
+| Command | What it does |
+|---|---|
+| `generate_spell_data` | Builds per-class spell JSON files used by character spell tabs |
+| `import_bis_from_markdown` | Seeds the Best-in-Slot table from `items/templates/items/best_in_slot/` |
+| `resolve_bis_item_ids` | Matches BIS entry names to item IDs in the game database |
+| `compute_item_expansions --seed-ranges` | Populates the item ID → expansion range table with defaults |
+| `compute_item_expansions` | Infers each item's expansion from zone provenance and ID ranges |
+
+**Re-running after game DB updates:** `generate_spell_data` and `compute_item_expansions --force` should be re-run whenever the game database receives a significant content update.
+
+**Adjusting item expansion ranges:** Edit the ranges via the Django admin (*Item Expansion ID Ranges*), then run `python manage.py compute_item_expansions --force` to recompute. Individual item exceptions can be pinned by setting `is_override=True` on the item's *Item Expansion* admin entry.
+
+### 5. Collect static files
 
 ```bash
 python manage.py collectstatic
@@ -59,7 +81,7 @@ python manage.py collectstatic
 
 This assembles all static assets (including Django admin and third-party app assets) into `staticfiles/`. Your web server should be pointed at that directory.
 
-### 5. Run (development)
+### 6. Run (development)
 
 ```bash
 python manage.py runserver

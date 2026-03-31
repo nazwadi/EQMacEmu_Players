@@ -9,7 +9,7 @@ from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 from django.http import Http404
 
-from items.models import BISEntry, BISRevision, SLOT_ORDER
+from items.models import BISEntry, BISRevision, ItemExpansion, SLOT_ORDER, ITEM_EXPANSION_CHOICES
 from items.utils import get_class_bitmask
 from items.utils import get_race_bitmask
 from items.utils import build_stat_query
@@ -44,6 +44,7 @@ def search(request):
                           "ITEM_TYPES": ITEM_TYPES,
                           "CONTAINER_TYPES": CONTAINER_TYPES,
                           "ITEM_STATS": ITEM_STATS,
+                          "ITEM_EXPANSION_CHOICES": ITEM_EXPANSION_CHOICES,
                       },
                       template_name="items/search_item.html")
 
@@ -70,6 +71,7 @@ def search(request):
         container_select = request.POST.get("container_select", "Container")
         container_slots = request.POST.get("container_slots", "0")
         container_wr = request.POST.get("container_wr", "0")
+        item_expansion = request.POST.get("item_expansion", "")
         query_limit = request.POST.get("query_limit", "50")
 
         params_list = []
@@ -216,6 +218,48 @@ def search(request):
         if item_has_worn:
             query += " AND (worneffect > 0 and worneffect < 4679)"
 
+        if item_expansion != "":
+            try:
+                item_expansion = int(item_expansion)
+            except ValueError:
+                messages.error(request, "Invalid expansion value.")
+                return redirect("/items/search")
+
+            from django.core.cache import cache
+            from django.db import connection as webdb_connection
+            cache_key = f'item_search:expansion_ids:{item_expansion}'
+            ids_str = cache.get(cache_key)
+            if ids_str is None:
+                with webdb_connection.cursor() as cursor:
+                    cursor.execute(
+                        "SELECT item_id FROM items_itemexpansion WHERE expansion <= %s",
+                        [item_expansion]
+                    )
+                    rows = cursor.fetchall()
+                ids_str = ','.join(str(row[0]) for row in rows) if rows else ''
+                if ids_str:
+                    cache.set(cache_key, ids_str, timeout=60 * 60 * 24 * 7)
+
+            if not ids_str:
+                messages.info(request, "No items found for the selected expansion or earlier. "
+                              "Try running compute_item_expansions to populate expansion data.")
+                return render(request=request,
+                              template_name="items/search_item.html",
+                              context={
+                                  "IS_SEARCH": True,
+                                  "search_results": [],
+                                  "EQUIPMENT_SLOTS": EQUIPMENT_SLOTS,
+                                  "ITEM_TYPES": ITEM_TYPES,
+                                  "CONTAINER_TYPES": CONTAINER_TYPES,
+                                  "ITEM_STATS": ITEM_STATS,
+                                  "PLAYER_CLASSES": PLAYER_CLASSES,
+                                  "PLAYER_RACES": PLAYER_RACES,
+                                  "ITEM_EXPANSION_CHOICES": ITEM_EXPANSION_CHOICES,
+                                  "level_range": range(100),
+                              })
+            clause = "AND" if clause in ("WHERE", "AND") else "WHERE"
+            query += f" {clause} items.id IN ({ids_str})"
+
         try:
             query_limit = int(query_limit)
         except ValueError:
@@ -243,6 +287,7 @@ def search(request):
                           "ITEM_STATS": ITEM_STATS,
                           "PLAYER_CLASSES": PLAYER_CLASSES,
                           "PLAYER_RACES": PLAYER_RACES,
+                          "ITEM_EXPANSION_CHOICES": ITEM_EXPANSION_CHOICES,
                           "level_range": range(100)})
 
 
