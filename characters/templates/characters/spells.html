@@ -18,11 +18,33 @@
                                             Spell names in&nbsp;<span style="color: #00FF00;">green</span>&nbsp;are
                                             scribed in the character's spell book.
                                         </div>
-                                        <div class="col">
-                                            <div class="form-group">
+                                        <div class="row mb-2 px-3">
+                                            <div class="col-md-4">
                                                 <label for="spell-filter"></label>
                                                 <input class="form-control" type="text" id="spell-filter"
                                                        placeholder="Search..."/>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="expansion-filter"></label>
+                                                <select class="form-control" id="expansion-filter">
+                                                    <option value="">All Expansions</option>
+                                                    <option value="0">Original EverQuest</option>
+                                                    <option value="1">Ruins of Kunark</option>
+                                                    <option value="2">Scars of Velious</option>
+                                                    <option value="3">Shadows of Luclin</option>
+                                                    <option value="4">Planes of Power</option>
+                                                    <option value="5">Legacy of Ykesha</option>
+                                                    <option value="6">Lost Dungeons of Norrath</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="level-filter"></label>
+                                                <select class="form-control" id="level-filter">
+                                                    <option value="">All Levels</option>
+                                                    {% for level in spell_list.keys %}
+                                                        <option value="{{ level }}">Level {{ level }}</option>
+                                                    {% endfor %}
+                                                </select>
                                             </div>
                                         </div>
                                         <table id="spell-table" class="eq-table bordered eq-highlight-rows">
@@ -39,7 +61,7 @@
                                             </thead>
                                             <tbody>
                                             {% define 1 as current_level %}
-                                            <tr>
+                                            <tr data-level-header="1">
                                                 <th scope="col" colspan="8"
                                                     style="text-align:center; background-color: #000; color: #FFF;">
                                                     Level {{ current_level }}
@@ -49,14 +71,14 @@
                                                 {% for spell in current_level_list %}
                                                     {% if spell.level > current_level %}
                                                         {% define spell.level as current_level %}
-                                                        <tr>
+                                                        <tr data-level-header="{{ current_level }}">
                                                             <th scope="col" colspan="8"
                                                                 style="text-align:center; background-color: #000; color: #FFF;">
                                                                 Level {{ current_level }}
                                                             </th>
                                                         </tr>
                                                     {% endif %}
-                                                    <tr>
+                                                    <tr data-spell-row="true" data-expansion="{{ spell.expansion }}" data-level="{{ spell.level }}">
                                                         <td>
                                 <span class="d-inline-block">
                                     <img src="/static/images/icons/{{ spell.custom_icon }}.gif"

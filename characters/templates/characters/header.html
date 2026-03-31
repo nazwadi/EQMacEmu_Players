@@ -50,13 +50,26 @@
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
 <script>
-    $(document).ready(function () {
-        $("#spell-filter").on("keyup", function () {
-            let value = $(this).val().toLowerCase();
-            $("#spell-table tbody>tr").filter(function () {
-                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-            });
+    function applySpellFilters() {
+        const textVal = $("#spell-filter").val().toLowerCase();
+        const expansionVal = $("#expansion-filter").val();
+        const levelVal = $("#level-filter").val();
+        $("[data-spell-row]").each(function () {
+            const row = $(this);
+            const textMatch = !textVal || row.text().toLowerCase().indexOf(textVal) > -1;
+            const expansionMatch = !expansionVal || row.attr("data-expansion") === expansionVal;
+            const levelMatch = !levelVal || row.attr("data-level") === levelVal;
+            row.toggle(textMatch && expansionMatch && levelMatch);
         });
+        $("[data-level-header]").each(function () {
+            const level = $(this).attr("data-level-header");
+            $(this).toggle($(`[data-spell-row][data-level="${level}"]:visible`).length > 0);
+        });
+    }
+    $(document).ready(function () {
+        $("#spell-filter").on("keyup", applySpellFilters);
+        $("#expansion-filter").on("change", applySpellFilters);
+        $("#level-filter").on("change", applySpellFilters);
     });
     $(document).ready(function () {
         $("#inventory-filter").on("keyup", function () {
