@@ -46,6 +46,25 @@
         </div>
     </div>
 
+    <!-- Delete confirmation modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Delete Account</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete <strong id="deleteAccountName"></strong>? This cannot be undone.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <a href="#" id="deleteConfirmBtn" class="btn btn-danger">Delete</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="container py-5">
 
         <!-- Page header -->
@@ -95,19 +114,29 @@
             </div>
         </div>
         {% else %}
-        <div class="mb-2 text-end">
+        <!-- Table toolbar -->
+        <div class="d-flex align-items-center justify-content-between mb-2">
+            <span class="text-muted small">{{ account_count }} account{{ account_count|pluralize }}</span>
             <a href="?_export=csv" class="btn btn-outline-secondary btn-sm">
                 <i class="fas fa-download me-1"></i> Export CSV
             </a>
         </div>
         <div class="table-responsive mb-5">
-            <table class="table table-hover align-middle">
+            <table class="table table-hover align-middle" id="accounts-table">
                 <thead>
                     <tr>
-                        <th>Account Name</th>
-                        <th class="d-none d-sm-table-cell">Email</th>
-                        <th class="d-none d-md-table-cell">Created</th>
-                        <th class="d-none d-md-table-cell">Last Login</th>
+                        <th class="sortable-col" data-col="0" data-type="string" style="cursor:pointer; white-space:nowrap;">
+                            Account Name <i class="fas fa-sort-up text-primary ms-1 sort-icon"></i>
+                        </th>
+                        <th class="sortable-col d-none d-sm-table-cell" data-col="1" data-type="string" style="cursor:pointer; white-space:nowrap;">
+                            Email <i class="fas fa-sort ms-1 sort-icon text-muted"></i>
+                        </th>
+                        <th class="sortable-col d-none d-md-table-cell" data-col="2" data-type="date" style="cursor:pointer; white-space:nowrap;">
+                            Created <i class="fas fa-sort ms-1 sort-icon text-muted"></i>
+                        </th>
+                        <th class="sortable-col d-none d-md-table-cell" data-col="3" data-type="date" style="cursor:pointer; white-space:nowrap;">
+                            Last Login <i class="fas fa-sort ms-1 sort-icon text-muted"></i>
+                        </th>
                         <th></th>
                     </tr>
                 </thead>
@@ -117,24 +146,31 @@
                         <td>
                             <a href="{% url 'characters:list' acct.AccountName %}">
                                 {% if acct.is_mule %}
-                                <i class="fas fa-coins text-warning me-1" title="Trader (Mule) Account"></i>
+                                <i class="fas fa-coins text-warning me-1"
+                                   title="Trader (Mule) Account"
+                                   aria-label="Trader (Mule) Account"></i>
                                 {% endif %}
                                 {{ acct.AccountName }}
                             </a>
                         </td>
                         <td class="text-muted d-none d-sm-table-cell">{{ acct.AccountEmail }}</td>
-                        <td class="text-muted d-none d-md-table-cell">{{ acct.AccountCreateDate|date:"M j, Y" }}</td>
-                        <td class="text-muted d-none d-md-table-cell">{{ acct.LastLoginDate|date:"M j, Y" }}</td>
+                        <td class="text-muted d-none d-md-table-cell" data-sort="{{ acct.AccountCreateDate|date:'Y-m-d' }}">{{ acct.AccountCreateDate|date:"M j, Y" }}</td>
+                        <td class="text-muted d-none d-md-table-cell" data-sort="{{ acct.LastLoginDate|date:'Y-m-d'|default:'0000-00-00' }}">
+                            {% if acct.LastLoginDate %}{{ acct.LastLoginDate|date:"M j, Y" }}{% else %}<span class="text-muted fst-italic">Never</span>{% endif %}
+                        </td>
                         <td class="text-end">
                             <div class="d-flex gap-2 justify-content-end">
                                 <a href="{% url 'accounts:update_account' acct.pk %}" class="btn btn-outline-warning btn-sm">
                                     <i class="fas fa-edit"></i>
                                     <span class="d-none d-sm-inline ms-1">Edit</span>
                                 </a>
-                                <a href="{% url 'accounts:delete_account' acct.pk %}" class="btn btn-outline-danger btn-sm">
+                                <button type="button" class="btn btn-outline-danger btn-sm"
+                                        data-account-name="{{ acct.AccountName }}"
+                                        data-delete-url="{% url 'accounts:delete_account' acct.pk %}"
+                                        onclick="confirmDelete(this)">
                                     <i class="fas fa-trash"></i>
                                     <span class="d-none d-sm-inline ms-1">Delete</span>
-                                </a>
+                                </button>
                             </div>
                         </td>
                     </tr>
@@ -147,7 +183,7 @@
         <!-- Security section -->
         <h6 class="text-muted text-uppercase fw-semibold small mb-2">Security</h6>
         <div class="card shadow-sm">
-            <div class="card-body d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <div class="card-body d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3">
                 <div>
                     <div class="fw-semibold mb-1">Two-Factor Authentication</div>
                     {% if mfa_enabled %}
@@ -172,4 +208,66 @@
 
     </div>
 
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function confirmDelete(btn) {
+    document.getElementById('deleteAccountName').textContent = btn.dataset.accountName;
+    document.getElementById('deleteConfirmBtn').href = btn.dataset.deleteUrl;
+    new bootstrap.Modal(document.getElementById('deleteModal')).show();
+}
+
+(function () {
+    const table = document.getElementById('accounts-table');
+    if (!table) return;
+
+    let currentCol = 0;
+    let currentDir = 'asc';
+
+    function getCellValue(row, colIndex, dataType) {
+        const cell = row.cells[colIndex];
+        if (!cell) return '';
+        const raw = cell.dataset.sort ?? cell.innerText.trim();
+        if (dataType === 'date') return raw;
+        return raw.toLowerCase();
+    }
+
+    function updateIcons(activeThIndex, dir) {
+        table.querySelectorAll('.sortable-col').forEach((th, i) => {
+            const icon = th.querySelector('.sort-icon');
+            if (i === activeThIndex) {
+                icon.className = `fas ${dir === 'asc' ? 'fa-sort-up' : 'fa-sort-down'} text-primary ms-1 sort-icon`;
+            } else {
+                icon.className = 'fas fa-sort ms-1 sort-icon text-muted';
+            }
+        });
+    }
+
+    table.querySelectorAll('.sortable-col').forEach((th, thIndex) => {
+        th.addEventListener('click', () => {
+            const colIndex = parseInt(th.dataset.col);
+            const dataType = th.dataset.type;
+
+            if (currentCol === colIndex) {
+                currentDir = currentDir === 'asc' ? 'desc' : 'asc';
+            } else {
+                currentCol = colIndex;
+                currentDir = 'asc';
+            }
+
+            const tbody = table.querySelector('tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            rows.sort((a, b) => {
+                const aVal = getCellValue(a, colIndex, dataType);
+                const bVal = getCellValue(b, colIndex, dataType);
+                const cmp = aVal.localeCompare(bVal, undefined, { numeric: true, sensitivity: 'base' });
+                return currentDir === 'asc' ? cmp : -cmp;
+            });
+            rows.forEach(row => tbody.appendChild(row));
+            updateIcons(thIndex, currentDir);
+        });
+    });
+})();
+</script>
 {% endblock %}

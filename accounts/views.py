@@ -287,7 +287,7 @@ def accounts(request):
         response["Content-Disposition"] = 'attachment; filename="accounts.csv"'
         writer = csv.writer(response)
         writer.writerow(["Account Name", "Email", "Created", "Last Login"])
-        for acct in queryset:
+        for acct in queryset.order_by('AccountName'):
             writer.writerow([acct.AccountName, acct.AccountEmail, acct.AccountCreateDate, acct.LastLoginDate])
         return response
 
@@ -296,7 +296,11 @@ def accounts(request):
 
     return render(request,
                   "accounts/list_accounts.html",
-                  {"accounts_list": queryset, "mfa_enabled": mfa_enabled, "account_count": account_count})
+                  {
+                      "accounts_list": queryset.order_by('AccountName'),
+                      "mfa_enabled": mfa_enabled,
+                      "account_count": account_count,
+                  })
 
 
 @login_required
