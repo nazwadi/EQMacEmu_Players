@@ -418,6 +418,13 @@ OTP_WEBAUTHN_RP_NAME = 'EQ Archives'
 OTP_WEBAUTHN_ALLOWED_ORIGINS = [f"{_parsed_site.scheme}://{_parsed_site.netloc}"]
 OTP_WEBAUTHN_ALLOW_PASSWORDLESS_LOGIN = True         # Passkeys can replace password entirely
 
+# In development the Django server runs plain HTTP even when SITE_URL uses https,
+# so add the http variant so the WebAuthn origin check passes either way.
+if DEBUG:
+    _http_origin = f"http://{_parsed_site.netloc}"
+    if _http_origin not in OTP_WEBAUTHN_ALLOWED_ORIGINS:
+        OTP_WEBAUTHN_ALLOWED_ORIGINS = OTP_WEBAUTHN_ALLOWED_ORIGINS + [_http_origin]
+
 LOGIN_REDIRECT_URL = '/accounts/'
 
 # Email backend — falls back to console (prints to terminal) if not configured in .env
