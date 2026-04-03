@@ -36,6 +36,7 @@ urlpatterns = [
     path('mfa/setup/', views.mfa_setup, name='mfa_setup'),
     path('mfa/backup-codes/', views.mfa_backup_codes, name='mfa_backup_codes'),
     path('mfa/disable/', views.mfa_disable, name='mfa_disable'),
+    path('mfa/passkeys/', views.mfa_passkeys, name='mfa_passkeys'),
 
     # Password reset URLs
     path('password_reset/',

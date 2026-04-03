@@ -30,6 +30,7 @@ from django.shortcuts import redirect, render
 import secrets
 from django_otp.plugins.otp_totp.models import TOTPDevice
 from django_otp.plugins.otp_static.models import StaticDevice, StaticToken
+from django_otp_webauthn.models import WebAuthnCredential
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 
@@ -83,8 +84,9 @@ def login_request(request):
             password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=password)
             if user is not None:
-                device = TOTPDevice.objects.filter(user=user, confirmed=True).first()
-                if device:
+                has_totp = TOTPDevice.objects.filter(user=user, confirmed=True).exists()
+                has_webauthn = WebAuthnCredential.objects.filter(user=user, confirmed=True).exists()
+                if has_totp or has_webauthn:
                     # Don't log in yet — store user ID and redirect to MFA verify
                     request.session['mfa_user_id'] = user.id
                     request.session['mfa_timestamp'] = timezone.now().timestamp()
@@ -107,7 +109,13 @@ def login_request(request):
     return render(request=request, template_name="accounts/login.html", context={"login_form": form})
 
 
+@ratelimit(key=_rate_limit_key, rate='10/m', method='POST', block=False)
 def mfa_verify(request):
+    if getattr(request, 'limited', False):
+        logger.warning('RATE_LIMITED_MFA ip=%s', get_client_ip(request))
+        messages.error(request, "Too many attempts. Please wait before trying again.")
+        return render(request, 'accounts/mfa_verify.html')
+
     user_id = request.session.get('mfa_user_id')
     if not user_id:
         return redirect('accounts:login')
@@ -121,13 +129,25 @@ def mfa_verify(request):
         return redirect('accounts:login')
 
     user = User.objects.get(id=user_id)
+    has_totp = TOTPDevice.objects.filter(user=user, confirmed=True).exists()
+    has_webauthn = WebAuthnCredential.objects.filter(user=user, confirmed=True).exists()
 
     if request.method == 'POST':
         token = request.POST.get('token', '').strip()
-        device = TOTPDevice.objects.filter(user=user, confirmed=True).first()
 
-        if device and device.verify_token(token):
+        verified_device = None
+        totp_device = TOTPDevice.objects.filter(user=user, confirmed=True).first()
+        if totp_device and totp_device.verify_token(token):
+            verified_device = totp_device
+        else:
+            static_device = StaticDevice.objects.filter(user=user).first()
+            if static_device and static_device.verify_token(token):
+                verified_device = static_device
+
+        if verified_device:
             del request.session['mfa_user_id']
+            import django_otp
+            django_otp.login(request, verified_device)
             login(request, user)
             request.session['login_ip'] = get_client_ip(request)
             _log_web_login(user, get_client_ip(request))
@@ -137,7 +157,10 @@ def mfa_verify(request):
         else:
             messages.error(request, 'Invalid code. Please try again.')
 
-    return render(request, 'accounts/mfa_verify.html')
+    return render(request, 'accounts/mfa_verify.html', {
+        'has_totp': has_totp,
+        'has_webauthn': has_webauthn,
+    })
 
 
 @login_required
@@ -292,6 +315,7 @@ def accounts(request):
         return response
 
     mfa_enabled = TOTPDevice.objects.filter(user=request.user, confirmed=True).exists()
+    passkey_count = WebAuthnCredential.objects.filter(user=request.user, confirmed=True).count()
     account_count = queryset.count()
 
     return render(request,
@@ -299,6 +323,7 @@ def accounts(request):
                   {
                       "accounts_list": queryset.order_by('AccountName'),
                       "mfa_enabled": mfa_enabled,
+                      "passkey_count": passkey_count,
                       "account_count": account_count,
                   })
 
@@ -549,6 +574,23 @@ def convert_to_trader(request):
     }
 
     return render(request, 'accounts/convert_to_trader.html', context)
+
+@login_required
+def mfa_passkeys(request):
+    if request.method == 'POST' and request.POST.get('action') == 'delete':
+        pk = request.POST.get('pk')
+        try:
+            cred = WebAuthnCredential.objects.get(pk=pk, user=request.user)
+            cred.delete()
+            logger.info('PASSKEY_DELETE user=%s ip=%s pk=%s', request.user.username, get_client_ip(request), pk)
+            messages.success(request, "Passkey removed.")
+        except WebAuthnCredential.DoesNotExist:
+            messages.error(request, "Passkey not found.")
+        return redirect('accounts:mfa_passkeys')
+
+    passkeys = WebAuthnCredential.objects.filter(user=request.user, confirmed=True).order_by('-created_at')
+    return render(request, 'accounts/mfa_passkeys.html', {'passkeys': passkeys})
+
 
 @login_required
 def inventory_search(request):

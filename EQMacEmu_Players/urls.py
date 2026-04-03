@@ -16,6 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from django_otp.admin import OTPAdminSite
+from django_otp_webauthn.views import BeginCredentialRegistrationView, CompleteCredentialRegistrationView
+from accounts.webauthn_views import MfaWebAuthnBeginView, MfaWebAuthnCompleteView
+from django.views.i18n import JavaScriptCatalog
+
+admin.site.__class__ = OTPAdminSite
 from django.shortcuts import redirect
 from accounts import views as accounts_views
 from django.conf import settings
@@ -57,6 +63,13 @@ urlpatterns = [
     path("spells/", include("spells.urls")),
     path("zones/", include("zones.urls")),
     path("mdeditor/", include('mdeditor.urls')),
+    # WebAuthn API — registration uses stock views; authentication uses our
+    # custom views that understand the pending-MFA session.
+    path("accounts/webauthn/registration/begin/", BeginCredentialRegistrationView.as_view(), name="webauthn-register-begin"),
+    path("accounts/webauthn/registration/complete/", CompleteCredentialRegistrationView.as_view(), name="webauthn-register-complete"),
+    path("accounts/webauthn/authentication/begin/", MfaWebAuthnBeginView.as_view(), name="webauthn-auth-begin"),
+    path("accounts/webauthn/authentication/complete/", MfaWebAuthnCompleteView.as_view(), name="webauthn-auth-complete"),
+    path("accounts/webauthn/jsi18n/", JavaScriptCatalog.as_view(packages=["django_otp_webauthn"]), name="webauthn-js-i18n"),
     path("raids/", include("raid_scheduler.urls")),
     path("petitions/", include("petitions.urls")),
     path('robots.txt', robots_txt),

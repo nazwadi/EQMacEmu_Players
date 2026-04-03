@@ -1,4 +1,5 @@
 {% extends 'accounts/base.html' %}
+{% load static %}
 
 {% block title %}Two-Factor Authentication - EQ Archives{% endblock %}
 
@@ -9,7 +10,36 @@
             <div class="card shadow-sm">
                 <div class="card-body p-4">
                     <h1 class="mb-1">Two-Factor Authentication</h1>
-                    <p class="text-muted mb-4">Open your authenticator app and enter the 6-digit code.</p>
+                    <p class="text-muted mb-4">Verify your identity to continue.</p>
+
+                    {% if has_webauthn %}
+                    <!-- Passkey verification -->
+                    <h6 class="fw-semibold mb-3">Use a Passkey</h6>
+
+                    <div id="passkey-verification-placeholder"></div>
+
+                    <template id="passkey-verification-available-template">
+                        <button id="passkey-verification-button" class="btn btn-outline-secondary w-100 mb-2" type="button">
+                            <i class="fas fa-key me-2"></i>Verify with Passkey
+                        </button>
+                        <p id="passkey-verification-status-message" class="small text-center mt-1" role="status"></p>
+                    </template>
+
+                    <template id="passkey-verification-unavailable-template">
+                        <p class="text-muted small text-center">Passkeys are not supported by this browser.</p>
+                    </template>
+                    {% endif %}
+
+                    {% if has_totp and has_webauthn %}
+                    <div class="d-flex align-items-center my-4">
+                        <hr class="flex-grow-1"><span class="mx-3 text-muted small">or</span><hr class="flex-grow-1">
+                    </div>
+                    {% endif %}
+
+                    {% if has_totp %}
+                    <!-- TOTP verification -->
+                    <h6 class="fw-semibold mb-3">Use Authenticator App</h6>
+                    <p class="text-muted small mb-3">Enter the 6-digit code from your authenticator app.</p>
                     <form method="POST" id="mfa-form">
                         {% csrf_token %}
                         <div class="mb-3">
@@ -23,17 +53,20 @@
                                 maxlength="6"
                                 autocomplete="one-time-code"
                                 placeholder="000000"
-                                autofocus
+                                {% if not has_webauthn %}autofocus{% endif %}
                                 required
                             >
                         </div>
                         <button class="btn btn-primary w-100" type="submit">Verify</button>
                     </form>
+                    {% endif %}
+
                     <hr class="my-4">
                     <p class="text-center mb-0 small text-muted">
-                        Lost access to your authenticator? Use a
-                        <a href="#">backup code</a> or
-                        <a href="{% url 'accounts:login' %}">return to login</a>.
+                        {% if has_totp %}
+                        Lost access to your authenticator? Enter a backup code in the field above &mdash;
+                        {% endif %}
+                        <a href="{% url 'accounts:login' %}">Return to login</a>
                     </p>
                 </div>
             </div>
@@ -42,9 +75,19 @@
 </div>
 {% endblock %}
 
+{% block extra_js %}
+{% if has_webauthn %}
+<script id="otp_webauthn_config" type="application/json">
+{"autocompleteLoginFieldSelector": null, "nextFieldSelector": "input[name='next']", "csrfToken": "{{ csrf_token }}", "beginAuthenticationUrl": "{% url 'webauthn-auth-begin' %}", "completeAuthenticationUrl": "{% url 'webauthn-auth-complete' %}", "beginRegistrationUrl": "{% url 'webauthn-register-begin' %}", "completeRegistrationUrl": "{% url 'webauthn-register-complete' %}"}
+</script>
+<script async defer src="{% url 'webauthn-js-i18n' %}"></script>
+<script type="module" src="{% static 'django_otp_webauthn/otp_webauthn_auth.js' %}"></script>
+{% endif %}
+{% endblock %}
+
 {% block inline_js %}
+{% if has_totp %}
 <script>
-    // Auto-submit when 6 digits are entered
     document.getElementById('token').addEventListener('input', function () {
         if (this.value.replace(/\D/g, '').length === 6) {
             this.value = this.value.replace(/\D/g, '');
@@ -52,4 +95,5 @@
         }
     });
 </script>
+{% endif %}
 {% endblock %}

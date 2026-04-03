@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from django.contrib.messages import constants as messages
 import os
 from pathlib import Path
+from urllib.parse import urlparse
 
 from dotenv import load_dotenv
 from os.path import join, dirname
@@ -76,6 +77,8 @@ INSTALLED_APPS = [
     'django_otp',
     'django_otp.plugins.otp_totp',   # TOTP (Google Authenticator, Authy)
     'django_otp.plugins.otp_static', # Backup codes
+    'django_otp_webauthn',           # Passkeys / WebAuthn
+    'rest_framework',                # Required by django-otp-webauthn
     'django_tables2',
     'dkp.apps.DkpConfig',
     'crispy_forms',
@@ -120,6 +123,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django_otp.middleware.OTPMiddleware',
+    'EQMacEmu_Players.middleware.StaffMFARequiredMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -406,6 +410,15 @@ MDEDITOR_CONFIGS = {
 # enabling media uploads
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 MEDIA_URL = '/media/'
+
+# WebAuthn / Passkeys (django-otp-webauthn)
+_parsed_site = urlparse(SITE_URL)
+OTP_WEBAUTHN_RP_ID = _parsed_site.hostname          # e.g. 'example.com' or 'localhost'
+OTP_WEBAUTHN_RP_NAME = 'EQ Archives'
+OTP_WEBAUTHN_ALLOWED_ORIGINS = [f"{_parsed_site.scheme}://{_parsed_site.netloc}"]
+OTP_WEBAUTHN_ALLOW_PASSWORDLESS_LOGIN = True         # Passkeys can replace password entirely
+
+LOGIN_REDIRECT_URL = '/accounts/'
 
 # Email backend — falls back to console (prints to terminal) if not configured in .env
 EMAIL_BACKEND = DJANGO_EMAIL_BACKEND or 'django.core.mail.backends.console.EmailBackend'
