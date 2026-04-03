@@ -256,4 +256,3 @@ uploads/*
 # Claude Code working files
 .claude/
 
-migrations/

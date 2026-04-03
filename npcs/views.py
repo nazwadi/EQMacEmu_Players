@@ -418,7 +418,8 @@ def view_npc(request, npc_id):
 
     related_quests = Quests.objects.filter(
         Q(related_npcs__npc_id=npc_data.id) |
-        Q(starting_npc_id=npc_data.id)
+        Q(starting_npc_id=npc_data.id),
+        status='published',
     ).distinct()
 
     return render(request=request,

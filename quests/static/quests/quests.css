@@ -108,7 +108,8 @@
     background: var(--bg-tertiary);
     border: 1px solid var(--border-color);
     padding: 1rem 1.25rem;
-    color: var(--text-primary);
+    color: #e0e0e0;
+    --text-primary: #e0e0e0;  /* soften pure white for long-form reading */
 }
 
 /* Rendered markdown elements inside description */
@@ -128,8 +129,10 @@
 .quest-description-content h2 { font-size: 1.25rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.2rem; }
 .quest-description-content h3 { font-size: 1.1rem; }
 
-.quest-description-content p {
+.quest-description-content p,
+.quest-description-content li {
     margin-bottom: 0.75rem;
+    max-width: 72ch;
 }
 
 .quest-description-content ul,

@@ -464,7 +464,7 @@ def view_item(request, item_id):
 
     obj_path = f"/static/models/equip/{item.idfile.lower()}{'.glb'}"
 
-    related_quests = Quests.objects.filter(quest_items__item_id=item_id)
+    related_quests = Quests.objects.filter(quest_items__item_id=item_id, status='published')
 
     return render(request=request,
                   template_name="items/view_item.html",
