@@ -18,17 +18,12 @@ class QuestQuerySet(models.QuerySet):
         return (starting_quests | related_quests).distinct()
 
     def for_item(self, item_id):
-        """Get all quests related to a particular item"""
-        # Get quests where this item is in the quest_items
-        item_quests = self.filter(quest_items__item_id=item_id)
-
-        # We need to also check the JSON field for reward items
-        # This is more complex as we need to check a JSON field
-        # This is a basic implementation - might need refinement based on your JSON structure
-        reward_quests = self.filter(quest_reward__contains={'item_id': item_id})
-
-        # Combine the querysets
-        return (item_quests | reward_quests).distinct()
+        """Get all quests related to a particular item (as quest item or item reward)"""
+        from quests.models import ItemReward
+        reward_quest_ids = ItemReward.objects.filter(item_id=item_id).values_list('quest_id', flat=True)
+        return self.filter(
+            models.Q(quest_items__item_id=item_id) | models.Q(id__in=reward_quest_ids)
+        ).distinct()
 
     def for_zone(self, zone_id=None, short_name=None):
         """Get all quests related to a particular zone"""

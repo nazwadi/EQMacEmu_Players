@@ -2,6 +2,7 @@ from django.db import models
 from django.core.validators import MinValueValidator
 from mdeditor.fields import MDTextField
 from common.constants import ZONE_SHORT_TO_LONG
+from quests.managers import QuestManager
 
 SERVER_MAX_LEVEL = 60
 
@@ -276,11 +277,20 @@ class QuestTag(models.Model):
     class Meta:
         ordering = ['name']
 
-class Quests(models.Model):
-    """
-    This model stores quest data that should correlate to quest scripts in the database
-    """
+FACTION_ROLE_CHOICES = [
+    ('required', 'Required'),
+    ('raised', 'Raised'),
+    ('lowered', 'Lowered'),
+]
 
+
+QUEST_STATUS_CHOICES = [
+    ('draft', 'Draft'),
+    ('published', 'Published'),
+]
+
+
+class Quests(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100, null=False, unique=True)
     description = MDTextField(null=True, blank=True, default="")
@@ -297,11 +307,6 @@ class Quests(models.Model):
     related_npcs = models.ManyToManyField("QuestsRelatedNPC", blank=True, related_name="quests")
     related_zones = models.ManyToManyField("QuestsRelatedZone", blank=True, related_name="quests")
     quest_items = models.ManyToManyField("QuestItem", blank=True, related_name="quests")
-    quest_reward = models.JSONField(default=dict, blank=True,
-                                    help_text="Reward data like {'item_id': 123, 'faction': 'Guardians', 'exp': 500, 'flag': 'completed_zone'}")
-    factions_required = models.ManyToManyField("QuestFactionRequired", blank=True, related_name="required_for_quests")
-    factions_raised = models.ManyToManyField("QuestFactionRaised", blank=True, related_name="raised_for_quests")
-    factions_lowered = models.ManyToManyField("QuestFactionLowered", blank=True, related_name="lowered_for_quests")
     difficulty_rating = models.SmallIntegerField(choices=[(1, 'Very Easy'), (2, 'Easy'),
                                                           (3, 'Medium'), (4, 'Hard'),
                                                           (5, 'Very Hard')], default=3)
@@ -309,12 +314,30 @@ class Quests(models.Model):
     category = models.ForeignKey(QuestCategory, null=True, blank=True,
                                  on_delete=models.SET_NULL, related_name='quests')
     tags = models.ManyToManyField(QuestTag, blank=True, related_name='quests')
+    prerequisite = models.ForeignKey('self', null=True, blank=True,
+                                     on_delete=models.SET_NULL, related_name='sequels')
+    status = models.CharField(max_length=10, choices=QUEST_STATUS_CHOICES, default='draft', db_index=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    objects = QuestManager()
 
     def __str__(self):
         return str(self.name)
 
+    def get_quest_chain(self):
+        """Walk back to the first quest and return the full chain in order."""
+        first = self
+        while first.prerequisite:
+            first = first.prerequisite
+        chain = []
+        current = first
+        while current:
+            chain.append(current)
+            current = current.sequels.first()
+        return chain
+
     def get_all_rewards(self):
-        """Get all rewards for this quest across all types"""
         rewards = []
         rewards.extend(list(self.itemreward_rewards.all()))
         rewards.extend(list(self.experiencereward_rewards.all()))
@@ -325,24 +348,18 @@ class Quests(models.Model):
         rewards.extend(list(self.titlereward_rewards.all()))
         rewards.extend(list(self.aareward_rewards.all()))
         rewards.extend(list(self.accessreward_rewards.all()))
-
-        # Sort by reward group
         return sorted(rewards, key=lambda r: r.reward_group)
 
     def get_reward_groups(self):
-        """Get rewards organized by group for selection UI"""
         all_rewards = self.get_all_rewards()
         groups = {}
-
         for reward in all_rewards:
             if reward.reward_group not in groups:
                 groups[reward.reward_group] = []
             groups[reward.reward_group].append(reward)
-
         return groups
 
     def get_reward_items(self):
-        """Return a list of item_ids from item rewards"""
         return [reward.item_id for reward in self.itemreward_rewards.all()]
 
     class Meta:
@@ -362,64 +379,63 @@ class Quests(models.Model):
         ordering = ['name']
 
 
-class QuestFactionRequired(models.Model):
-    id = models.IntegerField(primary_key=True, null=False)
-    name = models.CharField(max_length=50, null=False)
+class QuestFaction(models.Model):
+    quest = models.ForeignKey(Quests, on_delete=models.CASCADE, related_name='quest_factions')
+    faction_id = models.IntegerField()
+    name = models.CharField(max_length=50)
+    role = models.CharField(max_length=10, choices=FACTION_ROLE_CHOICES)
 
     def __str__(self):
-        return f"{self.name} ({self.id})"
+        return f"{self.name} ({self.get_role_display()})"
 
     class Meta:
-        verbose_name = 'Required Faction'
-        verbose_name_plural = 'Required Factions'
-        ordering = ['name']
-
-
-class QuestFactionRaised(models.Model):
-    id = models.IntegerField(primary_key=True, null=False)
-    name = models.CharField(max_length=50, null=False)
-
-    def __str__(self):
-        return f"{self.name} ({self.id})"
-
-    class Meta:
-        verbose_name = 'Raised Faction'
-        verbose_name_plural = 'Raised Factions'
-        ordering = ['name']
-
-
-class QuestFactionLowered(models.Model):
-    id = models.IntegerField(primary_key=True, null=False)
-    name = models.CharField(max_length=50, null=False)
-
-    def __str__(self):
-        return f"{self.name} ({self.id})"
-
-    class Meta:
-        verbose_name = 'Lowered Faction'
-        verbose_name_plural = 'Lowered Factions'
-        ordering = ['name']
+        verbose_name = 'Quest Faction'
+        verbose_name_plural = 'Quest Factions'
+        unique_together = ['quest', 'faction_id', 'role']
+        ordering = ['role', 'name']
+        indexes = [
+            models.Index(fields=['faction_id'], name='quest_faction_id_idx'),
+            models.Index(fields=['role'], name='quest_faction_role_idx'),
+        ]
 
 
 class QuestItem(models.Model):
-    """
-    This model stores quest items related to a given quest
-    """
     item_id = models.IntegerField(null=False, default=0)
-    Name = models.CharField(max_length=64, null=False, default=0)
+    name = models.CharField(max_length=64, null=False, default='', db_column='Name')
 
     def __str__(self):
-        return f"{self.Name} ({self.item_id})"
+        return f"{self.name} ({self.item_id})"
 
     class Meta:
         verbose_name = 'Quest Item'
         verbose_name_plural = 'Quest Items'
         indexes = [
             models.Index(fields=['item_id'], name='item_id_idx'),
-            models.Index(fields=['Name'], name='item_name_idx'),
+            models.Index(fields=['name'], name='item_name_idx'),
         ]
-        ordering = ['Name']
-        unique_together = ['item_id', 'Name']  # Ensure no duplicate entries for the same item
+        ordering = ['name']
+        unique_together = ['item_id', 'name']
+
+
+PATCH_HISTORY_ROLE_CHOICES = [
+    ('introduced', 'Introduced'),
+    ('updated', 'Updated'),
+]
+
+
+class QuestPatchHistory(models.Model):
+    quest = models.ForeignKey('Quests', on_delete=models.CASCADE, related_name='patch_history')
+    patch = models.ForeignKey('patch.PatchMessage', on_delete=models.CASCADE, related_name='quest_history')
+    role = models.CharField(max_length=10, choices=PATCH_HISTORY_ROLE_CHOICES, default='updated')
+
+    def __str__(self):
+        return f"{self.quest.name} — {self.get_role_display()} in {self.patch.title}"
+
+    class Meta:
+        verbose_name = 'Quest Patch History'
+        verbose_name_plural = 'Quest Patch Histories'
+        unique_together = ['quest', 'patch', 'role']
+        ordering = ['patch__patch_date']
 
 
 class QuestsRelatedNPC(models.Model):

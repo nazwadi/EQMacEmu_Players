@@ -1,0 +1,188 @@
+{% extends 'quests/base.html' %}
+{% load static %}
+{% load expansion_filters %}
+{% load data_utilities %}
+
+{% block extra_css %}
+    <link href="https://cdn.datatables.net/v/bs5/dt-2.0.2/datatables.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block title %}Quest Search - EQ Archives{% endblock %}
+
+{% block content %}
+    <div class="container py-4">
+        <div class="row">
+            <div class="col">
+                <h1 class="text-center mb-4">Quest Search</h1>
+
+                {% if form.errors %}
+                    <div class="alert alert-danger mb-3">
+                        <strong>Please correct the following errors:</strong>
+                        <ul class="mb-0">
+                            {% for field in form %}
+                                {% for error in field.errors %}
+                                    <li>{{ field.label }}: {{ error }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                <details id="search-form-details" {% if not search_results %}open=""{% endif %}>
+                    <summary class="none">
+                        <span class="mb-2">Quest Search Form</span>
+                    </summary>
+                    <form id="quest-search-form" class="p-3 mb-4 border" action="{% url 'quests:search' %}" method="post">
+                        {% csrf_token %}
+
+                        {# Primary search: quest name #}
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="form-label text-wrap"><label for="quest_name">Quest Name</label></div>
+                                <input type="text" class="form-control" id="quest_name" name="quest_name"
+                                       placeholder="Stein of Moggok" value="{{ form.quest_name.value|default:'' }}">
+                            </div>
+                        </div>
+
+                        <details id="advanced-search-details" {% if form.starting_zone.value or form.expansion.value and form.expansion.value != '-1' %}open{% endif %}>
+                            <summary>Advanced Search</summary>
+                            <div class="row gy-3 mb-3 mt-2">
+                                <div class="col-12"><h6 class="text-muted fw-semibold mb-0">Filters</h6><hr class="mt-1 mb-0"/></div>
+
+                                <div class="col-12 col-md-4">
+                                    <div class="form-label text-wrap"><label for="starting_zone">Zone</label></div>
+                                    <input type="text" class="form-control" id="starting_zone" name="starting_zone"
+                                           placeholder="e.g. qeynos, rivervale" value="{{ form.starting_zone.value|default:'' }}">
+                                </div>
+
+                                <div class="col-6 col-md-2">
+                                    <div class="form-label text-wrap"><label for="min_level">Min Level</label></div>
+                                    <input type="number" class="form-control" id="min_level" name="min_level"
+                                           min="1" max="60" value="{{ form.min_level.value|default:'1' }}">
+                                </div>
+
+                                <div class="col-6 col-md-2">
+                                    <div class="form-label text-wrap"><label for="max_level">Max Level</label></div>
+                                    <input type="number" class="form-control" id="max_level" name="max_level"
+                                           min="1" max="60" value="{{ form.max_level.value|default:'60' }}">
+                                </div>
+
+                                <div class="col-12 col-md-4">
+                                    <div class="form-label text-wrap"><label for="expansion">Expansion</label></div>
+                                    <select class="form-select" id="expansion" name="expansion">
+                                        {% for value, label in form.expansion.field.choices %}
+                                            <option value="{{ value }}" {% if form.expansion.value == value|stringformat:"s" %}selected{% endif %}>{{ label }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="col-6 col-md-3">
+                                    <div class="form-label text-wrap"><label for="player_class">Class</label></div>
+                                    <select class="form-select" id="player_class" name="player_class">
+                                        {% for value, label in form.player_class.field.choices %}
+                                            <option value="{{ value }}" {% if form.player_class.value == value|stringformat:"s" %}selected{% endif %}>{{ label }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="col-6 col-md-3">
+                                    <div class="form-label text-wrap"><label for="player_race">Race</label></div>
+                                    <select class="form-select" id="player_race" name="player_race">
+                                        {% for value, label in form.player_race.field.choices %}
+                                            <option value="{{ value }}" {% if form.player_race.value == value|stringformat:"s" %}selected{% endif %}>{{ label }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="col-6 col-md-2">
+                                    <div class="form-label text-wrap"><label for="query_limit">Result Limit</label></div>
+                                    <input type="number" class="form-control" id="query_limit" name="query_limit"
+                                           min="0" max="200" value="{{ form.query_limit.value|default:'50' }}">
+                                </div>
+                            </div>
+                        </details>
+
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-outline-primary flex-grow-1">Search</button>
+                                <button type="reset" class="btn btn-outline-secondary">Reset</button>
+                            </div>
+                        </div>
+                    </form>
+                </details>
+            </div>
+        </div>
+
+        {% if search_results %}
+        <div class="row py-3">
+            <div class="col">
+                <div class="table-responsive">
+                    <table id="quest-results-table" class="display table table-striped table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Zone</th>
+                                <th>Level</th>
+                                <th>Expansion</th>
+                                <th>Difficulty</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for quest in search_results %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'quests:view' quest.id %}">{{ quest.name }}</a>
+                                </td>
+                                <td>
+                                    {% if quest.starting_zone %}
+                                        <a href="{% url 'zones:view' quest.starting_zone %}">{{ quest.starting_zone|zone_short_to_long }}</a>
+                                    {% else %}
+                                        <span class="text-muted">Unknown</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {{ quest.minimum_level|default:"1" }}{% if quest.maximum_level == -1 %}+{% else %} - {{ quest.maximum_level }}{% endif %}
+                                </td>
+                                <td>
+                                    <img src="{% static '/images/' %}{{ quest.expansion_introduced|expansion_icon }}"
+                                         loading="lazy"
+                                         alt="{{ quest.expansion_introduced|exp_filter|title }}"
+                                         title="{{ quest.expansion_introduced|exp_filter|title }}"
+                                         style="height: 20px;">
+                                    {{ quest.expansion_introduced|exp_filter|title }}
+                                </td>
+                                <td>
+                                    {{ quest.get_difficulty_rating_display }}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% elif request.method == "POST" %}
+        <div class="text-center py-5">
+            <i class="fas fa-search fa-2x text-muted mb-3 d-block"></i>
+            <h5 class="mb-1">No quests found</h5>
+            <p class="text-muted">Try adjusting your search filters.</p>
+        </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="https://cdn.datatables.net/v/bs5/dt-2.0.2/datatables.min.js"></script>
+{% endblock %}
+{% block inline_js %}
+    <script>
+    $(document).ready(function () {
+        if (document.getElementById('quest-results-table')) {
+            $("#quest-results-table").DataTable({
+                order: [[0, 'asc']],
+                pageLength: 50
+            });
+        }
+    });
+    </script>
+{% endblock %}

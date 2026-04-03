@@ -9,61 +9,97 @@
     <div class="container py-4">
         {% if quest_exists %}
             <article class="quest-details">
+                {% if quest.status == 'draft' %}
+                <div class="alert alert-warning d-flex align-items-center gap-2 mb-3" role="alert">
+                    <i class="fas fa-pencil-alt" aria-hidden="true"></i>
+                    <div>
+                        <strong>Draft</strong> — This quest is not visible to players. Publish it in the
+                        <a href="{% url 'admin:quests_quests_change' quest.id %}" class="alert-link">admin</a>
+                        when it's ready.
+                    </div>
+                </div>
+                {% endif %}
                 <header>
                     <h1 class="quest-title">{{ quest.name }}</h1>
                     <hr class="quest-divider">
                 </header>
 
                 <div class="row">
-                    <nav aria-label="breadcrumb" class="mb-3">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{% url "accounts:index" %}">Home</a></li>
-                            <li class="breadcrumb-item"><a href="">Quests</a></li>
-                            {% if quest.starting_zone %}
-                                <li class="breadcrumb-item"><a href="">{{ quest.starting_zone|zone_short_to_long }}</a>
-                                </li>
-                            {% endif %}
-                            <li class="breadcrumb-item active" aria-current="page">{{ quest.name }}</li>
-                        </ol>
-                    </nav>
+                    <div class="col-12">
+                        <nav aria-label="breadcrumb" class="mb-3">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="{% url "accounts:index" %}">Home</a></li>
+                                <li class="breadcrumb-item"><a href="{% url 'quests:search' %}">Quests</a></li>
+                                {% if quest.starting_zone %}
+                                    <li class="breadcrumb-item"><a href="{% url 'zones:view' quest.starting_zone %}">{{ quest.starting_zone|zone_short_to_long }}</a>
+                                    </li>
+                                {% endif %}
+                                <li class="breadcrumb-item active" aria-current="page">{{ quest.name }}</li>
+                            </ol>
+                        </nav>
+                    </div>
                     <div class="col-12 quest-summary">
                         <div class="quest-location mb-2">
                             <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
                             <strong>Start at:</strong>
                             {% if quest.starting_zone %}
-                                <a href="/zones/view/{{ quest.starting_zone }}"> {{ quest.starting_zone|zone_short_to_long }}</a>
+                                <a href="{% url 'zones:view' quest.starting_zone %}"> {{ quest.starting_zone|zone_short_to_long }}</a>
                             {% else %}
                                 <span class="text-muted mb-0">Unknown Zone</span>
                             {% endif %}
+                            {% if starting_npc %}
                             with
                             <span class="tooltip-custom">
-                                <a href="/npcs/view/{{ starting_npc.id }}">{{ starting_npc.name|clean_name }}</a>
+                                <a href="{% url 'npcs:view' starting_npc.id %}">{{ starting_npc.name|clean_name }}</a>
                                 <span class="tooltip-text">NPC in {{ quest.starting_zone|zone_short_to_long }}</span>
                             </span>
+                            {% endif %}
                         </div>
 
                         <div class="quest-requirements mb-2">
                             <i class="fas fa-chess-king" aria-hidden="true"></i>
                             <strong>Level:</strong>
                             {% if quest.minimum_level %}{{ quest.minimum_level }}{% else %}1{% endif %}
-                            {% if quest.max_level == -1 %} - {{ quest.max_level }}{% else %}+{% endif %} |
+                            {% if quest.maximum_level == -1 %}+{% else %} - {{ quest.maximum_level }}{% endif %} |
                             <strong>Expansion:</strong>
                             <img src="{% static '/images/' %}{{ quest.expansion_introduced|expansion_icon }}"
                                  loading="lazy"
                                  alt="{{ quest.expansion_introduced|exp_filter|title }}"
                                  aria-label="Expansion icon for {{ quest.expansion_introduced|exp_filter|title }}"/>
-                        </div>
-
-                        <div class="quest-reward mb-2">
-                            <i class="fas fa-gem"></i> <strong>Reward:</strong>
-                            <span class="tooltip-custom">
-                                {% if quest.quest_reward.item_id %}
-                                    <a href="/items/view/{{ quest.quest_reward.item_id }}">{{ quest.quest_reward.item_name }}</a>
-                                {% endif %}
-                            </span>
+                            {{ quest.expansion_introduced|exp_filter|title }}
                         </div>
                     </div>
-                    <aside class="col-12 col-md-3" role="complementary">
+
+                    {# Sidebar first in source = left on desktop, top on mobile #}
+                    <div class="col-12 col-md-9 order-2">
+                        <section class="quest-description" aria-labelledby="quest-description-header">
+                            <h2 id="quest-description-header" class="quest-description-header h4">Description</h2>
+                            <div class="quest-description-content">
+                                {{ quest.description|render_markdown|safe }}
+                            </div>
+                        </section>
+
+                        {# Quest chain #}
+                        {% if quest_chain %}
+                        <section class="mt-4">
+                            <h2 class="h4">Quest Chain</h2>
+                            <ol class="list-group list-group-numbered">
+                                {% for chain_quest in quest_chain %}
+                                <li class="list-group-item{% if chain_quest.id == quest.id %} active{% endif %}">
+                                    {% if chain_quest.id == quest.id %}
+                                        {{ chain_quest.name }}
+                                    {% else %}
+                                        <a href="{% url 'quests:view' chain_quest.id %}">{{ chain_quest.name }}</a>
+                                    {% endif %}
+                                </li>
+                                {% endfor %}
+                            </ol>
+                        </section>
+                        {% endif %}
+
+                    </div>
+
+                    <aside class="col-12 col-md-3 order-1" role="complementary">
                         <section class="questInfoBox">
 
                             <table class="table" role="presentation">
@@ -108,12 +144,42 @@
                                 </tr>
                                 <tr>
                                     <th scope="row">Repeatable:</th>
-                                    <td>{{ quest.is_repeatable|yesno }}</td>
+                                    <td>
+                                        {% if quest.is_repeatable %}
+                                            <span class="badge bg-success">Repeatable</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">One-time</span>
+                                        {% endif %}
+                                    </td>
                                 </tr>
-                                <tr>
+                                <tr{% if not quest.monster_mission %} style="opacity:0.45"{% endif %}>
                                     <th scope="row">Monster Mission:</th>
                                     <td>{{ quest.monster_mission|yesno }}</td>
                                 </tr>
+                                <tr>
+                                    <th colspan="2" class="msb_sub">
+                                        <h2 class="h6 m-0">Difficulty</h2>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Rating:</th>
+                                    <td style="white-space: nowrap">
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= quest.difficulty_rating %}
+                                                <i class="fas fa-star text-warning" aria-hidden="true"></i>
+                                            {% else %}
+                                                <i class="fas fa-star text-muted" style="opacity:0.25" aria-hidden="true"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                        <span class="visually-hidden">{{ quest.difficulty_rating }} out of 5</span>
+                                    </td>
+                                </tr>
+                                {% if quest.estimated_time %}
+                                <tr>
+                                    <th scope="row">Est. Time:</th>
+                                    <td>{{ quest.estimated_time }}</td>
+                                </tr>
+                                {% endif %}
 
                                 {# Quest Items #}
                                 <tr>
@@ -126,7 +192,7 @@
                                         {% if quest_items %}
                                             <ul class="list-group">
                                                 {% for item in quest_items %}
-                                                    <li class="list-group-item"><a href="/items/view/{{ item.id }}"
+                                                    <li class="list-group-item"><a href="{% url 'items:view' item.id %}"
                                                                                    class="quest-item-link">{{ item.Name }}</a>
                                                     </li>
                                                 {% endfor %}
@@ -136,6 +202,80 @@
                                         {% endif %}
                                     </td>
                                 </tr>
+                                {# Rewards #}
+                                {% if rewards %}
+                                <tr>
+                                    <th colspan="2" class="msb_sub">
+                                        <h2 class="h6 m-0">Rewards</h2>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <ul class="list-group">
+                                            {% for reward in rewards %}
+                                            <li class="list-group-item">
+                                                {% if reward.is_optional %}<span class="badge bg-secondary me-1">Optional</span>{% endif %}
+                                                {% if reward.reward_group %}<span class="badge bg-info me-1">Choice {{ reward.reward_group }}</span>{% endif %}
+
+                                                {# Item rewards #}
+                                                {% if reward.item_id is not None and reward.item_name is not None %}
+                                                    <i class="fas fa-box-open text-warning me-1"></i>
+                                                    <a href="{% url 'items:view' reward.item_id %}">{{ reward.item_name }}</a>
+                                                    {% if reward.quantity > 1 %} x{{ reward.quantity }}{% endif %}
+                                                    {% if reward.attuned %}<span class="badge bg-danger ms-1">No Trade</span>{% endif %}
+
+                                                {# Experience rewards #}
+                                                {% elif reward.is_percentage is not None %}
+                                                    <i class="fas fa-star text-info me-1"></i>
+                                                    {{ reward }}
+
+                                                {# Currency rewards #}
+                                                {% elif reward.platinum is not None %}
+                                                    <i class="fas fa-coins text-warning me-1"></i>
+                                                    {{ reward }}
+
+                                                {# Faction rewards #}
+                                                {% elif reward.faction_name is not None and reward.amount is not None %}
+                                                    <i class="fas fa-users me-1 {% if reward.amount > 0 %}text-success{% else %}text-danger{% endif %}"></i>
+                                                    <a href="{% url 'factions:view' reward.faction_id %}">{{ reward.faction_name }}</a>
+                                                    ({% if reward.amount > 0 %}+{% endif %}{{ reward.amount }})
+
+                                                {# Spell rewards #}
+                                                {% elif reward.spell_name is not None %}
+                                                    <i class="fas fa-magic text-primary me-1"></i>
+                                                    {{ reward.spell_name }} (Level {{ reward.spell_level }})
+
+                                                {# Skill rewards #}
+                                                {% elif reward.skill_name is not None %}
+                                                    <i class="fas fa-fist-raised text-success me-1"></i>
+                                                    {{ reward }}
+
+                                                {# Title rewards #}
+                                                {% elif reward.title_text is not None %}
+                                                    <i class="fas fa-crown text-warning me-1"></i>
+                                                    {{ reward }}
+
+                                                {# AA rewards #}
+                                                {% elif reward.aa_name is not None %}
+                                                    <i class="fas fa-chevron-up text-primary me-1"></i>
+                                                    {{ reward }}
+
+                                                {# Access rewards #}
+                                                {% elif reward.flag_name is not None %}
+                                                    <i class="fas fa-key text-success me-1"></i>
+                                                    {{ reward }}
+                                                    {% if reward.description %}<br><small class="text-muted">{{ reward.description }}</small>{% endif %}
+
+                                                {% else %}
+                                                    {{ reward }}
+                                                {% endif %}
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </td>
+                                </tr>
+                                {% endif %}
+
                                 <tr>
                                     <th colspan="2" class="msb_sub" scope="row">Related Zones</th>
                                 </tr>
@@ -145,13 +285,13 @@
                                             <ul class="list-group">
                                                 {% for zone in related_zones %}
                                                     <li class="list-group-item">
-                                                        <a href="/zones/view/{{ zone.short_name }}"
+                                                        <a href="{% url 'zones:view' zone.short_name %}"
                                                            class="related-zones-link">{{ zone.long_name }}</a>
                                                     </li>
                                                 {% endfor %}
                                             </ul>
                                         {% else %}
-                                            <p class="text-muted">None</p>
+                                            <p class="text-muted mb-0">None</p>
                                         {% endif %}
                                     </td>
                                 </tr>
@@ -160,20 +300,23 @@
                                 </tr>
                                 <tr>
                                     <td colspan="2">
-                                        <ul class="list-group">
-                                            {% for npc in related_npcs %}
-                                                <li class="list-group-item"><a
-                                                        href="/npcs/view/{{ npc.id }}">{{ npc.name|clean_name }}</a>
-                                                </li>
-                                            {% empty %}
-                                                <li class=" text-muted list-group-item">None</li>
-                                            {% endfor %}
-                                        </ul>
+                                        {% if related_npcs %}
+                                            <ul class="list-group">
+                                                {% for npc in related_npcs %}
+                                                    <li class="list-group-item">
+                                                        <a href="{% url 'npcs:view' npc.id %}">{{ npc.name|clean_name }}</a>
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% else %}
+                                            <p class="text-muted mb-0">None</p>
+                                        {% endif %}
                                     </td>
                                 </tr>
                                 <tr>
                                     <th colspan="2" class="msb_top" scope="row">Faction Information</th>
                                 </tr>
+                                {% if factions_required or factions_raised or factions_lowered %}
                                 <tr>
                                     <th colspan="2" class="msb_sub" scope="row">Factions Required</th>
                                 </tr>
@@ -182,10 +325,10 @@
                                         <ul class="list-group">
                                             {% for faction in factions_required %}
                                                 <li class="list-group-item">
-                                                    <a href="/factions/view/{{ faction.id }}">{{ faction.name|clean_name }}</a>
+                                                    <a href="{% url 'factions:view' faction.faction_id %}">{{ faction.name }}</a>
                                                 </li>
                                             {% empty %}
-                                                <li class="list-group-item">None</li>
+                                                <li class="list-group-item text-muted">None</li>
                                             {% endfor %}
                                         </ul>
                                     </td>
@@ -198,10 +341,10 @@
                                         <ul class="list-group">
                                             {% for faction in factions_raised %}
                                                 <li class="list-group-item">
-                                                    <a href="/factions/view/{{ faction.id }}">{{ faction.name|clean_name }}</a>
+                                                    <a href="{% url 'factions:view' faction.faction_id %}">{{ faction.name }}</a>
                                                 </li>
                                             {% empty %}
-                                                <li class="list-group-item">None</li>
+                                                <li class="list-group-item text-muted">None</li>
                                             {% endfor %}
                                         </ul>
                                     </td>
@@ -214,45 +357,100 @@
                                         <ul class="list-group">
                                             {% for faction in factions_lowered %}
                                                 <li class="list-group-item">
-                                                    <a href="/factions/view/{{ faction.id }}">{{ faction.name|clean_name }}</a>
+                                                    <a href="{% url 'factions:view' faction.faction_id %}">{{ faction.name }}</a>
                                                 </li>
                                             {% empty %}
-                                                <li class="list-group-item">None</li>
+                                                <li class="list-group-item text-muted">None</li>
                                             {% endfor %}
                                         </ul>
                                     </td>
                                 </tr>
+                                {% else %}
                                 <tr>
-                                    <th colspan="2" class="msb_top" scope="row">Known Revisions (Patches)</th>
+                                    <td colspan="2">
+                                        <p class="text-muted mb-0">No faction requirements or changes.</p>
+                                    </td>
+                                </tr>
+                                {% endif %}
+
+                                {# Patch History #}
+                                {% if patch_introduced or patch_updates %}
+                                <tr>
+                                    <th colspan="2" class="msb_top" scope="row">History</th>
+                                </tr>
+                                {% if patch_introduced %}
+                                <tr>
+                                    <th scope="row">Introduced:</th>
+                                    <td>
+                                        <a href="{% url 'patch:view' patch_introduced.patch.slug %}">
+                                            {{ patch_introduced.patch.patch_date|date:"M j, Y" }}
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endif %}
+                                {% if patch_updates %}
+                                <tr>
+                                    <th colspan="2" class="msb_sub" scope="row">Updates</th>
                                 </tr>
                                 <tr>
-                                    <td>
+                                    <td colspan="2">
                                         <ul class="list-group">
-                                            <li class="list-group-item">None</li>
+                                            {% for entry in patch_updates %}
+                                                <li class="list-group-item">
+                                                    <a href="{% url 'patch:view' entry.patch.slug %}">{{ entry.patch.patch_date|date:"M j, Y" }}</a>
+                                                </li>
+                                            {% endfor %}
                                         </ul>
                                     </td>
                                 </tr>
+                                {% endif %}
+                                {% endif %}
                                 </tbody>
                             </table>
                         </section>
                     </aside>
-                    <div class="col-12 col-md-9">
-                        <section class="quest-description" aria-labelledby="quest-description-header">
-                            <h2 id="quest-description-header" class="quest-description-header h5">Description</h2>
-                            <div class="quest-description-content">
-                                {{ quest.description|render_markdown|safe }}
-                            </div>
-                        </section>
-                    </div>
                 </div>
                 <script src="{% static 'quests/checkbox-cookie-manager.js' %}"></script>
             </article>
+
+            <a href="#top" class="back-to-top" aria-label="Back to top" title="Back to top">
+                <i class="fas fa-arrow-up" aria-hidden="true"></i>
+            </a>
+            <style>
+                .back-to-top {
+                    position: fixed;
+                    bottom: 2rem;
+                    right: 2rem;
+                    z-index: 1000;
+                    width: 2.75rem;
+                    height: 2.75rem;
+                    border-radius: 50%;
+                    background-color: var(--accent-color, #c8a84b);
+                    color: var(--bg-dark, #111);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+                    opacity: 0;
+                    pointer-events: none;
+                    transition: opacity 0.25s ease;
+                    text-decoration: none;
+                }
+                .back-to-top.visible {
+                    opacity: 1;
+                    pointer-events: auto;
+                }
+                .back-to-top:hover {
+                    color: var(--bg-dark, #111);
+                    filter: brightness(1.15);
+                }
+            </style>
 
         {% else %}
             <section class="error-section" role="alert">
                 <h1>Quest Not Found</h1>
                 <p class="error-message">We could not find a quest with ID "{{ quest_id }}". Please try another quest.</p>
-                <a href="#" class="btn btn-primary">Return to Quest Search</a>
+                <a href="{% url 'quests:search' %}" class="btn btn-primary">Return to Quest Search</a>
                 <a href="{% url 'accounts:index' %}" class="btn btn-secondary">Go to Homepage</a>
             </section>
         {% endif %} {# End if quest exists #}
@@ -265,14 +463,10 @@
             checkbox.disabled = false;
         });
 
-        // Back to Top functionality
-        window.onscroll = function() {
-            const backToTop = document.querySelector('.back-to-top');
-            if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
-                backToTop.style.display = 'block';
-            } else {
-                backToTop.style.display = 'none';
-            }
-        };
+        // Back to top
+        const backToTop = document.querySelector('.back-to-top');
+        window.addEventListener('scroll', () => {
+            backToTop.classList.toggle('visible', window.scrollY > 300);
+        });
     </script>
 {% endblock %}

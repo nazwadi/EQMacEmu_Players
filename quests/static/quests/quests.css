@@ -107,8 +107,113 @@
 .quest-description-content {
     background: var(--bg-tertiary);
     border: 1px solid var(--border-color);
-    padding: 1rem 0.5rem;
+    padding: 1rem 1.25rem;
     color: var(--text-primary);
+}
+
+/* Rendered markdown elements inside description */
+.quest-description-content h1,
+.quest-description-content h2,
+.quest-description-content h3,
+.quest-description-content h4,
+.quest-description-content h5,
+.quest-description-content h6 {
+    color: var(--accent-color);
+    margin-top: 1.25rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    line-height: 1.3;
+}
+.quest-description-content h1 { font-size: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.3rem; }
+.quest-description-content h2 { font-size: 1.25rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.2rem; }
+.quest-description-content h3 { font-size: 1.1rem; }
+
+.quest-description-content p {
+    margin-bottom: 0.75rem;
+}
+
+.quest-description-content ul,
+.quest-description-content ol {
+    margin-bottom: 0.75rem;
+    padding-left: 1.75rem;
+}
+.quest-description-content li {
+    margin-bottom: 0.25rem;
+}
+
+.quest-description-content blockquote {
+    border-left: 4px solid var(--accent-color);
+    margin: 1rem 0;
+    padding: 0.5rem 1rem;
+    background-color: var(--bg-secondary);
+    color: var(--text-secondary, var(--text-primary));
+    border-radius: 0 4px 4px 0;
+}
+.quest-description-content blockquote p { margin-bottom: 0; }
+
+.quest-description-content pre {
+    margin: 1rem 0;
+    padding: 1rem;
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    overflow-x: auto;
+    font-family: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+.quest-description-content pre code {
+    background: none;
+    padding: 0;
+    font-size: inherit;
+    color: var(--text-primary);
+}
+.quest-description-content code {
+    background-color: var(--bg-secondary);
+    color: var(--accent-color);
+    padding: 0.15em 0.4em;
+    border-radius: 3px;
+    font-family: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+    font-size: 0.875em;
+}
+
+.quest-description-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+    font-size: 0.9375rem;
+}
+.quest-description-content thead tr {
+    background-color: var(--bg-secondary);
+    border-bottom: 2px solid var(--border-color);
+}
+.quest-description-content th {
+    padding: 0.5rem 0.75rem;
+    text-align: left;
+    color: var(--accent-color);
+    font-weight: 600;
+}
+.quest-description-content td {
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+.quest-description-content tbody tr:nth-child(even) {
+    background-color: rgba(255,255,255,0.03);
+}
+
+.quest-description-content hr {
+    border: none;
+    border-top: 1px solid var(--border-color);
+    margin: 1.25rem 0;
+}
+
+.quest-description-content a {
+    color: var(--accent-color);
+    text-decoration: underline;
+}
+.quest-description-content a:hover {
+    filter: brightness(1.2);
 }
 
 /* Summary Box */
