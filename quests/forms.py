@@ -2,6 +2,21 @@ from django import forms
 from quests.models import EXPANSION_INTRODUCED_CHOICES, PLAYER_CLASS_RESTRICTION_CHOICES, PLAYER_RACE_RESTRICTION_CHOICES
 
 
+class QuestIssueReportForm(forms.Form):
+    reporter_name = forms.CharField(
+        required=False,
+        max_length=64,
+        label="Your name (optional)",
+        widget=forms.TextInput(attrs={'placeholder': 'Anonymous'}),
+    )
+    body = forms.CharField(
+        label="What's wrong?",
+        widget=forms.Textarea(attrs={'rows': 4, 'placeholder': 'Describe the issue…'}),
+    )
+    # Honeypot — bots fill this in, humans don't see it
+    website = forms.CharField(required=False, widget=forms.HiddenInput)
+
+
 class QuestSearchForm(forms.Form):
     quest_name = forms.CharField(required=False, max_length=100)
     starting_zone = forms.CharField(required=False, max_length=100)

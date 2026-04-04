@@ -1,9 +1,10 @@
 from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from quests.models import Quests
+from django.views.decorators.http import require_POST
+from quests.models import Quests, QuestIssueReport
 from quests.models import SERVER_MAX_LEVEL
-from quests.forms import QuestSearchForm
+from quests.forms import QuestSearchForm, QuestIssueReportForm
 from common.models.zones import Zone
 from common.models.items import Items
 from django.views.generic import ListView
@@ -73,10 +74,13 @@ def view_quest(request, quest_id):
     patch_introduced = patch_history.filter(role='introduced').first()
     patch_updates = patch_history.filter(role='updated')
 
+    report_form = QuestIssueReportForm()
+
     return render(request=request,
                   context={
                       "quest_exists": True,
                       "quest": quest,
+                      "report_form": report_form,
                       'factions_required': quest_factions.filter(role='required'),
                       'factions_raised': quest_factions.filter(role='raised'),
                       'factions_lowered': quest_factions.filter(role='lowered'),
@@ -140,3 +144,19 @@ def search(request):
                       "form": form,
                       "search_results": search_results,
                   })
+
+
+@require_POST
+def report_issue(request, quest_id):
+    quest = Quests.objects.filter(id=quest_id).first()
+    if not quest or (quest.status == 'draft' and not request.user.is_staff):
+        return redirect('quests:search')
+    form = QuestIssueReportForm(request.POST)
+    if form.is_valid() and not form.cleaned_data.get('website'):
+        QuestIssueReport.objects.create(
+            quest=quest,
+            body=form.cleaned_data['body'],
+            reporter_name=form.cleaned_data.get('reporter_name', ''),
+        )
+        messages.success(request, "Thanks — your report has been submitted and will be reviewed by staff.")
+    return redirect('quests:view', quest_id=quest_id)

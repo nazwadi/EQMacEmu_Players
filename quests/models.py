@@ -423,10 +423,17 @@ PATCH_HISTORY_ROLE_CHOICES = [
 ]
 
 
+ISSUE_REPORT_STATUS_CHOICES = [
+    ('open', 'Open'),
+    ('resolved', 'Resolved'),
+]
+
+
 class QuestPatchHistory(models.Model):
     quest = models.ForeignKey('Quests', on_delete=models.CASCADE, related_name='patch_history')
     patch = models.ForeignKey('patch.PatchMessage', on_delete=models.CASCADE, related_name='quest_history')
     role = models.CharField(max_length=10, choices=PATCH_HISTORY_ROLE_CHOICES, default='updated')
+    notes = models.TextField(blank=True, help_text="Staff note: what changed and how this may differ from P99 wiki or Allakhazam")
 
     def __str__(self):
         return f"{self.quest.name} — {self.get_role_display()} in {self.patch.title}"
@@ -436,6 +443,22 @@ class QuestPatchHistory(models.Model):
         verbose_name_plural = 'Quest Patch Histories'
         unique_together = ['quest', 'patch', 'role']
         ordering = ['patch__patch_date']
+
+
+class QuestIssueReport(models.Model):
+    quest = models.ForeignKey('Quests', on_delete=models.CASCADE, related_name='issue_reports')
+    body = models.TextField()
+    reporter_name = models.CharField(max_length=64, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=10, choices=ISSUE_REPORT_STATUS_CHOICES, default='open', db_index=True)
+
+    def __str__(self):
+        return f"Issue on '{self.quest.name}' ({self.created_at.date()})"
+
+    class Meta:
+        verbose_name = 'Quest Issue Report'
+        verbose_name_plural = 'Quest Issue Reports'
+        ordering = ['-created_at']
 
 
 class QuestsRelatedNPC(models.Model):

@@ -10,6 +10,7 @@ from quests.models import Quests
 from quests.models import QuestCategory
 from quests.models import QuestTag
 from quests.models import QuestFaction
+from quests.models import QuestIssueReport
 from quests.models import QuestPatchHistory
 from quests.models import QuestsRelatedNPC
 from quests.models import QuestsRelatedZone
@@ -123,6 +124,7 @@ class QuestPatchHistoryInline(admin.TabularInline):
     verbose_name = "Patch History Entry"
     verbose_name_plural = "Patch History"
     autocomplete_fields = ['patch']
+    fields = ('patch', 'role', 'notes')
 
 
 class ItemRewardInline(admin.TabularInline):
@@ -373,6 +375,23 @@ class AccessRewardAdmin(admin.ModelAdmin):
     list_filter = ['is_optional', 'reward_group']
 
 
+class QuestIssueReportAdmin(admin.ModelAdmin):
+    list_display = ('quest', 'reporter_name', 'created_at', 'status', 'short_body')
+    list_filter = ['status']
+    search_fields = ['quest__name', 'reporter_name', 'body']
+    readonly_fields = ('quest', 'reporter_name', 'body', 'created_at')
+    actions = ['mark_resolved']
+
+    @admin.display(description='Report')
+    def short_body(self, obj):
+        return obj.body[:80] + '…' if len(obj.body) > 80 else obj.body
+
+    @admin.action(description='Mark selected reports as resolved')
+    def mark_resolved(self, request, queryset):
+        updated = queryset.update(status='resolved')
+        self.message_user(request, f"{updated} report(s) marked as resolved.")
+
+
 admin.site.register(Quests, QuestsAdmin)
 admin.site.register(QuestCategory, QuestCategoryAdmin)
 admin.site.register(QuestTag, QuestTagAdmin)
@@ -390,3 +409,4 @@ admin.site.register(SpellReward, SpellRewardAdmin)
 admin.site.register(TitleReward, TitleRewardAdmin)
 admin.site.register(AAReward, AARewardAdmin)
 admin.site.register(AccessReward, AccessRewardAdmin)
+admin.site.register(QuestIssueReport, QuestIssueReportAdmin)
