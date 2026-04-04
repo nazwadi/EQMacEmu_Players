@@ -159,20 +159,18 @@ class CurrencyReward(QuestReward):
 
 # Faction rewards
 class FactionReward(QuestReward):
-    faction_id = models.IntegerField()
-    faction_name = models.CharField(max_length=100)
+    faction = models.ForeignKey('Faction', on_delete=models.CASCADE, related_name='faction_rewards')
     amount = models.IntegerField(help_text="Positive for faction gain, negative for faction loss")
 
     def __str__(self):
         action = "gain" if self.amount > 0 else "loss"
-        return f"{self.faction_name} {action}: {abs(self.amount)}"
+        return f"{self.faction.name} {action}: {abs(self.amount)}"
 
     class Meta(QuestReward.Meta):
         verbose_name = "Faction Reward"
         verbose_name_plural = "Faction Rewards"
         indexes = [
-            models.Index(fields=['faction_id'], name='reward_faction_id_idx'),
-            models.Index(fields=['faction_name'], name='reward_faction_name_idx'),
+            models.Index(fields=['faction'], name='reward_faction_idx'),
         ]
 
 
@@ -379,22 +377,33 @@ class Quests(models.Model):
         ordering = ['name']
 
 
+class Faction(models.Model):
+    faction_id = models.IntegerField(unique=True)
+    name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return f"{self.name} ({self.faction_id})"
+
+    class Meta:
+        ordering = ['name']
+        verbose_name = 'Faction'
+        verbose_name_plural = 'Factions'
+
+
 class QuestFaction(models.Model):
     quest = models.ForeignKey(Quests, on_delete=models.CASCADE, related_name='quest_factions')
-    faction_id = models.IntegerField()
-    name = models.CharField(max_length=50)
+    faction = models.ForeignKey('Faction', on_delete=models.CASCADE, related_name='quest_factions')
     role = models.CharField(max_length=10, choices=FACTION_ROLE_CHOICES)
 
     def __str__(self):
-        return f"{self.name} ({self.get_role_display()})"
+        return f"{self.faction.name} ({self.get_role_display()})"
 
     class Meta:
         verbose_name = 'Quest Faction'
         verbose_name_plural = 'Quest Factions'
-        unique_together = ['quest', 'faction_id', 'role']
-        ordering = ['role', 'name']
+        unique_together = ['quest', 'faction', 'role']
+        ordering = ['role', 'faction__name']
         indexes = [
-            models.Index(fields=['faction_id'], name='quest_faction_id_idx'),
             models.Index(fields=['role'], name='quest_faction_role_idx'),
         ]
 

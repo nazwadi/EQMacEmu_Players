@@ -9,7 +9,7 @@ from common.models.npcs import NPCTypes
 from quests.models import Quests
 from quests.models import QuestCategory
 from quests.models import QuestTag
-from quests.models import QuestFaction
+from quests.models import Faction, QuestFaction
 from quests.models import QuestIssueReport
 from quests.models import QuestPatchHistory
 from quests.models import QuestsRelatedNPC
@@ -315,10 +315,16 @@ class QuestsAdmin(admin.ModelAdmin):
         js = ['admin/js/npc_lookup.js']
 
 
+class FactionAdmin(admin.ModelAdmin):
+    list_display = ('name', 'faction_id')
+    search_fields = ['name', 'faction_id']
+
+
 class QuestFactionAdmin(admin.ModelAdmin):
-    list_display = ('quest', 'name', 'faction_id', 'role')
-    search_fields = ['name', 'faction_id', 'quest__name']
+    list_display = ('quest', 'faction', 'role')
+    search_fields = ['faction__name', 'faction__faction_id', 'quest__name']
     list_filter = ['role']
+    autocomplete_fields = ['faction']
 
 
 class ItemRewardAdmin(admin.ModelAdmin):
@@ -340,9 +346,10 @@ class CurrencyRewardAdmin(admin.ModelAdmin):
 
 
 class FactionRewardAdmin(admin.ModelAdmin):
-    list_display = ('quest', 'faction_name', 'faction_id', 'amount')
-    search_fields = ['faction_name', 'faction_id', 'quest__name']
+    list_display = ('quest', 'faction', 'amount')
+    search_fields = ['faction__name', 'faction__faction_id', 'quest__name']
     list_filter = ['is_optional', 'reward_group']
+    autocomplete_fields = ['faction']
 
 
 class SkillRewardAdmin(admin.ModelAdmin):
@@ -395,6 +402,7 @@ class QuestIssueReportAdmin(admin.ModelAdmin):
 admin.site.register(Quests, QuestsAdmin)
 admin.site.register(QuestCategory, QuestCategoryAdmin)
 admin.site.register(QuestTag, QuestTagAdmin)
+admin.site.register(Faction, FactionAdmin)
 admin.site.register(QuestFaction, QuestFactionAdmin)
 admin.site.register(QuestsRelatedZone, QuestsRelatedZoneAdmin)
 # admin.site.register(QuestsRelatedNPC, QuestsRelatedNPCAdmin)

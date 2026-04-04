@@ -237,7 +237,7 @@
                                                 {# Faction rewards #}
                                                 {% elif reward.faction_name is not None and reward.amount is not None %}
                                                     <i class="fas fa-users me-1 {% if reward.amount > 0 %}text-success{% else %}text-danger{% endif %}"></i>
-                                                    <a href="{% url 'factions:view' reward.faction_id %}">{{ reward.faction_name }}</a>
+                                                    <a href="{% url 'factions:view' reward.faction.faction_id %}">{{ reward.faction.name }}</a>
                                                     ({% if reward.amount > 0 %}+{% endif %}{{ reward.amount }})
 
                                                 {# Spell rewards #}
@@ -325,7 +325,7 @@
                                         <ul class="list-group">
                                             {% for faction in factions_required %}
                                                 <li class="list-group-item">
-                                                    <a href="{% url 'factions:view' faction.faction_id %}">{{ faction.name }}</a>
+                                                    <a href="{% url 'factions:view' faction.faction.faction_id %}">{{ faction.faction.name }}</a>
                                                 </li>
                                             {% empty %}
                                                 <li class="list-group-item text-muted">None</li>
@@ -341,7 +341,7 @@
                                         <ul class="list-group">
                                             {% for faction in factions_raised %}
                                                 <li class="list-group-item">
-                                                    <a href="{% url 'factions:view' faction.faction_id %}">{{ faction.name }}</a>
+                                                    <a href="{% url 'factions:view' faction.faction.faction_id %}">{{ faction.faction.name }}</a>
                                                 </li>
                                             {% empty %}
                                                 <li class="list-group-item text-muted">None</li>
@@ -357,7 +357,7 @@
                                         <ul class="list-group">
                                             {% for faction in factions_lowered %}
                                                 <li class="list-group-item">
-                                                    <a href="{% url 'factions:view' faction.faction_id %}">{{ faction.name }}</a>
+                                                    <a href="{% url 'factions:view' faction.faction.faction_id %}">{{ faction.faction.name }}</a>
                                                 </li>
                                             {% empty %}
                                                 <li class="list-group-item text-muted">None</li>

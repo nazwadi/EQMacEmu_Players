@@ -23,6 +23,7 @@ from common.constants import CONTAINER_TYPES
 from common.models.items import DiscoveredItems
 from common.models.items import Items
 from quests.models import Quests
+from django.db.models import Q
 from collections import namedtuple
 
 logger = logging.getLogger(__name__)
@@ -464,7 +465,10 @@ def view_item(request, item_id):
 
     obj_path = f"/static/models/equip/{item.idfile.lower()}{'.glb'}"
 
-    related_quests = Quests.objects.filter(quest_items__item_id=item_id, status='published')
+    related_quests = Quests.objects.filter(
+        Q(quest_items__item_id=item_id) | Q(itemreward_rewards__item_id=item_id),
+        status='published',
+    ).distinct()
 
     return render(request=request,
                   template_name="items/view_item.html",
