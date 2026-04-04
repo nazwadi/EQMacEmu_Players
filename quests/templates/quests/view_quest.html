@@ -427,23 +427,28 @@
             </div>
             {% endif %}
 
-            <section class="mt-4 mb-4" aria-labelledby="report-issue-header">
-                <h2 id="report-issue-header" class="h5">Report an Issue</h2>
-                <p class="text-muted small">Something wrong with this quest? Let us know — notes about differences from P99 wiki or Allakhazam are especially helpful.</p>
+            <hr class="my-4" style="border-color: var(--border-color); opacity: 0.5;">
+
+            <section class="report-issue-box mb-4" aria-labelledby="report-issue-header">
+                <p id="report-issue-header" class="report-issue-lead">Something wrong with this quest? Let us know.</p>
                 <form method="post" action="{% url 'quests:report' quest.id %}" class="report-issue-form">
                     {% csrf_token %}
                     <input type="hidden" name="website" value="">
-                    <div class="mb-2">
-                        <label for="reporter_name" class="form-label small">Your name (optional)</label>
-                        <input type="text" id="reporter_name" name="reporter_name" maxlength="64"
-                               class="form-control form-control-sm" placeholder="Anonymous">
+                    <div class="row g-2 align-items-end">
+                        <div class="col-12 col-sm-4">
+                            <label for="reporter_name" class="form-label small mb-1">Your name (optional)</label>
+                            <input type="text" id="reporter_name" name="reporter_name" maxlength="64"
+                                   class="form-control form-control-sm" placeholder="Anonymous">
+                        </div>
+                        <div class="col-12 col-sm-8">
+                            <label for="report_body" class="form-label small mb-1">What's wrong?</label>
+                            <textarea id="report_body" name="body" rows="2" required
+                                      class="form-control form-control-sm" placeholder="Describe the issue…"></textarea>
+                        </div>
                     </div>
-                    <div class="mb-2">
-                        <label for="report_body" class="form-label small">What's wrong?</label>
-                        <textarea id="report_body" name="body" rows="3" required
-                                  class="form-control form-control-sm" placeholder="Describe the issue…"></textarea>
+                    <div class="mt-2">
+                        <button type="submit" class="btn btn-sm btn-outline-secondary">Submit Report</button>
                     </div>
-                    <button type="submit" class="btn btn-sm btn-outline-secondary">Submit Report</button>
                 </form>
             </section>
 
