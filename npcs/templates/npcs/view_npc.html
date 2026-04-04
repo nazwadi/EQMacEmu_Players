@@ -215,6 +215,19 @@
             margin-bottom: 2px;
         }
 
+        /* Map expand/collapse */
+        #map-row.map-expanded #map-col {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+        #map-row.map-expanded #spawn-points-col {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+        #map-row.map-expanded #konva-container {
+            min-height: 560px;
+        }
+
         /* Spawn group row header */
         .spawn-group-header {
             background-color: var(--bg-content);
@@ -437,8 +450,8 @@
                 <!-- Spawns: map + spawn points + spawn groups -->
                 <section id="spawns-section" class="npc-section">
                     <h2 class="section-header">Spawns</h2>
-                    <div class="row g-3">
-                        <div class="col-12 col-xl-7">
+                    <div id="map-row" class="row g-3">
+                        <div id="map-col" class="col-12 col-xl-7">
                             <div id="konva-container"
                                  role="img"
                                  aria-label="Map showing spawn locations for {{ npc_data.name|clean_name }} in {{ zone.long_name }}"
@@ -459,13 +472,14 @@
                                     <label for="toggleAnim" class="form-check-label">Toggle Animation</label>
                                 </div>
                                 <button type="button" id="reCenter" class="btn btn-secondary btn-sm" disabled>Reset Map</button>
+                                <button type="button" id="expandMap" class="btn btn-outline-secondary btn-sm ms-auto">Expand Map</button>
                             </div>
                             <div class="text-muted small mt-1">
                                 Credit to <a href="https://www.pqdi.cc/">Talodar</a> for the original map script.
                                 Maps by <a href="https://www.eqmaps.info/">Brewall</a>.
                             </div>
                         </div>
-                        <div class="col-12 col-xl-5">
+                        <div id="spawn-points-col" class="col-12 col-xl-5">
                             <p class="text-muted mb-2"><em>Found {{ spawn_point_list|length }} spawn point{{ spawn_point_list|length|pluralize }} for {{ npc_data.name|clean_name }} in {{ zone.long_name }}.</em></p>
                             <div class="table-responsive">
                             <table class="table">
@@ -727,6 +741,24 @@
                     });
                 }, {rootMargin: '200px'});
                 konvaObserver.observe(spawnsSection);
+            }
+
+            // Map expand/collapse toggle
+            const expandMapBtn = document.getElementById('expandMap');
+            const mapRow = document.getElementById('map-row');
+            if (expandMapBtn && mapRow) {
+                expandMapBtn.addEventListener('click', function () {
+                    const expanded = mapRow.classList.toggle('map-expanded');
+                    expandMapBtn.textContent = expanded ? 'Collapse Map' : 'Expand Map';
+                    // Notify Konva stage of new container size
+                    const container = document.getElementById('konva-container');
+                    if (container && window.Konva) {
+                        const stages = Konva.stages;
+                        if (stages && stages.length > 0) {
+                            stages[0].width(container.clientWidth);
+                        }
+                    }
+                });
             }
 
             // Shared Tippy factory

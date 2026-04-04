@@ -279,6 +279,7 @@ SECURE_CONTENT_SECURITY_POLICY = {
         "blob:",
         f"{protocol}*.cloudflare.com",
         f"{protocol}secure.gravatar.com",
+        f"{protocol}media.eqarchives.com",
     ],
     'connect-src': [
         "'self'",
