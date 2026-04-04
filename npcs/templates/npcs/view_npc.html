@@ -16,12 +16,6 @@
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/eq-ui.css' %}">
     <style>
-        /* Only the minimal necessary styles */
-        .tooltip-container {
-            position: relative;
-            display: inline-block;
-        }
-
         .tippy-box[data-theme~="item"] {
             position: relative;
             pointer-events: none;
@@ -30,36 +24,11 @@
             background: transparent;
         }
 
-        .tippy-box[data-theme~="ability"] {
-            position: relative;
-            pointer-events: none;
-            padding: 0;
-            border-radius: 4px;
-            background: black;
-        }
-
         .tippy-box img {
             max-width: 200px;
             height: auto;
             display: block;
             border-radius: 4px;
-        }
-
-        .hover-link:hover + .tooltip, .tooltip:hover {
-            display: block;
-        }
-
-        .tooltip {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            background: white;
-            border: 1px solid #ccc;
-            padding: 8px;
-            display: none;
-            min-width: 200px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            z-index: 50000;
         }
 
         .ability-button {
@@ -95,8 +64,9 @@
         }
 
         .npc-portrait-placeholder {
-            width: 500px;
-            height: 375px;
+            width: 100%;
+            max-width: 100%;
+            aspect-ratio: 4 / 3;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -104,8 +74,6 @@
             font-size: 16px;
             text-align: center;
             background: transparent;
-            background-size: 20px 20px;
-            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
         }
 
         .npc-portrait-caption {
@@ -121,11 +89,13 @@
             text-align: center;
         }
 
-        /* Reduce stats table width and optimize spacing */
         @media (min-width: 992px) {
             .stats-column {
                 flex: 0 0 30%;
                 max-width: 30%;
+                position: sticky;
+                top: 1rem;
+                align-self: flex-start;
             }
 
             .content-column {
@@ -134,556 +104,570 @@
                 padding-left: 15px;
                 padding-right: 15px;
             }
+        }
 
+        /* Stats panel — override eq-window 13px base */
+        .npc-stats-panel {
+            font-size: 15px;
+        }
+
+        /* Panel summary line: Level · Race · Class */
+        .npc-panel-name {
+            font-family: menuetto, serif;
+            font-size: 1.2rem;
+            color: var(--accent-color);
+            text-align: center;
+            text-shadow: 0 0 3px #000, 1px 2px 5px #000;
+            padding-bottom: 8px;
+            margin-bottom: 4px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        /* Resistance grid — 5-column badge layout */
+        .resist-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 4px;
+            margin-top: 6px;
+            text-align: center;
+        }
+
+        .resist-label {
+            font-size: 0.9rem;
+            font-weight: bold;
+            letter-spacing: 0.03em;
+            display: block;
+        }
+
+        .resist-value {
+            font-size: 1.15rem;
+            font-weight: bold;
+            color: var(--text-primary);
+            display: block;
+            line-height: 1.2;
+        }
+
+        .resist-magic   { color: #a78bfa; }
+        .resist-cold    { color: #7dd3fc; }
+        .resist-fire    { color: #f97316; }
+        .resist-disease { color: #86efac; }
+        .resist-poison  { color: #4ade80; }
+
+        .stat-hp    { color: #f87171; }
+        .stat-mana  { color: #60a5fa; }
+        .stat-ac    { color: #fbbf24; }
+        .stat-dmg   { color: #fb923c; }
+        .stat-delay { color: #94a3b8; }
+
+        /* Badge grid column variants */
+        .badge-grid-2 { grid-template-columns: repeat(2, 1fr); }
+        .badge-grid-3 { grid-template-columns: repeat(3, 1fr); }
+        .resist-grid + .resist-grid { margin-top: 8px; }
+
+        /* Spell lists in stats panel */
+        .npc-stats-table ul {
+            list-style: none;
+            padding-left: 0;
+            margin: 4px 0 0;
+        }
+        .npc-stats-table ul li {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 2px 0;
+        }
+
+        /* Map loading placeholder */
+        .map-loading-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--text-muted, #6c757d);
+            pointer-events: none;
+        }
+
+        /* Section headers for scrollable right column */
+        .section-header {
+            font-family: menuetto, serif;
+            font-size: 1.3rem;
+            color: var(--accent-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 6px;
+            margin: 1.5rem 0 0.75rem;
+        }
+
+        .npc-section:first-child .section-header {
+            margin-top: 0;
+        }
+
+        /* Ability hover detail panel */
+        .ability-detail {
+            font-size: 0.85rem;
+            padding: 6px 4px;
+            margin-top: 6px;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+        .ability-detail strong {
+            color: var(--text-primary);
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        /* Spawn group row header */
+        .spawn-group-header {
+            background-color: var(--bg-content);
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* Breadcrumb dark theme */
+        .breadcrumb-item a { color: var(--link-color); }
+        .breadcrumb-item.active { color: var(--text-secondary); }
+        .breadcrumb-item + .breadcrumb-item::before { color: var(--text-muted); }
+
+        /* Section jump navigation bar */
+        .section-jump-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 6px;
+            padding: 6px 0 8px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1.25rem;
+        }
+        .section-jump-link {
+            font-size: 0.82rem;
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 2px 8px;
+            border-radius: 3px;
+            border: 1px solid transparent;
+            transition: border-color 0.15s, background-color 0.15s;
+        }
+        .section-jump-link:hover,
+        .section-jump-link:focus {
+            border-color: var(--accent-color);
+            background-color: rgba(180, 140, 70, 0.08);
+            color: var(--accent-color);
+        }
+
+        /* Stats panel section header left-border accent */
+        .npc-stats-panel .msb_sub {
+            border-left: 3px solid var(--accent-color);
+            padding-left: 6px;
+        }
+
+        /* Ability grid — equal-height buttons */
+        .ability-grid {
+            align-items: stretch;
+        }
+        .ability-grid .npc_special_ability {
+            display: flex;
         }
     </style>
 {% endblock %}
 {% block content %}
-    <div class="container-fluid">
+    <div class="container-fluid" style="max-width: 1600px;">
+        <nav aria-label="breadcrumb" class="pt-2 pb-1">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'npcs:search' %}">NPC Search</a></li>
+                {% if zone.short_name %}
+                    <li class="breadcrumb-item"><a href="/zones/view/{{ zone.short_name }}">{{ zone.long_name }}</a></li>
+                {% endif %}
+                <li class="breadcrumb-item active" aria-current="page">{{ npc_data.name|clean_name }}</li>
+            </ol>
+        </nav>
         <div class="row">
             <div class="col">
-                <h1>{{ npc_data.name|clean_name }} {% if npc_data.lastname %}
-                    {{ npc_data.lastname|clean_name }} {% endif %}</h1>
+                <h1 class="eq-header">{{ npc_data.name|clean_name }}{% if npc_data.lastname %} {{ npc_data.lastname|clean_name }}{% endif %}</h1>
             </div>
         </div>
         <div class="row g-4">
+            <!-- LEFT: Sticky stats panel -->
             <div class="col-12 col-lg-3 stats-column">
+                <button class="d-lg-none btn btn-outline-secondary w-100 mb-2"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#stats-panel-body"
+                        aria-expanded="false"
+                        aria-controls="stats-panel-body">
+                    Stats &amp; Info
+                </button>
+                <div id="stats-panel-body" class="collapse d-lg-block">
                 {% if npc_page_text.portrait %}
-                    <div class="npc-portrait-container" style="margin-bottom: 20px;">
-                        {% if npc_page_text.portrait %}
-                            {{ npc_page_text.portrait|safe }}
-                            <div class="npc-portrait-caption">
-                                <em>{{ npc_data.name|clean_name }}{% if npc_data.lastname %}
-                                    {{ npc_data.lastname|clean_name }}{% endif %}</em>
-                            </div>
-                        {% else %}
-                            <div class="npc-portrait-placeholder">
-                                <div>
-                                    <div style="font-size: 3em; margin-bottom: 10px;">🏛️</div>
-                                    <div>No Portrait Available</div>
-                                    <div style="font-size: 0.8em; margin-top: 5px;">500×375</div>
-                                </div>
-                            </div>
-                        {% endif %}
+                    <div class="npc-portrait-container mb-3">
+                        {{ npc_page_text.portrait|safe }}
                     </div>
                 {% endif %}
-                <table class="table mobStatsBox"
-                       style="float: none; box-shadow: 5px 10px 20px rgba(0, 0, 0, 0.6); box-sizing: border-box; font-size: 0.9rem;">
-                    <tr>
-                        <th> Mob Information</th>
-                    </tr>
-                    <tr>
-                        <th class="msb_sub"> About</th>
-                    </tr>
-                    <tr>
-                        <td><span style="font-weight: bold;">Race:</span>&nbsp;{{ npc_data.race|npc_race }} </td>
-                    </tr>
-                    <tr>
-                        <td><span style="font-weight: bold;">Body Type:</span>&nbsp;{{ npc_data.bodytype|body_type }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><span style="font-weight: bold;">Class:</span>&nbsp;{{ npc_data.class_name|npc_class }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><span style="font-weight: bold;">Level:</span>&nbsp;{{ npc_data.level }}
-                            {% if npc_data.max_level %} - {{ npc_data.max_level }}{% endif %}</td>
-                    </tr>
-                    <tr>
-                        <td><span style="font-weight: bold;">Zone:&nbsp;</span>
-                            {% if zone.short_name is not None %}
-                                <a href="/zones/view/{{ zone.short_name }}">{{ zone.long_name }}</a></td>
-                            {% else %}
-                                {{ zone.long_name }}
+                <div class="eq-window-simple npc-stats-panel" style="margin-top: 0; padding: 14px 12px;">
+                    <div class="npc-panel-name">
+                        Level {{ npc_data.level }}{% if npc_data.max_level %}&ndash;{{ npc_data.max_level }}{% endif %}
+                        &middot; {{ npc_data.race|npc_race }}
+                        &middot; {{ npc_data.class_name|npc_class }}
+                    </div>
+                    <table class="eq-table npc-stats-table w-100">
+                        <tbody>
+                            <tr><th class="msb_sub"> About</th></tr>
+                            <tr><td><span class="stat-label">Race:</span>&nbsp;{{ npc_data.race|npc_race }}</td></tr>
+                            <tr><td><span class="stat-label">Body Type:</span>&nbsp;{{ npc_data.bodytype|body_type }}</td></tr>
+                            <tr><td><span class="stat-label">Class:</span>&nbsp;{{ npc_data.class_name|npc_class }}</td></tr>
+                            <tr><td><span class="stat-label">Level:</span>&nbsp;{{ npc_data.level }}{% if npc_data.max_level %} - {{ npc_data.max_level }}{% endif %}</td></tr>
+                            <tr>
+                                <td><span class="stat-label">Zone:</span>&nbsp;
+                                    {% if zone.short_name is not None %}
+                                        <a href="/zones/view/{{ zone.short_name }}">{{ zone.long_name }}</a>
+                                    {% else %}
+                                        {{ zone.long_name }}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% if factions %}
+                            <tr>
+                                <td><span class="stat-label">Faction:</span>&nbsp;{% for name, value, npc_value in factions %}{{ name|clean_name|title }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
+                            </tr>
                             {% endif %}
-                    </tr>
-                    <tr>
-                        <td>
-                            <span style="font-weight: bold;">Expansion:</span>&nbsp;
-                            {% if expansion == -1 %}
-                                <div class="expansion-tag {{ expansion }}">
-                                    <span class="">{{ expansion|expansion_icon|title }}</span> (Expansion
-                                    tagging in progress)
-                                </div>
-                            {% elif expansion == None %}
-                                No information
-                            {% else %}
-                                <img src="/static/images/{{ expansion|expansion_icon }}"
-                                     alt="{{ expansion|expansion_name|capfirst }} expansion"/>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th class="msb_sub"> Stats</th>
-                    </tr>
-                    <tr>
-                        <td><span style="font-weight: bold;">AC:</span>&nbsp;{{ npc_data.ac|intcomma }}</td>
-                    </tr>
-                    <tr>
-                        <td><span style="font-weight: bold;">HP:</span>&nbsp;{{ npc_data.hp|intcomma }}</td>
-                    </tr>
-                    <tr>
-                        <td><span style="font-weight: bold;">Mana:</span>&nbsp;{{ npc_data.mana|intcomma }}</td>
-                    </tr>
-                    <tr>
-                        <td><span style="font-weight: bold;">MR:</span>&nbsp;{{ npc_data.MR }}</td>
-                    </tr>
-                    <tr>
-                        <td><span style="font-weight: bold;">CR:</span>&nbsp;{{ npc_data.CR }}</td>
-                    </tr>
-                    <tr>
-                        <td><span style="font-weight: bold;">FR:</span>&nbsp;{{ npc_data.FR }}</td>
-                    </tr>
-                    <tr>
-                        <td><span style="font-weight: bold;">DR:</span>&nbsp;{{ npc_data.DR }}</td>
-                    </tr>
-                    <tr>
-                        <td><span style="font-weight: bold;">PR:</span>&nbsp;{{ npc_data.PR }}</td>
-                    </tr>
-                    <tr>
-                        <th class="msb_sub"> Combat</th>
-                    </tr>
-                    <tr>
-                        <td><span style="font-weight: bold;">Damage Per Hit:</span>&nbsp;{{ npc_data.min_dmg }}
-                            - {{ npc_data.max_dmg }}</td>
-                    </tr>
-                    <tr>
-                        <td><span style="font-weight: bold;">ATK Delay:</span> {{ npc_data.attack_delay }}</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span style="font-weight: bold;">Special Abilities:</span>
-                            <div class="list-group d-grid gap-2"
-                                 style="grid-template-columns: repeat(auto-fill, minmax(150px, 1fr))">
-                                {{ npc_data.special_abilities|npc_special_ability|safe }}
+                            <tr>
+                                <td>
+                                    <span class="stat-label">Expansion:</span>&nbsp;
+                                    {% if expansion == None %}
+                                        <span class="text-muted">No information</span>
+                                    {% else %}
+                                        <span class="expansion-tag {{ expansion|exp_filter }}"
+                                              data-expansion-id="{{ expansion }}">
+                                            <span>{{ expansion|exp_filter|title }}</span>
+                                        </span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr><th class="msb_sub"> Stats</th></tr>
+                            <tr>
+                                <td>
+                                    <div class="resist-grid badge-grid-3" role="group" aria-label="Core Stats">
+                                        <div aria-label="Hit Points: {{ npc_data.hp|intcomma }}"><span class="resist-label stat-hp" aria-hidden="true">HP</span><span class="resist-value" aria-hidden="true">{{ npc_data.hp|intcomma }}</span></div>
+                                        <div aria-label="Mana: {{ npc_data.mana|intcomma }}"><span class="resist-label stat-mana" aria-hidden="true">Mana</span><span class="resist-value" aria-hidden="true">{{ npc_data.mana|intcomma }}</span></div>
+                                        <div aria-label="Armor Class: {{ npc_data.ac|intcomma }}"><span class="resist-label stat-ac" aria-hidden="true">AC</span><span class="resist-value" aria-hidden="true">{{ npc_data.ac|intcomma }}</span></div>
+                                    </div>
+                                    <div class="resist-grid" role="group" aria-label="Resistances">
+                                        <div aria-label="Magic Resist: {{ npc_data.MR }}"><span class="resist-label resist-magic" aria-hidden="true">MR</span><span class="resist-value" aria-hidden="true">{{ npc_data.MR }}</span></div>
+                                        <div aria-label="Cold Resist: {{ npc_data.CR }}"><span class="resist-label resist-cold" aria-hidden="true">CR</span><span class="resist-value" aria-hidden="true">{{ npc_data.CR }}</span></div>
+                                        <div aria-label="Fire Resist: {{ npc_data.FR }}"><span class="resist-label resist-fire" aria-hidden="true">FR</span><span class="resist-value" aria-hidden="true">{{ npc_data.FR }}</span></div>
+                                        <div aria-label="Disease Resist: {{ npc_data.DR }}"><span class="resist-label resist-disease" aria-hidden="true">DR</span><span class="resist-value" aria-hidden="true">{{ npc_data.DR }}</span></div>
+                                        <div aria-label="Poison Resist: {{ npc_data.PR }}"><span class="resist-label resist-poison" aria-hidden="true">PR</span><span class="resist-value" aria-hidden="true">{{ npc_data.PR }}</span></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr><th class="msb_sub"> Combat</th></tr>
+                            <tr>
+                                <td>
+                                    <div class="resist-grid badge-grid-2" role="group" aria-label="Combat Stats">
+                                        <div aria-label="Damage Per Hit: {{ npc_data.min_dmg }} to {{ npc_data.max_dmg }}"><span class="resist-label stat-dmg" aria-hidden="true">Damage</span><span class="resist-value" aria-hidden="true">{{ npc_data.min_dmg }}&ndash;{{ npc_data.max_dmg }}</span></div>
+                                        <div aria-label="Attack Delay: {{ npc_data.attack_delay }}"><span class="resist-label stat-delay" aria-hidden="true">Delay</span><span class="resist-value" aria-hidden="true">{{ npc_data.attack_delay }}</span></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="stat-label">Special Abilities:</span>
+                                    <div class="list-group ability-grid d-grid gap-2"
+                                         style="grid-template-columns: repeat(auto-fill, minmax(150px, 1fr))">
+                                        {{ npc_data.special_abilities|npc_special_ability|safe }}
+                                    </div>
+                                    <div id="ability-detail" class="ability-detail"><span class="text-muted fst-italic small">Hover an ability to see its description.</span></div>
+                                </td>
+                            </tr>
+                            <tr><th class="msb_sub"> Spells</th></tr>
+                            <tr>
+                                <td><span class="stat-label">Attack Proc:</span>
+                                    <ul>
+                                        {% if npc_spell_proc_data.proc %}
+                                            <li class="px-1">
+                                                <img src="{% static "/images/icons/" %}{{ npc_spell_proc_data.custom_icon }}.gif"
+                                                     alt="{{ npc_spell_proc_data.spell_name }}"/>
+                                                <a href="/spells/view/{{ npc_spell_proc_data.proc }}">{{ npc_spell_proc_data.spell_name }}</a>
+                                            </li>
+                                        {% else %}
+                                            <li>None</li>
+                                        {% endif %}
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="stat-label">Proc Chance:</span>&nbsp;{% if npc_spell_proc_data.proc_chance %}{{ npc_spell_proc_data.proc_chance }}%{% else %}N/A{% endif %}</td>
+                            </tr>
+                            <tr>
+                                <td><span class="stat-label">Casts:</span>
+                                    <ul>
+                                        {% for custom_icon, spell_name, spell_id in npc_spells_entries %}
+                                            <li>
+                                                <img src="{% static "/images/icons/" %}{{ custom_icon }}.gif"
+                                                     alt="{{ spell_name }}"/>
+                                                <span class="px-1"><a href="/spells/view/{{ spell_id }}">{{ spell_name }}</a></span>
+                                            </li>
+                                        {% empty %}
+                                            <li>None</li>
+                                        {% endfor %}
+                                    </ul>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                </div>{# end #stats-panel-body collapse #}
+            </div>
+            <!-- RIGHT: Scrollable content sections -->
+            <div class="col-12 col-lg-9 content-column">
+                <!-- Section jump navigation -->
+                <nav class="section-jump-nav" aria-label="Page sections">
+                    {% if npc_page_text.description %}<a href="#description-section" class="section-jump-link">Description</a>{% endif %}
+                    <a href="#spawns-section" class="section-jump-link">Spawns</a>
+                    <a href="#loot-section" class="section-jump-link">Loot</a>
+                    <a href="#faction-section" class="section-jump-link">Faction</a>
+                    {% if npc_data.merchant_id > 0 %}<a href="#merchant-section" class="section-jump-link">Merchant</a>{% endif %}
+                    {% if related_quests %}<a href="#quest-section" class="section-jump-link">Quests</a>{% endif %}
+                </nav>
+
+                {% if npc_page_text.description %}
+                    <section id="description-section" class="npc-section">
+                        <h2 class="section-header">Description</h2>
+                        {{ npc_page_text.description|render_markdown|safe }}
+                    </section>
+                {% endif %}
+
+                <!-- Spawns: map + spawn points + spawn groups -->
+                <section id="spawns-section" class="npc-section">
+                    <h2 class="section-header">Spawns</h2>
+                    <div class="row g-3">
+                        <div class="col-12 col-xl-7">
+                            <div id="konva-container"
+                                 role="img"
+                                 aria-label="Map showing spawn locations for {{ npc_data.name|clean_name }} in {{ zone.long_name }}"
+                                 style="width: 100%; min-height: 300px; position: relative;">
+                                <p class="map-loading-text" id="map-placeholder">Loading map&hellip;</p>
                             </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th class="msb_sub"> Spells</th>
-                    </tr>
-                    <tr>
-                        <td><span style="font-weight: bold;">Attack Proc:</span>&nbsp;
-                            <ul>
-                                {% if npc_spell_proc_data.proc %}
-                                    <li class="px-1">
-                                        <img src="
-                                                {% static "/images/icons/" %}{{ npc_spell_proc_data.custom_icon }}.gif"
-                                             alt="{{ npc_spell_proc_data.spell_name }}"/>
-                                        <a href="/spells/view/{{ npc_spell_proc_data.proc }}">{{ npc_spell_proc_data.spell_name }}</a>
-                                    </li>
-                                {% else %}
-                                    <li>None</li>
-                                {% endif %}
-                            </ul>
-                    </tr>
-                    <tr>
-                        <td><span style="font-weight: bold;">Proc Chance:</span>&nbsp;
-                            {% if npc_spell_proc_data.proc_chance %}
-                                {{ npc_spell_proc_data.proc_chance }}%
-                            {% else %}
-                                N/A
-                            {% endif %}<br/></td>
-                    </tr>
-                    <tr>
-                        <td><span style="font-weight: bold;">Casts:</span><br/>
-                            <ul>
-                                {% for custom_icon, spell_name, spell_id in npc_spells_entries %}
-                                    <li>
-                                        <img src="{% static "/images/icons/" %}{{ custom_icon }}.gif"
-                                             alt="{{ spell_name }}"/>
-                                        <span class="px-1"><a
-                                                href="/spells/view/{{ spell_id }}">{{ spell_name }}</a></span>
+                            <div id="controls" class="d-flex flex-wrap gap-3 align-items-center py-2">
+                                <div class="d-flex align-items-center gap-2">
+                                    <label for="lineWeight">Line Weight</label>
+                                    <input type="range" id="lineWeight" min="1" max="10" step="1" value="2" disabled>
+                                </div>
+                                <div class="form-check mb-0">
+                                    <input type="checkbox" id="showPoints" class="form-check-input" disabled>
+                                    <label for="showPoints" class="form-check-label">Toggle Points</label>
+                                </div>
+                                <div class="form-check mb-0">
+                                    <input type="checkbox" id="toggleAnim" class="form-check-input" disabled>
+                                    <label for="toggleAnim" class="form-check-label">Toggle Animation</label>
+                                </div>
+                                <button type="button" id="reCenter" class="btn btn-secondary btn-sm" disabled>Reset Map</button>
+                            </div>
+                            <div class="text-muted small mt-1">
+                                Credit to <a href="https://www.pqdi.cc/">Talodar</a> for the original map script.
+                                Maps by <a href="https://www.eqmaps.info/">Brewall</a>.
+                            </div>
+                        </div>
+                        <div class="col-12 col-xl-5">
+                            <p class="text-muted mb-2"><em>Found {{ spawn_point_list|length }} spawn point{{ spawn_point_list|length|pluralize }} for {{ npc_data.name|clean_name }} in {{ zone.long_name }}.</em></p>
+                            <div class="table-responsive">
+                            <table class="table">
+                                <thead class="table-floating-header">
+                                <tr>
+                                    <th>Coordinates (y,x,z)</th>
+                                    <th>Respawntime<br/>(variance)</th>
+                                    <th>Expansion</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for sp in spawn_point_list %}
+                                    <tr>
+                                        <td>
+                                            ({{ sp.y|floatformat:1 }}, {{ sp.x|floatformat:1 }}, {{ sp.z|floatformat:1 }})
+                                        </td>
+                                        <td>{{ sp.respawntime|datetime_delta }}<br/>({{ sp.variance|datetime_delta }})</td>
+                                        <td class="expansion-tag {{ sp.min_expansion|exp_filter }}"
+                                            data-expansion-id="{{ sp.min_expansion }}">
+                                            <span>{{ sp.min_expansion|exp_filter|title }}</span>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            </div>
+                        </div>
+                    </div>
+                    <h3 class="mt-3 mb-2 text-muted fs-6">Spawn Groups <small>({{ spawn_groups|length }} found in {{ zone.long_name }})</small></h3>
+                    <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead class="table-floating-header">
+                        <tr>
+                            <th>NPC (Spawn Chance)</th>
+                            <th>Spawn Points</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for spawngroupID, spawn_data in spawn_groups.items %}
+                            <tr>
+                                <td colspan="2" class="spawn-group-header">
+                                    Spawn Group:&nbsp;#{{ forloop.counter }} has {{ spawn_data.1|length }} spawn point{{ spawn_data.1|length|pluralize }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    {% for spawn_entry in spawn_data.0 %}
+                                        <a href="/npcs/view/{{ spawn_entry.npcID }}">{{ spawn_entry.npcID.name|clean_name }}</a>
+                                        ({{ spawn_entry.chance }}%)<br/>
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    <ul class="list-group list-group-flush">
+                                        {% for sp in spawn_data.1 %}
+                                            <li class="list-group-item">({{ sp.y|floatformat:1 }}, {{ sp.x|floatformat:1 }}, {{ sp.z|floatformat:1 }})</li>
+                                        {% endfor %}
+                                    </ul>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    </div>
+                </section>
+
+                <!-- Loot -->
+                <section id="loot-section" class="npc-section">
+                    <h2 class="section-header">Loot</h2>
+                    <p class="text-muted mb-2"><em>Found {{ loot_tables|length }} loot drop tables for {{ npc_data.name|clean_name }} in {{ zone.long_name }}.</em></p>
+                    <div class="d-flex flex-wrap gap-3 mb-3 small text-muted">
+                        <span><span class="stat-label">Min Cash:</span> {{ loottable.min_cash|copper_to_coins }}</span>
+                        <span><span class="stat-label">Max Cash:</span> {{ loottable.max_cash|copper_to_coins }}</span>
+                        <span><span class="stat-label">Avg Coin:</span> {{ loottable.avg_coin|copper_to_coins }}</span>
+                    </div>
+                    {% for key, loot_data in loot_tables.items %}
+                        <div class="list-group-item mb-3">
+                            <div class="d-flex flex-wrap gap-3 mb-2 small text-muted">
+                                <span><span class="stat-label">Table #{{ forloop.counter }}</span></span>
+                                <span><span class="stat-label">Probability:</span> {{ loot_data.0.probability }}%</span>
+                                <span><span class="stat-label">Min Drops:</span> {{ loot_data.0.min_drop }}</span>
+                                <span><span class="stat-label">Limit:</span> {{ loot_data.0.drop_limit }}</span>
+                                <span><span class="stat-label">Multiplier:</span> {{ loot_data.0.multiplier }}</span>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead class="table-floating-header">
+                                    <tr>
+                                        <th>Item</th>
+                                        <th>Chance</th>
+                                        <th>Min. Expansion</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for ld_entry in loot_data.1 %}
+                                        <tr>
+                                            <td>
+                                                <img src="/static/images/items/item_{{ ld_entry.item_id.icon }}.png"
+                                                     alt="{{ ld_entry.item_id.Name }}">
+                                                <a class="tooltip-link link"
+                                                   data-url="{{ ld_entry.item_id.id }}"
+                                                   href="/items/view/{{ ld_entry.item_id.id }}">{{ ld_entry.item_id.Name }}</a>
+                                            </td>
+                                            <td>{{ ld_entry.chance }}%</td>
+                                            <td class="expansion-tag {{ ld_entry.min_expansion|exp_filter }}"
+                                                data-expansion-id="{{ ld_entry.min_expansion }}">
+                                                <span>{{ ld_entry.min_expansion|exp_filter|title }}</span>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </section>
+
+                <!-- Faction -->
+                <section id="faction-section" class="npc-section">
+                    <h2 class="section-header">Faction</h2>
+                    <div class="row g-3">
+                        <div class="col-12 col-sm-6">
+                            <h3 class="fs-6 fw-bold mb-2">Factions</h3>
+                            <ul class="list-unstyled mb-0">
+                                {% for name, value, npc_value in factions %}
+                                    <li class="py-1 border-bottom border-opacity-25 border-secondary">
+                                        {{ name|clean_name|title }}
+                                        <span class="float-end {% if value < 0 %}faction-negative{% elif value > 0 %}faction-positive{% else %}text-muted{% endif %}">{{ value }}</span>
                                     </li>
                                 {% empty %}
-                                    <li>None</li>
+                                    <li class="text-muted">None</li>
                                 {% endfor %}
                             </ul>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-            <div class="col-12 col-lg-9 content-column">
-                {% if npc_page_text.description %}
-                    <div style="margin-bottom: 10px;">
-                        <h5>Description</h5>
-                        {{ npc_page_text.description|render_markdown|safe }}
-                    </div>
-                {% endif %}
-                <ul class="nav nav-tabs" id="npcDataTab" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="map-tab" data-bs-toggle="tab"
-                                data-bs-target="#map-tab-pane"
-                                type="button" role="tab" aria-controls="map-tab-pane" aria-selected="true">Map
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="faction-tab" data-bs-toggle="tab"
-                                data-bs-target="#faction-tab-pane"
-                                type="button" role="tab" aria-controls="faction-tab-pane" aria-selected="true">Faction
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        {% if npc_data.merchant_id > 0 %}
-                            <button class="nav-link" id="merchant-tab" data-bs-toggle="tab"
-                                    data-bs-target="#merchant-tab-pane"
-                                    type="button" role="tab" aria-controls="merchant-tab-pane" aria-selected="false">
-                                Merchant
-                            </button>
-                        {% endif %}
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="spawn-point-tab" data-bs-toggle="tab"
-                                data-bs-target="#spawn-point-tab-pane"
-                                type="button" role="tab" aria-controls="spawn-point-tab-pane" aria-selected="true">Spawn
-                            Points
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="spawn-group-tab" data-bs-toggle="tab"
-                                data-bs-target="#spawn-group-tab-pane"
-                                type="button" role="tab" aria-controls="spawn-group-tab-pane" aria-selected="true">Spawn
-                            Groups
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="loot-tab" data-bs-toggle="tab"
-                                data-bs-target="#loot-tab-pane"
-                                type="button" role="tab" aria-controls="loot-tab-pane" aria-selected="true">Loot
-                        </button>
-                    </li>
-                    {% if related_quests %}
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="quest-tab" data-bs-toggle="tab"
-                                    data-bs-target="#quest-tab-pane"
-                                    type="button" role="tab" aria-controls="quest-tab-pane" aria-selected="true">Quests
-                            </button>
-                        </li>
-                    {% endif %}
-                </ul>
-                <div class="tab-content" id="charViewTabContent">
-                    <div class="tab-pane fade show active" id="map-tab-pane" role="tabpanel" aria-labelledby="map-tab"
-                         tabindex="0">
-                        <div class="row">
-                            <div class="col py-2 px-3">
-                                <div id="konva-container" class="s12 l9 row"
-                                     style="min-width: 400px; min-height: 600px;position:relative">
-                                </div>
-                                <div id="controls" class="navbar">
-                                    <ul class="nav nav-fill">
-                                        <li class="nav-item">
-                                            <label for="lineWeight" class="px-2">Line Weight</label>
-                                            <input type="range" id="lineWeight" min="1" max="10" step="1" value="2">
-                                        </li>
-                                        <li class="nav-item">
-                                            <input type="checkbox" id="showPoints" class="custom-control-input">
-                                            <label for="showPoints" class="custom-control-label">Toggle Points</label>
-                                        </li>
-                                        <li class="nav-item">
-                                            <input type="checkbox" id="toggleAnim" class="custom-control-input">
-                                            <label for="toggleAnim" class="custom-control-label">Toggle
-                                                Animation</label>
-                                        </li>
-                                        <li class="nav-item">
-                                            <button type="button" id="reCenter"
-                                                    class="btn btn-secondary custom-control-input">Reset Map
-                                            </button>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <span class="navbar-text">Credit to <a href="https://www.pqdi.cc/">Talodar</a> for the original map script.</span>
-                                <span class="navbar-text">Credit for all maps goes to <a class="link"
-                                                                                         href="https://www.eqmaps.info/">Brewall</a>.</span>
-                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6">
+                            <h3 class="fs-6 fw-bold mb-2">Opposing Factions</h3>
+                            <ul class="list-unstyled mb-0">
+                                {% for name, value, npc_value in opposing_factions %}
+                                    <li class="py-1 border-bottom border-opacity-25 border-secondary">
+                                        {{ name|clean_name|title }}
+                                        <span class="faction-positive float-end">+{{ value }}</span>
+                                    </li>
+                                {% empty %}
+                                    <li class="text-muted">None</li>
+                                {% endfor %}
+                            </ul>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="faction-tab-pane" role="tabpanel"
-                         aria-labelledby="faction-tab"
-                         tabindex="1">
-                        <div class="row">
-                            <div class="col py-2 px-3">
-                                <div class="py-2">
-                                    <h5>Factions</h5>
-                                    <ul>
-                                        {% for name, value, npc_value in factions %}
-                                            <li>{{ name|clean_name|title }}<span
-                                                    style="color:#770000">({{ value }})</span></li>
-                                        {% empty %}
-                                            <li>None</li>
-                                        {% endfor %}
-                                    </ul>
-                                    <h5>Opposing Factions</h5>
-                                    <ul>
-                                        {% for name, value, npc_value in opposing_factions %}
-                                            {% if value != 0 %}
-                                                <li>{{ name|clean_name|title }}<span
-                                                        style="color:#007700">({{ value }})</span></li>
-                                            {% endif %}
-                                        {% empty %}
-                                            <li>None</li>
-                                        {% endfor %}
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="merchant-tab-pane" role="tabpanel" aria-labelledby="merchant-tab"
-                         tabindex="2">
-                        <div class='eq-window-simple' style="width:100%;">
-                            <div class="eq-window-title-bar">
-                                {{ npc_data.name|clean_name }}
-                            </div>
-                            <div class="eq-window-nested-blue">
-                                <table class="eq-table" style="height: 78vh; overflow: hidden scroll">
-                                    <thead class="eq-table-floating-header">
-                                    <tr>
-                                        <th>Item Name</th>
-                                        <th><img src="{% static "/images/icons/Platinum.png" %}" alt="Platinum">
-                                        </th>
-                                        <th><img src="{% static "/images/icons/Gold.png" %}" alt="Gold"></th>
-                                        <th><img src="{% static "/images/icons/Silver.png" %}" alt="Silver"></th>
-                                        <th><img src="{% static "/images/icons/Copper.png" %}" alt="Copper"></th>
-                                        <th>Qty</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    {% for item in merchant_list %}
-                                        <tr>
-                                            <td><img src="{% static "/images/items/" %}item_{{ item.icon }}.png"
-                                                     alt="{{ item.name }}">&nbsp;<a href="/items/view/{{ item.id }}"
-                                                                                        target="_blank">{{ item.name }}</a>
-                                            </td>
-                                            <td>{{ item.platinum.0 }}</td>
-                                            <td>{{ item.gold.0 }}</td>
-                                            <td>{{ item.silver.0 }}</td>
-                                            <td>{{ item.copper }}</td>
-                                            <td>-</td>
-                                        </tr>
-                                    {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="spawn-point-tab-pane" role="tabpanel"
-                         aria-labelledby="spawn-point-tab"
-                         tabindex="3">
-                        <div class="row">
-                            <div class="col py-2 px-3">
-                                <div class="py-2">
-                                <span><b>Spawn Points</b> - <i>Found {{ spawn_point_list|length }} spawn points for
-                                    {{ npc_data.name|clean_name }} in {{ zone.long_name }}.</i></span>
-                                </div>
-                                <table class="table">
-                                    <thead class="table-floating-header">
-                                    <tr>
-                                        <th>Coordinates (y,x,z)</th>
-                                        <th>Respawntime<br/>(variance)</th>
-                                        <th>Expansion</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    {% for sp in spawn_point_list %}
-                                        <tr>
-                                            <td style="width: 250px;">
-                                                ({{ sp.y|floatformat:1 }}, {{ sp.x|floatformat:1 }}, {{ sp.z|floatformat:1 }})
-                                            </td>
-                                            <td>{{ sp.respawntime|datetime_delta }}<br/>({{ sp.variance|datetime_delta }})
-                                            </td>
-                                            {% if sp.min_expansion == -1 %}
-                                                <td class="expansion-tag {{ sp.min_expansion|exp_filter }}">
-                                                    <span>{{ sp.min_expansion|exp_filter|title }}</span>
-                                                </td>
-                                            {% else %}
-                                                <td>
-                                                <img src="{% static "/images/" %}{{ sp.min_expansion|expansion_icon }}"
-                                                     alt="{{ sp.min_expansion|expansion_name|capfirst }} expansion">
-                                            {% endif %}
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="spawn-group-tab-pane" role="tabpanel"
-                         aria-labelledby="spawn-group-tab"
-                         tabindex="4">
-                        <div class="row">
-                            <div class="col py-2 px-3">
-                                <div class="py-2">
-                                <span><b>Spawn Groups</b> - <i>Found {{ spawn_groups|length }} spawn groups for
-                                    {{ npc_data.name|clean_name }} in {{ zone.long_name }}.</i></span>
-                                </div>
-                                <table class="table">
-                                    <thead class="table-floating-header">
-                                    <tr>
-                                        <th>NPC (Spawn Chance)</th>
-                                        <th>Spawn Points</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    {% for spawngroupID, spawn_data in spawn_groups.items %}
-                                        <tr>
-                                            <th colspan="2"
-                                                style="background-color:#f3f8fd; text-align: center;">Spawn
-                                                Group:&nbsp;#{{ forloop.counter }} has {{ spawn_data.1|length }} spawn
-                                                points
-                                            </th>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                {% for spawn_entry in spawn_data.0 %}
-                                                    <a href="/npcs/view/{{ spawn_entry.npcID }}">{{ spawn_entry.npcID.name|clean_name }}</a>
-                                                    ({{ spawn_entry.chance }}%)<br/>
-                                                {% endfor %}
-                                            </td>
-                                            <td>
-                                                <ul class="list-group">
-                                                    {% for sp in spawn_data.1 %}
-                                                        {% if forloop.counter|divisibleby:2 %}
-                                                            <li class="list-group-item list-group-item">
-                                                                ({{ sp.y }}, {{ sp.x }}, {{ sp.z }})
-                                                            </li>
-                                                        {% else %}
-                                                            <li class="list-group-item">
-                                                                ({{ sp.y }}, {{ sp.x }}, {{ sp.z }})
-                                                            </li>
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                </ul>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="loot-tab-pane" role="tabpanel" aria-labelledby="loot-tab"
-                         tabindex="5">
-                        <div class="row">
-                            <div class="col py-2 px-3">
-                                <div class="py-2">
-                                <span><b>Loot Tables</b> - <i>Found {{ loot_tables|length }} loot drop tables for
-                                    {{ npc_data.name|clean_name }} in {{ zone.long_name }}.</i></span>
-                                </div>
-                                <div>
-                                    <ul class="list-group list-group-horizontal">
-                                        <li class="list-group-item">Min Cash: {{ loottable.min_cash }} copper</li>
-                                        <li class="list-group-item">Max Cash: {{ loottable.max_cash }} copper</li>
-                                        <li class="list-group-item">Average Coin: {{ loottable.avg_coin }} copper</li>
-                                    </ul>
-                                </div>
-                                <ul class="list-group">
-                                    {% for key, loot_data in loot_tables.items %}
-                                        <li class="list-group-item">
-                                            Drop Table #{{ forloop.counter }} has a {{ loot_data.0.probability }}%
-                                            probability of being used.<br/>
-                                            <b>Minimum Drop(s):</b> {{ loot_data.0.min_drop }},
-                                            <b>Drop Limit:</b> {{ loot_data.0.drop_limit }}
-                                            <b>Multiplier:</b> {{ loot_data.0.multiplier }},
-                                        </li>
-                                        <div class="table-responsive">
+                </section>
 
-                                            <table class="table table-striped">
-                                                <thead class="table-floating-header">
-                                                <tr>
-                                                    <th>Item</th>
-                                                    <th>Chance</th>
-                                                    <th>Min. Expansion</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                {% for ld_entry in loot_data.1 %}
-                                                    <tr>
-                                                        <td>
-                                                            <img src="/static/images/items/item_{{ ld_entry.item_id.icon }}.png"
-                                                                 alt="{{ ld_entry.item_id.Name }}">
-                                                            <a class="tooltip-link link"
-                                                               data-url="{{ ld_entry.item_id.id }}"
-                                                               href="/items/view/{{ ld_entry.item_id.id }}">{{ ld_entry.item_id.Name }}</a>
-                                                        </td>
-                                                        <td>{{ ld_entry.chance }}%</td>
-                                                        <td class="expansion-tag {{ ld_entry.min_expansion|exp_filter }}">
-                                                            <span>{{ ld_entry.min_expansion|exp_filter|title }}</span>
-                                                        </td>
-                                                    </tr>
-                                                {% endfor %}
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    {% endfor %}
-                                </ul>
-                            </div>
+                <!-- Merchant (conditional) -->
+                {% if npc_data.merchant_id > 0 %}
+                <section id="merchant-section" class="npc-section">
+                    <h2 class="section-header">Merchant Inventory</h2>
+                    <div class="eq-window-simple" style="width:100%;">
+                        <div class="eq-window-title-bar">{{ npc_data.name|clean_name }}</div>
+                        <div class="eq-window-nested-blue">
+                            <table class="eq-table" style="max-height: 500px; overflow-y: auto; display: block;">
+                                <thead class="eq-table-floating-header">
+                                <tr>
+                                    <th>Item Name</th>
+                                    <th><img src="{% static "/images/icons/Platinum.png" %}" alt="Platinum"></th>
+                                    <th><img src="{% static "/images/icons/Gold.png" %}" alt="Gold"></th>
+                                    <th><img src="{% static "/images/icons/Silver.png" %}" alt="Silver"></th>
+                                    <th><img src="{% static "/images/icons/Copper.png" %}" alt="Copper"></th>
+                                    <th>Qty</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for item in merchant_list %}
+                                    <tr>
+                                        <td><img src="{% static "/images/items/" %}item_{{ item.icon }}.png"
+                                                 alt="{{ item.name }}">&nbsp;<a href="/items/view/{{ item.id }}"
+                                                                                    target="_blank" rel="noopener noreferrer">{{ item.name }}</a>
+                                        </td>
+                                        <td>{{ item.platinum.0 }}</td>
+                                        <td>{{ item.gold.0 }}</td>
+                                        <td>{{ item.silver.0 }}</td>
+                                        <td>{{ item.copper }}</td>
+                                        <td>-</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                    {% if related_quests %}
-                        <div class="tab-pane fade" id="quest-tab-pane" role="tabpanel" aria-labelledby="quest-tab"
-                             tabindex="6">
-                            <div class="row">
-                                <div class="col py-2 px-3">
-                                    <div class="py-2">
-                                        <h5>Related Quests</h5>
-                                        {% if related_quests %}
-                                            <ul>
-                                                {% for quest in related_quests %}
-                                                    <li><a href="{% url 'quests:view' quest.id %}">{{ quest }}</a></li>
-                                                {% endfor %}
-                                            </ul>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    {% endif %}
-                </div>
+                </section>
+                {% endif %}
+
+                <!-- Quests (conditional) -->
+                {% if related_quests %}
+                <section id="quest-section" class="npc-section">
+                    <h2 class="section-header">Related Quests</h2>
+                    <ul>
+                        {% for quest in related_quests %}
+                            <li><a href="{% url 'quests:view' quest.id %}">{{ quest }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </section>
+                {% endif %}
             </div>
         </div>
     </div>
-    <script src="https://unpkg.com/konva@9/konva.min.js"></script>
-    <script type="text/javascript">
-        mapBaseName = JSON.parse('"{{ zone.short_name }}"')
-        const creatureSpawnPoints = [
-            {% for sp in spawn_point_list %}
-                {x: {{ sp.x|multiply:-1 }}, y: {{ sp.y|multiply:-1 }}},
-            {% endfor %}
-        ];
-    </script>
-    <script src="/static/konvamap.js"></script>
-    <script type="text/javascript">
-        const creaturePathPoints = {{ creature_path_points|safe }};
-    </script>
-    <script>
-        const creatureRoamBoxes = [
-            {% for roam_box in roam_boxes %}
-                {
-                    x: {{ roam_box.start_x|multiply:-1 }},
-                    y: {{ roam_box.start_y|multiply:-1 }},
-                    width: {{ roam_box.width|multiply:-1 }},
-                    height: {{ roam_box.height|multiply:-1 }}
-                },
-            {% endfor %}
-        ]
-    </script>
-    {% if enable_wp_spawn_notice %}
-        <script>
-            $(document).ready(function () {
-                let infoDisplay = document.getElementById('info-display');
-                infoDisplay.textContent = "{{ npc_data.name|clean_name }} can spawn on any of their waypoints (noted by arrow heads).";
-            });
-        </script>
-    {% endif %}
-    {% if roam_boxes|length > 0 %}
-        <script>
-            $(document).ready(function () {
-                let info = document.getElementById('info-display');
-                info.textContent = "{{ npc_data.name|clean_name }} is a roam box spawn and can spawn anywhere in the blue box(es).";
-            });
-        </script>
-    {% endif %}
 {% endblock %}
 {% block extra_js %}
     {# Popper required for Tippy #}
@@ -691,134 +675,123 @@
             integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
             crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/tippy.js@6/dist/tippy-bundle.umd.min.js"></script>
+    <script>
+        mapBaseName = JSON.parse('"{{ zone.short_name }}"');
+        const creatureSpawnPoints = [
+            {% for sp in spawn_point_list %}{x: {{ sp.x|multiply:-1 }}, y: {{ sp.y|multiply:-1 }}},{% endfor %}
+        ];
+        const creaturePathPoints = {{ creature_path_points|safe }};
+        const creatureRoamBoxes = [
+            {% for roam_box in roam_boxes %}{x: {{ roam_box.start_x|multiply:-1 }}, y: {{ roam_box.start_y|multiply:-1 }}, width: {{ roam_box.width|multiply:-1 }}, height: {{ roam_box.height|multiply:-1 }}},{% endfor %}
+        ];
+    </script>
 {% endblock %}
 {% block inline_js %}
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const contentCache = new Map();
-            tippy('.tooltip-link', {
-                content: 'Loading...',
-                allowHTML: true,
-                interactive: true,
-                placement: 'auto',
-                theme: 'item',
-                touch: 'hold',
-                maxWidth: '90vw', // Ensure tooltip doesn't exceed screen width
-                popperOptions: {
-                    strategy: 'fixed',
-                    modifiers: [{
-                        name: 'preventOverflow',
-                        options: {
-                            boundary: document.body,
-                            padding: 8
+            // Lazy-load Konva map when spawns section scrolls into view
+            const spawnsSection = document.getElementById('spawns-section');
+            if (spawnsSection) {
+                const konvaObserver = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (entry) {
+                        if (entry.isIntersecting) {
+                            konvaObserver.disconnect();
+                            const konvaScript = document.createElement('script');
+                            konvaScript.src = 'https://unpkg.com/konva@9/konva.min.js';
+                            konvaScript.onload = function () {
+                                const mapScript = document.createElement('script');
+                                mapScript.src = '/static/konvamap.js';
+                                mapScript.onload = function () {
+                                    // Remove loading placeholder
+                                    const placeholder = document.getElementById('map-placeholder');
+                                    if (placeholder) placeholder.remove();
+                                    // Enable map controls
+                                    ['lineWeight', 'showPoints', 'toggleAnim', 'reCenter'].forEach(function (id) {
+                                        const el = document.getElementById(id);
+                                        if (el) el.disabled = false;
+                                    });
+                                    // Spawn location notices
+                                    const infoDisplay = document.getElementById('info-display');
+                                    if (infoDisplay) {
+                                        {% if enable_wp_spawn_notice %}
+                                        infoDisplay.textContent = "{{ npc_data.name|clean_name }} can spawn on any of their waypoints (noted by arrow heads).";
+                                        {% elif roam_boxes|length > 0 %}
+                                        infoDisplay.textContent = "{{ npc_data.name|clean_name }} is a roam box spawn and can spawn anywhere in the blue box(es).";
+                                        {% endif %}
+                                    }
+                                };
+                                document.body.appendChild(mapScript);
+                            };
+                            document.body.appendChild(konvaScript);
                         }
+                    });
+                }, {rootMargin: '200px'});
+                konvaObserver.observe(spawnsSection);
+            }
+
+            // Shared Tippy factory
+            const contentCache = new Map();
+            function initTippy(selector, theme, fetchUrl, extraOptions) {
+                tippy(selector, Object.assign({
+                    content: 'Loading...',
+                    allowHTML: true,
+                    interactive: true,
+                    placement: 'auto',
+                    theme: theme,
+                    touch: 'hold',
+                    maxWidth: '90vw',
+                    appendTo: () => document.body,
+                    zIndex: 99999,
+                    popperOptions: {
+                        strategy: 'fixed',
+                        modifiers: [
+                            {name: 'preventOverflow', options: {boundary: document.body, padding: 8}},
+                            {name: 'flip', options: {padding: 8, fallbackPlacements: ['bottom', 'top', 'left', 'right']}}
+                        ]
                     },
-                        {
-                            name: 'flip',
-                            options: {
-                                padding: 8,
-                                fallbackPlacements: ['bottom', 'top', 'left', 'right']
-                            }
-                        }
-                    ]
-                },
-                onShow(instance) {
-                    instance.setContent('Loading...');
+                    onShow(instance) {
+                        instance.setContent('Loading...');
+                        const key = instance.reference.dataset.url;
+                        if (!key) { instance.setContent('Error: No URL provided'); return; }
+                        if (contentCache.has(key)) { instance.setContent(contentCache.get(key)); return; }
+                        fetchUrl(key)
+                            .then(content => { contentCache.set(key, content); instance.setContent(content); })
+                            .catch(err => instance.setContent(`Failed to load: ${err.message}`));
+                    }
+                }, extraOptions || {}));
+            }
 
-                    const url = instance.reference.dataset.url;
-                    if (!url) {
-                        instance.setContent('Error: No URL provided');
+            initTippy('.tooltip-link', 'item', key =>
+                fetch(`/items/api/${encodeURIComponent(key)}`).then(r => r.text())
+            );
+
+            // Ability detail panel — inline hover, no floating tooltip
+            const abilityDetail = document.getElementById('ability-detail');
+            const abilityCache = new Map();
+            document.querySelectorAll('.npc_special_ability').forEach(function (btn) {
+                function showAbilityDetail() {
+                    if (!abilityDetail) return;
+                    const key = btn.dataset.url;
+                    if (!key) return;
+                    if (abilityCache.has(key)) {
+                        abilityDetail.innerHTML = abilityCache.get(key);
                         return;
                     }
-                    // Check cache first
-                    if (contentCache.has(url)) {
-                        instance.setContent(contentCache.get(url));
-                        return;
-                    }
-
-                    fetch(`/items/api/${encodeURIComponent(url)}`)
-                        .then(response => response.text())
-                        .then(content => {
-                            contentCache.set(url, content);
-                            instance.setContent(content);
+                    abilityDetail.textContent = 'Loading...';
+                    fetch('/npcs/api/special-ability/' + encodeURIComponent(key))
+                        .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+                        .then(function (data) {
+                            if (data.error) throw new Error(data.error);
+                            const html = '<strong>' + data.name + '</strong><br>' + data.description;
+                            abilityCache.set(key, html);
+                            abilityDetail.innerHTML = html;
                         })
-                        .catch(error => {
-                            instance.setContent(`Failed to load data: ${error}`);
+                        .catch(function () {
+                            abilityDetail.innerHTML = '<span class="text-muted fst-italic small">Hover an ability to see its description.</span>';
                         });
                 }
-            });
-        });
-        document.addEventListener('DOMContentLoaded', function () {
-            const contentCache = new Map();
-            tippy('.npc_special_ability', {
-                content: 'Loading...',
-                allowHTML: true,
-                interactive: true,
-                placement: 'auto',
-                theme: 'ability',
-                touch: 'hold',
-                maxWidth: '90vw', // Ensure tooltip doesn't exceed screen width
-                popperOptions: {
-                    strategy: 'fixed',
-                    modifiers: [
-                        {
-                            name: 'preventOverflow',
-                            options: {
-                                boundary: document.body,
-                                padding: 8
-                            }
-                        },
-                        {
-                            name: 'flip',
-                            options: {
-                                padding: 8,
-                                fallbackPlacements: ['bottom', 'top', 'left', 'right']
-                            }
-                        }
-                    ]
-                },
-                onShow(instance) {
-                    instance.setContent('Loading...');
-
-                    const url = instance.reference.dataset.url;
-                    if (!url) {
-                        instance.setContent('Error: No URL provided');
-                        return;
-                    }
-                    // Check cache first
-                    if (contentCache.has(url)) {
-                        instance.setContent(contentCache.get(url));
-                        return;
-                    }
-
-                    fetch(`/npcs/api/special-ability/${encodeURIComponent(url)}`)
-                        .then(response => {
-                            // Check if response is ok
-                            if (!response.ok) {
-                                throw new Error(`HTTP error! status: ${response.status}`);
-                            }
-                            return response.text();  // Get text instead of json first
-                        })
-                        .then(text => {
-                            const data = JSON.parse(text);
-                            if (data.error) {
-                                throw new Error(data.error);
-                            }
-                            // Create formatted content from the description
-                            const content = `
-                        <div class="tooltip-content">
-                            <strong>${data.name}</strong><br>
-                            ${data.description}
-                        </div>
-                    `;
-                            contentCache.set(url, content);
-                            instance.setContent(content);
-                        })
-                        .catch(error => {
-                            console.error('Fetch error:', error);
-                            instance.setContent(`Failed to load data: ${error.message}`);
-                        });
-                }
+                btn.addEventListener('mouseenter', showAbilityDetail);
+                btn.addEventListener('focus', showAbilityDetail);
             });
         });
     </script>

@@ -170,6 +170,7 @@ def search(request):
                           'npc_races': npc_races['npc_races'],
                           'npc_classes': npc_classes['npc_classes'],
                           "search_results": search_results,
+                          "search_submitted": True,
                       })
     return HttpResponseNotAllowed(['GET', 'POST'])
 

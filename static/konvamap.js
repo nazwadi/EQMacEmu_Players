@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function () {
+(function () {
     let minX = 0;
     let minY = 0;
     let maxX = 0;
@@ -505,4 +505,4 @@ document.addEventListener('DOMContentLoaded', function () {
     if (typeof creatureSpawnPoints !== 'undefined') {
         loadCreatureSpawnPoints(layer, creatureSpawnPoints);
     }
-});
+}());

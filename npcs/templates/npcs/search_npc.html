@@ -16,7 +16,7 @@
         <div class="row">
             <div class="col">
                 <h1 class="text-center mb-4">NPC Search</h1>
-                <form class="p-3 mb-4 border rounded" action="/npcs/search" method="post">
+                <form class="p-3 mb-4 border rounded" action="{% url 'npcs:search' %}" method="post">
                     {% csrf_token %}
 
                     {% if form.errors %}
@@ -66,7 +66,7 @@
                             {% endif %}
                         </div>
                         <div class="col-12 col-sm-4 col-md-2">
-                            <label for="query_limit" class="form-label">Query Limit (Max: 200)</label>
+                            <label for="query_limit" class="form-label">Limit <span class="text-muted">(max 200)</span></label>
                             <input class="form-control {% if form.query_limit.errors %}is-invalid{% endif %}"
                                    id="query_limit"
                                    name="query_limit"
@@ -131,7 +131,7 @@
                                 <div class="invalid-feedback">{{ form.select_npc_class.errors.0 }}</div>
                             {% endif %}
                         </div>
-                        <div class="col-6 col-sm-3 col-md-1">
+                        <div class="col-6 col-sm-3 col-md-2">
                             <label for="min_level" class="form-label">Min Level</label>
                             <input class="form-control {% if form.min_level.errors %}is-invalid{% endif %}"
                                    id="min_level"
@@ -142,7 +142,7 @@
                                 <div class="invalid-feedback">{{ form.min_level.errors.0 }}</div>
                             {% endif %}
                         </div>
-                        <div class="col-6 col-sm-3 col-md-1">
+                        <div class="col-6 col-sm-3 col-md-2">
                             <label for="max_level" class="form-label">Max Level</label>
                             <input class="form-control {% if form.max_level.errors %}is-invalid{% endif %}"
                                    id="max_level"
@@ -160,7 +160,7 @@
                         <div class="row g-3 mb-3">
                             <div class="col-12 col-md-4">
                                 <label for="zone" class="form-label">Zone</label>
-                                <select id="zone" class="form-select">
+                                <select id="zone" name="zone" class="form-select">
                                     <option selected>any</option>
                                     {% for zone in zones %}
                                         <option value="{{ zone.short_name }}">{{ zone.long_name }}</option>
@@ -173,20 +173,27 @@
                     <!-- Checkbox row -->
                     <div class="row g-3 mb-3">
                         <div class="col-12">
-                            <div class="form-check"></div>
-                            <input class="form-check-input" type="checkbox" id="exclude_merchants"
-                                   name="exclude_merchants" {% if form.exclude_merchants.value %}checked{% endif %}>
-                            <label class="form-check-label" for="exclude_merchants">Exclude Merchants</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="exclude_merchants"
+                                       name="exclude_merchants" {% if form.exclude_merchants.value %}checked{% endif %}>
+                                <label class="form-check-label" for="exclude_merchants">Exclude Merchants</label>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Search button -->
-                    <div class="row">
-                        <div class="col-12">
-                            <button type="submit" class="btn btn-outline-primary w-100">Search</button>
+                    <!-- Search / Reset buttons -->
+                    <div class="row g-2">
+                        <div class="col-9 col-sm-10">
+                            <button type="submit" class="btn btn-secondary w-100">Search</button>
+                        </div>
+                        <div class="col-3 col-sm-2">
+                            <a href="{% url 'npcs:search' %}" class="btn btn-outline-secondary w-100">Reset</a>
                         </div>
                     </div>
                 </form>
+                {% if search_submitted and not search_results %}
+                    <div class="alert alert-secondary">No NPCs found matching your criteria.</div>
+                {% endif %}
             </div>
         </div>
         {% if search_results %}

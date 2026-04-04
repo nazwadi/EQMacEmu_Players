@@ -180,23 +180,23 @@ nav.border {
 
 
 /* NPC Page */
-.mobStatsBox {
-    border: 1px solid var(--border-color);
-    margin: 0 5px 5px 0;
-    float: left;
-    width: 300px;
-    background-color: var(--bg-tertiary);
-}
-
-.mobStatsBox th {
-    background-color: var(--bg-tertiary);
-    color: var(--accent-color);
-    border-bottom: 1px solid var(--border-color);
-}
-
-.mobStatsBox .msb_sub {
+.npc-stats-table .msb_sub {
     background-color: var(--bg-content);
     color: var(--text-secondary);
+    border-bottom: 1px solid var(--border-color);
+    padding: 4px 8px;
+}
+
+.stat-label {
+    font-weight: bold;
+}
+
+.faction-negative {
+    color: #cc4444;
+}
+
+.faction-positive {
+    color: #44aa44;
 }
 
 .table-floating-header {
