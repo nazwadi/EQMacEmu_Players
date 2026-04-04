@@ -507,5 +507,52 @@
         window.addEventListener('scroll', () => {
             backToTop.classList.toggle('visible', window.scrollY > 300);
         });
+
+        // Report-an-issue: inline feedback via fetch so the user
+        // doesn't have to scroll back to the top to see the result.
+        (function () {
+            const form = document.querySelector('.report-issue-form');
+            if (!form) return;
+
+            const btn = form.querySelector('[type="submit"]');
+            const feedback = document.createElement('p');
+            feedback.className = 'report-issue-feedback mt-2 mb-0 small';
+            feedback.hidden = true;
+            form.after(feedback);
+
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                // Basic client-side guard: body must not be empty
+                const body = form.querySelector('[name="body"]').value.trim();
+                if (!body) return;
+
+                btn.disabled = true;
+                btn.textContent = 'Sending…';
+
+                fetch(form.action, {
+                    method: 'POST',
+                    body: new FormData(form),
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                })
+                .then(r => r.json())
+                .then(() => {
+                    feedback.textContent = 'Thanks — your report has been submitted.';
+                    feedback.style.color = 'var(--accent-color)';
+                    feedback.hidden = false;
+                    form.reset();
+                    btn.textContent = 'Submit Report';
+                    // Re-enable after a short delay to prevent double-submit
+                    setTimeout(() => { btn.disabled = false; }, 3000);
+                })
+                .catch(() => {
+                    feedback.textContent = 'Something went wrong — please try again.';
+                    feedback.style.color = '#e07070';
+                    feedback.hidden = false;
+                    btn.disabled = false;
+                    btn.textContent = 'Submit Report';
+                });
+            });
+        }());
     </script>
 {% endblock %}

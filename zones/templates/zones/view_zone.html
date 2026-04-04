@@ -50,6 +50,14 @@
                                 type="button" role="tab" aria-controls="merchants-tab-pane" aria-selected="false">
                             Merchants
                         </button>
+                        <button class="nav-link" id="quests-tab" data-bs-toggle="pill"
+                                data-bs-target="#quests-tab-pane"
+                                type="button" role="tab" aria-controls="quests-tab-pane" aria-selected="false">
+                            Quests
+                            {% if zone_quests %}
+                                <span class="badge bg-secondary ms-1">{{ zone_quests|length }}</span>
+                            {% endif %}
+                        </button>
                     </div>
                 </div>
                 <div class="col tab-content" id="zonesTabContent">
@@ -105,6 +113,11 @@
                          aria-labelledby="merchants-tab"
                          tabindex="7">
                         {% include "zones/merchants.html" %}
+                    </div>
+                    <div class="tab-pane fade" id="quests-tab-pane" role="tabpanel"
+                         aria-labelledby="quests-tab"
+                         tabindex="8">
+                        {% include "zones/quests.html" %}
                     </div>
                 </div>
             </div>
@@ -182,6 +195,9 @@
                     },
                 },
                 order: [[3, 'desc']]
+            });
+            $("#quests-table").DataTable({
+                order: [[1, 'asc']]
             });
         });
     </script>

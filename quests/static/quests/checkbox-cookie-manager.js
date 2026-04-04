@@ -1,123 +1,134 @@
 // checkbox-cookie-manager.js
-document.addEventListener('DOMContentLoaded', function() {
-    // Process markdown2 task list output to match GitHub style
-    processTaskLists();
-
-    // Get the quest ID from the page
+document.addEventListener('DOMContentLoaded', function () {
     const questId = getQuestIdFromPage();
 
-    // Initialize checkboxes when the page loads
+    processTaskLists(questId);
     initializeCheckboxes(questId);
 
-    // Function to get the quest ID from the page
     function getQuestIdFromPage() {
-        // Try to get quest ID directly from URL path
-        // Example: if URL is /quests/view/123, extract 123
         const pathParts = window.location.pathname.split('/');
-        const questIdFromPath = pathParts[pathParts.length - 1];
-        if (questIdFromPath && !isNaN(questIdFromPath)) {
-            return questIdFromPath;
-        }
-
-        // Try to get from quest title
-        const questTitle = document.querySelector('.quest-title');
-        if (questTitle) {
-            return questTitle.textContent.trim();
-        }
-
-        // If all else fails, use the full page URL as a unique identifier
+        const id = pathParts[pathParts.length - 1];
+        if (id && !isNaN(id)) return id;
+        const title = document.querySelector('.quest-title');
+        if (title) return title.textContent.trim();
         return window.location.pathname;
     }
 
-    // Process markdown2 task list output to match GitHub style
-    function processTaskLists() {
+    // Enhance markdown2 task list output:
+    //  - adds unique IDs to each checkbox
+    //  - wraps the text node in a <span> for the strikethrough CSS rule
+    //  - wraps <input> + <span> in a <label> for a full-row click target and
+    //    proper screen-reader association
+    //  - appends a single "Reset progress" button after the last task list
+    function processTaskLists(questId) {
         const content = document.querySelector('.quest-description-content');
         if (!content) return;
 
-        // Find all lists in the content
-        const lists = content.querySelectorAll('ul');
+        const safeId = questId.replace(/[^a-z0-9]/gi, '_');
+        let globalIndex = 0;
+        let lastTaskList = null;
 
-        lists.forEach(list => {
-            // Check if this list contains checkbox items
+        content.querySelectorAll('ul').forEach(list => {
             const checkboxItems = list.querySelectorAll('li input[type="checkbox"]');
+            if (checkboxItems.length === 0) return;
 
-            if (checkboxItems.length > 0) {
-                // This is a task list
-                list.classList.add('task-list');
+            list.classList.add('task-list');
+            lastTaskList = list;
 
-                // Process each list item with a checkbox
-                checkboxItems.forEach(checkbox => {
-                    const li = checkbox.closest('li');
+            checkboxItems.forEach(checkbox => {
+                const li = checkbox.closest('li');
+                const uid = `task-cb-${safeId}-${globalIndex++}`;
+                checkbox.id = uid;
 
-                    // Wrap text after checkbox in a span
-                    const textNode = Array.from(li.childNodes).find(node =>
-                        node.nodeType === Node.TEXT_NODE && node.textContent.trim() !== ''
-                    );
+                // Wrap text node in a <span> so the :checked + span rule works
+                const textNode = Array.from(li.childNodes).find(
+                    n => n.nodeType === Node.TEXT_NODE && n.textContent.trim() !== ''
+                );
+                let span;
+                if (textNode) {
+                    span = document.createElement('span');
+                    span.textContent = textNode.textContent;
+                    textNode.replaceWith(span);
+                }
 
-                    if (textNode) {
-                        const span = document.createElement('span');
-                        span.textContent = textNode.textContent;
-                        textNode.replaceWith(span);
-                    }
-                });
-            }
+                // Wrap checkbox + span in a <label> for full-row hit target + a11y
+                const label = document.createElement('label');
+                label.htmlFor = uid;
+                label.className = 'task-label';
+                li.insertBefore(label, checkbox);
+                label.appendChild(checkbox);
+                if (span) label.appendChild(span);
+            });
         });
+
+        if (lastTaskList) {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'task-reset-btn';
+            btn.textContent = 'Reset progress';
+            btn.setAttribute('aria-label', 'Uncheck all task list items');
+            lastTaskList.after(btn);
+        }
     }
 
-    // Initialize checkboxes based on saved cookie data
     function initializeCheckboxes(questId) {
-        // Get all checkboxes in the quest description content area
         const checkboxes = document.querySelectorAll('.quest-description-content input[type="checkbox"]');
+        if (checkboxes.length === 0) return;
 
-        if (checkboxes.length === 0) {
-            return; // No checkboxes found, nothing to do
-        }
-
-        // Get saved checkbox states from cookie
         const savedStates = getSavedCheckboxStates(questId);
 
-        // Apply saved states to checkboxes and add event listeners
         checkboxes.forEach((checkbox, index) => {
-            // Set a unique identifier for each checkbox
             checkbox.setAttribute('data-checkbox-id', index);
 
-            // Apply saved state if it exists
             if (savedStates && savedStates[index] !== undefined) {
                 checkbox.checked = savedStates[index];
             }
 
-            // Add event listener to save state on change
-            checkbox.addEventListener('change', function() {
+            // Drive visual state via class — bypasses the deferred :checked
+            // repaint that some browsers apply to inputs previously rendered
+            // as disabled (which markdown2's task_list extension does).
+            checkbox.classList.toggle('is-checked', checkbox.checked);
+
+            // Keep class in sync immediately on every click (fires after the
+            // browser has already toggled checkbox.checked).
+            checkbox.addEventListener('click', function () {
+                this.classList.toggle('is-checked', this.checked);
+            });
+
+            checkbox.addEventListener('change', function () {
                 saveCheckboxState(questId);
             });
         });
+
+        // Reset button: uncheck everything and clear the saved cookie
+        const resetBtn = document.querySelector('.quest-description-content .task-reset-btn');
+        if (resetBtn) {
+            resetBtn.addEventListener('click', function () {
+                checkboxes.forEach(cb => {
+                    cb.checked = false;
+                    cb.classList.remove('is-checked');
+                });
+                const cookieName = `quest_checkboxes_${questId.replace(/[^a-z0-9]/gi, '_')}`;
+                document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; SameSite=Lax`;
+            });
+        }
     }
 
-    // Save the state of all checkboxes to a cookie
     function saveCheckboxState(questId) {
         const checkboxes = document.querySelectorAll('.quest-description-content input[type="checkbox"]');
         const states = {};
-
         checkboxes.forEach((checkbox, index) => {
             states[index] = checkbox.checked;
         });
-
-        // Create cookie name using the quest ID
         const cookieName = `quest_checkboxes_${questId.replace(/[^a-z0-9]/gi, '_')}`;
-
-        // Save to cookie (expires in 30 days)
         const expiryDate = new Date();
         expiryDate.setDate(expiryDate.getDate() + 30);
-
         document.cookie = `${cookieName}=${JSON.stringify(states)}; expires=${expiryDate.toUTCString()}; path=/; SameSite=Lax`;
     }
 
-    // Get saved checkbox states from cookie
     function getSavedCheckboxStates(questId) {
         const cookieName = `quest_checkboxes_${questId.replace(/[^a-z0-9]/gi, '_')}`;
-        const cookies = document.cookie.split(';');
-
-        for (let cookie of cookies) {
+        for (const cookie of document.cookie.split(';')) {
             const [name, value] = cookie.trim().split('=');
             if (name === cookieName && value) {
                 try {
@@ -128,7 +139,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         }
-
         return null;
     }
 });

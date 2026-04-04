@@ -1,4 +1,5 @@
 from django.db.models import Q
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.views.decorators.http import require_POST
@@ -148,8 +149,11 @@ def search(request):
 
 @require_POST
 def report_issue(request, quest_id):
+    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
     quest = Quests.objects.filter(id=quest_id).first()
     if not quest or (quest.status == 'draft' and not request.user.is_staff):
+        if is_ajax:
+            return JsonResponse({'ok': False}, status=404)
         return redirect('quests:search')
     form = QuestIssueReportForm(request.POST)
     if form.is_valid() and not form.cleaned_data.get('website'):
@@ -158,5 +162,7 @@ def report_issue(request, quest_id):
             body=form.cleaned_data['body'],
             reporter_name=form.cleaned_data.get('reporter_name', ''),
         )
-        messages.success(request, "Thanks — your report has been submitted and will be reviewed by staff.")
+    if is_ajax:
+        return JsonResponse({'ok': True})
+    messages.success(request, "Thanks — your report has been submitted and will be reviewed by staff.")
     return redirect('quests:view', quest_id=quest_id)

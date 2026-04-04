@@ -1,0 +1,87 @@
+{% load static %}
+{% load expansion_filters %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            {% if zone_quests %}
+                <p class="mb-3">
+                    {% if request.user.is_staff %}
+                        <strong>{{ zone_quests|length }} quest{{ zone_quests|length|pluralize }}</strong>
+                        starting in {{ zone_data.long_name }}
+                        — <span class="text-success">{{ quest_published_count }} published</span>{% if quest_draft_count %},
+                        <span class="text-warning">{{ quest_draft_count }} draft</span>{% endif %}.
+                    {% else %}
+                        <strong>{{ zone_quests|length }} quest{{ zone_quests|length|pluralize }}</strong>
+                        starting in {{ zone_data.long_name }}:
+                    {% endif %}
+                </p>
+
+                <table id="quests-table" class="display table table-striped" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Quest Name</th>
+                            <th>Level</th>
+                            <th>Expansion</th>
+                            <th>Repeatable</th>
+                            {% if request.user.is_staff %}<th>Status</th>{% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for quest in zone_quests %}
+                        <tr>
+                            <td>
+                                {% if quest.status == 'published' %}
+                                    <a href="{% url 'quests:view' quest.id %}">{{ quest.name }}</a>
+                                {% else %}
+                                    <a href="{% url 'admin:quests_quests_change' quest.id %}"
+                                       title="Draft — click to edit in admin">{{ quest.name }}</a>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {{ quest.minimum_level|default:1 }}{% if quest.maximum_level == -1 %}+{% else %} – {{ quest.maximum_level }}{% endif %}
+                            </td>
+                            <td>
+                                <img src="{% static '/images/' %}{{ quest.expansion_introduced|expansion_icon }}"
+                                     loading="lazy"
+                                     alt="{{ quest.expansion_introduced|exp_filter|title }}"
+                                     style="width:16px;height:16px;vertical-align:middle;margin-right:4px;">
+                                {{ quest.expansion_introduced|exp_filter|title }}
+                            </td>
+                            <td>{{ quest.is_repeatable|yesno:"Yes,No" }}</td>
+                            {% if request.user.is_staff %}
+                            <td>
+                                {% if quest.status == 'published' %}
+                                    <span class="badge bg-success">Published</span>
+                                {% else %}
+                                    <span class="badge bg-warning text-dark">Draft</span>
+                                {% endif %}
+                            </td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                {% if request.user.is_staff %}
+                <p class="mt-3 mb-0 small text-muted">
+                    <a href="{% url 'admin:quests_quests_add' %}?starting_zone={{ zone_data.short_name }}">
+                        + Add a quest starting in {{ zone_data.long_name }}
+                    </a>
+                </p>
+                {% endif %}
+
+            {% else %}
+                <p class="text-muted mb-2">
+                    No quests starting in {{ zone_data.long_name }} have been documented yet.
+                </p>
+                {% if request.user.is_staff %}
+                <p class="small mb-0">
+                    <a href="{% url 'admin:quests_quests_add' %}?starting_zone={{ zone_data.short_name }}">
+                        + Add the first quest for this zone
+                    </a>
+                </p>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>

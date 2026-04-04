@@ -5,6 +5,7 @@ from collections import namedtuple
 from zones.models import ZonePage
 from common.models.zones import Zone
 from common.models.spawns import SpawnEntry
+from quests.models import Quests
 
 
 def index(request):
@@ -111,6 +112,13 @@ def view_zone(request, short_name):
                         i.NAME;""", [zone_data.short_name])
     items_result = cursor.fetchall()
 
+    zone_quests = Quests.objects.filter(starting_zone=short_name).order_by('minimum_level', 'name')
+    if not request.user.is_staff:
+        zone_quests = zone_quests.filter(status='published')
+    zone_quests = list(zone_quests)
+    quest_published_count = sum(1 for q in zone_quests if q.status == 'published')
+    quest_draft_count = len(zone_quests) - quest_published_count
+
     return render(request=request,
                   template_name="zones/view_zone.html",
                   context={"zone_data": zone_data,
@@ -122,4 +130,7 @@ def view_zone(request, short_name):
                            "ground_spawns": ground_spawn_results,
                            "spawn_points": spawn_points,
                            "fish": fish,
-                           "forage": forage, })
+                           "forage": forage,
+                           "zone_quests": zone_quests,
+                           "quest_published_count": quest_published_count,
+                           "quest_draft_count": quest_draft_count, })

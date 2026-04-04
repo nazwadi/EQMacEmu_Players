@@ -23,7 +23,7 @@
     font-size: 1.1rem;
     transition: background-color 0.2s ease;
     position: sticky;
-    top: 0;
+    top: 52px; /* offset for sticky navbar */
     z-index: 10;
 }
 
@@ -309,27 +309,34 @@
     background-color: var(--bg-content);
 }
 
-/* GitHub-style Task List Styles - Dark Theme */
-.quest-description-content ul li input[type="checkbox"] {
-    margin-right: 0.5em;
-}
+/* Task List Styles */
 
-.quest-description-content ul li:has(input[type="checkbox"]) {
-    list-style-type: none;
-    padding-left: 0;
-    margin-left: -1.25em;
-}
-
+/* Merged from two duplicate rules; covers both :has() browsers and the
+   .task-list class added by processTaskLists() */
+.quest-description-content ul li:has(input[type="checkbox"]),
 .quest-description-content ul.task-list li {
     list-style-type: none;
     padding-left: 0;
     margin-left: -1.25em;
+    margin-bottom: 0.5em;
+}
+
+/* Full-row click target injected by processTaskLists() */
+.quest-description-content .task-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    cursor: pointer;
+    width: 100%;
+    padding: 0.1em 0;
+    user-select: none;
 }
 
 .quest-description-content input[type="checkbox"] {
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
+    flex-shrink: 0;
     width: 16px;
     height: 16px;
     border: 1px solid var(--border-color);
@@ -340,7 +347,15 @@
     cursor: pointer;
 }
 
-.quest-description-content input[type="checkbox"]:checked {
+.quest-description-content input[type="checkbox"]:checked,
+.quest-description-content input[type="checkbox"].is-checked {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+/* Pre-JS fallback: markdown2 renders checked items as [checked disabled];
+   show them checked before the script removes the disabled attribute */
+.quest-description-content input[type="checkbox"]:disabled:checked {
     background-color: var(--accent-color);
     border-color: var(--accent-color);
 }
@@ -358,7 +373,9 @@
     opacity: 0;
 }
 
-.quest-description-content input[type="checkbox"]:checked::after {
+.quest-description-content input[type="checkbox"]:checked::after,
+.quest-description-content input[type="checkbox"].is-checked::after,
+.quest-description-content input[type="checkbox"]:disabled:checked::after {
     opacity: 1;
 }
 
@@ -371,13 +388,29 @@
     border-color: var(--hover-color);
 }
 
-.quest-description-content ul li:has(input[type="checkbox"]) {
-    margin-bottom: 0.5em;
-}
-
-.quest-description-content input[type="checkbox"]:checked + span {
+.quest-description-content input[type="checkbox"]:checked + span,
+.quest-description-content input[type="checkbox"].is-checked + span {
     text-decoration: line-through;
     color: var(--text-muted);
+}
+
+/* Reset progress button */
+.quest-description-content .task-reset-btn {
+    display: inline-block;
+    margin-top: 0.4rem;
+    padding: 0.2em 0.65em;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    background: none;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+}
+
+.quest-description-content .task-reset-btn:hover {
+    color: var(--text-primary);
+    border-color: var(--accent-color);
 }
 
 /* Responsive Improvements */
