@@ -345,7 +345,7 @@
     border-color: var(--accent-color);
 }
 
-.quest-description-content input[type="checkbox"]:checked::after {
+.quest-description-content input[type="checkbox"]::after {
     content: '';
     position: absolute;
     left: 5px;
@@ -355,6 +355,11 @@
     border: solid var(--bg-dark);
     border-width: 0 2px 2px 0;
     transform: rotate(45deg);
+    opacity: 0;
+}
+
+.quest-description-content input[type="checkbox"]:checked::after {
+    opacity: 1;
 }
 
 .quest-description-content input[type="checkbox"]:focus {
