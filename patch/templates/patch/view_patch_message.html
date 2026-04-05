@@ -2,6 +2,13 @@
 {% load static %}
 {% load humanize %}
 {% load markdown_extras %}
+{% block og_type %}article{% endblock %}
+{% block og_title %}{{ patch_message.title }} — EQ Archives{% endblock %}
+{% block og_description %}{{ patch_message.body_plaintext|truncatechars:160 }}{% endblock %}
+{% block extra_meta %}
+    <meta property="article:published_time" content="{{ patch_message.patch_date|date:'c' }}">
+    <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'patch:view' slug=patch_message.slug %}">
+{% endblock %}
 {% block extra_css %}
     <style>
         /* Dark Mode Patch View Styling - Updated to use main.css variables */
@@ -231,7 +238,7 @@
         }
 
         /* Mobile Optimizations */
-        @media (max-width: 768px) {
+        @media (max-width: 991px) {
             .patch-content {
                 font-size: 1rem;
                 line-height: 1.5;
@@ -250,12 +257,44 @@
             .accordion-button {
                 font-size: 0.9rem;
             }
+
+            /* On mobile the sidebar comes first (order-1), keep it compact */
+            #patchMessageAccordion {
+                max-height: 40vh !important;
+            }
+
+            /* Show only the active month's patches by default on mobile */
+            .sticky-top {
+                position: relative !important;
+            }
         }
 
         /* Navigation z-index */
         nav {
             z-index: 1025;
         }
+
+        /* Patch type badges */
+        .badge-patch-type { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.04em; padding: 0.25em 0.55em; border-radius: 4px; vertical-align: middle; }
+        .badge-patch       { background: rgba(123,113,74,0.25); color: var(--text-secondary); border: 1px solid var(--border-color); }
+        .badge-hotfix      { background: rgba(180,60,40,0.35);  color: #f88; border: 1px solid rgba(180,60,40,0.6); }
+        .badge-press       { background: rgba(46,87,191,0.35);  color: #9ab; border: 1px solid rgba(46,87,191,0.6); }
+        .badge-news        { background: rgba(60,140,90,0.35);  color: #8c8; border: 1px solid rgba(60,140,90,0.6); }
+
+        /* Tag badges */
+        .badge-tag { background: rgba(40,80,120,0.3); color: #8ab; border: 1px solid rgba(40,80,120,0.6); font-size: 0.7rem; font-weight: 600; padding: 0.25em 0.55em; border-radius: 4px; vertical-align: middle; }
+
+        /* Expansion badges */
+        .badge-expansion { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.03em; padding: 0.25em 0.55em; border-radius: 4px; vertical-align: middle; }
+        .exp-classic   { background: rgba(100,100,100,0.3); color: #ccc;    border: 1px solid #555; }
+        .exp-kunark    { background: rgba(96,118,67,0.4);  color: #D3AB5C; border: 1px solid #607643; }
+        .exp-velious   { background: rgba(208,196,186,0.2); color: #cbb;   border: 1px solid #8a7f78; }
+        .exp-luclin    { background: rgba(46,87,191,0.3);  color: #DDBE47; border: 1px solid #2E57BF; }
+        .exp-pop       { background: rgba(139,62,24,0.4);  color: #CEB04A; border: 1px solid #8B3E18; }
+        .exp-other     { background: rgba(60,60,80,0.35);  color: #aac;    border: 1px solid #446; }
+
+        /* Source notes footnote */
+        .source-notes { font-size: 0.75rem; color: var(--text-muted); border-top: 1px solid var(--border-light); margin-top: 1.5rem; padding-top: 0.75rem; }
 
         /* Ensure proper styling for Bootstrap icons */
         .bi {
@@ -280,7 +319,7 @@
     <div class="container-fluid py-4">
         <div class="row justify-content-center">
             <!-- Main Content Column -->
-            <div class="col-xl-8 col-lg-9 col-md-12 mb-4">
+            <div class="col-xl-8 col-lg-9 col-md-12 mb-4 order-2 order-lg-1">
                 <div class="card shadow-sm">
                     <!-- Navigation Bar -->
                     <div class="card-header bg-transparent border-0 py-3">
@@ -318,24 +357,49 @@
                         <header class="text-center mb-4">
                             <h1 class="h4 mb-2">{{ patch_message.title }}</h1>
                             <time datetime="{{ patch_message.patch_date|date:'Y-m-d' }}"
-                                  class="text-muted small">
+                                  class="text-muted small d-block mb-2">
                                 {{ patch_message.patch_date|date:"F d, Y" }}
                             </time>
+                            <div class="d-flex gap-2 justify-content-center flex-wrap">
+                                {% if patch_message.patch_type == 'hotfix' %}
+                                    <span class="badge-patch-type badge-hotfix">Hotfix</span>
+                                {% elif patch_message.patch_type == 'press_release' %}
+                                    <span class="badge-patch-type badge-press">Press Release</span>
+                                {% elif patch_message.patch_type == 'news' %}
+                                    <span class="badge-patch-type badge-news">News</span>
+                                {% endif %}
+                                {% if patch_message.expansion %}
+                                    {% with exp=patch_message.expansion %}
+                                    <span class="badge-expansion {% if exp == 'classic' %}exp-classic{% elif exp == 'kunark' %}exp-kunark{% elif exp == 'velious' %}exp-velious{% elif exp == 'luclin' %}exp-luclin{% elif exp == 'pop' %}exp-pop{% else %}exp-other{% endif %}">
+                                        {{ patch_message.get_expansion_display }}
+                                    </span>
+                                    {% endwith %}
+                                {% endif %}
+                                {% for tag in patch_message.tags.all %}
+                                    <span class="badge-tag">{{ tag.name }}</span>
+                                {% endfor %}
+                            </div>
                         </header>
 
                         <!-- Content Tabs -->
                         <ul class="nav nav-tabs" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="markdown-tab"
+                                <button class="nav-link {% if default_tab == 'markdown' %}active{% endif %}"
+                                        id="markdown-tab"
                                         data-bs-toggle="tab" data-bs-target="#markdown-tab-pane"
-                                        type="button" role="tab" aria-selected="true">
+                                        type="button" role="tab"
+                                        aria-controls="markdown-tab-pane"
+                                        aria-selected="{% if default_tab == 'markdown' %}true{% else %}false{% endif %}">
                                     Formatted
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="plaintext-tab"
+                                <button class="nav-link {% if default_tab == 'plaintext' %}active{% endif %}"
+                                        id="plaintext-tab"
                                         data-bs-toggle="tab" data-bs-target="#plaintext-tab-pane"
-                                        type="button" role="tab">
+                                        type="button" role="tab"
+                                        aria-controls="plaintext-tab-pane"
+                                        aria-selected="{% if default_tab == 'plaintext' %}true{% else %}false{% endif %}">
                                     Plain Text
                                 </button>
                             </li>
@@ -344,7 +408,8 @@
                         <!-- Tab Content -->
                         <div class="tab-content mt-4" id="patchViewTabContent">
                             <!-- Markdown Version -->
-                            <div class="tab-pane fade show active" id="markdown-tab-pane"
+                            <div class="tab-pane fade {% if default_tab == 'markdown' %}show active{% endif %}"
+                                 id="markdown-tab-pane"
                                  role="tabpanel" aria-labelledby="markdown-tab">
                                 <article class="patch-content">
                                     {{ patch_message.body_markdown|render_markdown|safe }}
@@ -352,9 +417,20 @@
                             </div>
 
                             <!-- Plain Text Version -->
-                            <div class="tab-pane fade" id="plaintext-tab-pane"
+                            <div class="tab-pane fade {% if default_tab == 'plaintext' %}show active{% endif %}"
+                                 id="plaintext-tab-pane"
                                  role="tabpanel" aria-labelledby="plaintext-tab">
-                                <pre class="patch-plaintext p-3 bg-light rounded">{{ patch_message.body_plaintext|linebreaks }}</pre>
+                                <div class="d-flex justify-content-end mb-2">
+                                    <a href="{% url 'patch:raw' slug=patch_message.slug %}"
+                                       class="btn btn-outline-secondary btn-sm"
+                                       download>
+                                        <i class="bi bi-download"></i> Download .txt
+                                    </a>
+                                </div>
+                                <pre class="patch-plaintext p-3 bg-light rounded">{{ patch_message.body_plaintext }}</pre>
+                                {% if patch_message.source_notes %}
+                                    <p class="source-notes">Source: {{ patch_message.source_notes }}</p>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -362,31 +438,33 @@
             </div>
 
             <!-- Sidebar -->
-            <div class="col-xl-3 col-lg-3 col-md-12">
+            <div class="col-xl-3 col-lg-3 col-md-12 order-1 order-lg-2 mb-4">
                 <div class="sticky-top" style="top: 1rem;">
                     <h5 class="mb-3">Patches in {{ patch_message.patch_year }}</h5>
-                    <div class="accordion accordion-flush shadow-sm" id="patchMessageAccordion">
+                    <div class="accordion accordion-flush shadow-sm" id="patchMessageAccordion"
+                         style="max-height: calc(100vh - 8rem); overflow-y: auto;">
                         {% for month, patches in patches_by_month.items %}
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="heading{{ month }}">
-                                    <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}"
+                                    <button class="accordion-button {% if month != current_month %}collapsed{% endif %}"
                                             type="button" data-bs-toggle="collapse"
                                             data-bs-target="#collapse{{ month }}"
-                                            aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}">
+                                            aria-controls="collapse{{ month }}"
+                                            aria-expanded="{% if month == current_month %}true{% else %}false{% endif %}">
                                         {{ month }}
                                     </button>
                                 </h2>
                                 <div id="collapse{{ month }}"
-                                     class="accordion-collapse collapse {% if forloop.first %}show{% endif %}"
+                                     class="accordion-collapse collapse {% if month == current_month %}show{% endif %}"
                                      data-bs-parent="#patchMessageAccordion">
                                     <div class="accordion-body p-0">
                                         <div class="list-group list-group-flush">
                                             {% for patch in patches %}
-                                                <a href="{{ patch.slug }}"
+                                                <a href="{% url 'patch:view' slug=patch.slug %}"
                                                    class="list-group-item list-group-item-action {% if patch.slug == patch_message.slug %}active{% endif %}">
-                                                    <time datetime="{{ patch.patch_date|date:'Y-m-d H:i' }}"
-                                                          class="small">
-                                                        {{ patch.patch_date|date:"M d Y H:i" }}
+                                                    <span class="d-block small fw-medium">{{ patch.title|truncatechars:48 }}</span>
+                                                    <time datetime="{{ patch.patch_date|date:'c' }}" class="d-block small text-muted">
+                                                        {{ patch.patch_date|date:"M j, Y" }}{% if patch.patch_date|date:"H:i" != "00:00" %} {{ patch.patch_date|date:"H:i" }}{% endif %}
                                                     </time>
                                                 </a>
                                             {% endfor %}
@@ -400,4 +478,23 @@
             </div>
         </div>
     </div>
+    <script>
+    document.addEventListener('keydown', function(e) {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        {% if prev_patch %}
+        if (e.key === 'ArrowLeft') { window.location.href = "{% url 'patch:view' slug=prev_patch.slug %}"; }
+        {% endif %}
+        {% if next_patch %}
+        if (e.key === 'ArrowRight') { window.location.href = "{% url 'patch:view' slug=next_patch.slug %}"; }
+        {% endif %}
+    });
+
+    // Scroll the active sidebar item into view on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        const activeItem = document.querySelector('.list-group-item.active');
+        if (activeItem) {
+            activeItem.scrollIntoView({ block: 'nearest' });
+        }
+    });
+    </script>
 {% endblock %}

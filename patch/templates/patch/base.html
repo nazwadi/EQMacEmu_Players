@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block sidebar %}{% endblock %}
+{% block extra_head %}
+    <link rel="alternate" type="application/rss+xml" title="EverQuest Patch Archive" href="{% url 'patch:feed' %}">
+{% endblock %}
 {% block extra_js %}
     <script>
     // Initialize tooltips

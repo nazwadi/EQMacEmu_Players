@@ -420,6 +420,40 @@
     /* Hide elements based on current view */
     .view-grid .compact-only { display: none; }
     .view-compact .grid-only { display: none; }
+
+    /* Tag filter strip */
+    .tag-filter-strip {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        align-items: center;
+    }
+
+    .tag-filter-btn {
+        display: inline-block;
+        padding: 0.3rem 0.7rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        color: var(--text-secondary) !important;
+        border: 1px solid var(--border-color);
+        background: var(--bg-tertiary);
+    }
+
+    .tag-filter-btn:hover {
+        color: var(--accent-color) !important;
+        border-color: var(--accent-color);
+        background: var(--bg-secondary);
+    }
+
+    .tag-filter-btn.active {
+        color: var(--bg-dark) !important;
+        background: var(--accent-color);
+        border-color: var(--accent-color);
+        font-weight: 700;
+    }
 </style>
 
 <div class="container py-4">
@@ -437,13 +471,13 @@
                     <label for="start_date" class="form-label">From Date</label>
                     <input type="date" class="form-control" id="start_date"
                            name="start_date" value="{{ start_date }}"
-                           min="1999-01-01" max="2001-12-31">
+                           min="1999-01-01" max="2010-12-31">
                 </div>
                 <div class="col-md-5">
                     <label for="end_date" class="form-label">To Date</label>
                     <input type="date" class="form-control" id="end_date"
                            name="end_date" value="{{ end_date }}"
-                           min="1999-01-01" max="2001-12-31">
+                           min="1999-01-01" max="2010-12-31">
                 </div>
                 <div class="col-md-2">
                     <label class="form-label">&nbsp;</label>
@@ -569,6 +603,17 @@
                             {% endif %}
                         </div>
                     </div>
+                    <div class="d-flex gap-2 align-items-center flex-wrap">
+                        <a href="{% url 'patch:export_json' %}" class="btn btn-outline-secondary btn-sm" title="Download full archive as JSON">
+                            <i class="bi bi-download"></i> JSON
+                        </a>
+                        <a href="{% url 'patch:export_csv' %}" class="btn btn-outline-secondary btn-sm" title="Download full archive as CSV">
+                            <i class="bi bi-download"></i> CSV
+                        </a>
+                        <a href="{% url 'patch:feed' %}" class="btn btn-outline-secondary btn-sm" title="RSS feed">
+                            <i class="bi bi-rss"></i> RSS
+                        </a>
+                    </div>
                 </div>
 
                 <div class="view-controls">
@@ -579,7 +624,17 @@
                         <button class="view-option" onclick="setBrowseView('compact')">
                             Compact
                         </button>
+                        <button class="view-option" onclick="setBrowseView('expansion')">
+                            Expansions
+                        </button>
                     </div>
+                </div>
+
+                <div class="tag-filter-strip mb-3" id="tag-filter-strip">
+                    <a href="{% url 'patch:index' %}" class="tag-filter-btn {% if not active_tag %}active{% endif %}">All</a>
+                    {% for tag in all_tags %}
+                        <a href="?tag={{ tag.slug }}" class="tag-filter-btn {% if active_tag == tag.slug %}active{% endif %}">{{ tag.name }}</a>
+                    {% endfor %}
                 </div>
 
                 <!-- Sticky Year Navigation -->
@@ -644,6 +699,33 @@
                         </div>
                     {% endfor %}
                 </div>
+
+                <!-- Expansion View -->
+                <div id="browse-expansions" style="display: none;">
+                    {% for exp in patches_by_expansion %}
+                        <div class="year-group" id="exp-{{ exp.key }}">
+                            <div class="year-group-header card">
+                                <h6 class="year-group-title">{{ exp.display }}</h6>
+                                <span class="year-patch-count badge bg-secondary">
+                                    {{ exp.count }} patch{{ exp.count|pluralize:"es" }}
+                                </span>
+                            </div>
+                            <div class="year-compact-grid">
+                                {% for patch in exp.patches %}
+                                    <div class="compact-patch-item">
+                                        <a href="{% url 'patch:view' slug=patch.slug %}"
+                                           class="compact-patch-title text-decoration-none">
+                                            {{ patch.title }}
+                                        </a>
+                                        <div class="compact-patch-date text-muted">
+                                            {{ patch.patch_date|date:"M j, Y" }}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
         </div>
     {% endif %}
@@ -658,6 +740,9 @@ function setBrowseView(view) {
     currentBrowseView = view;
     const container = document.getElementById('browse-container');
     const buttons = container.querySelectorAll('.view-option');
+    const browseCards = document.getElementById('browse-cards');
+    const browseExpansions = document.getElementById('browse-expansions');
+    const yearNavSticky = container.querySelector('.year-nav-sticky');
 
     // Update button states
     buttons.forEach(btn => btn.classList.remove('active'));
@@ -665,6 +750,17 @@ function setBrowseView(view) {
 
     // Update container class
     container.className = container.className.replace(/view-\w+/, '') + ' view-' + view;
+
+    // Show/hide expansion vs year views
+    if (view === 'expansion') {
+        if (browseCards) browseCards.style.display = 'none';
+        if (browseExpansions) browseExpansions.style.display = 'block';
+        if (yearNavSticky) yearNavSticky.style.display = 'none';
+    } else {
+        if (browseCards) browseCards.style.display = 'block';
+        if (browseExpansions) browseExpansions.style.display = 'none';
+        if (yearNavSticky) yearNavSticky.style.display = 'block';
+    }
 }
 
 function setSearchView(view) {
