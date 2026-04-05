@@ -58,6 +58,14 @@
                                 <span class="badge bg-secondary ms-1">{{ zone_quests|length }}</span>
                             {% endif %}
                         </button>
+                        {% if zone_patch_history %}
+                        <button class="nav-link" id="patch-history-tab" data-bs-toggle="pill"
+                                data-bs-target="#patch-history-tab-pane"
+                                type="button" role="tab" aria-controls="patch-history-tab-pane" aria-selected="false">
+                            Patch History
+                            <span class="badge bg-secondary ms-1">{{ zone_patch_history|length }}</span>
+                        </button>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="col tab-content" id="zonesTabContent">
@@ -119,6 +127,21 @@
                          tabindex="8">
                         {% include "zones/quests.html" %}
                     </div>
+                    {% if zone_patch_history %}
+                    <div class="tab-pane fade" id="patch-history-tab-pane" role="tabpanel"
+                         aria-labelledby="patch-history-tab"
+                         tabindex="9">
+                        <ul class="list-unstyled mt-3 mb-0">
+                            {% for entry in zone_patch_history %}
+                            <li class="mb-2">
+                                <a href="{% url 'patch:view' entry.patch.slug %}">{{ entry.patch.patch_date|date:"M j, Y" }}</a>
+                                <span class="badge bg-secondary ms-1">{{ entry.get_role_display }}</span>
+                                {% if entry.notes %}<br><small class="text-muted">{{ entry.notes }}</small>{% endif %}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

@@ -262,6 +262,12 @@ def view_patch_message(request, slug: str):
     :param slug: the slug for the patch message
     :return: HttpResponse
     """
+    from quests.models import QuestPatchHistory
+    from npcs.models import NPCPatchHistory
+    from items.models import ItemPatchHistory
+    from spells.models import SpellPatchHistory
+    from zones.models import ZonePatchHistory
+
     patch_message = PatchMessage.objects.get(slug=slug)
     next_patch = PatchMessage.objects.filter(
         Q(patch_date=patch_message.patch_date, patch_number_this_date__gt=patch_message.patch_number_this_date) |
@@ -281,6 +287,33 @@ def view_patch_message(request, slug: str):
         if month_key not in patches_by_month_dict:
             patches_by_month_dict[month_key] = []
         patches_by_month_dict[month_key].append(patch)
+
+    quest_history = (
+        QuestPatchHistory.objects
+        .filter(patch=patch_message)
+        .select_related('quest')
+        .order_by('quest__name')
+    )
+    npc_history = (
+        NPCPatchHistory.objects
+        .filter(patch=patch_message)
+        .order_by('npc_name')
+    )
+    item_history = (
+        ItemPatchHistory.objects
+        .filter(patch=patch_message)
+        .order_by('item_name')
+    )
+    spell_history = (
+        SpellPatchHistory.objects
+        .filter(patch=patch_message)
+        .order_by('spell_name')
+    )
+    zone_history = (
+        ZonePatchHistory.objects
+        .filter(patch=patch_message)
+        .order_by('zone_long_name')
+    )
 
     new_comment = None  # Comment posted
     if request.method == 'POST':
@@ -311,6 +344,11 @@ def view_patch_message(request, slug: str):
                       "comments": comments,
                       "new_comment": new_comment,
                       "comment_form": comment_form,
+                      "quest_history": quest_history,
+                      "npc_history": npc_history,
+                      "item_history": item_history,
+                      "spell_history": spell_history,
+                      "zone_history": zone_history,
                   },
                   template_name="patch/view_patch_message.html")
 

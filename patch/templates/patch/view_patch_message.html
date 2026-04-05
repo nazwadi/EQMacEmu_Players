@@ -437,6 +437,91 @@
                 </div>
             </div>
 
+            <!-- Cross-links: entities documented in this patch -->
+            {% if quest_history or npc_history or item_history or spell_history or zone_history %}
+            <div class="col-12 order-3 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-transparent border-0 py-2 px-3">
+                        <h2 class="h6 mb-0">Referenced in This Patch</h2>
+                    </div>
+                    <div class="card-body py-2 px-3">
+                        <div class="row g-3">
+                            {% if quest_history %}
+                            <div class="col-12 col-sm-6 col-lg-4">
+                                <h6 class="text-muted small text-uppercase mb-2">Quests</h6>
+                                <ul class="list-unstyled mb-0">
+                                    {% for entry in quest_history %}
+                                    <li class="mb-1">
+                                        <a href="{% url 'quests:view' entry.quest.id %}">{{ entry.quest.name }}</a>
+                                        <span class="badge bg-secondary ms-1 small">{{ entry.get_role_display }}</span>
+                                        {% if entry.notes %}<br><small class="text-muted">{{ entry.notes }}</small>{% endif %}
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            {% endif %}
+                            {% if npc_history %}
+                            <div class="col-12 col-sm-6 col-lg-4">
+                                <h6 class="text-muted small text-uppercase mb-2">NPCs</h6>
+                                <ul class="list-unstyled mb-0">
+                                    {% for entry in npc_history %}
+                                    <li class="mb-1">
+                                        <a href="{% url 'npcs:view' entry.npc_id %}">{{ entry.npc_name }}</a>
+                                        <span class="badge bg-secondary ms-1 small">{{ entry.get_role_display }}</span>
+                                        {% if entry.notes %}<br><small class="text-muted">{{ entry.notes }}</small>{% endif %}
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            {% endif %}
+                            {% if item_history %}
+                            <div class="col-12 col-sm-6 col-lg-4">
+                                <h6 class="text-muted small text-uppercase mb-2">Items</h6>
+                                <ul class="list-unstyled mb-0">
+                                    {% for entry in item_history %}
+                                    <li class="mb-1">
+                                        <a href="{% url 'items:view' entry.item_id %}">{{ entry.item_name }}</a>
+                                        <span class="badge bg-secondary ms-1 small">{{ entry.get_role_display }}</span>
+                                        {% if entry.notes %}<br><small class="text-muted">{{ entry.notes }}</small>{% endif %}
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            {% endif %}
+                            {% if spell_history %}
+                            <div class="col-12 col-sm-6 col-lg-4">
+                                <h6 class="text-muted small text-uppercase mb-2">Spells</h6>
+                                <ul class="list-unstyled mb-0">
+                                    {% for entry in spell_history %}
+                                    <li class="mb-1">
+                                        <a href="{% url 'spells:view' entry.spell_id %}">{{ entry.spell_name }}</a>
+                                        <span class="badge bg-secondary ms-1 small">{{ entry.get_role_display }}</span>
+                                        {% if entry.notes %}<br><small class="text-muted">{{ entry.notes }}</small>{% endif %}
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            {% endif %}
+                            {% if zone_history %}
+                            <div class="col-12 col-sm-6 col-lg-4">
+                                <h6 class="text-muted small text-uppercase mb-2">Zones</h6>
+                                <ul class="list-unstyled mb-0">
+                                    {% for entry in zone_history %}
+                                    <li class="mb-1">
+                                        <a href="{% url 'zones:view' entry.zone_short_name %}">{{ entry.zone_long_name }}</a>
+                                        <span class="badge bg-secondary ms-1 small">{{ entry.get_role_display }}</span>
+                                        {% if entry.notes %}<br><small class="text-muted">{{ entry.notes }}</small>{% endif %}
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
             <!-- Sidebar -->
             <div class="col-xl-3 col-lg-3 col-md-12 order-1 order-lg-2 mb-4">
                 <div class="sticky-top" style="top: 1rem;">

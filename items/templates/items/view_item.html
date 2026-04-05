@@ -231,6 +231,24 @@
                         {% endif %}
                     </div>
                 </div>
+
+                {% if item_patch_history %}
+                <div class="row py-2">
+                    <div class="col">
+                        <h5>Patch History</h5>
+                        <hr/>
+                        <ul class="list-unstyled mb-0">
+                            {% for entry in item_patch_history %}
+                            <li class="mb-1">
+                                <a href="{% url 'patch:view' entry.patch.slug %}">{{ entry.patch.patch_date|date:"M j, Y" }}</a>
+                                <span class="badge bg-secondary ms-1">{{ entry.get_role_display }}</span>
+                                {% if entry.notes %}<br><small class="text-muted">{{ entry.notes }}</small>{% endif %}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>

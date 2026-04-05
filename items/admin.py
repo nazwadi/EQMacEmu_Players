@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from items.models import BISEntry, BISRevision, ItemExpansion, ItemExpansionIdRange
+from items.models import BISEntry, BISRevision, ItemExpansion, ItemExpansionIdRange, ItemPatchHistory
 from common.constants import PLAYER_CLASSES
 
 
@@ -63,3 +63,12 @@ class ItemExpansionAdmin(admin.ModelAdmin):
     @admin.display(description='Expansion', ordering='expansion')
     def get_expansion_display(self, obj):
         return obj.get_expansion_display()
+
+
+@admin.register(ItemPatchHistory)
+class ItemPatchHistoryAdmin(admin.ModelAdmin):
+    list_display = ['item_name', 'item_id', 'patch', 'role']
+    list_filter = ['role']
+    search_fields = ['item_name', 'item_id']
+    autocomplete_fields = ['patch']
+    ordering = ['patch__patch_date']

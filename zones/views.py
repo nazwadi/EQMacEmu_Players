@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.db import connections
 from collections import namedtuple
 
-from zones.models import ZonePage
+from zones.models import ZonePage, ZonePatchHistory
 from common.models.zones import Zone
 from common.models.spawns import SpawnEntry
 from quests.models import Quests
@@ -119,6 +119,13 @@ def view_zone(request, short_name):
     quest_published_count = sum(1 for q in zone_quests if q.status == 'published')
     quest_draft_count = len(zone_quests) - quest_published_count
 
+    zone_patch_history = (
+        ZonePatchHistory.objects
+        .filter(zone_short_name=short_name)
+        .select_related('patch')
+        .order_by('patch__patch_date')
+    )
+
     return render(request=request,
                   template_name="zones/view_zone.html",
                   context={"zone_data": zone_data,
@@ -133,4 +140,5 @@ def view_zone(request, short_name):
                            "forage": forage,
                            "zone_quests": zone_quests,
                            "quest_published_count": quest_published_count,
-                           "quest_draft_count": quest_draft_count, })
+                           "quest_draft_count": quest_draft_count,
+                           "zone_patch_history": zone_patch_history, })

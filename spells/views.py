@@ -7,7 +7,7 @@ from django.views.decorators.http import require_http_methods
 
 from common.models.spells import SpellsNew
 from common.models.items import Items
-from spells.models import SpellExpansion
+from spells.models import SpellExpansion, SpellPatchHistory
 from spells.utils import calc_buff_duration
 from spells.utils import prep_spell_data
 from django.db.models import Q
@@ -253,6 +253,14 @@ def view_spell(request, spell_id):
             components.append((Items.objects.filter(id=spell_data.components4).first(), spell_data.component_counts4))
         result = SpellExpansion.objects.filter(id=spell_id).first()
         expansion = result.expansion if result else None
+
+        spell_patch_history = (
+            SpellPatchHistory.objects
+            .filter(spell_id=spell_id)
+            .select_related('patch')
+            .order_by('patch__patch_date')
+        )
+
         return render(request=request,
                       template_name="spells/view_spell.html",
                       context={"spell_data": spell_data,
@@ -265,5 +273,6 @@ def view_spell(request, spell_id):
                                "spell_max_duration": spell_max_duration,
                                "spell_max_time": spell_max_time,
                                "items_with_effect": items_with_effect,
+                               "spell_patch_history": spell_patch_history,
                                },
                       )

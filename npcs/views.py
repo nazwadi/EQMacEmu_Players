@@ -11,7 +11,7 @@ from dataclasses import asdict
 from collections import namedtuple
 from django.views.decorators.http import require_http_methods
 
-from npcs.models import NpcPage
+from npcs.models import NpcPage, NPCPatchHistory
 from common.models.loot import LootTable, LootDropEntries
 from common.models.loot import LootTableEntries
 from common.models.npcs import NPCTypes
@@ -423,6 +423,13 @@ def view_npc(request, npc_id):
         status='published',
     ).distinct()
 
+    npc_patch_history = (
+        NPCPatchHistory.objects
+        .filter(npc_id=npc_data.id)
+        .select_related('patch')
+        .order_by('patch__patch_date')
+    )
+
     return render(request=request,
                   template_name="npcs/view_npc.html",
                   context={
@@ -440,6 +447,7 @@ def view_npc(request, npc_id):
                       "npc_spell_proc_data": npc_spell_proc_data,
                       "opposing_factions": opposing_factions,
                       "related_quests": related_quests,
+                      "npc_patch_history": npc_patch_history,
                       "spawn_point_list": spawn_point_list,
                       "spawn_groups": spawn_groups,
                       "zone": zone,

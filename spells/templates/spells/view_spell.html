@@ -313,5 +313,21 @@
             </div>
             </div>
         {% endif %}
+
+    {% if spell_patch_history %}
+    <div class="container mt-4">
+        <h5>Patch History</h5>
+        <hr/>
+        <ul class="list-unstyled mb-0">
+            {% for entry in spell_patch_history %}
+            <li class="mb-1">
+                <a href="{% url 'patch:view' entry.patch.slug %}">{{ entry.patch.patch_date|date:"M j, Y" }}</a>
+                <span class="badge bg-secondary ms-1">{{ entry.get_role_display }}</span>
+                {% if entry.notes %}<br><small class="text-muted">{{ entry.notes }}</small>{% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
     </div>
 {% endblock %}

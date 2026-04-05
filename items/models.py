@@ -2,6 +2,11 @@ from django.db import models
 
 from common.constants import PLAYER_CLASSES
 
+PATCH_HISTORY_ROLE_CHOICES = [
+    ('introduced', 'Introduced'),
+    ('updated', 'Updated'),
+]
+
 # Integer-keyed expansion choices used by ItemExpansion (covers all 31 expansions).
 ITEM_EXPANSION_CHOICES = [
     (0, 'Original EverQuest'),
@@ -205,3 +210,49 @@ class BISRevision(models.Model):
         if self.action == self.ACTION_EDIT:
             return f'Edited note on {self.item_name} in {self.slot}'
         return f'{self.action} {self.item_name}'
+
+
+class ItemPatchHistory(models.Model):
+    """
+    Links an item (by game-DB id) to a patch message that changed it.
+
+    Most items were introduced with their expansion — ItemExpansion already
+    tracks that. Only use role='introduced' when a specific patch note
+    documents the item being added mid-expansion. The common case is
+    role='updated' (stat change, effect change, no-rent/no-drop flag, etc.).
+    """
+    item_id = models.IntegerField(
+        help_text="Game-DB item id (items.id)",
+    )
+    item_name = models.CharField(
+        max_length=128,
+        help_text="Denormalized name for display (game DB is read-only).",
+    )
+    patch = models.ForeignKey(
+        'patch.PatchMessage',
+        on_delete=models.CASCADE,
+        related_name='item_history',
+    )
+    role = models.CharField(
+        max_length=10,
+        choices=PATCH_HISTORY_ROLE_CHOICES,
+        default='updated',
+        help_text=(
+            "Use 'Updated' for stat/flag/effect changes documented in the patch. "
+            "Only use 'Introduced' when the item was genuinely added mid-expansion "
+            "by this specific patch — ItemExpansion handles expansion-launch items."
+        ),
+    )
+    notes = models.TextField(
+        blank=True,
+        help_text="What changed and how this may differ from P99 wiki or Allakhazam.",
+    )
+
+    def __str__(self):
+        return f"{self.item_name} ({self.item_id}) — {self.get_role_display()} in {self.patch.title}"
+
+    class Meta:
+        verbose_name = 'Item Patch History'
+        verbose_name_plural = 'Item Patch Histories'
+        unique_together = ['item_id', 'patch', 'role']
+        ordering = ['patch__patch_date']

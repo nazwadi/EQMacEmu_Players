@@ -679,6 +679,22 @@
                     </ul>
                 </section>
                 {% endif %}
+
+                <!-- Patch History (conditional) -->
+                {% if npc_patch_history %}
+                <section id="patch-history-section" class="npc-section">
+                    <h2 class="section-header">Patch History</h2>
+                    <ul class="list-unstyled mb-0">
+                        {% for entry in npc_patch_history %}
+                        <li class="mb-1">
+                            <a href="{% url 'patch:view' entry.patch.slug %}">{{ entry.patch.patch_date|date:"M j, Y" }}</a>
+                            <span class="badge bg-secondary ms-1">{{ entry.get_role_display }}</span>
+                            {% if entry.notes %}<br><small class="text-muted">{{ entry.notes }}</small>{% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </section>
+                {% endif %}
             </div>
         </div>
     </div>

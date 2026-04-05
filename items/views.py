@@ -9,7 +9,7 @@ from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 from django.http import Http404
 
-from items.models import BISEntry, BISRevision, ItemExpansion, SLOT_ORDER, ITEM_EXPANSION_CHOICES
+from items.models import BISEntry, BISRevision, ItemExpansion, ItemPatchHistory, SLOT_ORDER, ITEM_EXPANSION_CHOICES
 from items.utils import get_class_bitmask
 from items.utils import get_race_bitmask
 from items.utils import build_stat_query
@@ -470,6 +470,13 @@ def view_item(request, item_id):
         status='published',
     ).distinct()
 
+    item_patch_history = (
+        ItemPatchHistory.objects
+        .filter(item_id=item_id)
+        .select_related('patch')
+        .order_by('patch__patch_date')
+    )
+
     return render(request=request,
                   template_name="items/view_item.html",
                   context={
@@ -485,6 +492,7 @@ def view_item(request, item_id):
                       "forage": forage,
                       "ground_spawns": ground_spawns,
                       "related_quests": related_quests,
+                      "item_patch_history": item_patch_history,
                   })
 
 @require_http_methods(["GET"])
