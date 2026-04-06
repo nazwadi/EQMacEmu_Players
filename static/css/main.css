@@ -328,6 +328,11 @@ nav.border {
     color: #dddddd;
 }
 
+.vanilla span, h2 .vanilla {
+    background: #666666;
+    color: #dddddd;
+}
+
 .kunark span, h2 .kunark {
     background: #607643;
     color: #D3AB5C;
@@ -371,6 +376,11 @@ nav.border {
 .dragons span, h2 .dragons {
     background: #8B0000;
     color: #FFD700;
+}
+
+.depths span, h2 .depths {
+    background: #1C1C3A;
+    color: #7B9EA6;
 }
 
 span.script {

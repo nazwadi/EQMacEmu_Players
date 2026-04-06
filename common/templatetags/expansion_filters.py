@@ -17,4 +17,16 @@ def exp_filter(expansion_code):
         case 3:
             return "luclin"
         case 4:
-            return "pop"
+            return "planes"
+        case 5:
+            return "ykesha"
+        case 6:
+            return "ldon"
+        case 7:
+            return "gates"
+        case 8:
+            return "omens"
+        case 9:
+            return "dragons"
+        case 10:
+            return "depths"

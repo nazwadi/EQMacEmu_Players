@@ -50,14 +50,19 @@
                                 type="button" role="tab" aria-controls="merchants-tab-pane" aria-selected="false">
                             Merchants
                         </button>
+                        {% if quest_published_count or request.user.is_staff %}
                         <button class="nav-link" id="quests-tab" data-bs-toggle="pill"
                                 data-bs-target="#quests-tab-pane"
                                 type="button" role="tab" aria-controls="quests-tab-pane" aria-selected="false">
                             Quests
-                            {% if zone_quests %}
-                                <span class="badge bg-secondary ms-1">{{ zone_quests|length }}</span>
+                            {% if quest_published_count %}
+                                <span class="badge bg-secondary ms-1">{{ quest_published_count }}</span>
+                            {% endif %}
+                            {% if request.user.is_staff and quest_draft_count %}
+                                <span class="badge bg-warning ms-1" title="{{ quest_draft_count }} draft">{{ quest_draft_count }}d</span>
                             {% endif %}
                         </button>
+                        {% endif %}
                         {% if zone_patch_history %}
                         <button class="nav-link" id="patch-history-tab" data-bs-toggle="pill"
                                 data-bs-target="#patch-history-tab-pane"
@@ -122,11 +127,13 @@
                          tabindex="7">
                         {% include "zones/merchants.html" %}
                     </div>
+                    {% if quest_published_count or request.user.is_staff %}
                     <div class="tab-pane fade" id="quests-tab-pane" role="tabpanel"
                          aria-labelledby="quests-tab"
                          tabindex="8">
                         {% include "zones/quests.html" %}
                     </div>
+                    {% endif %}
                     {% if zone_patch_history %}
                     <div class="tab-pane fade" id="patch-history-tab-pane" role="tabpanel"
                          aria-labelledby="patch-history-tab"

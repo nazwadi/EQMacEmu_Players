@@ -41,12 +41,8 @@
                             <td>
                                 {{ quest.minimum_level|default:1 }}{% if quest.maximum_level == -1 %}+{% else %} – {{ quest.maximum_level }}{% endif %}
                             </td>
-                            <td>
-                                <img src="{% static '/images/' %}{{ quest.expansion_introduced|expansion_icon }}"
-                                     loading="lazy"
-                                     alt="{{ quest.expansion_introduced|exp_filter|title }}"
-                                     style="width:16px;height:16px;vertical-align:middle;margin-right:4px;">
-                                {{ quest.expansion_introduced|exp_filter|title }}
+                            <td class="expansion-tag {{ quest.expansion_introduced|exp_filter }}">
+                                <span>{{ quest.expansion_introduced|exp_filter|title }}</span>
                             </td>
                             <td>{{ quest.is_repeatable|yesno:"Yes,No" }}</td>
                             {% if request.user.is_staff %}
