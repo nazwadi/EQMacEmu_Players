@@ -347,6 +347,37 @@ def cancel_event(request, pk):
     return redirect('raid_scheduler:board')
 
 
+# ── delete event ─────────────────────────────────────────────────────────────
+
+@login_required
+@require_POST
+def delete_event(request, pk):
+    event = get_object_or_404(RaidEvent, pk=pk)
+
+    is_officer = False
+    if event.circuit:
+        is_officer = CircuitMembership.objects.filter(
+            circuit=event.circuit,
+            member=request.user,
+            role='officer',
+            status='active',
+        ).exists()
+
+    if not (request.user.is_superuser or request.user == event.created_by or is_officer):
+        messages.error(request, 'You do not have permission to delete this event.')
+        return redirect('raid_scheduler:event_detail', pk=pk)
+
+    if event.status != RaidEvent.STATUS_CANCELLED:
+        messages.error(request, 'Only cancelled events can be deleted.')
+        return redirect('raid_scheduler:event_detail', pk=pk)
+
+    title = event.title
+    event_date = event.date
+    event.delete()
+    messages.success(request, f"Deleted: {title} on {event_date}.")
+    return redirect('raid_scheduler:history')
+
+
 # ── edit event ────────────────────────────────────────────────────────────────
 
 @login_required
@@ -584,6 +615,7 @@ def event_detail(request, pk):
     editable_pks = _closeable_pks(request.user, RaidEvent.objects.filter(pk=pk))
     is_closeable = event.pk in editable_pks
     is_editable = is_closeable and event.status in (RaidEvent.STATUS_SCHEDULED, RaidEvent.STATUS_ACTIVE)
+    is_deletable = is_closeable and event.status == RaidEvent.STATUS_CANCELLED
 
     can_rsvp = False
     user_signup = None
@@ -602,6 +634,7 @@ def event_detail(request, pk):
         'event': event,
         'is_closeable': is_closeable,
         'is_editable': is_editable,
+        'is_deletable': is_deletable,
         'can_rsvp': can_rsvp,
         'user_signup': user_signup,
         'membership': rsvp_membership,

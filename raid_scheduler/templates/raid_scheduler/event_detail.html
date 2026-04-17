@@ -448,7 +448,7 @@
     {% endwith %}
 
     <!-- Actions -->
-    {% if is_editable or is_closeable and event.status in "scheduled active" %}
+    {% if is_editable or is_closeable and event.status in "scheduled active" or is_deletable %}
     <div class="rs-actions">
         {% if is_editable %}
         <a href="{% url 'raid_scheduler:edit_event' event.pk %}" class="btn btn-sm btn-outline-secondary">
@@ -461,6 +461,15 @@
             <button type="submit" class="btn btn-sm btn-outline-danger"
                     onclick="return confirm('Cancel this raid? This cannot be undone.')">
                 <i class="fas fa-times-circle"></i> Cancel Event
+            </button>
+        </form>
+        {% endif %}
+        {% if is_deletable %}
+        <form method="post" action="{% url 'raid_scheduler:delete_event' event.pk %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-outline-danger"
+                    onclick="return confirm('Permanently delete this event? This cannot be undone.')">
+                <i class="fas fa-trash-alt"></i> Delete Event
             </button>
         </form>
         {% endif %}
