@@ -341,6 +341,9 @@ STORAGES = {
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# Log file path; set DJANGO_LOG_FILE to empty to log only to the console (the Docker image does this)
+DJANGO_LOG_FILE = os.environ.get('DJANGO_LOG_FILE', 'server.log')
+LOG_HANDLERS = ['console', 'logfile'] if DJANGO_LOG_FILE else ['console']
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -351,9 +354,13 @@ LOGGING = {
         },
     },
     'handlers': {
+        'console': {
+                'class': 'logging.StreamHandler',
+                'formatter': 'standard',
+        },
         'logfile': {
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': 'server.log',
+            'filename': DJANGO_LOG_FILE or os.devnull,
             'maxBytes': 10 * 1024 * 1024,  # 10 MB
             'backupCount': 5,
             'formatter': 'standard',
@@ -364,7 +371,7 @@ LOGGING = {
     },
     'loggers': {
         'django': {
-            'handlers': ['logfile'],
+            'handlers': LOG_HANDLERS,
             'level': 'WARNING',
         },
         'django.security.DisallowedHost': {
@@ -372,12 +379,12 @@ LOGGING = {
             'propagate': False,
         },
         'eqmacemu.security': {
-            'handlers': ['logfile'],
+            'handlers': LOG_HANDLERS,
             'level': 'INFO',
             'propagate': False,
         },
         'raid_scheduler': {
-            'handlers': ['logfile'],
+            'handlers': LOG_HANDLERS,
             'level': 'ERROR',
             'propagate': False,
         },

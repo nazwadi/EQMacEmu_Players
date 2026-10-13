@@ -9,6 +9,8 @@ ENV PYTHONDONTWRITEBYTECODE=1
 # Turns off buffering for easier container logging
 ENV PYTHONUNBUFFERED=1
 
+ENV DJANGO_LOG_FILE=
+
 # Set the working directory
 WORKDIR /app
 
