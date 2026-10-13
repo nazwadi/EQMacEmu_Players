@@ -1,6 +1,8 @@
 import ipaddress
 from hashlib import sha1
 
+from django.conf import settings
+
 _PRIVATE_NETWORKS = [
     ipaddress.ip_network(cidr) for cidr in (
         '127.0.0.0/8',
@@ -46,10 +48,12 @@ def get_client_ip(request):
 def sha1_password(password: str) -> str:
     """Returns the sha1 hash of a plain text password
 
-    The TAKP database stores the sha1 hash of account passwords
+    The TAKP database stores the sha1 hash + salt of account passwords
+
+    The salt is configured in the server's login.json file.
     """
     message = sha1()
-    message.update(bytes(password,
+    message.update(bytes(password + settings.LS_PASSWORD_SALT,
                    encoding="utf8"))
     password = message.hexdigest()
     return password
