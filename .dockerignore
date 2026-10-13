@@ -1,2 +1,9 @@
 venv/
 .venv/
+.git/
+.idea/
+.env
+staticfiles/
+cache/
+uploads/
+server.log
