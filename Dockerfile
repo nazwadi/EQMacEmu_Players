@@ -33,6 +33,8 @@ COPY --chown=$USERNAME:$USERNAME . /app
 
 USER $USERNAME
 
+RUN mkdir -p /app/uploads
+
 RUN python manage.py collectstatic --noinput
 
 CMD ["sh", "scripts/start.sh"]
