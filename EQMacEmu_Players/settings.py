@@ -341,6 +341,7 @@ STORAGES = {
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 # Log file path; set DJANGO_LOG_FILE to empty to log only to the console (the Docker image does this)
 DJANGO_LOG_FILE = os.environ.get('DJANGO_LOG_FILE', 'server.log')
 LOG_HANDLERS = ['console', 'logfile'] if DJANGO_LOG_FILE else ['console']
@@ -355,8 +356,8 @@ LOGGING = {
     },
     'handlers': {
         'console': {
-                'class': 'logging.StreamHandler',
-                'formatter': 'standard',
+            'class': 'logging.StreamHandler',
+            'formatter': 'standard',
         },
         'logfile': {
             'class': 'logging.handlers.RotatingFileHandler',
